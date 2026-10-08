@@ -1,0 +1,2 @@
+# The BO6 bundle manifest hashes exact file bytes, so preserve source line endings.
+ml-service/bundle/** -text
