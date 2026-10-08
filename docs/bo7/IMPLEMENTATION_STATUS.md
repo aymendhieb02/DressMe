@@ -2,45 +2,44 @@
 
 Last updated: 2026-10-08. Active branch: `feature/bo7-autonomous-mvp`.
 
+See [`docs/DRESSME_AUTONOMOUS_EXECUTION_REPORT.md`](../DRESSME_AUTONOMOUS_EXECUTION_REPORT.md) for the authoritative evidence, exact commands, acceptance matrix, environment, limitations, and local run instructions. This file is a compact BO7 status summary.
+
 ## Checkpoint
 
 - Start revision: `a0528d1` (`docs: record autonomous BO6 verification baseline`).
 - Implementation commit: `eaa0f5444d22788f22ad45f08e13a0a2de015f2a` (`feat: integrate DressMe mock VTON application`).
-- No push was made. A previous GitHub authentication check failed, and no relevant authentication change occurred.
-- The only remaining untracked path is `.tmp-local-demo/`, preserved and excluded from changes and commits.
-- Overall BO7 verdict: **INCOMPLETE**. None of Gates A, B, or C has passed.
+- No push was made; the prior one-time GitHub authentication check failed.
+- Overall BO7 verdict: **INCOMPLETE**. No Docker/PostgreSQL integrated gate, real FASHN gate, or Hybrid Avatar gate has passed.
 
 ## Milestones
 
 | Milestone | Status | Evidence and limits |
 |---|---|---|
-| M0 — baseline and contract inventory | VERIFIED (inspection and local baseline) | Existing BO6 tests pass; BO6/FASHN contracts and local artifacts were inspected. No repository source under `ml-service/` changed. |
-| M1 — application API, database, authentication | IMPLEMENTED—UNVERIFIED | FastAPI API, six additive Alembic revisions, Argon2id cookie sessions, rotation/replay revocation, CSRF/origin checks, rate limits, request IDs and safe errors. Backend tests use SQLite; PostgreSQL SQL was generated offline but not applied to PostgreSQL. API import check excludes Torch and FASHN. |
-| M2 — private wardrobe workflow | IMPLEMENTED—UNVERIFIED | Typed BO6 HTTP client, bounded/normalized private uploads, review/edit/list/delete, user-confirmed values and provenance, owner checks, cleanup outbox, versioned candidate VTON eligibility. Tests mock BO6; the integrated BO6 service was not started. |
-| M3 — consent and mock job worker | IMPLEMENTED—UNVERIFIED | Private person photos with consent version/time; owner-scoped jobs, idempotency, database outbox, Redis/RQ dispatcher/worker, attempt tokens, reconciliation, cancellation/deletion paths, and an explicit mock contact sheet. Contract tests call worker logic and a fake queue; Redis/RQ services were not started. |
-| M4 — unified frontend | IMPLEMENTED—UNVERIFIED | React/Vite auth, wardrobe review/edit, photo consent, job submission/status/history/results/deletion and account deletion. Build and one component test pass; no browser-level journey was run. |
-| M5 — Gate A integration | BLOCKED / NOT VERIFIED | Compose configuration validates, but Docker Engine access is denied. No PostgreSQL/Redis/BO6/backend/frontend service startup, restart recovery, or browser journey was verified. |
-| M6 — real FASHN / Gate B | BLOCKED | No application FASHN adapter is implemented. The inspected frozen source selects float32/BF16 rather than the requested strict FP16 profile; CPU-only Torch cannot provide CUDA validation. Real mode returns a structured 503 and never substitutes the mock. |
-| M7 — Hybrid Avatar / Gate C | BLOCKED | No Hybrid Avatar V1.4 material was found in the checked repository/archive filenames. No automatic initialization, avatar correction/persistence, or validated DressMe use flow exists. |
-| M8 — final QA and handoff | IN PROGRESS | Local suites, build, offline migration SQL and Compose config have been checked. Runtime gates remain open; exact evidence is in `AUTONOMOUS_EXECUTION_REPORT.md`. |
+| M0 — baseline and contract inventory | VERIFIED (local scope) | BO6 contracts and artifacts inspected; BO6 baseline and bundle self-test pass. |
+| M1 — application API, database, authentication | PARTIAL | FastAPI, six additive Alembic revisions, Argon2id cookie sessions, rotation/replay revocation, CSRF/origin checks, request IDs and safe errors. SQLite tests and live local health passed; no PostgreSQL migrations or Docker runtime. |
+| M2 — private wardrobe workflow | PARTIAL — LOCAL REAL-INFERENCE DEMO VERIFIED | Real local BO6 inference and description ran through backend using isolated SQLite/private storage. API create/list/edit/reload/private-image/delete passed; browser reload showed a saved garment. Browser file chooser failed; upload was verified via API. No Compose/PostgreSQL or live two-user journey. |
+| M3 — consent and mock job worker | IMPLEMENTED—UNVERIFIED AT RUNTIME | Private consented photo and durable job/outbox/dispatcher/worker paths; backend tests use worker logic/fake queue. Redis/RQ services not started. |
+| M4 — unified frontend | PARTIAL | React/Vite UI and mock labeling implemented; build and one component test pass. Browser rendered the persisted BO6 item after reload; no full browser upload/mock-job journey. |
+| M5 — Gate A integration | BLOCKED / NOT VERIFIED | Docker Linux engine access denied; PostgreSQL credentials unavailable. No Compose startup or container health. |
+| M6 — real FASHN / Gate B | BLOCKED | No real adapter; strict FP16 profile and CUDA pose path are unmet. Real mode fails closed. |
+| M7 — Hybrid Avatar / Gate C | BLOCKED | Supported V1.4 source/material not located; automatic initialization, correction, persistence and downstream use are absent. |
+| M8 — final QA and handoff | IN PROGRESS | Backend 23, BO6 13, frontend 1 tests and frontend production build pass. Full runtime gates remain open. |
 
 ## Feature matrix
 
 | Feature | Implementation | Verification |
 |---|---|---|
-| BO6 wardrobe workflow | Application client and UI implemented; original BO6 service and taxonomy retained. | BO6 suite passes. Backend client and wardrobe tests use mocked BO6; integrated service flow unverified. |
-| Mock VTON | Implemented; output is a labelled source-photo contact sheet, not an outfit generation. | Backend contract tests pass; queue and container runtime unverified. |
-| Real VTON | Not implemented; real mode fails closed. | NOT VERIFIED. Strict FP16 and CUDA prerequisites are unmet. |
-| Automatic avatar initialization | Not implemented. | BLOCKED: supported V1.4 source/material unavailable. |
-| Avatar manual correction | Not implemented as an avatar feature. Garment review/edit is separate. | NOT VERIFIED. |
-| Avatar persistence | Not implemented. | NOT VERIFIED. |
-| Intended avatar product use | Not defined or integrated. | NOT VERIFIED. |
-| Deployment | Not performed. | NOT VERIFIED; Compose config validation is not deployment evidence. |
+| BO6 wardrobe | Real BO6 client, review workflow and persistent wardrobe | Local CPU-model + SQLite API flow passed; browser reload displayed saved garment. Browser upload, PostgreSQL and Compose remain unverified. |
+| Mock VTON | Labelled source-photo contact sheet, with no outfit generation or fit estimate | Backend contract tests pass; Redis/RQ and browser job journey unverified. |
+| Real VTON | Not implemented; real mode fails closed | BLOCKED: strict FP16/CUDA evidence unavailable. |
+| Automatic avatar initialization | Not implemented | BLOCKED: supported V1.4 source/material unavailable. |
+| Avatar correction/persistence/use | Not implemented | NOT VERIFIED. |
+| Deployment | Not performed | NOT VERIFIED; Compose config validation is not deployment evidence. |
 
 ## Acceptance gates and next work
 
-- **Gate A — NOT PASSED / NOT VERIFIED.** Needs a Compose stack with verified BO6 artifacts, PostgreSQL, Redis/RQ, backend and frontend running, plus a browser journey and user-isolation evidence.
-- **Gate B — BLOCKED / NOT VERIFIED.** Needs an isolated FASHN adapter that satisfies the selected strict profile, verified model/runtime artifacts and CUDA pose provider, then actual consented image generation and output review.
-- **Gate C — BLOCKED / NOT VERIFIED.** Needs a supported automatic avatar source, photo initialization, user correction, save/reload and validated intended product use.
+- **Gate A — NOT PASSED.** Needs Docker/Compose with verified BO6 artifacts, PostgreSQL, Redis/RQ, backend and frontend running, migration/runtime checks, and browser journey including two-user isolation.
+- **Gate B — BLOCKED.** Needs an isolated real FASHN adapter satisfying selected profile/runtime constraints, actual authorized inference and output review.
+- **Gate C — BLOCKED.** Needs supported automatic photo initialization, correction, save/reload and validated downstream use.
 
-Next tasks, in dependency order: obtain a usable Docker Engine and approved BO6 artifacts; run migrations and the complete Compose demonstrator; add browser-level two-user workflow coverage; resolve the FASHN precision/runtime incompatibility before adding real inference; locate and validate supported Hybrid Avatar V1.4 material. Keep the overall verdict incomplete until all mandatory Gate C evidence exists.
+Keep the overall verdict **INCOMPLETE** until all mandatory gates have passed. The real BO6 local demo does not imply Docker/PostgreSQL acceptance, and mock VTON does not complete Virtual Try-On Generation.

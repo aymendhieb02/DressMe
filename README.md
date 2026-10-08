@@ -13,7 +13,7 @@ BO6 is a single-garment photo workflow for a digital wardrobe. Its AI suggests a
 
 The frontend talks only to the application backend. The application backend calls the ML service over the internal Docker network. PostgreSQL and the ML service are not published to the host in the completed stack.
 
-The repository now contains the shared application API and BO6 wardrobe workflow under `backend/`, a React/Vite client under `frontend/`, and a Compose topology for PostgreSQL, private BO6 inference, Redis, an outbox dispatcher, a separate mock worker, backend, and frontend. Local API tests use isolated SQLite and mock BO6/queue contracts. PostgreSQL and Compose runtime remain unverified because the Docker Linux engine is inaccessible. See [the execution report](docs/bo7/AUTONOMOUS_EXECUTION_REPORT.md) for exact evidence and remaining acceptance gates.
+The repository now contains the shared application API and BO6 wardrobe workflow under `backend/`, a React/Vite client under `frontend/`, and a Compose topology for PostgreSQL, private BO6 inference, Redis, an outbox dispatcher, a separate mock worker, backend, and frontend. Local API tests use isolated SQLite and mock BO6/queue contracts; a separate real BO6 + SQLite wardrobe smoke was verified. PostgreSQL and Compose runtime remain unverified because the Docker Linux engine is inaccessible. See the [authoritative execution report](docs/DRESSME_AUTONOMOUS_EXECUTION_REPORT.md) for exact evidence and remaining acceptance gates.
 
 See [ARCHITECTURE_ROADMAP.md](ARCHITECTURE_ROADMAP.md) for the exact proposed project structure, migration plan, API flow, and acceptance criteria for Phases 1–6.
 
