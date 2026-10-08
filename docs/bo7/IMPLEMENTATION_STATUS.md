@@ -5,10 +5,10 @@ Last updated: 2026-10-08.
 ## Phase 0 — PARTIALLY COMPLETE
 
 - **Local shared baseline:** `main` points to `63d1904`, containing BO6 service source/tests/configuration and BO7 FASHN source. The baseline also tracks research PDFs, a BO6 notebook, and small research ZIPs; the PDFs contain human-model imagery whose provenance/privacy/publication rights remain under review.
-- **BO7 integration:** Local branch `BO7` preserves the two documentation commits and has merge commit `36ab05c` integrating `main`. The remote `BO7` branch has not been verified or published.
-- **Remote:** The public repository's observed refs were `main` and `feature/bo6-implementation`, both at `63d1904`. `main` is already on the remote. No remote `BO7` ref was observed.
-- **Connectivity:** A temporary process-scoped no-proxy Git request worked. GitHub CLI is absent. Git Credential Manager is configured but push authentication has not been verified.
-- **BO6 tests:** `pytest -q` in `ml-service/` passed 13 tests on the local checkout with one deprecation warning. The matching model files are present locally but excluded from Git.
+- **BO7 integration:** Local branch `BO7` preserves its documentation commits and includes merge commits `36ab05c` and `b14d2b2` integrating `main`. The remote `BO7` branch was absent at the last read-only check.
+- **Remote:** At the last read-only check, public refs were `main` and `feature/bo6-implementation`, both at `63d1904`. Local `main` was `4c0ff9c`; local `BO7` was `b14d2b2` before this status update.
+- **Connectivity:** A temporary process-scoped no-proxy Git request worked. GitHub CLI is absent. Git Credential Manager is configured, but no stored GitHub credential was found by the no-prompt probe.
+- **BO6 tests:** `pytest -q` in `ml-service/` passed 13 tests after restoring the bundle byte-for-byte, with one deprecation warning. Both matching model checkpoint files are present locally but excluded from Git.
 - **Architecture handoff:** Original source not found in the checkout or inspected archives. The committed handoff record is explicitly provisional.
 - **BO7 runtime:** Pretrained FASHN VTON v1.5 source package is present, but no unified-app BO7 API/worker is implemented. Task target is 15 steps with float16, guidance 1.5, seed 42, segmentation-free, one sample; real GPU execution, CUDA pose providers, and this target configuration are unverified. The archived source config's 20/30-step presets conflict with the target.
 - **Category mapping:** Research mappings remain candidates pending image-based validation. Jackets are blocked from try-on by default until compatibility is established.
@@ -16,9 +16,8 @@ Last updated: 2026-10-08.
 
 ## Remaining Phase 0 gates
 
-1. Resolve whether the committed BO6/BO7 research reports and notebook, including their model imagery, may remain in the public repository history. Do not rewrite history; if they must be removed from public history, obtain an approved migration plan before changing it.
-2. Once the public-content review is resolved, verify GitHub push authentication locally and publish `BO7`; verify remote head hashes and upstream tracking for `main` and `BO7`.
-3. Run `docker compose config --quiet` and rerun `pytest -q` after final documentation changes.
+1. Verify GitHub push authentication interactively using the configured Git Credential Manager, then publish the updated `main` and local `BO7`; verify remote head hashes and upstream tracking.
+2. Track the unresolved Kaggle catalog image redistribution terms before adding more dataset-derived images to the public repository.
 
 ## Smallest Phase 1 task
 

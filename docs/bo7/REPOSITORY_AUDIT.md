@@ -4,10 +4,10 @@ Audit date: 2026-10-08. Scope: `D:\5eme\DressMe\Projet_DressMe` and public GitHu
 
 ## Git and publication state
 
-- The initial checkout had no `.git` directory. A local repository was initialized with baseline commit `ea83c5d`; BO7 documentation commits `2cceb2d` and `b36d806` preserve the Phase 0 handoff, audit, contracts, and roadmap.
-- Shared source commit `63d1904` is on local `main` and `feature/bo6-implementation`. It tracks BO6 service source/configuration and tests, plus BO6/BO7 reports, one BO6 notebook, two small BO7 inference ZIPs, and the extracted FASHN source package. The package contains source and licenses; private FASHN model weights are not tracked. These research artifacts were present in the source commit and must be treated as part of the public baseline.
-- Local `BO7` contains the existing BO7 documentation commits plus a non-fast-forward merge commit `36ab05c` integrating `main`. `main` does not contain BO7-specific documentation; BO7 is not merged into main.
-- The remote is `https://github.com/aymendhieb02/DressMe.git`. A process-scoped no-proxy retry successfully reached GitHub. Current remote refs observed with `git ls-remote --heads origin` are `main` and `feature/bo6-implementation`, both at `63d1904`. The earlier zero-branch report is stale. There is no remote `BO7` ref in the latest observed listing.
+- The initial checkout had no `.git` directory. A local repository was initialized with baseline commit `ea83c5d`; BO7 documentation commits `2cceb2d`, `b36d806`, and `fcea6b2` preserve the Phase 0 handoff, audit, contracts, and roadmap.
+- Shared source commit `63d1904` is on local `main` and `feature/bo6-implementation`. It tracks BO6 service source/configuration and tests, plus BO6/BO7 reports, one BO6 notebook, two small BO7 inference ZIPs, and the extracted FASHN source package. The package contains source and licenses; private FASHN model weights are not tracked. These research artifacts were already present in the source commit and its public remote head.
+- Local `BO7` preserves its documentation commits and includes non-fast-forward merge commits `36ab05c` and `b14d2b2`, integrating the shared baseline and subsequent `main` checksum fix. `main` does not contain BO7-specific documentation; BO7 is not merged into main.
+- The remote is `https://github.com/aymendhieb02/DressMe.git`. A process-scoped no-proxy retry successfully reached GitHub. At the last read-only remote check before this publication attempt, refs were `main` and `feature/bo6-implementation`, both at `63d1904`; no remote `BO7` ref was observed. At that check, local `main` was `4c0ff9c` and local `BO7` was `b14d2b2`.
 - Git-specific and general proxy variables were present in the process environment, all pointing to `127.0.0.1:9`; Git config itself had no HTTP proxy. Temporarily clearing the process proxy variables and using `git -c http.proxy= -c https.proxy= ...` worked. No global network settings were changed.
 - GitHub CLI is unavailable. Git Credential Manager is configured as a credential helper, but its GitHub authentication status has not yet been established. An anonymous read of public refs does not establish push access.
 
@@ -35,7 +35,7 @@ The tracked `ml-service/bundle/checksums.json` expects `model_weights.pt` and `a
 - The source package status says its weights manifest/export, clean GPU restoration/inference, and actual CUDA ONNX provider verification are not verified. FASHN/DWPose/human-parser licence and redistribution questions remain; a package licence note identifies a non-commercial human-parser dependency.
 - Research CSV evidence maps some garment labels to `tops`, `bottoms`, and `one-pieces` but explicitly says “Candidate single garment; inspect images”. BO6-to-FASHN mappings remain candidates pending image-based validation. Jackets are not automatically eligible until compatibility is established.
 - Hybrid Avatar V1.4 has not been validated on real user photos. Automatic initialization, manual editing, persistence, and product integration remain open feasibility questions.
-- Current `main` contains BO6/BO7 research PDFs and a BO6 notebook in addition to the application baseline. The PDFs include human-model imagery; the imagery's provenance, privacy status, and publication rights have not been fully verified. Do not publish further refs until this review is resolved.
+- Current public `main` contains BO6/BO7 research PDFs and a BO6 notebook in addition to the application baseline. The BO7 report identifies its controlled cases as VITON-HD from a Kaggle mirror under CC BY-NC 4.0 and says the original person photo is not included in one exported comparison. The BO6 notebook visibly embeds catalogue/model images from the Kaggle fashion-product dataset; that dataset's redistribution terms were not verified in this audit. No private offline weights archive or BO6 checkpoint was found in the tracked tree. Preserve this provenance/license caveat in future publication decisions.
 
 ## Privacy and ignore rules
 
@@ -44,6 +44,8 @@ The tracked `ml-service/bundle/checksums.json` expects `model_weights.pt` and `a
 ## Verification performed
 
 - `git ls-remote --heads origin` (with process-only proxy override): remote `main` and `feature/bo6-implementation` refs observed at `63d1904`; no `BO7` ref at that time.
-- `pytest -q` in `ml-service/`: 13 passed on the local checkout; one Starlette/httpx deprecation warning.
-- `docker compose config --quiet`: pending final Phase 0 check. No image build or real inference verification is claimed.
+- The committed bundle blobs match all tracked entries in `checksums.json`; root `.gitattributes` now pins LF for `ml-service/bundle/**` so Windows autocrlf settings cannot change the manifest bytes.
+- `pytest -q` in `ml-service/`: 13 passed after restoring byte-exact bundle files; one Starlette/httpx deprecation warning.
+- `docker compose config --quiet`: passed. No image build or real inference verification is claimed.
+- Git Credential Manager is configured, but a no-prompt credential probe found no stored GitHub username/token. Push authentication remains unverified; GitHub CLI is unavailable.
 - The architecture handoff document was absent from the checkout and inspected archives. `ARCHITECTURE_HANDOFF.md` remains explicitly provisional.
