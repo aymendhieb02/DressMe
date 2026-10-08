@@ -5,8 +5,9 @@ Last updated: 2026-10-08. Active branch: `feature/bo7-autonomous-mvp`.
 ## Checkpoint
 
 - Start revision: `a0528d1` (`docs: record autonomous BO6 verification baseline`).
-- Local implementation and documentation changes are in progress; no new commit or push has been made at this checkpoint.
-- The shared tree also contains an unrelated-looking, untracked `.tmp-local-demo/` directory. It is preserved and excluded from all changes and commits.
+- Implementation commit: `eaa0f5444d22788f22ad45f08e13a0a2de015f2a` (`feat: integrate DressMe mock VTON application`).
+- No push was made. A previous GitHub authentication check failed, and no relevant authentication change occurred.
+- The only remaining untracked path is `.tmp-local-demo/`, preserved and excluded from changes and commits.
 - Overall BO7 verdict: **INCOMPLETE**. None of Gates A, B, or C has passed.
 
 ## Milestones

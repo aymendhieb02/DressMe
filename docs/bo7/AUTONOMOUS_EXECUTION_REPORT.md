@@ -5,10 +5,10 @@ Last updated: 2026-10-08.
 ## Checkpoint and repository state
 
 - Repository: `D:\5eme\DressMe\Projet_DressMe`; branch: `feature/bo7-autonomous-mvp`.
-- This implementation checkpoint started at `a0528d1` (`docs: record autonomous BO6 verification baseline`). The first implementation commit has not yet been made at the time of this report update.
+- This implementation checkpoint started at `a0528d1` (`docs: record autonomous BO6 verification baseline`). The implementation is committed locally as `eaa0f5444d22788f22ad45f08e13a0a2de015f2a` (`feat: integrate DressMe mock VTON application`).
 - Remote `origin` is `https://github.com/aymendhieb02/DressMe.git`. A prior authentication check failed; no relevant auth change has occurred, so no push was attempted. No branch ancestry or permission claim is made for a push.
 - A separate worktree, `D:\5eme\DressMe\Projet_DressMe_BO7`, was left untouched.
-- `.tmp-local-demo/` is an untracked directory in the shared checkout. It was not inspected, edited, staged or committed.
+- The only remaining untracked path is `.tmp-local-demo/`. It was not inspected, edited, staged or committed.
 - No source files under `ml-service/` changed. Private BO6/FASHN weights, archives and personal media are excluded from changes.
 
 ## Implemented architecture and decisions
