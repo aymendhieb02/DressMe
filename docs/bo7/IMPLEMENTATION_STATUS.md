@@ -6,40 +6,39 @@ See [`docs/DRESSME_AUTONOMOUS_EXECUTION_REPORT.md`](../DRESSME_AUTONOMOUS_EXECUT
 
 ## Checkpoint
 
-- Start revision: `a0528d1` (`docs: record autonomous BO6 verification baseline`).
-- Implementation commit: `eaa0f5444d22788f22ad45f08e13a0a2de015f2a` (`feat: integrate DressMe mock VTON application`).
-- No push was made; the prior one-time GitHub authentication check failed.
-- Overall BO7 verdict: **INCOMPLETE**. No Docker/PostgreSQL integrated gate, real FASHN gate, or Hybrid Avatar gate has passed.
+- Verification started at `68d0030` (`docs: record integrated wardrobe verification`); implementation remains based on `eaa0f54` (`feat: integrate DressMe mock VTON application`).
+- No push was made. The earlier one-time GitHub authentication check failed; no retry was made.
+- Overall verdict: **INCOMPLETE**. Gate A's real PostgreSQL and partial browser checks passed, but Compose, Redis/RQ worker delivery/results and the full failure/restart matrix are unverified. Gate B and Gate C remain incomplete.
 
 ## Milestones
 
 | Milestone | Status | Evidence and limits |
 |---|---|---|
-| M0 — baseline and contract inventory | VERIFIED (local scope) | BO6 contracts and artifacts inspected; BO6 baseline and bundle self-test pass. |
-| M1 — application API, database, authentication | PARTIAL | FastAPI, six additive Alembic revisions, Argon2id cookie sessions, rotation/replay revocation, CSRF/origin checks, request IDs and safe errors. SQLite tests and live local health passed; no PostgreSQL migrations or Docker runtime. |
-| M2 — private wardrobe workflow | PARTIAL — LOCAL REAL-INFERENCE DEMO VERIFIED | Real local BO6 inference and description ran through backend using isolated SQLite/private storage. API create/list/edit/reload/private-image/delete passed; browser reload showed a saved garment. Browser file chooser failed; upload was verified via API. No Compose/PostgreSQL or live two-user journey. |
-| M3 — consent and mock job worker | IMPLEMENTED—UNVERIFIED AT RUNTIME | Private consented photo and durable job/outbox/dispatcher/worker paths; backend tests use worker logic/fake queue. Redis/RQ services not started. |
-| M4 — unified frontend | PARTIAL | React/Vite UI and mock labeling implemented; build and one component test pass. Browser rendered the persisted BO6 item after reload; no full browser upload/mock-job journey. |
-| M5 — Gate A integration | BLOCKED / NOT VERIFIED | Docker Linux engine access denied; PostgreSQL credentials unavailable. No Compose startup or container health. |
-| M6 — real FASHN / Gate B | BLOCKED | No real adapter; strict FP16 profile and CUDA pose path are unmet. Real mode fails closed. |
-| M7 — Hybrid Avatar / Gate C | BLOCKED | Supported V1.4 source/material not located; automatic initialization, correction, persistence and downstream use are absent. |
-| M8 — final QA and handoff | IN PROGRESS | Backend 23, BO6 13, frontend 1 tests and frontend production build pass. Full runtime gates remain open. |
+| M0 — baseline and contract inventory | VERIFIED (local scope) | BO6 taxonomy, preprocessing, descriptions and artifact manifest reviewed; bundle self-test passes. |
+| M1 — application API, database, authentication | PARTIAL — POSTGRESQL VERIFIED | Fresh and revision-0003 PostgreSQL 18.4 migrations reach `0006_mock_tryon_jobs`; live API readiness, synthetic persistence and concurrent idempotency verified. No Compose runtime/restart test. |
+| M2 — private wardrobe workflow | VERIFIED (synthetic browser path) | Actual browser file chooser → real BO6 analysis → review/correction → description → save/reload. A second browser account saw an empty wardrobe; separate live HTTP checks confirmed cross-owner garment/photo/job `404` responses and left the owner's records intact. |
+| M3 — consent and mock job worker | PARTIAL | Browser person-photo consent/save, mock submission, history reload and queued cancellation passed. No Redis/RQ server or worker was available; no result or crash/recovery run. |
+| M4 — unified frontend | PARTIAL | Frontend test (1) and production build pass; browser journey above was exercised. Expired-session and full worker polling/result path remain unverified. |
+| M5 — Gate A integration | NOT PASSED | Docker Desktop `desktop-linux` pipe returns `Access is denied`; PostgreSQL and browser subsets pass locally, but Compose Redis/RQ, worker result, recovery and full isolation are still required. |
+| M6 — real FASHN / Gate B | BLOCKED | Source and private archive exist; archive CRC scan is clean. Requested 15-step strict FP16 profile differs from 20/30-step defaults; local Torch is CPU-only and no real CUDA/pose inference ran. |
+| M7 — Hybrid Avatar / Gate C | BLOCKED | No supported V1.4 implementation surfaced in inspected text paths; automatic initialization, correction, persistence/reload and downstream use remain absent. |
+| M8 — final QA and handoff | IN PROGRESS | Backend 23, BO6 13, BO6 bundle 17/17, frontend 1 tests and frontend build pass. Gate A/B/C acceptance remains open. |
 
 ## Feature matrix
 
 | Feature | Implementation | Verification |
 |---|---|---|
-| BO6 wardrobe | Real BO6 client, review workflow and persistent wardrobe | Local CPU-model + SQLite API flow passed; browser reload displayed saved garment. Browser upload, PostgreSQL and Compose remain unverified. |
-| Mock VTON | Labelled source-photo contact sheet, with no outfit generation or fit estimate | Backend contract tests pass; Redis/RQ and browser job journey unverified. |
-| Real VTON | Not implemented; real mode fails closed | BLOCKED: strict FP16/CUDA evidence unavailable. |
-| Automatic avatar initialization | Not implemented | BLOCKED: supported V1.4 source/material unavailable. |
+| BO6 wardrobe | Real BO6 review workflow and persistent wardrobe | Synthetic browser upload, live CPU BO6 analysis, user review and save/reload against isolated PostgreSQL passed. |
+| Mock VTON | Labelled source-photo contact sheet; no outfit generation or fit estimate | PostgreSQL/browser submission and cancellation passed. Redis/RQ worker, generated mock result and result retrieval remain unverified. |
+| Real VTON | Not implemented; real mode fails closed | BLOCKED: strict FP16/15-step CUDA execution and pose-provider evidence unavailable. |
+| Automatic avatar initialization | Not implemented | BLOCKED: supported V1.4 source/material and automatic initialization evidence unavailable. |
 | Avatar correction/persistence/use | Not implemented | NOT VERIFIED. |
-| Deployment | Not performed | NOT VERIFIED; Compose config validation is not deployment evidence. |
+| Deployment | Not performed | Compose config validation passes; Docker engine pipe access is denied. |
 
 ## Acceptance gates and next work
 
-- **Gate A — NOT PASSED.** Needs Docker/Compose with verified BO6 artifacts, PostgreSQL, Redis/RQ, backend and frontend running, migration/runtime checks, and browser journey including two-user isolation.
-- **Gate B — BLOCKED.** Needs an isolated real FASHN adapter satisfying selected profile/runtime constraints, actual authorized inference and output review.
-- **Gate C — BLOCKED.** Needs supported automatic photo initialization, correction, save/reload and validated downstream use.
+- **Gate A — NOT PASSED.** Restore ordinary access to Docker Desktop's `desktop-linux` pipe. Then run Compose with approved BO6 artifacts and isolated volumes, verify PostgreSQL/Redis/RQ/dispatcher/worker, complete the browser mock result and failure/restart cases, and verify two-user direct-resource isolation.
+- **Gate B — BLOCKED.** Needs an isolated real FASHN adapter satisfying the requested precision/steps, actual authorized CUDA and pose execution, and reviewed output.
+- **Gate C — BLOCKED.** Needs supported automatic photo initialization, correction, save/reload, and validated downstream use.
 
-Keep the overall verdict **INCOMPLETE** until all mandatory gates have passed. The real BO6 local demo does not imply Docker/PostgreSQL acceptance, and mock VTON does not complete Virtual Try-On Generation.
+Keep the overall verdict **INCOMPLETE** until all mandatory gates have passed. PostgreSQL local-service evidence does not establish Compose acceptance; mock VTON does not complete Virtual Try-On Generation.
