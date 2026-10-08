@@ -1,41 +1,64 @@
-# Local credentials and environment files
+# Environment files and local credentials
 .env
 .env.*
 !.env.example
 *.pem
 *.key
+**/kaggle.json
 
-# Python environments, caches, and test output
+# Python environments, caches, test output
 .venv/
 venv/
+env/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-ml-service/.coverage
+.coverage
+htmlcov/
 
-# Private runtime data and generated results
-data/
-private-data/
-generated-results/
-uploads/
+# JavaScript dependencies and build output
+node_modules/
+dist/
+coverage/
+.vite/
 
-# Research archives, datasets, notebooks, and image evidence
+# Local databases, private user uploads, and runtime data
+*.sqlite
+*.sqlite3
+*.db
+/data/
+/private-data/
+/private-storage/
+/storage-data/
+/uploads/
+**/user_uploads/
+**/user-uploads/
+
+# Datasets and tabular/array exports
+**/datasets/
+**/dataset/
+**/kaggle_data/
+**/kaggle-data/
+*.csv
+*.parquet
+*.npz
+!ml-service/bundle/parity_reference.npz
+*.ipynb
+
+# Large research outputs and model archives
 *.zip
 *.7z
 *.tar
 *.tar.gz
-*.ipynb
-*.parquet
-*.csv
-*.npz
-*.png
-*.jpg
-*.jpeg
-*.webp
+**/bo6_results*.zip
+**/bo7_research_evidence*.zip
+**/dressme_bo7_fashn_weights_offline_PRIVATE.zip
+**/selected_model_bundle.zip
+BO7 — Try-On/AvatarProfile/dressme_bo7_fashn_inference_v1/
 
-# Model weights and large checkpoints; redistribution rights are not established
+# Model weights/checkpoints; redistribution rights are not established
 *.pt
 *.pth
 *.ckpt
@@ -44,3 +67,23 @@ uploads/
 *.bin
 weights/
 checkpoints/
+
+# Generated inference/evaluation outputs and temporary files
+**/inference_outputs/
+**/predictions/
+**/generated-results/
+**/runs/
+*.tmp
+*.temp
+
+# Image evidence is retained locally unless deliberately added as source
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# Local IDE and operating-system metadata
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

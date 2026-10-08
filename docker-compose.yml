@@ -1,0 +1,9 @@
+services:
+  ml-service:
+    build:
+      context: ./ml-service
+    ports:
+      - "${ML_PORT:-8001}:8000"
+    environment:
+      MODEL_BUNDLE_DIR: /srv/ml-service/bundle
+    restart: unless-stopped

@@ -1,0 +1,11 @@
+{
+  "styles_csv_sha256": "cd86bd2d71b4065ed91786a52aa6ccc0eed343949791c663be9af35f105a128c",
+  "dataset_unit": "fashion-dataset",
+  "split": "f7f11d3ef7d2963e",
+  "split_protocol": "exact_sha256_only_provisional",
+  "taxonomy": "923229a357d78e97",
+  "preprocessing": "ef1a40e80cef6123",
+  "experiment": "008df35cbc2ce8fc",
+  "weights_sha256": "4a4d129d0346f3cd6f416d37be30154c2243ae4a5e1a8b21d61c99b511d04477",
+  "mode": "STANDARD"
+}

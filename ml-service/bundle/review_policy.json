@@ -1,0 +1,9 @@
+{
+  "review_threshold": 0.7,
+  "always_review": true,
+  "target_error": 0.05,
+  "validation_coverage": 0.9541125541125541,
+  "validation_error_among_accepted": 0.04990925589836659,
+  "status": "threshold measured on CATALOG validation only; scores are uncalibrated softmax; not validated on phone photos, so always_review stays True",
+  "score_type": "uncalibrated_softmax"
+}
