@@ -1,0 +1,46 @@
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python environments, caches, and test output
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+ml-service/.coverage
+
+# Private runtime data and generated results
+data/
+private-data/
+generated-results/
+uploads/
+
+# Research archives, datasets, notebooks, and image evidence
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.ipynb
+*.parquet
+*.csv
+*.npz
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# Model weights and large checkpoints; redistribution rights are not established
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.bin
+weights/
+checkpoints/
