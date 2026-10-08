@@ -12,6 +12,8 @@ venv/
 env/
 __pycache__/
 *.py[cod]
+*.egg-info/
+*.tsbuildinfo
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -29,6 +31,7 @@ coverage/
 *.sqlite3
 *.db
 /data/
+backend/data/
 /private-data/
 /private-storage/
 /storage-data/

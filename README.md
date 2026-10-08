@@ -13,7 +13,7 @@ BO6 is a single-garment photo workflow for a digital wardrobe. Its AI suggests a
 
 The frontend talks only to the application backend. The application backend calls the ML service over the internal Docker network. PostgreSQL and the ML service are not published to the host in the completed stack.
 
-The repository is currently at Phase 1. It contains the ML service, BO6 source materials, and BO7 research materials. It does not yet contain the React frontend, application backend, or PostgreSQL stack. The current Phase 1 Compose file publishes the ML diagnostic port on host port 8001; the future application Compose topology will remove that host mapping while preserving the ML service itself.
+The repository now contains the shared application API and BO6 wardrobe workflow under `backend/`, a React/Vite client under `frontend/`, and a Compose topology for PostgreSQL, private BO6 inference, Redis, an outbox dispatcher, a separate mock worker, backend, and frontend. Local API tests use isolated SQLite and mock BO6/queue contracts. PostgreSQL and Compose runtime remain unverified because the Docker Linux engine is inaccessible. See [the execution report](docs/bo7/AUTONOMOUS_EXECUTION_REPORT.md) for exact evidence and remaining acceptance gates.
 
 See [ARCHITECTURE_ROADMAP.md](ARCHITECTURE_ROADMAP.md) for the exact proposed project structure, migration plan, API flow, and acceptance criteria for Phases 1–6.
 
@@ -41,15 +41,24 @@ pytest -q
 uvicorn app.main:app --reload --port 8000
 ```
 
-For the Phase 1 development diagnostic container:
+For local integrated development, first restore the authorized BO6 checkpoints described above. Then copy the placeholder environment file once, validate Compose, run migrations, and start the application:
 
-```bash
-docker compose build ml-service
-docker compose up -d ml-service
-curl http://localhost:8001/health
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+docker compose --env-file .env config --quiet
+docker compose --env-file .env run --build --rm backend alembic upgrade head
+docker compose --env-file .env up --build -d
 ```
 
-The current host port is temporary development access. The completed multi-service Compose stack will make the ML API reachable only to the application backend over Docker networking.
+Open `http://localhost:8080`. The application backend is available on `http://localhost:8000` for local API development. PostgreSQL and the BO6 ML service are not published to the host; the backend calls the ML service privately. The PostgreSQL and private-image volumes persist across restarts. Use `docker compose down` for ordinary shutdown; omit `-v` so persistent data remains.
+
+For a Vite development server instead of the Compose frontend, run `npm ci` and `npm run dev` from `frontend/`. Its `/auth`, `/garments`, `/person-photos`, `/try-on`, and `/health` requests proxy to the application backend at `localhost:8000`.
+
+To run the backend unit suite locally, create a virtual environment in `backend/`, install `requirements-dev.lock`, and run `python -m pytest tests -q`. These tests use an isolated SQLite database and explicit BO6/queue mocks where needed; use Compose with a disposable PostgreSQL database for PostgreSQL acceptance.
+
+The try-on screen is explicitly mock-only. It returns a labelled contact sheet of the two source photos; it does not generate an outfit or estimate fit. The project remains an academic prototype; component and dataset terms vary, and this notice is not commercial-use clearance.
+
+The local automated checks are `python -m pytest ml-service/tests -q`, `backend/.venv/Scripts/python.exe -m pytest backend/tests -q` (after installing `backend/` dependencies), `npm ci`, `npm test`, and `npm run build` from `frontend/`. SQLite and mocked BO6 tests are development evidence only; they do not establish PostgreSQL migration or integrated real-service acceptance.
 
 ### ML endpoints
 

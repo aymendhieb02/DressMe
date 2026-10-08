@@ -1,44 +1,54 @@
 # BO6 ↔ BO7 integration contracts
 
-These contracts are requirements for future shared application work, not implemented application endpoints. Preserve the existing BO6 ML service API and taxonomy.
+Last reviewed: 2026-10-08. This document distinguishes implemented local contracts from runtime or product acceptance that remains open.
 
 ## Shared application boundary
 
-- One authenticated application backend owns users, garments, person photos, jobs, generated results, and private storage keys.
-- Every record/file lookup and mutation includes the authenticated owner in its access predicate. The browser never calls BO6 or BO7 inference directly.
-- BO6 and BO7 inference stay separate from application APIs. The backend supplies authorized inputs and persists outputs/metadata.
-- Do not create a BO7 account system, duplicate wardrobe, second BO6 classifier, or public static directory for private media.
+- The browser calls the application API. FastAPI owns accounts, wardrobe, private person photos, consent, jobs, results and private storage keys.
+- BO6 inference remains the existing service at `/health`, `/analyze` (multipart `image`) and `/describe` (JSON `confirmed`). The application backend calls it over internal HTTP; the frontend does not call it directly.
+- PostgreSQL is the intended source of business state. Redis/RQ transports asynchronous work. The API imports neither Torch nor FASHN.
+- Compose publishes the development frontend and backend only. PostgreSQL, Redis and BO6 are internal services. Compose configuration passed validation; service startup has not been verified because Docker Engine access is denied.
 
-## BO6 service contract (verified)
+## BO6 prediction and garment-review contract
 
-- Internal endpoints: `GET /health`, `POST /analyze` (multipart field `image`), `POST /describe` (JSON `confirmed`). Details and response semantics are in `REPOSITORY_AUDIT.md` and `ml-service/app/`.
-- Keep taxonomy `dressme-v0.2` and prediction/provenance snapshots. Never present uncalibrated scores as probabilities. Quality warnings are advisory, and user review is required.
-- Current BO6 model categories and proposed FASHN mapping to validate with the product owner:
+- Keep taxonomy `dressme-v0.2`, prediction/quality snapshots, description provenance and `uncalibrated_softmax` score semantics. Scores are suggestions, not probabilities. Quality warnings are advisory; users review and confirm fields before saving.
+- The application retains source prediction separately from user-confirmed category, attributes, photo type, description provenance and correction flags. The user may correct a garment and the versioned VTON decision is recomputed.
+- Supported upload formats are JPEG, PNG and WEBP; server-side decoding, size and pixel limits, EXIF orientation and re-encoding are applied. Images and results use opaque private keys and authenticated owner-scoped retrieval.
+- The versioned mapping is a candidate semantic map only:
 
-| BO6 category | Proposed FASHN category | Status |
+| BO6 category | Candidate FASHN category | Real VTON status |
 |---|---|---|
-| `t-shirt`, `shirt`, `top`, `sweater`, `sweatshirt` | `tops` | Candidate only; research rows require image inspection and are not validated for product use |
-| `jeans`, `trousers`, `shorts`, `skirt` | `bottoms` | Candidate mapping; confirm in Phase 1 |
-| `dress` | `one-pieces` | Research evidence maps Dresses to `one-pieces`, still marked for image inspection |
-| `jacket` | Not eligible yet | Research row proposes `tops`, but compatibility is unverified; keep blocked until image-based/product validation |
+| `t-shirt`, `shirt`, `top`, `sweater`, `sweatshirt` | `tops` | Disabled; no visual/product validation |
+| `jeans`, `trousers`, `shorts`, `skirt` | `bottoms` | Disabled; no visual/product validation |
+| `dress` | `one-pieces` | Disabled; no visual/product validation |
+| `jacket` | None | Unsupported pending evidence |
+| Unknown or unmapped class | None | Unsupported |
 
-The archived `bo6_vton_category_mapping.csv` maps candidate dataset labels and marks mapped apparel rows “Candidate single garment; inspect images”. It supports the table above as a starting point, not a validated BO6 taxonomy mapping: no human validation of these exact BO6 prediction classes is recorded. The model may predict a class unfit for VTON. The user must review the category, and an unmapped item cannot be submitted for try-on until a supported policy is agreed. Jackets are not automatically eligible until their compatibility is established. No taxonomy change is authorized by this audit.
+Garments record `garment_photo_type` as user-confirmed `flat-lay` or `model`. A candidate category supports only the mock workflow contract; it does not mean real-inference eligibility. The mock preview performs no generation and does not estimate fit.
 
-## Garment additions needed by BO7
+## Person-photo and job API (implemented mock contract)
 
-- Add a reviewable garment photo type with values `flat-lay` or `model`, persisted with the shared garment and exposed to the owner.
-- Keep the BO6 class, confirmed attributes, original image reference, prediction/quality snapshots, and provenance. Keep an explicit FASHN category mapping separate from the BO6 taxonomy.
-- Ensure person photo and garment image are private objects with owner checks, opaque keys, and a documented deletion lifecycle.
+Routes are owner-scoped and require explicit consent before photo upload:
 
-## Try-on submission and job contract (to design in Phase 2+)
-
-- Accept only a garment and person-photo reference owned by the caller, an allowed mapped FASHN category, explicit photo-upload consent, and an idempotency key.
-- Preserve the existing mock API v1 idempotency behavior and structured error envelope after the mock API is inspected; no such API was found in this checkout.
-- Persist owner/input references, garment ID/photo type, model/revision, effective settings, input SHA-256 hashes, timings, peak GPU memory, state, errors, and private output key.
-- Use states `queued`, `running`, `succeeded`, `failed`, `timed_out`, `cancelled`. Report named states; do not invent percentage progress.
-- Defaults requested by the task: pretrained FASHN VTON v1.5, float16, 15 steps, guidance 1.5, seed 42, `segmentation_free=true`, `num_samples=1`. Reject real inference if dtype/provider verification fails. Mock mode remains GPU-free.
-- The worker is a separate process/service, loads the model once when feasible, serializes GPU inference initially, verifies pose ONNX providers use CUDA, and enforces killable process timeouts.
+- `POST /person-photos`, `GET /person-photos`, `GET /person-photos/{id}/image`, `DELETE /person-photos/{id}`.
+- `POST /try-on/jobs` accepts a reviewed garment ID and person-photo ID, with an `Idempotency-Key`. `GET /try-on/jobs`, `GET /try-on/jobs/{id}`, and `GET /try-on/jobs/{id}/result` provide history/status/private result. `POST /try-on/jobs/{id}/cancel` requests cancellation; `DELETE /try-on/jobs/{id}` deletes the job and dependent result.
+- Job states are `queued`, `running`, `succeeded`, `failed`, `timed_out`, `cancelled`. The mock output is a labelled contact sheet of the two inputs; it is not a generated outfit, fit estimate or body measurement.
+- Mode is stored in each job. `VTON_MODE=real` currently rejects submission with `real_vton_unavailable`; it never substitutes a mock output. The worker currently routes only `run_mock_job`.
+- Same owner/key/request returns the same job; reusing a key for different inputs returns 409. The database has an owner/key unique constraint. A transactional outbox covers the database/Redis publication gap. Reconciliation handles missing queue deliveries and stale worker leases; claims/publication use conditional state changes and attempt tokens. Retries are bounded. This behavior has contract tests, but live Redis/RQ recovery has not been exercised.
+- Job creation snapshots garment revision, inputs, hashes, photo consent version and effective mock settings. Workers recheck owner/input/consent references and cancellation before publishing. Result/image reads are private and no-store.
 
 ## Privacy and deletion
 
-Require explicit consent before person-photo upload. Keep generated previews and person photos private and owner-scoped. A future deletion implementation must define behavior for queued jobs (cancel and delete inputs), running jobs (terminate or mark cancellation and clean artifacts), completed jobs (delete result and its private file), and account deletion (remove or anonymize all owned records and files in a documented order). No such lifecycle exists yet.
+- Cookie-authenticated unsafe requests require the session-bound CSRF token and an allowlisted Origin. Session cookies are HttpOnly, SameSite=Lax and Secure in production. Credentials are Argon2id-hashed; session and CSRF secrets are stored hashed. The SPA retains the CSRF token only in `sessionStorage`, not a bearer access token.
+- Account, garment, person-photo and job deletions revoke database access first, delete job/attempt/outbox children in dependency order, and queue private-file cleanup. If file removal fails, the API returns `202 deletion_queued`; a cleanup worker retries from durable storage-deletion records.
+- Local backend tests enable SQLite foreign-key enforcement and cover account, garment, photo and job deletion. Live PostgreSQL deletion behavior and concurrent deletion races remain unverified.
+
+## Real FASHN and avatar contracts still open
+
+- Selected candidate: pretrained FASHN VTON v1.5; requested profile is float16, 15 steps, guidance 1.5, seed 42, `segmentation_free=true`, `num_samples=1`. The inspected frozen source uses float32/BF16 and does not satisfy strict FP16. No application adapter or verified CUDA pose provider is present; real mode remains disabled.
+- Before Gate B, verify exact source/model revisions, license terms, component precision, CUDA execution, finite output, private output handling, process-level timeout/recovery and representative consented result quality. Do not infer GPU readiness from an advertised provider or hardware inventory.
+- Hybrid Avatar V1.4 source/material has not been found. Automatic photo initialization, neutral user correction, avatar persistence, downstream compatibility and intended DressMe use remain mandatory Gate C requirements, not implemented contracts.
+
+## Verification scope
+
+Backend unit tests use isolated SQLite, explicit BO6 mocks and a fake queue; BO6 has its own local regression suite. Offline PostgreSQL DDL generation and Compose configuration validation pass. None of these proves PostgreSQL, Redis/RQ, BO6/Compose service startup, browser end-to-end behavior, real FASHN output or avatar use. Exact latest commands and outcomes are in `AUTONOMOUS_EXECUTION_REPORT.md`.

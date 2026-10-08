@@ -1,9 +1,138 @@
 services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
   ml-service:
     build:
       context: ./ml-service
-    ports:
-      - "${ML_PORT:-8001}:8000"
+    expose:
+      - "8000"
     environment:
       MODEL_BUNDLE_DIR: /srv/ml-service/bundle
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
     restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in .env}
+      FRONTEND_ORIGINS: ${FRONTEND_ORIGINS:-http://localhost:8080}
+      BO6_SERVICE_URL: http://ml-service:8000
+      STORAGE_PATH: /srv/data/private-images
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-10485760}
+      MAX_IMAGE_PIXELS: ${MAX_IMAGE_PIXELS:-40000000}
+      PENDING_UPLOAD_TTL_SECONDS: ${PENDING_UPLOAD_TTL_SECONDS:-3600}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      VTON_MODE: ${VTON_MODE:-mock}
+      MAX_PERSON_PHOTOS: ${MAX_PERSON_PHOTOS:-10}
+      MAX_OUTSTANDING_JOBS: ${MAX_OUTSTANDING_JOBS:-3}
+      MAX_QUEUED_JOBS: ${MAX_QUEUED_JOBS:-200}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - "8000"
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - private_images:/srv/data/private-images
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/ || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  tryon-dispatcher:
+    build:
+      context: ./backend
+    command: ["python", "-m", "app.tryon.dispatcher"]
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in .env}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      STORAGE_PATH: /srv/data/private-images
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - private_images:/srv/data/private-images
+    restart: unless-stopped
+
+  tryon-worker:
+    build:
+      context: ./backend
+    command: ["python", "-m", "app.tryon.worker"]
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in .env}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      STORAGE_PATH: /srv/data/private-images
+      VTON_MODE: ${VTON_MODE:-mock}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - private_images:/srv/data/private-images
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  private_images:
+  redis_data:
