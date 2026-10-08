@@ -1,54 +1,49 @@
 # Repository audit — Phase 0
 
-Audit date: 2026-10-08. Scope: local checkout at `D:\5eme\DressMe\Projet_DressMe`.
+Audit date: 2026-10-08. Scope: `D:\5eme\DressMe\Projet_DressMe` and public GitHub repository `aymendhieb02/DressMe`.
 
-## Git and remote
+## Git and publication state
 
-- The project directory was not a Git repository: `git rev-parse --show-toplevel`, `git status`, `git branch`, `git log`, and `git remote` all reported “not a git repository”. There is no local history, branch, origin, or dirty-worktree state to preserve.
-- The configured HTTPS proxy points at `127.0.0.1:9`; `git ls-remote --heads https://github.com/aymendhieb02/DressMe.git` failed to connect to that proxy. The GitHub page fetch also failed in the available web cache. Remote emptiness, branch list, and repository metadata therefore remain **unverified**.
-- `gh` is not installed. Git identity is configured as `aymendhieb02` / `aymen.dhieb@gmail.com`, but that does not establish GitHub authentication.
-- No remote was changed and nothing was pushed. Creating or pushing `main`/`BO7` before checking remote branches could create an unrelated history or collide with existing work. Revisit Git initialization and branch publication after remote access is restored.
+- The initial checkout had no `.git` directory. A local repository was initialized with baseline commit `ea83c5d`; BO7 documentation commits `2cceb2d` and `b36d806` preserve the Phase 0 handoff, audit, contracts, and roadmap.
+- Shared source commit `63d1904` is on local `main` and `feature/bo6-implementation`. It tracks BO6 service source/configuration and tests, plus BO6/BO7 reports, one BO6 notebook, two small BO7 inference ZIPs, and the extracted FASHN source package. The package contains source and licenses; private FASHN model weights are not tracked. These research artifacts were present in the source commit and must be treated as part of the public baseline.
+- Local `BO7` contains the existing BO7 documentation commits plus a non-fast-forward merge commit `36ab05c` integrating `main`. `main` does not contain BO7-specific documentation; BO7 is not merged into main.
+- The remote is `https://github.com/aymendhieb02/DressMe.git`. A process-scoped no-proxy retry successfully reached GitHub. Current remote refs observed with `git ls-remote --heads origin` are `main` and `feature/bo6-implementation`, both at `63d1904`. The earlier zero-branch report is stale. There is no remote `BO7` ref in the latest observed listing.
+- Git-specific and general proxy variables were present in the process environment, all pointing to `127.0.0.1:9`; Git config itself had no HTTP proxy. Temporarily clearing the process proxy variables and using `git -c http.proxy= -c https.proxy= ...` worked. No global network settings were changed.
+- GitHub CLI is unavailable. Git Credential Manager is configured as a credential helper, but its GitHub authentication status has not yet been established. An anonymous read of public refs does not establish push access.
 
-## Confirmed application components
+## Application components now tracked on `main`
 
-| Area | Present and verified | Absent in this checkout |
-|---|---|---|
-| BO6 inference | `ml-service/app/` FastAPI service; `/health`, `/analyze`, `/describe`; Pillow format/content checks; structured errors; bundle checksum verification; one CPU `GarmentDescriber` loaded at startup; lock serializes predictions | User-facing review flow, application API, garment persistence, account ownership |
-| BO6 model | `ml-service/bundle/` contains classifier and attribute code/configuration, taxonomy, deterministic description, quality checks and weights; bundle is checked by `checksums.json` | Evaluation on real phone photos; calibrated scores or human-verified taxonomy |
-| BO6 tests | Five pytest files cover analyze, health, describe, concurrency, startup/checksum behavior | No frontend or application integration tests |
-| BO6 source material | Reports, notebook, result/model archives under `BO6 — Smart Wardrobe Digitization/` | These materials are not the deployed service and are excluded from Git by the Phase 0 ignore rules |
-| BO7 research | Several VTON archives and reports under `BO7 — Try-On/`; archived FASHN standalone source bundle includes a model card, licence notes, smoke-test tooling and settings | BO7 application API, job queue, worker integrated into DressMe, persistent jobs/results, UI |
-| Frontend | None found; no React, TypeScript, Vite, or package manifest | Entire shared frontend |
-| Shared backend/auth | None found; no FastAPI application backend, user/session code, or application APIs | Shared authentication and orchestration |
-| Database | No PostgreSQL configuration, SQLAlchemy models, or Alembic migrations found | Shared persistence |
-| Storage | No shared private storage abstraction found | Owner-checked uploads and private file serving |
-| Infrastructure | Root `docker-compose.yml` has only `ml-service`, published at configurable host port 8001; service Dockerfile uses Python 3.11 and runs one Uvicorn worker | Frontend/backend/PostgreSQL/queue/worker stack; internal-only ML topology |
+| Area | Verified state |
+|---|---|
+| BO6 inference | `ml-service/app/` FastAPI service; `GET /health`, `POST /analyze`, `POST /describe`; image validation; structured errors; checksum verification; one CPU `GarmentDescriber` loaded at startup; prediction calls serialized with a lock |
+| BO6 model source | `ml-service/bundle/` includes classifier/attribute source, deterministic description and quality code, taxonomy/configuration, manifest, and a synthetic parity fixture. The two trained checkpoints are excluded from Git. |
+| BO6 tests | Five pytest files cover analyze, health, describe, concurrency, and startup/checksum behavior. The service suite passes locally with the checkpoints present. |
+| Infrastructure | Root Compose file contains only the BO6 ML service and publishes its diagnostic port on host port 8001. Dockerfile uses Python 3.11 and runs a single Uvicorn worker. |
+| BO7 research source | `BO7 — Try-On/AvatarProfile/dressme_bo7_fashn_inference_v1/` contains standalone pretrained FASHN v1.5 source, upstream source/license notes, settings, and smoke-test tooling. It is not integrated into the DressMe application or a worker. |
+| Shared app | No React/Vite frontend, shared application backend/auth, PostgreSQL, SQLAlchemy/Alembic, or private storage abstraction exists. |
 
-## BO6 interface details to preserve
+The current BO6 taxonomy is `dressme-v0.2`: `dress`, `jacket`, `jeans`, `shirt`, `shorts`, `skirt`, `sweater`, `sweatshirt`, `t-shirt`, `top`, `trousers`. `/describe` rejects `other`. Scores are uncalibrated and user review is required.
 
-- `/health` returns `status`, `model_version`, `taxonomy_version`, `description_version`, and `quality_version`.
-- `/analyze` accepts multipart `image`, JPEG/PNG/WEBP, up to 10 MiB, and returns `{quality, prediction}`. Quality is advisory; prediction scores are explicitly uncalibrated softmax values and require user review.
-- `/describe` accepts `{confirmed: {category, color, pattern, sleeve_length}}`, rejects extra fields and unsupported values, and returns deterministic description text, fields, provenance and schema version.
-- Taxonomy version is `dressme-v0.2`; its 11 categories are `dress`, `jacket`, `jeans`, `shirt`, `shorts`, `skirt`, `sweater`, `sweatshirt`, `t-shirt`, `top`, `trousers`. `other` is not accepted by the ML `/describe` schema.
-- The wrapper verifies model checksums at startup, creates one CPU model instance, and locks inference calls. The bundle directory is out of scope for modification.
+## Required BO6 model artifacts
 
-## BO7 package evidence and risks
+The tracked `ml-service/bundle/checksums.json` expects `model_weights.pt` and `attribute_heads.pt` at `ml-service/bundle/`. The actual files are ignored and excluded from Git. See `ml-service/ARTIFACTS.md` for approved private delivery and verification. Missing files or checksum/size mismatches fail bundle verification; Docker build's bundle self-test also fails without valid local artifacts. The exported bundle was not modified.
 
-- `BO7 — Try-On/AvatarProfile/dressme_bo7_fashn_inference_v1 (1).zip` contains a standalone FASHN v1.5 inference package; it is an archive, not an integrated service. Its private offline weights archive is present separately and must not be committed or redistributed.
-- The package README and config specify 20/30 steps, guidance 1.5, seed 42, segmentation-free true, one sample, and the three FASHN categories. This conflicts with the task's 15-step requirement.
-- The package status ledger marks manifest generation, offline weights hash round-trip, clean GPU restoration/inference, and CUDA ONNX provider verification unverified. Its model card reports limited single-person research observations; these do not establish product quality or general performance.
-- The archive's own licence note records a non-commercial human-parser restriction and incomplete verification of other model/runtime terms. Treat deployment as academic/non-commercial pending resolution.
-- The research evidence ZIP contains `bo6_vton_category_mapping.csv`; mapped rows are explicitly marked “Candidate single garment; inspect images”. It proposes tops/bottoms/one-pieces for apparel labels but does not establish human-validated mapping for the 11 deployed BO6 prediction classes. In particular, jacket-to-tops needs a product decision.
-- Hybrid Avatar V1.4 is described by the task as unvalidated on real user photos. Automatic initialization, manual editing, persistence, and product integration remain unproven and are a later feasibility milestone.
+## BO7 behavior and unresolved risks
 
-## Security and repository hygiene
+- Pretrained FASHN VTON v1.5 is the selected model. The target contract is float16, 15 steps, guidance 1.5, seed 42, segmentation-free, one sample. These settings have not been verified by a real GPU-backed smoke test.
+- The included archived config specifies 20-step preview and 30-step balanced presets. This conflicts with the 15-step target. Do not treat the included source defaults as the approved app contract.
+- The source package status says its weights manifest/export, clean GPU restoration/inference, and actual CUDA ONNX provider verification are not verified. FASHN/DWPose/human-parser licence and redistribution questions remain; a package licence note identifies a non-commercial human-parser dependency.
+- Research CSV evidence maps some garment labels to `tops`, `bottoms`, and `one-pieces` but explicitly says “Candidate single garment; inspect images”. BO6-to-FASHN mappings remain candidates pending image-based validation. Jackets are not automatically eligible until compatibility is established.
+- Hybrid Avatar V1.4 has not been validated on real user photos. Automatic initialization, manual editing, persistence, and product integration remain open feasibility questions.
+- Current `main` contains BO6/BO7 research PDFs and a BO6 notebook in addition to the application baseline. The PDFs include human-model imagery; the imagery's provenance, privacy status, and publication rights have not been fully verified. Do not publish further refs until this review is resolved.
 
-The original `.gitignore` only excluded `.env`, Python caches, virtual environments, and coverage. Phase 0 expands it to ignore local secrets, private/generated images and data, research archives, notebooks, model weights, and cache artifacts. Confirmed `.env.example` contains only `ML_PORT=8001`.
+## Privacy and ignore rules
+
+`.gitignore` covers credentials, environments, caches, datasets, local databases, personal/generated images, archives, notebooks, and model checkpoints. It keeps the synthetic `ml-service/bundle/parity_reference.npz` fixture. Ignore rules do not remove already tracked files. The two trained BO6 `.pt` files and the private offline FASHN weights archive are not in the current `main` tree.
 
 ## Verification performed
 
-- `git status --short --branch`, `git branch -avv`, `git log --oneline --decorate -12`, `git remote -v`, and `git rev-parse --show-toplevel`: no Git repository.
-- `git ls-remote --heads https://github.com/aymendhieb02/DressMe.git`: failed because configured proxy was unreachable; no branch list obtained.
-- `gh auth status` and `gh repo view ...`: unavailable because `gh` is not installed.
-- `pytest -q` from `ml-service/`: **13 passed**, one Starlette/httpx deprecation warning.
-- Python 3.11.9, pytest 9.0.2, Git 2.42.0, Docker 28.1.1 are available. No Docker build or Compose validation was run.
+- `git ls-remote --heads origin` (with process-only proxy override): remote `main` and `feature/bo6-implementation` refs observed at `63d1904`; no `BO7` ref at that time.
+- `pytest -q` in `ml-service/`: 13 passed on the local checkout; one Starlette/httpx deprecation warning.
+- `docker compose config --quiet`: pending final Phase 0 check. No image build or real inference verification is claimed.
+- The architecture handoff document was absent from the checkout and inspected archives. `ARCHITECTURE_HANDOFF.md` remains explicitly provisional.
