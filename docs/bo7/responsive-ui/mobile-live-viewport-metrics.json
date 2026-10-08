@@ -1,0 +1,173 @@
+{
+  "evidence": "local FastAPI + real BO6; synthetic fixtures; no worker result",
+  "metrics": [
+    {
+      "screen": "wardrobe",
+      "viewport": "320x800",
+      "scrollWidth": 320,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "wardrobe",
+      "viewport": "360x780",
+      "scrollWidth": 360,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "wardrobe",
+      "viewport": "390x844",
+      "scrollWidth": 390,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "wardrobe",
+      "viewport": "390x667",
+      "scrollWidth": 390,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "wardrobe",
+      "viewport": "844x390",
+      "scrollWidth": 844,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "wardrobe",
+      "viewport": "768x1024",
+      "scrollWidth": 768,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "wardrobe",
+      "viewport": "1440x1000",
+      "scrollWidth": 1440,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "garment-review",
+      "viewport": "320x800",
+      "scrollWidth": 320,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "garment-review",
+      "viewport": "360x780",
+      "scrollWidth": 360,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "garment-review",
+      "viewport": "390x844",
+      "scrollWidth": 390,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "garment-review",
+      "viewport": "390x667",
+      "scrollWidth": 390,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "garment-review",
+      "viewport": "844x390",
+      "scrollWidth": 844,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "garment-review",
+      "viewport": "768x1024",
+      "scrollWidth": 768,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "garment-review",
+      "viewport": "1440x1000",
+      "scrollWidth": 1440,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "try-on",
+      "viewport": "320x800",
+      "scrollWidth": 320,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "try-on",
+      "viewport": "360x780",
+      "scrollWidth": 360,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "try-on",
+      "viewport": "390x844",
+      "scrollWidth": 390,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "try-on",
+      "viewport": "390x667",
+      "scrollWidth": 390,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "try-on",
+      "viewport": "844x390",
+      "scrollWidth": 844,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "try-on",
+      "viewport": "768x1024",
+      "scrollWidth": 768,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    },
+    {
+      "screen": "try-on",
+      "viewport": "1440x1000",
+      "scrollWidth": 1440,
+      "horizontalOverflow": false,
+      "clippedControls": [],
+      "buttonsUnder44px": []
+    }
+  ]
+}
