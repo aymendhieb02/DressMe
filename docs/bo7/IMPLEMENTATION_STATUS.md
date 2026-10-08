@@ -1,24 +1,44 @@
 # BO7 implementation status
 
-Last updated: 2026-10-08.
+Last updated: 2026-10-08. Active branch: `feature/bo7-autonomous-mvp`.
 
-## Phase 0 — PARTIALLY COMPLETE
+## Current checkpoint
 
-- **Local shared baseline:** `main` points to `63d1904`, containing BO6 service source/tests/configuration and BO7 FASHN source. The baseline also tracks research PDFs, a BO6 notebook, and small research ZIPs; the PDFs contain human-model imagery whose provenance/privacy/publication rights remain under review.
-- **BO7 integration:** Local branch `BO7` preserves its documentation commits and includes merge commits `36ab05c` and `b14d2b2` integrating `main`. The remote `BO7` branch was absent at the last read-only check.
-- **Remote:** At the last read-only check, public refs were `main` and `feature/bo6-implementation`, both at `63d1904`. Local `main` was `4c0ff9c`; local `BO7` was `b14d2b2` before this status update.
-- **Connectivity:** A temporary process-scoped no-proxy Git request worked. GitHub CLI is absent. Git Credential Manager 2.3.2 is installed, but no stored GitHub credential was found; push and interactive GCM login could not complete in this environment.
-- **BO6 tests:** `pytest -q` in `ml-service/` passed 13 tests after restoring the bundle byte-for-byte, with one deprecation warning. Both matching model checkpoint files are present locally but excluded from Git.
-- **Architecture handoff:** Original source not found in the checkout or inspected archives. The committed handoff record is explicitly provisional.
-- **BO7 runtime:** Pretrained FASHN VTON v1.5 source package is present, but no unified-app BO7 API/worker is implemented. Task target is 15 steps with float16, guidance 1.5, seed 42, segmentation-free, one sample; real GPU execution, CUDA pose providers, and this target configuration are unverified. The archived source config's 20/30-step presets conflict with the target.
-- **Category mapping:** Research mappings remain candidates pending image-based validation. Jackets are blocked from try-on by default until compatibility is established.
-- **Hybrid Avatar:** V1.4 validation on real user photos remains pending; automatic initialization, manual editing, persistence, and product integration are not proven.
+- Start/end revision for this checkpoint: `ad4f8fa` (M0 documentation only; implementation work is next).
+- Working tree was clean at inspection. The requested implementation branch already exists and is checked out.
+- Baseline: `pytest -q` from `ml-service/` — **13 passed**, one Starlette/httpx deprecation warning. `docker compose config --quiet` — **passed**. Docker client reports 28.1.1 but no engine/server is available, so no service startup was verified.
+- Host inspection found an NVIDIA GeForce RTX 3050 Laptop GPU with 4096 MiB and driver 576.88. This is an inventory fact, not evidence that FASHN fits or runs.
+- No `AGENTS.md` applies in the repository or its checked parent directories.
 
-## Remaining Phase 0 gates
+## Milestones
 
-1. Complete local GitHub sign-in, then publish the updated `main` and local `BO7`; verify remote head hashes and upstream tracking.
-2. Track the unresolved Kaggle catalog image redistribution terms before adding more dataset-derived images to the public repository.
+| Milestone | Status | Evidence / scope |
+|---|---|---|
+| M0 baseline and contract inventory | VERIFIED (inspection and local baseline only) | Commands and limits in `AUTONOMOUS_EXECUTION_REPORT.md`; BO6 suite and Compose configuration only. No integrated-app runtime exists yet. |
+| M1 API, database, shared authentication | NOT STARTED | No backend, migrations, or shared authentication existed at M0. |
+| M2 private wardrobe vertical slice | NOT STARTED | No application wardrobe or private storage existed at M0. |
+| M3 person-photo consent and mock worker | NOT STARTED | No job API, broker, worker, or mock adapter existed at M0. Archived mock contract was not located in inspected repository/archive filenames. |
+| M4 unified frontend | NOT STARTED | No React/Vite app existed at M0. |
+| M5 Gate A integration | NOT STARTED | Docker engine unavailable at M0; no integrated stack existed. |
+| M6 real FASHN / Gate B | BLOCKED (runtime verification) | Local 4 GiB GPU and a private 2.55 GB weights archive are present; strict profile, verified manifest-to-archive match, real GPU inference, CUDA ONNX providers and output quality are not established. Keep real mode disabled. |
+| M7 Hybrid Avatar / Gate C | BLOCKED (source evidence) | No Hybrid Avatar V1.4 material was found in the checked repository or archive filenames. No automatic initializer, correction/persistence flow or validated downstream use is established. |
+| M8 final QA and handoff | NOT STARTED | Depends on implementation and infrastructure. |
 
-## Smallest Phase 1 task
+## Feature matrix
 
-Validate the BO6-to-FASHN category mapping against actual garment images and record an explicit eligibility decision for each of the 11 BO6 classes. Keep jackets ineligible until compatibility is established. Do not start shared backend implementation in this Phase 0 task.
+| Feature | Implementation | Verification |
+|---|---|---|
+| BO6 classifier and description service | Existing separate service | 13-test local suite passes; checkpoint files are local and ignored; not container-started in this environment. |
+| Mock VTON | Not implemented | Not verified. |
+| Real VTON | Standalone candidate source only | Not verified; real mode must remain disabled. |
+| Automatic avatar initialization | Not implemented / source not located | Not verified. |
+| Avatar correction | Not implemented | Not verified. |
+| Avatar persistence | Not implemented | Not verified. |
+| Intended avatar product use | Not defined by inspected artifact | Not verified. |
+| Deployment | Not performed | Not verified. |
+
+Overall BO7 verdict: **INCOMPLETE**. No acceptance gate A, B, or C has passed.
+
+## Current blockers and next action
+
+Continue with M1 on `feature/bo7-autonomous-mvp`: application API, PostgreSQL models/migration, server-side sessions, CSRF protection, safe errors, health endpoints, and a typed BO6 HTTP client. Keep API imports independent of Torch/FASHN. Docker-backed PostgreSQL/startup evidence depends on an available Docker engine. Preserve BO6 and all private model assets.
