@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from ..database import SessionLocal
 from ..models import Garment, PersonPhoto, StorageDeletion, TryOnAttempt, TryOnJob, utcnow
 from ..storage.local_disk import LocalPrivateStorage
+from .adapters import MOCK_ADAPTER, UNSUPPORTED_ADAPTER, supports_mock_profile
 
 
 def _claim(job_id: UUID, session_factory: sessionmaker) -> tuple[UUID, dict] | None:
@@ -34,7 +35,7 @@ def _claim(job_id: UUID, session_factory: sessionmaker) -> tuple[UUID, dict] | N
         db.add(TryOnAttempt(job_id=job_id, attempt_number=number, attempt_token=token, state="running"))
         db.commit()
         job = db.get(TryOnJob, job_id)
-        return token, {"user_id": job.user_id, "input": dict(job.input_snapshot), "settings": dict(job.settings_snapshot)}
+        return token, {"user_id": job.user_id, "mode": job.mode, "input": dict(job.input_snapshot), "settings": job.settings_snapshot}
 
 
 def _mock_preview(person_bytes: bytes, garment_bytes: bytes) -> bytes:
@@ -90,7 +91,7 @@ def _publish(job_id: UUID, token: UUID, result_key: str, session_factory: sessio
                 result_key=result_key,
                 result_metadata={
                     "mode": "mock",
-                    "adapter": "mock-preview-v1",
+                    "adapter": MOCK_ADAPTER,
                     "notice": "Workflow preview only. No virtual try-on model ran.",
                 },
                 active_attempt_token=None,
@@ -123,6 +124,9 @@ def process_mock_job(job_id: str, session_factory: sessionmaker = SessionLocal, 
     if claim is None:
         return
     token, snapshot = claim
+    if not supports_mock_profile(snapshot["mode"], snapshot["settings"]):
+        _fail(parsed_id, token, UNSUPPORTED_ADAPTER, session_factory)
+        return
     private_storage = storage or LocalPrivateStorage()
     result_key = None
     try:

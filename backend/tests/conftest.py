@@ -10,10 +10,13 @@ from sqlalchemy.pool import StaticPool
 from app.database import Base, get_db
 from app import models  # noqa: F401
 from app.main import app
+from app.auth import rate_limit
 
 
 @pytest.fixture
-def client():
+def client(monkeypatch):
+    # Each API fixture has its own database and abuse-guard state, with real limits.
+    monkeypatch.setattr(rate_limit, "login_limiter", rate_limit.LoginLimiter())
     engine = create_engine(
         "sqlite+pysqlite:///:memory:",
         connect_args={"check_same_thread": False},

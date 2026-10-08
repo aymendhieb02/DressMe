@@ -112,3 +112,14 @@ def test_account_deletion_requires_csrf_password_and_confirmation(client, origin
     assert deleted.status_code == 204
     assert "dressme_session" in deleted.headers.get("set-cookie", "")
     assert client.get("/auth/me").status_code == 401
+
+
+def test_authentication_rate_limit_remains_enforced_in_isolated_fixture(client, origin):
+    from app.config import get_settings
+
+    assert register(client, "limited@example.com", origin).status_code == 201
+    for _ in range(get_settings().login_limit_count - 1):
+        assert register(client, "limited@example.com", origin).status_code == 409
+    blocked = register(client, "limited@example.com", origin)
+    assert blocked.status_code == 429
+    assert blocked.json()["error"]["code"] == "rate_limited"
