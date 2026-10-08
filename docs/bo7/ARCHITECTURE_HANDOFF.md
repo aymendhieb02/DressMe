@@ -17,7 +17,7 @@
 1. The archived standalone FASHN package declares 20-step preview and 30-step balanced presets, whereas the task brief requires 15 steps. Do not wire the archived defaults into an API until the owner confirms the frozen contract; Phase 0 records the task brief's 15-step requirement as the requested target.
 2. The archive's status ledger says the weight manifest, clean-worker restoration, real smoke test, and ONNX provider verification are not verified. No production or GPU readiness claim follows from the bundle's presence.
 3. The archive's licence audit identifies a non-commercial NVIDIA SegFormer source licence in the human-parser dependency and says other model/deployment terms remain incompletely verified. Keep the prototype non-commercial and do not redistribute private weights.
-4. BO6 categories do not map one-to-one to FASHN categories. Define and validate a mapping against confirmed BO6 garments; reject unsupported categories instead of guessing.
+4. The research evidence ZIP contains a candidate mapping CSV, but its mapped rows still require image inspection. Validate the mapping against the actual BO6 taxonomy and confirmed garments; jacket-to-`tops` needs a product decision. Reject unsupported categories instead of guessing.
 5. The root BO6 roadmap proposes the shared backend, auth, PostgreSQL, SQLAlchemy/Alembic, and private storage, but those components do not exist in this checkout.
 
 ## Required follow-up

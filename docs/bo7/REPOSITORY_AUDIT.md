@@ -38,6 +38,7 @@ Audit date: 2026-10-08. Scope: local checkout at `D:\5eme\DressMe\Projet_DressMe
 - The package README and config specify 20/30 steps, guidance 1.5, seed 42, segmentation-free true, one sample, and the three FASHN categories. This conflicts with the task's 15-step requirement.
 - The package status ledger marks manifest generation, offline weights hash round-trip, clean GPU restoration/inference, and CUDA ONNX provider verification unverified. Its model card reports limited single-person research observations; these do not establish product quality or general performance.
 - The archive's own licence note records a non-commercial human-parser restriction and incomplete verification of other model/runtime terms. Treat deployment as academic/non-commercial pending resolution.
+- The research evidence ZIP contains `bo6_vton_category_mapping.csv`; mapped rows are explicitly marked “Candidate single garment; inspect images”. It proposes tops/bottoms/one-pieces for apparel labels but does not establish human-validated mapping for the 11 deployed BO6 prediction classes. In particular, jacket-to-tops needs a product decision.
 - Hybrid Avatar V1.4 is described by the task as unvalidated on real user photos. Automatic initialization, manual editing, persistence, and product integration remain unproven and are a later feasibility milestone.
 
 ## Security and repository hygiene

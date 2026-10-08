@@ -17,12 +17,11 @@ These contracts are requirements for future shared application work, not impleme
 
 | BO6 category | Proposed FASHN category | Status |
 |---|---|---|
-| `t-shirt`, `shirt`, `top`, `sweater`, `sweatshirt` | `tops` | Candidate mapping; confirm in Phase 1 |
+| `t-shirt`, `shirt`, `top`, `sweater`, `sweatshirt`, `jacket` | `tops` | Research evidence maps Tshirts/Shirts/Tops/Sweaters/Sweatshirts/Jackets to `tops`; each row is marked “Candidate single garment; inspect images”, so the mapping is not validated for product use |
 | `jeans`, `trousers`, `shorts`, `skirt` | `bottoms` | Candidate mapping; confirm in Phase 1 |
-| `dress` | `one-pieces` | Candidate mapping; confirm in Phase 1 |
-| `jacket` | None yet | Layering semantics unsupported; do not guess |
+| `dress` | `one-pieces` | Research evidence maps Dresses to `one-pieces`, still marked for image inspection |
 
-The BO6 model may predict a class unfit for VTON. The user must review the category, and an unmapped item cannot be submitted for try-on until a supported policy is agreed. No taxonomy change is authorized by this audit.
+The archived `bo6_vton_category_mapping.csv` maps candidate dataset labels and marks mapped apparel rows “Candidate single garment; inspect images”. It supports the table above as a starting point, not a validated BO6 taxonomy mapping: no human validation of these exact BO6 prediction classes is recorded. The model may predict a class unfit for VTON. The user must review the category, and an unmapped item cannot be submitted for try-on until a supported policy is agreed. Jacket-to-`tops` semantics need explicit confirmation because jackets are often outer layers. No taxonomy change is authorized by this audit.
 
 ## Garment additions needed by BO7
 
