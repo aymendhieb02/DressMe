@@ -1,0 +1,98 @@
+{
+  "val_macro_f1": 0.8881509321800766,
+  "val_weighted_f1": 0.9321721154914236,
+  "val_accuracy": 0.9316017316017317,
+  "val_top2_accuracy": 0.9922077922077922,
+  "val_min_class_f1": 0.7708333333333334,
+  "best_epoch": 8.0,
+  "latency_cpu_ms": 28.21,
+  "latency_gpu_ms": 7.9,
+  "params": 4021639.0,
+  "split": "catalog validation",
+  "per_class": {
+    "dress": {
+      "precision": 0.863,
+      "recall": 0.9403,
+      "f1-score": 0.9,
+      "support": 67.0
+    },
+    "jacket": {
+      "precision": 0.8649,
+      "recall": 0.8421,
+      "f1-score": 0.8533,
+      "support": 38.0
+    },
+    "jeans": {
+      "precision": 0.9667,
+      "recall": 0.956,
+      "f1-score": 0.9613,
+      "support": 91.0
+    },
+    "shirt": {
+      "precision": 0.9707,
+      "recall": 0.9748,
+      "f1-score": 0.9727,
+      "support": 476.0
+    },
+    "shorts": {
+      "precision": 0.9205,
+      "recall": 0.9759,
+      "f1-score": 0.9474,
+      "support": 83.0
+    },
+    "skirt": {
+      "precision": 1.0,
+      "recall": 0.7143,
+      "f1-score": 0.8333,
+      "support": 21.0
+    },
+    "sweater": {
+      "precision": 0.8421,
+      "recall": 0.7619,
+      "f1-score": 0.8,
+      "support": 42.0
+    },
+    "sweatshirt": {
+      "precision": 0.6852,
+      "recall": 0.881,
+      "f1-score": 0.7708,
+      "support": 42.0
+    },
+    "t-shirt": {
+      "precision": 0.9672,
+      "recall": 0.9453,
+      "f1-score": 0.9561,
+      "support": 1061.0
+    },
+    "top": {
+      "precision": 0.7875,
+      "recall": 0.8175,
+      "f1-score": 0.8022,
+      "support": 263.0
+    },
+    "trousers": {
+      "precision": 0.9685,
+      "recall": 0.9762,
+      "f1-score": 0.9723,
+      "support": 126.0
+    },
+    "accuracy": {
+      "precision": 0.9316,
+      "recall": 0.9316,
+      "f1-score": 0.9316,
+      "support": 0.9316
+    },
+    "macro avg": {
+      "precision": 0.8942,
+      "recall": 0.8896,
+      "f1-score": 0.8882,
+      "support": 2310.0
+    },
+    "weighted avg": {
+      "precision": 0.934,
+      "recall": 0.9316,
+      "f1-score": 0.9322,
+      "support": 2310.0
+    }
+  }
+}

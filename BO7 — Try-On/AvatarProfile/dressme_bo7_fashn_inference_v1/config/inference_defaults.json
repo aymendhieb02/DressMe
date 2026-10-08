@@ -1,0 +1,28 @@
+{
+  "_comment": "Frozen BO7 inference baseline. Pretrained FASHN VTON v1.5 only. These are the values used in the Phase 3/3b/4A experiments (seed/guidance/segmentation_free = FASHN repo defaults).",
+  "model": "fashn-vton-1.5",
+  "weights_origin": "pretrained, NOT trained by DressMe",
+  "default_preset": "preview",
+  "presets": {
+    "preview":  {"num_timesteps": 20, "note": "development/default preview; 20-step C results looked indistinguishable from 30 on 4 comparisons (1 person) - see MODEL_CARD"},
+    "balanced": {"num_timesteps": 30, "note": "FASHN default; kept as alternative"}
+  },
+  "guidance_scale": 1.5,
+  "seed": 42,
+  "num_samples": 1,
+  "segmentation_free": true,
+  "garment_photo_type_default": "model",
+  "garment_photo_type_note": "Must be set per garment image: 'model' (worn) or 'flat-lay'. 'model' was used for all Myntra experiments.",
+  "categories": ["tops", "bottoms", "one-pieces"],
+  "person_input": {
+    "default": "original",
+    "candidate": "tight_crop_3x4",
+    "note": "tight_crop_3x4 is the leading experimental candidate, NOT a proven winner (1 person, visual, seed-dependent)"
+  },
+  "human_parser": {
+    "source": "fashn-ai/fashn-human-parser",
+    "package": "fashn-human-parser==0.1.1",
+    "local_dir_in_weights": "human_parser",
+    "note": "Upstream loads it from the HF hub by name with no revision pin; this package pins a revision and loads it from a local directory."
+  }
+}

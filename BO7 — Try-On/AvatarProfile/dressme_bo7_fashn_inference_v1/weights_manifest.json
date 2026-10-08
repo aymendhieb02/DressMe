@@ -1,0 +1,69 @@
+{
+  "schema": "dressme.weights_manifest/1",
+  "created_at_utc": "2026-10-08T04:18:14.963443+00:00",
+  "weights_origin": "pretrained third-party weights (FASHN AI); NOT trained or fine-tuned by DressMe",
+  "files": {
+    "model.safetensors": {
+      "sha256": "d6cd38286885bc29fa487ea9383f80ffeb95862e7747c630d42c5d3c05bdd35a",
+      "size": 1943668048
+    },
+    "dwpose/yolox_l.onnx": {
+      "sha256": "7860ae79de6c89a3c1eb72ae9a2756c0ccfbe04b7791bb5880afabd97855a411",
+      "size": 216746733
+    },
+    "dwpose/dw-ll_ucoco_384.onnx": {
+      "sha256": "724f4ff2439ed61afb86fb8a1951ec39c6220682803b4a8bd4f598cd913b1843",
+      "size": 134399116
+    },
+    "human_parser/.gitattributes": {
+      "sha256": "bada87ab0fbcf3e833dd13a1b4c0ac41f48cd06fd564548e8f46b665d1bb052c",
+      "size": 1562
+    },
+    "human_parser/README.md": {
+      "sha256": "e23eb885bde6f74b89cb0b9733287e566b9e169eea3a15f99ea2ffa951ebc721",
+      "size": 4929
+    },
+    "human_parser/config.json": {
+      "sha256": "87bd5b66419dbfa7c02cfbeb94e292454863b1606c5df29526b19a6c1de70d9f",
+      "size": 1654
+    },
+    "human_parser/model.safetensors": {
+      "sha256": "e43c8c8a9b04f28798f0a4630cf18caa2cdb27a0d454fae43a5716e6f7078244",
+      "size": 256146352
+    },
+    "human_parser/preprocessor_config.json": {
+      "sha256": "54007eb4cedae02565c4f035750aeebe3ddc53d36ab575e8534615623e6b6225",
+      "size": 340
+    }
+  },
+  "sources": {
+    "model.safetensors": {
+      "hf_repo": "fashn-ai/fashn-vton-1.5",
+      "revision": "7720683168567eb5a2a4c67f15116c6e29c83ded",
+      "etag": "d6cd38286885bc29fa487ea9383f80ffeb95862e7747c630d42c5d3c05bdd35a"
+    },
+    "dwpose/yolox_l.onnx": {
+      "hf_repo": "fashn-ai/DWPose",
+      "revision": null,
+      "etag": null,
+      "note": "no hub metadata found; revision unknown"
+    },
+    "dwpose/dw-ll_ucoco_384.onnx": {
+      "hf_repo": "fashn-ai/DWPose",
+      "revision": null,
+      "etag": null,
+      "note": "no hub metadata found; revision unknown"
+    },
+    "human_parser/*": {
+      "hf_repo": "fashn-ai/fashn-human-parser",
+      "revision": "1f80c34dbab321c5730dda5c3fea279fd3e97498"
+    }
+  },
+  "fashn_source": {
+    "commit": "7c0f10af3f91ad4048fe9729c470a13ef905d25a",
+    "remote": "https://github.com/fashn-AI/fashn-vton-1.5.git",
+    "commit_date": "2026-02-01T23:30:28+01:00",
+    "dirty": false
+  },
+  "human_parser_package": "fashn-human-parser==0.1.1 (PyPI wheel sha256 3d84a1959148d29f169ed78aa46b9ae8562e7df3f22465cc8f599adc8fdc04b8)"
+}

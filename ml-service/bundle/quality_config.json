@@ -1,0 +1,26 @@
+{
+  "version": "quality-v0.1",
+  "analysis_long_side": 512,
+  "status": "provisional: calibrated on catalog validation images and synthetic degradations, not on phone photos",
+  "thresholds": {
+    "min_side_px": 224,
+    "blur_sharpness_below": 13.84,
+    "dark_mean_below": 50.0,
+    "dark_p95_below": 110.0,
+    "bright_mean_above": 245.0,
+    "bright_p05_above": 200.0,
+    "low_contrast_std_below": 12.0
+  },
+  "threshold_sources": {
+    "min_side_px": "the classifier's input size",
+    "blur_sharpness_below": "geometric mean of the 5th percentile of clear and 95th percentile of blurred validation images",
+    "others": "fixed starting values, not tuned"
+  },
+  "sharpness_definition": "variance of the 4-neighbour Laplacian of the luminance, image downscaled to a 512 px long side",
+  "calibration": {
+    "n_images": 300,
+    "split": "validation",
+    "split_fingerprint": "f7f11d3ef7d2963e"
+  },
+  "limits": "cannot detect a cropped or partly hidden garment, several garments, or a wrong subject"
+}

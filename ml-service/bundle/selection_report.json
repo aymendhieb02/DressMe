@@ -1,0 +1,70 @@
+{
+  "selected": "E03_efficientnet_b0",
+  "rule": "highest validation macro-F1, then lowest CPU latency within 0.01 macro-F1",
+  "tolerance": 0.01,
+  "top_by_macro_f1": "E01_resnet18",
+  "smoke_only": false,
+  "candidates": [
+    {
+      "experiment_id": "E01_resnet18",
+      "category": "trained",
+      "val_macro_f1": 0.8922930518153332,
+      "val_min_class_f1": 0.7816091954022989,
+      "latency_cpu_ms": 30.64,
+      "params": 11182155.0
+    },
+    {
+      "experiment_id": "E02_mobilenet_v3_small",
+      "category": "trained",
+      "val_macro_f1": 0.8768197470158299,
+      "val_min_class_f1": 0.7513611615245009,
+      "latency_cpu_ms": 10.94,
+      "params": 1529131.0
+    },
+    {
+      "experiment_id": "E03_efficientnet_b0",
+      "category": "trained",
+      "val_macro_f1": 0.8881509321800766,
+      "val_min_class_f1": 0.7708333333333334,
+      "latency_cpu_ms": 28.21,
+      "params": 4021639.0
+    },
+    {
+      "experiment_id": "TUNE_resnet18_T1_ft_longer",
+      "category": "trained",
+      "val_macro_f1": 0.8882018292934233,
+      "val_min_class_f1": 0.7674418604651163,
+      "latency_cpu_ms": 30.92,
+      "params": 11182155.0
+    },
+    {
+      "experiment_id": "TUNE_resnet18_T2_lr_bb_x2",
+      "category": "trained",
+      "val_macro_f1": 0.885777477619249,
+      "val_min_class_f1": 0.7514677103718199,
+      "latency_cpu_ms": 29.57,
+      "params": 11182155.0
+    }
+  ],
+  "seed_stability": {
+    "status": "measured",
+    "experiment": "E01_resnet18",
+    "seed_a": 42,
+    "macro_f1_a": 0.8922930518153332,
+    "seed_b": 43,
+    "macro_f1_b": 0.8757216572818074,
+    "abs_difference": 0.01657139453352585
+  },
+  "review_policy": {
+    "review_threshold": 0.7,
+    "always_review": true,
+    "target_error": 0.05,
+    "validation_coverage": 0.9541125541125541,
+    "validation_error_among_accepted": 0.04990925589836659,
+    "status": "threshold measured on CATALOG validation only; scores are uncalibrated softmax; not validated on phone photos, so always_review stays True",
+    "score_type": "uncalibrated_softmax"
+  },
+  "selected_on": "catalog validation split only",
+  "split_fingerprint": "f7f11d3ef7d2963e",
+  "taxonomy_fingerprint": "923229a357d78e97"
+}

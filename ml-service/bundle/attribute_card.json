@@ -1,0 +1,447 @@
+{
+  "policy": {
+    "sleeve_length": 0.0,
+    "pattern": 0.97,
+    "color": null
+  },
+  "table": [
+    {
+      "attribute": "sleeve_length",
+      "policy": "stated if score >= 0.0",
+      "eligible garment types": "jacket, shirt, sweatshirt, t-shirt, top",
+      "eligible labelled val rows (denominator)": 1639,
+      "accuracy vs catalog": 0.9273947528981086,
+      "macro_f1 vs catalog": 0.8718140465149209,
+      "majority baseline accuracy": 0.6760219646125687,
+      "answered at policy (share of denominator)": 1.0,
+      "error among answered": 0.0726052471018914,
+      "all val images": 2310,
+      "stated": 1787,
+      "below threshold / suggestion only": 0,
+      "inapplicable garment type": 417,
+      "category withheld": 106,
+      "stated share of all val images": 0.7735930735930736
+    },
+    {
+      "attribute": "pattern",
+      "policy": "stated if score >= 0.97",
+      "eligible garment types": "dress, jacket, shirt, shorts, skirt, sweatshirt, t-shirt, top, trousers",
+      "eligible labelled val rows (denominator)": 1835,
+      "accuracy vs catalog": 0.8267029972752044,
+      "macro_f1 vs catalog": 0.8107580760461032,
+      "majority baseline accuracy": 0.42670299727520433,
+      "answered at policy (share of denominator)": 0.7253405994550409,
+      "error among answered": 0.09316303531179564,
+      "all val images": 2310,
+      "stated": 1515,
+      "below threshold / suggestion only": 569,
+      "inapplicable garment type": 120,
+      "category withheld": 106,
+      "stated share of all val images": 0.6558441558441559
+    },
+    {
+      "attribute": "color",
+      "policy": "suggestion only",
+      "eligible garment types": "dress, jacket, jeans, shirt, shorts, skirt, sweater, sweatshirt, t-shirt, top, trousers",
+      "eligible labelled val rows (denominator)": 2291,
+      "accuracy vs catalog": 0.6905281536446967,
+      "macro_f1 vs catalog": 0.6426545905685644,
+      "majority baseline accuracy": 0.17415975556525534,
+      "answered at policy (share of denominator)": 0.0,
+      "error among answered": NaN,
+      "all val images": 2310,
+      "stated": 0,
+      "below threshold / suggestion only": 2204,
+      "inapplicable garment type": 0,
+      "category withheld": 106,
+      "stated share of all val images": 0.0
+    }
+  ],
+  "detail": {
+    "sleeve_length": {
+      "per_value": {
+        "long": {
+          "precision": 0.9182,
+          "recall": 0.9357,
+          "f1-score": 0.9269,
+          "support": 420.0
+        },
+        "short": {
+          "precision": 0.9628,
+          "recall": 0.935,
+          "f1-score": 0.9487,
+          "support": 1108.0
+        },
+        "sleeveless": {
+          "precision": 0.6741,
+          "recall": 0.8198,
+          "f1-score": 0.7398,
+          "support": 111.0
+        },
+        "accuracy": {
+          "precision": 0.9274,
+          "recall": 0.9274,
+          "f1-score": 0.9274,
+          "support": 0.9274
+        },
+        "macro avg": {
+          "precision": 0.8517,
+          "recall": 0.8969,
+          "f1-score": 0.8718,
+          "support": 1639.0
+        },
+        "weighted avg": {
+          "precision": 0.9318,
+          "recall": 0.9274,
+          "f1-score": 0.929,
+          "support": 1639.0
+        }
+      },
+      "risk_coverage": [
+        {
+          "threshold": 0.0,
+          "coverage_of_eligible_labelled": 1.0,
+          "error_among_answered": 0.0726
+        },
+        {
+          "threshold": 0.5,
+          "coverage_of_eligible_labelled": 0.9994,
+          "error_among_answered": 0.0726
+        },
+        {
+          "threshold": 0.7,
+          "coverage_of_eligible_labelled": 0.9689,
+          "error_among_answered": 0.0605
+        },
+        {
+          "threshold": 0.9,
+          "coverage_of_eligible_labelled": 0.9189,
+          "error_among_answered": 0.0465
+        },
+        {
+          "threshold": 0.95,
+          "coverage_of_eligible_labelled": 0.8932,
+          "error_among_answered": 0.0417
+        },
+        {
+          "threshold": 0.97,
+          "coverage_of_eligible_labelled": 0.8633,
+          "error_among_answered": 0.036
+        },
+        {
+          "threshold": 0.99,
+          "coverage_of_eligible_labelled": 0.8133,
+          "error_among_answered": 0.0308
+        }
+      ]
+    },
+    "pattern": {
+      "per_value": {
+        "checked": {
+          "precision": 0.8837,
+          "recall": 0.8559,
+          "f1-score": 0.8696,
+          "support": 222.0
+        },
+        "printed": {
+          "precision": 0.8866,
+          "recall": 0.8889,
+          "f1-score": 0.8878,
+          "support": 783.0
+        },
+        "solid": {
+          "precision": 0.8101,
+          "recall": 0.758,
+          "f1-score": 0.7832,
+          "support": 591.0
+        },
+        "striped": {
+          "precision": 0.6489,
+          "recall": 0.7657,
+          "f1-score": 0.7025,
+          "support": 239.0
+        },
+        "accuracy": {
+          "precision": 0.8267,
+          "recall": 0.8267,
+          "f1-score": 0.8267,
+          "support": 0.8267
+        },
+        "macro avg": {
+          "precision": 0.8074,
+          "recall": 0.8171,
+          "f1-score": 0.8108,
+          "support": 1835.0
+        },
+        "weighted avg": {
+          "precision": 0.8307,
+          "recall": 0.8267,
+          "f1-score": 0.8278,
+          "support": 1835.0
+        }
+      },
+      "risk_coverage": [
+        {
+          "threshold": 0.0,
+          "coverage_of_eligible_labelled": 1.0,
+          "error_among_answered": 0.1733
+        },
+        {
+          "threshold": 0.5,
+          "coverage_of_eligible_labelled": 0.9918,
+          "error_among_answered": 0.1692
+        },
+        {
+          "threshold": 0.7,
+          "coverage_of_eligible_labelled": 0.9248,
+          "error_among_answered": 0.1491
+        },
+        {
+          "threshold": 0.9,
+          "coverage_of_eligible_labelled": 0.8185,
+          "error_among_answered": 0.1105
+        },
+        {
+          "threshold": 0.95,
+          "coverage_of_eligible_labelled": 0.7657,
+          "error_among_answered": 0.1004
+        },
+        {
+          "threshold": 0.97,
+          "coverage_of_eligible_labelled": 0.7253,
+          "error_among_answered": 0.0932
+        },
+        {
+          "threshold": 0.99,
+          "coverage_of_eligible_labelled": 0.6452,
+          "error_among_answered": 0.0802
+        }
+      ]
+    },
+    "color": {
+      "per_value": {
+        "beige": {
+          "precision": 0.4528,
+          "recall": 0.4528,
+          "f1-score": 0.4528,
+          "support": 53.0
+        },
+        "black": {
+          "precision": 0.7652,
+          "recall": 0.7233,
+          "f1-score": 0.7437,
+          "support": 365.0
+        },
+        "blue": {
+          "precision": 0.7277,
+          "recall": 0.7368,
+          "f1-score": 0.7323,
+          "support": 399.0
+        },
+        "brown": {
+          "precision": 0.3284,
+          "recall": 0.386,
+          "f1-score": 0.3548,
+          "support": 57.0
+        },
+        "green": {
+          "precision": 0.7822,
+          "recall": 0.7315,
+          "f1-score": 0.756,
+          "support": 216.0
+        },
+        "grey": {
+          "precision": 0.625,
+          "recall": 0.6502,
+          "f1-score": 0.6374,
+          "support": 223.0
+        },
+        "navy": {
+          "precision": 0.4812,
+          "recall": 0.4873,
+          "f1-score": 0.4843,
+          "support": 158.0
+        },
+        "orange": {
+          "precision": 0.5926,
+          "recall": 0.5161,
+          "f1-score": 0.5517,
+          "support": 31.0
+        },
+        "pink": {
+          "precision": 0.6637,
+          "recall": 0.5952,
+          "f1-score": 0.6276,
+          "support": 126.0
+        },
+        "purple": {
+          "precision": 0.6818,
+          "recall": 0.6522,
+          "f1-score": 0.6667,
+          "support": 115.0
+        },
+        "red": {
+          "precision": 0.7865,
+          "recall": 0.8032,
+          "f1-score": 0.7947,
+          "support": 188.0
+        },
+        "white": {
+          "precision": 0.7161,
+          "recall": 0.7629,
+          "f1-score": 0.7388,
+          "support": 291.0
+        },
+        "yellow": {
+          "precision": 0.7763,
+          "recall": 0.8551,
+          "f1-score": 0.8138,
+          "support": 69.0
+        },
+        "accuracy": {
+          "precision": 0.6905,
+          "recall": 0.6905,
+          "f1-score": 0.6905,
+          "support": 0.6905
+        },
+        "macro avg": {
+          "precision": 0.6446,
+          "recall": 0.6425,
+          "f1-score": 0.6427,
+          "support": 2291.0
+        },
+        "weighted avg": {
+          "precision": 0.6927,
+          "recall": 0.6905,
+          "f1-score": 0.691,
+          "support": 2291.0
+        }
+      },
+      "risk_coverage": [
+        {
+          "threshold": 0.0,
+          "coverage_of_eligible_labelled": 1.0,
+          "error_among_answered": 0.3095
+        },
+        {
+          "threshold": 0.5,
+          "coverage_of_eligible_labelled": 0.9598,
+          "error_among_answered": 0.2915
+        },
+        {
+          "threshold": 0.7,
+          "coverage_of_eligible_labelled": 0.8464,
+          "error_among_answered": 0.2517
+        },
+        {
+          "threshold": 0.9,
+          "coverage_of_eligible_labelled": 0.6971,
+          "error_among_answered": 0.1985
+        },
+        {
+          "threshold": 0.95,
+          "coverage_of_eligible_labelled": 0.6251,
+          "error_among_answered": 0.1781
+        },
+        {
+          "threshold": 0.97,
+          "coverage_of_eligible_labelled": 0.5687,
+          "error_among_answered": 0.1589
+        },
+        {
+          "threshold": 0.99,
+          "coverage_of_eligible_labelled": 0.4771,
+          "error_among_answered": 0.1327
+        }
+      ]
+    }
+  },
+  "label_audit": [
+    {
+      "attribute": "sleeve_length",
+      "rows": 13105,
+      "label_missing": 3208,
+      "label_usable": 9709,
+      "label_unsupported_value": 188,
+      "unsupported_values (excluded)": "Three-Quarter Sleeves (188)"
+    },
+    {
+      "attribute": "pattern",
+      "rows": 13105,
+      "label_missing": 2292,
+      "label_usable": 10659,
+      "label_unsupported_value": 154,
+      "unsupported_values (excluded)": "Embellished (63), Self Design (47), Washed (30), Colourblocked (9), Dyed (5)"
+    },
+    {
+      "attribute": "color",
+      "rows": 13105,
+      "label_missing": 0,
+      "label_usable": 12993,
+      "label_unsupported_value": 112,
+      "unsupported_values (excluded)": "Multi (50), Teal (45), Rust (12), NA (5)"
+    }
+  ],
+  "feature": "input of the classifier's last Linear layer, then 512-bin sqrt RGB histogram of the central region (rows 20-80%, cols 25-75%, pixels with min channel < 235, 8 levels per channel); standardised with training mean/std",
+  "checkpoint_dependency": "E03_efficientnet_b0",
+  "split_fingerprint": "f7f11d3ef7d2963e",
+  "labels": "weak supervision: catalog baseColour and articleAttributes (Pattern, Sleeve Length)",
+  "label_maps": {
+    "color": {
+      "Black": "black",
+      "White": "white",
+      "Off White": "white",
+      "Grey": "grey",
+      "Grey Melange": "grey",
+      "Charcoal": "grey",
+      "Silver": "grey",
+      "Steel": "grey",
+      "Navy Blue": "navy",
+      "Blue": "blue",
+      "Turquoise Blue": "blue",
+      "Red": "red",
+      "Maroon": "red",
+      "Burgundy": "red",
+      "Green": "green",
+      "Olive": "green",
+      "Lime Green": "green",
+      "Sea Green": "green",
+      "Fluorescent Green": "green",
+      "Yellow": "yellow",
+      "Mustard": "yellow",
+      "Gold": "yellow",
+      "Orange": "orange",
+      "Pink": "pink",
+      "Peach": "pink",
+      "Magenta": "pink",
+      "Rose": "pink",
+      "Purple": "purple",
+      "Lavender": "purple",
+      "Mauve": "purple",
+      "Brown": "brown",
+      "Coffee Brown": "brown",
+      "Mushroom Brown": "brown",
+      "Tan": "brown",
+      "Beige": "beige",
+      "Cream": "beige",
+      "Khaki": "beige",
+      "Nude": "beige",
+      "Skin": "beige",
+      "Taupe": "beige"
+    },
+    "pattern": {
+      "Printed": "printed",
+      "Solid": "solid",
+      "Striped": "striped",
+      "Checked": "checked"
+    },
+    "sleeve_length": {
+      "Short Sleeves": "short",
+      "Long Sleeves": "long",
+      "Sleeveless": "sleeveless",
+      "No Sleeves": "sleeveless"
+    }
+  },
+  "eligibility_rule": "garment type eligible when >= 50% of its training rows carry the label",
+  "normalisation": "(features - training mean) / (training std + 1e-6); feature order [embedding, histogram]"
+}

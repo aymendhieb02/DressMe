@@ -23,9 +23,11 @@ The Phase 1 service wraps the exported BO6 model bundle. The bundle is treated a
 
 #### Model checkpoint assets
 
-The checkpoint files `ml-service/bundle/model_weights.pt` and `ml-service/bundle/attribute_heads.pt` are excluded from ordinary Git history. The remaining bundle source, metadata, and `checksums.json` are kept in the repository. Before running the ML service from a fresh clone, obtain the matching exported BO6 bundle archive from the project owner or approved project artifact. In the current local project it is `BO6 — Smart Wardrobe Digitization/final_v2/selected_model_bundle.zip`.
+The checkpoint files `ml-service/bundle/model_weights.pt` and `ml-service/bundle/attribute_heads.pt` are excluded from Git because redistribution rights have not been established. Obtain the matching export from the project owner or an approved private artifact before building or starting the ML service. The expected paths, manifest verification, and missing-artifact behavior are documented in [ml-service/ARTIFACTS.md](ml-service/ARTIFACTS.md). The private archive currently present in this local workspace is not published.
 
 Place those two checkpoint files at the exact paths under `ml-service/bundle/`, then verify their SHA-256 values against `ml-service/bundle/checksums.json`. Do not substitute checkpoints from another model export. Docker build and service startup intentionally fail if files are absent or fail checksum validation. The source archive and weights are not published in this Git repository.
+
+The BO7 FASHN inference source and license files are kept under `BO7 — Try-On/AvatarProfile/dressme_bo7_fashn_inference_v1/`. Its pretrained weights are also excluded from Git: the local offline archive is `BO7 — Try-On/AvatarProfile/dressme_bo7_fashn_weights_offline_PRIVATE.zip` (about 2.4 GB). Obtain an authorized copy from the project owner or approved project artifact, then use the package's `tools/restore.py --offline-weights <archive>` command to restore and verify hashes into a private runtime weights directory. Do not commit the archive or restored checkpoints.
 
 From the repository root:
 
