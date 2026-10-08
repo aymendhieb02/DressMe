@@ -9,7 +9,7 @@ Audit date: 2026-10-08. Scope: `D:\5eme\DressMe\Projet_DressMe` and public GitHu
 - Local `BO7` preserves its documentation commits and includes non-fast-forward merge commits `36ab05c` and `b14d2b2`, integrating the shared baseline and subsequent `main` checksum fix. `main` does not contain BO7-specific documentation; BO7 is not merged into main.
 - The remote is `https://github.com/aymendhieb02/DressMe.git`. A process-scoped no-proxy retry successfully reached GitHub. At the last read-only remote check before this publication attempt, refs were `main` and `feature/bo6-implementation`, both at `63d1904`; no remote `BO7` ref was observed. At that check, local `main` was `4c0ff9c` and local `BO7` was `b14d2b2`.
 - Git-specific and general proxy variables were present in the process environment, all pointing to `127.0.0.1:9`; Git config itself had no HTTP proxy. Temporarily clearing the process proxy variables and using `git -c http.proxy= -c https.proxy= ...` worked. No global network settings were changed.
-- GitHub CLI is unavailable. Git Credential Manager is configured as a credential helper, but its GitHub authentication status has not yet been established. An anonymous read of public refs does not establish push access.
+- GitHub CLI is unavailable. Git Credential Manager 2.3.2 is installed/configured, but no stored GitHub username or credential was found. Push failed because Git could not launch its interactive `sh` prompt and no username was available. GCM device login could not reach its auth endpoint in this environment; its browser-login mode reported unsupported platform. An anonymous read of public refs does not establish push access.
 
 ## Application components now tracked on `main`
 
@@ -47,5 +47,5 @@ The tracked `ml-service/bundle/checksums.json` expects `model_weights.pt` and `a
 - The committed bundle blobs match all tracked entries in `checksums.json`; root `.gitattributes` now pins LF for `ml-service/bundle/**` so Windows autocrlf settings cannot change the manifest bytes.
 - `pytest -q` in `ml-service/`: 13 passed after restoring byte-exact bundle files; one Starlette/httpx deprecation warning.
 - `docker compose config --quiet`: passed. No image build or real inference verification is claimed.
-- Git Credential Manager is configured, but a no-prompt credential probe found no stored GitHub username/token. Push authentication remains unverified; GitHub CLI is unavailable.
+- Git Credential Manager is installed, but a no-prompt credential probe found no stored GitHub username/credential. The attempted push and GCM interactive flows failed as described above; GitHub CLI is unavailable. `BO7` publication and upstream tracking remain pending local sign-in.
 - The architecture handoff document was absent from the checkout and inspected archives. `ARCHITECTURE_HANDOFF.md` remains explicitly provisional.
