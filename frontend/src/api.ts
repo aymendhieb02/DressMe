@@ -52,6 +52,14 @@ export type TryOnJob = {
 export type TryOnJobList = { items: TryOnJob[] };
 
 const CSRF_KEY = "dressme.csrf";
+export type Avatar = {
+  id: string; provider: "avaturn"; provider_avatar_id: string; model_url: string;
+  asset_sha256: string; asset_size: number; version: number; consent_version: string;
+  created_at: string; updated_at: string;
+};
+export type AvatarConsent = {
+  id: string; provider: "avaturn"; consent_version: string; consented_at: string;
+};
 let csrfToken: string | null = sessionStorage.getItem(CSRF_KEY);
 
 export function setCsrfToken(value: string | null) {

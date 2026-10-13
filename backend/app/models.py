@@ -133,6 +133,44 @@ class PersonPhoto(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
 
+class AvatarConsent(Base):
+    __tablename__ = "avatar_consents"
+    __table_args__ = (Index("ix_avatar_consents_user_created", "user_id", "consented_at"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    provider: Mapped[str] = mapped_column(String(32), nullable=False)
+    consent_version: Mapped[str] = mapped_column(String(64), nullable=False)
+    consented_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+
+class Avatar(Base):
+    __tablename__ = "avatars"
+    __table_args__ = (
+        UniqueConstraint("user_id", name="uq_avatars_user_id"),
+        UniqueConstraint("asset_key", name="uq_avatars_asset_key"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    consent_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("avatar_consents.id", ondelete="RESTRICT"), nullable=False
+    )
+    provider: Mapped[str] = mapped_column(String(32), nullable=False, default="avaturn", server_default="avaturn")
+    provider_avatar_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    asset_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    asset_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    asset_size: Mapped[int] = mapped_column(Integer, nullable=False)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default="1")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
+
+
 class TryOnJob(Base):
     __tablename__ = "try_on_jobs"
     __table_args__ = (

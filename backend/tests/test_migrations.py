@@ -13,7 +13,9 @@ def test_initial_migration_upgrades_an_empty_sqlite_database(tmp_path, monkeypat
     engine = create_engine(database_url)
     try:
         tables = set(inspect(engine).get_table_names())
-        assert {"users", "auth_sessions", "garments", "storage_deletions", "alembic_version"} <= tables
+        assert {
+            "users", "auth_sessions", "garments", "storage_deletions", "avatar_consents", "avatars", "alembic_version",
+        } <= tables
     finally:
         engine.dispose()
 

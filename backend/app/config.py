@@ -40,6 +40,7 @@ class Settings:
     max_upload_bytes: int = _integer("MAX_UPLOAD_BYTES", 10 * 1024 * 1024, 1024, 50 * 1024 * 1024)
     max_image_pixels: int = _integer("MAX_IMAGE_PIXELS", 40_000_000, 100_000, 100_000_000)
     pending_upload_ttl_seconds: int = _integer("PENDING_UPLOAD_TTL_SECONDS", 3600, 60, 24 * 3600)
+    max_avatar_bytes: int = _integer("MAX_AVATAR_BYTES", 50 * 1024 * 1024, 1024 * 1024, 250 * 1024 * 1024)
     storage_path: Path = Path(os.getenv("STORAGE_PATH", "./data/private-images"))
 
     def __post_init__(self) -> None:

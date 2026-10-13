@@ -16,10 +16,10 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         response.headers["X-Request-ID"] = correlation_id
         response.headers["X-Content-Type-Options"] = "nosniff"
-        if request.url.path.startswith(("/auth", "/api/", "/garments", "/person-photos", "/try-on")):
+        if request.url.path.startswith(("/auth", "/api/", "/garments", "/person-photos", "/try-on", "/avatars")):
             response.headers["Cache-Control"] = (
                 "private, no-store"
-                if request.url.path.endswith("/image") or request.url.path.endswith("/result")
+                if request.url.path.endswith(("/image", "/result", "/model"))
                 else "no-store"
             )
             response.headers["Vary"] = "Cookie"

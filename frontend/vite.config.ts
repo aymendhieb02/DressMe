@@ -9,6 +9,7 @@ export default defineConfig({
       "/garments": "http://localhost:8000",
       "/person-photos": "http://localhost:8000",
       "/try-on": "http://localhost:8000",
+      "/avatars": "http://localhost:8000",
       "/health": "http://localhost:8000",
     },
   },

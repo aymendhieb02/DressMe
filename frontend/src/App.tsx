@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   api, ApiError, categories, colors, getCsrfToken, patterns, setCsrfToken, sleeves,
   type AuthResponse, type Garment, type GarmentPage, type PendingUpload, type PersonPhoto,
   type TryOnJob, type TryOnJobList, type User,
 } from "./api";
+const AvatarPage = lazy(() => import("./AvatarPage"));
 
-type Screen = "wardrobe" | "add" | "try-on";
+type Screen = "wardrobe" | "add" | "try-on" | "avatar";
 type Category = (typeof categories)[number];
 type Color = (typeof colors)[number];
 type Pattern = (typeof patterns)[number];
@@ -26,7 +27,7 @@ const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
 function screenFromHash(hash: string): Screen {
   const route = hash.replace(/^#\/?/, "");
-  return route === "add" || route === "try-on" ? route : "wardrobe";
+  return route === "add" || route === "try-on" || route === "avatar" ? route : "wardrobe";
 }
 
 function imageFileError(file: File) {
@@ -437,7 +438,7 @@ function App() {
       <div className="brand-mark" aria-hidden="true">D</div>
       <p className="eyebrow">A considered wardrobe</p>
       <h1>{authMode === "login" ? "Welcome back" : "Create your account"}</h1>
-      <p className="muted">Keep your garments in one private, searchable place.</p>
+      <p className="muted">Keep your garments and 3D avatar in one private place.</p>
       <form onSubmit={submitAuth} className="stack-form">
         <label className="field"><span>Email</span><input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></label>
         <label className="field"><span>Password</span><input type="password" autoComplete={authMode === "login" ? "current-password" : "new-password"} minLength={12} required value={password} onChange={(e) => setPassword(e.target.value)} /></label>
@@ -517,6 +518,7 @@ function App() {
         <div className="quality-note mock-notice" role="note"><strong>MOCK MODE · NO AI TRY-ON</strong><p>Submitted jobs return a labelled contact sheet only. Real FASHN inference is disabled.</p><p>Academic prototype. Component and dataset terms vary; this notice does not grant commercial-use clearance.</p></div>
         <div className="review-layout">
           <form className="review-card" onSubmit={uploadPersonPhoto} aria-busy={busy}>
+        <button aria-current={screen === "avatar" ? "page" : undefined} className={"nav-link " + (screen === "avatar" ? "selected" : "")} onClick={() => navigateTo("avatar")}>My Avatar</button>
             <h2>Add a person photo</h2>
             <p className="muted">The photo stays private and is only used for a try-on you request.</p>
           <label className="field"><span>Choose a JPEG, PNG, or WEBP photo</span><input ref={personFileInputRef} type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="person-file-help" onChange={(e) => {
@@ -526,6 +528,8 @@ function App() {
             setPersonFile(validation ? null : chosen);
             if (validation) e.currentTarget.value = "";
           }} /></label>
+      {screen === "avatar" && <Suspense fallback={<p role="status">Loading your avatar page…</p>}><AvatarPage /></Suspense>}
+
           <p id="person-file-help" className="upload-file-details" aria-live="polite">{personFile ? `${personFile.name} · ${personFile.type.replace("image/", "").toUpperCase()} · ${fileSizeLabel(personFile.size)}` : "Choose an image up to 10 MB."}</p>
           {personFileError && <p className="alert upload-error" role="alert">{personFileError}</p>}
             {personPreview && <img className="person-photo-preview" src={personPreview} alt="Selected private person photo preview" />}

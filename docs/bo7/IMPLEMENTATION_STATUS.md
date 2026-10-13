@@ -58,3 +58,9 @@ Keep the overall verdict **INCOMPLETE** until all mandatory gates have passed. P
 - Implemented/tested: persisted mock-profile guards, UTC-normalized SQLite recovery, conditional recovery updates that preserve concurrent publication, and explicit development-only simple mock worker plus bounded launch options.
 - Final validation: backend **48 passed**; current frontend snapshot **11 passed** and build passed. Redis/RQ boundaries in backend tests are explicit fakes; successful contact-sheet tests call the worker directly.
 - Docker still denies ordinary engine access. No Redis runtime or CUDA-enabled Torch is available; no new browser result or real FASHN inference was executed. Gate A remains **INCOMPLETE**.
+
+## Avaturn visual-avatar continuation — 2026-10-13
+
+The additive Avaturn integration now has an explicit consent gate, browser-only export import, owner-scoped private GLB storage/retrieval, replacement and deletion handling, an additive migration, and a lazy 3D viewer. The API and UI paths are covered with synthetic GLB/API tests. This is a visual avatar only and is not connected to BO6 fitting or garment measurements.
+
+Final automated validation for this continuation: backend `pytest tests -q` **53 passed**; frontend `npm test -- --run --reporter=dot` **20 passed**; `npm run build` passed with a large lazy viewer chunk warning; `pip check` found no broken requirements; Compose configuration validated. A loopback Vite/API demo is running on ports 5173/8000 with isolated SQLite/private storage; backend readiness is 503 because BO6 is absent. Docker Desktop's engine pipe is unavailable in the current session. Avaturn iframe/export, exact provider CORS origin, and a real GLB remain **NOT VERIFIED**. See [`avaturn-avatar-implementation.md`](avaturn-avatar-implementation.md) and the authoritative report appendix for setup and evidence.

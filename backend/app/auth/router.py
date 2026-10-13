@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from ..common.errors import error_response
 from ..config import settings
 from ..database import get_db
-from ..models import AuthSession, Garment, PendingUpload, PersonPhoto, StorageDeletion, TryOnJob, User
+from ..models import Avatar, AuthSession, Garment, PendingUpload, PersonPhoto, StorageDeletion, TryOnJob, User
 from ..storage.cleanup import acknowledge_storage_deletion, record_storage_deletion_failure
 from ..storage.local_disk import LocalPrivateStorage
 from ..tryon.deletion import delete_jobs
@@ -174,8 +174,10 @@ def delete_account(
     pending = db.scalars(select(PendingUpload).where(PendingUpload.user_id == user.id)).all()
     garments = db.scalars(select(Garment).where(Garment.user_id == user.id)).all()
     photos = db.scalars(select(PersonPhoto).where(PersonPhoto.user_id == user.id)).all()
+    avatars = db.scalars(select(Avatar).where(Avatar.user_id == user.id)).all()
     jobs = db.scalars(select(TryOnJob).where(TryOnJob.user_id == user.id)).all()
     keys = {row.image_key for row in pending} | {row.image_key for row in garments} | {row.image_key for row in photos}
+    keys |= {row.asset_key for row in avatars}
     keys |= {row.result_key for row in jobs if row.result_key}
     existing = set(db.scalars(select(StorageDeletion.image_key).where(StorageDeletion.image_key.in_(keys))).all()) if keys else set()
     for key in keys - existing:
@@ -185,6 +187,8 @@ def delete_account(
         db.delete(row)
     db.flush()
     for row in photos:
+        db.delete(row)
+    for row in avatars:
         db.delete(row)
     for row in pending:
         db.delete(row)

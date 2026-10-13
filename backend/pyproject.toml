@@ -18,6 +18,7 @@ dependencies = [
   "httpx>=0.28,<1",
   "python-multipart>=0.0.18,<1",
   "Pillow>=11,<13",
+  "pygltflib==1.16.5",
   "email-validator>=2.2,<3",
   "redis>=8,<9",
   "rq>=2.12,<3",

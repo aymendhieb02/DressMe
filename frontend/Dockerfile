@@ -1,5 +1,9 @@
 FROM node:22-alpine AS build
 WORKDIR /src
+ARG VITE_AVATURN_URL=https://dressme.avaturn.dev/
+ARG VITE_AVATURN_EXPORT_ORIGINS=
+ENV VITE_AVATURN_URL=$VITE_AVATURN_URL
+ENV VITE_AVATURN_EXPORT_ORIGINS=$VITE_AVATURN_EXPORT_ORIGINS
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY index.html vite.config.ts tsconfig.json ./
