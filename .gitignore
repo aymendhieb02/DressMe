@@ -1,0 +1,16 @@
+﻿# secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# editeur / historique
+.history/
+.vscode/
+.ipynb_checkpoints/
+
+# OS
+Thumbs.db
+.DS_Store
