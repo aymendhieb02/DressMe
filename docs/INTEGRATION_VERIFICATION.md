@@ -8,6 +8,9 @@ After integration:
 
 | Check | Result |
 |---|---|
+| `python -m pytest tests -q` after lifecycle/config ordering repair | PASS, 79 passed in 22.35 s. Added outer-app lifespan, direct Studio lifespan, and disposable expired-upload/deferred-file cleanup checks. |
+| Combined `uvicorn api:app` lifespan | PASS: outer lifespan enters Studio once; cleanup task is named, canceled and awaited; cleanup pass uses test-controlled functions without sleeping 30 seconds or touching private data. |
+| Configuration import order | `load_dotenv(override=False)` now runs before combined app imports and before `app.config` constructs settings. Clean subprocess precedence coverage remains pending. |
 | `bo6_service/bundle/selftest.py` with restored local `.pt` files | PASS, `passed=true`, `n_checks=17`. |
 | `python -m alembic upgrade head` against dedicated database on port 55461 | PASS, revisions `0001` through `0008_private_avatar_renders`. |
 | `GET http://127.0.0.1:18022/health` | 200, `E03_efficientnet_b0`, `dressme-v0.2`. |
@@ -37,6 +40,8 @@ Representative screenshots: `integration-screenshots/team-ootd-desktop.png`, `te
 - Original team recommendation, weather, image search and shop calls were not fully exercised because they can invoke first-use model downloads or external services. Their unchanged source and route/navigation baseline are preserved, but full API regression remains open.
 - Browser checks used emulation, not physical mobile devices or assistive technology. Screenshots show disposable data only.
 - Full Compose deployment, PostgreSQL cluster restart, integration import from old private data, and production HTTPS remain unverified. Application-service restart persistence passed. The separate local database is persistent; test account cleanup deleted only owned synthetic records.
+- Reproducible clean-environment dependency resolution is still open: `requirements-studio.in` references a missing `requirements.lock`, app and BO6 service dependency pins conflict, and existing README setup uses `--system-site-packages`. No lockfile has been fabricated.
+- Browser verification still assumes the live mock worker is unavailable; it needs separate deterministic UI cases for unavailable and available runtime before it is robust on a machine with Redis.
 
 ## Publication safeguard
 
