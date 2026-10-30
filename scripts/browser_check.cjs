@@ -1,8 +1,12 @@
 const { chromium } = require(process.env.DRESSME_PLAYWRIGHT_PATH || 'playwright');
 const path = require('path');
 const crypto = require('crypto');
+const fs = require('fs');
+const os = require('os');
 
 const root = path.resolve(__dirname, '..');
+const screenshotDir = process.env.DRESSME_SCREENSHOT_DIR || path.join(os.tmpdir(), 'dressme-integration-screenshots');
+fs.mkdirSync(screenshotDir, {recursive:true});
 const base = 'http://127.0.0.1:8002';
 (async () => {
   const browser = await chromium.launch({headless:true,executablePath:process.env.DRESSME_BROWSER_EXECUTABLE || chromium.executablePath()});
@@ -12,9 +16,9 @@ const base = 'http://127.0.0.1:8002';
   const password = 'Browser-check-' + crypto.randomBytes(12).toString('hex');
   try {
     await page.goto(base + '/#ootd');
-    await page.screenshot({path:path.join(root,'docs/integration-screenshots/team-ootd-desktop.png')});
+    await page.screenshot({path:path.join(screenshotDir,'team-ootd-desktop.png')});
     await page.setViewportSize({width:390,height:844});
-    await page.screenshot({path:path.join(root,'docs/integration-screenshots/team-ootd-mobile.png')});
+    await page.screenshot({path:path.join(screenshotDir,'team-ootd-mobile.png')});
     await page.setViewportSize({width:1440,height:900});
     for (const id of ['ootd','score','comp','sim','wardrobe']) {
       await page.evaluate(id => window.go(id), id);
@@ -46,7 +50,7 @@ const base = 'http://127.0.0.1:8002';
     await page.waitForFunction(() => document.querySelector('#studio-confirm textarea[name=description]')?.value);
     const text = await page.locator('#studio-confirm textarea[name=description]').inputValue();
     if (!text.toLowerCase().includes('trousers')) throw Error('description did not reflect category');
-    await page.screenshot({path:path.join(root,'docs/integration-screenshots/bo6-review-desktop.png')});
+    await page.screenshot({path:path.join(screenshotDir,'bo6-review-desktop.png')});
     await page.getByRole('button',{name:'Save garment'}).click();
     await page.locator('#bo6-wardrobe').waitFor({state:'visible'});
     await page.getByRole('button',{name:'View and edit'}).click();
@@ -58,7 +62,7 @@ const base = 'http://127.0.0.1:8002';
     await page.getByText('Reviewed catalog trousers.').waitFor();
     for(const width of [360,390,768,1440]){
       await page.setViewportSize({width,height:844});
-      if(width===390){await page.evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:path.join(root,'docs/integration-screenshots/bo6-wardrobe-mobile.png')});}
+      if(width===390){await page.evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:path.join(screenshotDir,'bo6-wardrobe-mobile.png')});}
       const layout=await page.evaluate(() => {window.scrollTo(1000,scrollY);return {scrollX,clipped:[...document.querySelectorAll('.studio-nav a')].filter(e=>{const b=e.getBoundingClientRect();return b.left<0||b.right>innerWidth}).map(e=>e.textContent)}});
       if(layout.scrollX>0||layout.clipped.length) throw Error(`${width}px studio overflow or clipped links: ${JSON.stringify(layout)}`);
     }
