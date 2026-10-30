@@ -44,7 +44,16 @@ const base = 'http://127.0.0.1:8002';
     await page.getByRole('button',{name:'Analyze photo'}).click();
     await page.locator('#studio-confirm select[name=category]').waitFor();
     if (await page.locator('#studio-confirm select[name=category]').inputValue()) throw Error('AI suggestion was silently confirmed');
-    await page.locator('#studio-confirm select[name=category]').selectOption('trousers');
+    const categorySuggestion=page.locator('[data-action="suggest-category"]').first();
+    const suggestedCategory=await categorySuggestion.getAttribute('data-value');
+    await categorySuggestion.click();
+    if(await page.locator('#studio-confirm select[name=category]').inputValue()!==suggestedCategory) throw Error('category suggestion did not fill the review field');
+    const attributeSuggestion=page.locator('[data-action="suggest-attribute"]').first();
+    if(await attributeSuggestion.count()){
+      const field=await attributeSuggestion.getAttribute('data-field'), value=await attributeSuggestion.getAttribute('data-value');
+      await attributeSuggestion.click();
+      if(await page.locator(`#studio-confirm [name="${field}"]`).inputValue()!==value) throw Error('attribute suggestion did not fill the review field');
+    }
     await page.locator('#studio-confirm select[name=garment_photo_type]').selectOption('flat-lay');
     await page.getByRole('button',{name:'Generate description'}).click();
     await page.waitForFunction(() => document.querySelector('#studio-confirm textarea[name=description]')?.value);
