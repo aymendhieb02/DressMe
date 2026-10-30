@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+BASELINE_COMMIT = "6db709ade062bad5c7ca7be7ee85d4b88c2fdfee"
 
 
 def git(*args):
@@ -17,7 +18,7 @@ def blob_hash(data):
 
 def main():
     unchanged, changed = {}, {}
-    for record in git("ls-tree", "-rz", "HEAD").split(b"\0"):
+    for record in git("ls-tree", "-rz", BASELINE_COMMIT).split(b"\0"):
         if not record:
             continue
         metadata, raw_path = record.split(b"\t", 1)
@@ -46,11 +47,11 @@ def main():
     }
     new_files.update(
         n.decode("utf-8", "surrogateescape")
-        for n in git("diff", "--name-only", "--diff-filter=A", "HEAD", "-z").split(b"\0")
+        for n in git("diff", "--name-only", "--diff-filter=A", BASELINE_COMMIT, "-z").split(b"\0")
         if n
     )
     output = {
-        "baseline_commit": git("rev-parse", "HEAD").decode().strip(),
+        "baseline_commit": BASELINE_COMMIT,
         "original_tracked_count": len(unchanged) + len(changed),
         "unchanged_count": len(unchanged),
         "changed_existing_count": len(changed),
