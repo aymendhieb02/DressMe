@@ -1,7 +1,9 @@
 """Dress Me : API des 3 idees des notebooks.   Lancer :  uvicorn api:app --port 8000   puis ouvrir http://localhost:8000"""
 import itertools, json, os
+import re
 from functools import lru_cache
 from pathlib import Path
+from urllib.parse import urlsplit
 import numpy as np, requests, torch, torch.nn as nn, torch.nn.functional as F
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -9,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from similar import router as similar_router
 from wardrobe import router as wardrobe_router     
+from app.main import app as studio_app
 from dotenv import load_dotenv; load_dotenv()
 
 DATA = Path(os.environ.get("DRESSME_DATA", "data"))
@@ -131,6 +134,34 @@ def complete(ctx, want=None, topn=6, lam=1.0, mu=0.3):
 app = FastAPI(title="Dress Me")
 app.include_router(similar_router)
 app.include_router(wardrobe_router) 
+app.mount("/studio-api", studio_app, name="studio-api")
+
+@app.get("/api/studio-config")
+def studio_config():
+    """Expose only validated, public provider origins; credentials remain server-side."""
+    raw = os.environ.get("AVATURN_URL", "").strip()
+    try:
+        parsed = urlsplit(raw)
+    except ValueError:
+        return {"avaturn_url": None, "export_origins": []}
+    allowed = (parsed.scheme == "https" and parsed.hostname is not None
+               and re.fullmatch(r"[a-z0-9-]+\.avaturn\.dev", parsed.hostname, re.I)
+               and parsed.netloc.lower() == parsed.hostname.lower() and parsed.path in ("", "/")
+               and not parsed.username and not parsed.password and not parsed.query and not parsed.fragment)
+    if not allowed:
+        return {"avaturn_url": None, "export_origins": []}
+    origins = {f"https://{parsed.hostname}"}
+    for value in os.environ.get("AVATURN_EXPORT_ORIGINS", "").split(","):
+        value = value.strip()
+        try:
+            extra = urlsplit(value)
+        except ValueError:
+            continue
+        if (extra.scheme == "https" and extra.hostname and extra.netloc.lower() == extra.hostname.lower()
+                and extra.path in ("", "/")
+                and not extra.username and not extra.password and not extra.query and not extra.fragment):
+            origins.add(f"https://{extra.netloc}")
+    return {"avaturn_url": raw, "export_origins": sorted(origins)}
 class Items(BaseModel): items: list[int]; want: str | None = None
 class Ootd(BaseModel):
     lat: float | None = None; lon: float | None = None; city: str | None = None; place: str = "My location"

@@ -1,0 +1,26 @@
+{
+  "version": "pad-resize-v2",
+  "image_size": 224,
+  "pad_to_square": true,
+  "pad_fill": [
+    255,
+    255,
+    255
+  ],
+  "resize": "bilinear, antialias",
+  "to_rgb": true,
+  "exif_transpose": true,
+  "mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "eval_pipeline": "exif_transpose -> RGB -> pad to square -> resize SxS -> ToTensor -> Normalize",
+  "train_augment": "hflip 0.5, rotation +-8deg @0.3, colour jitter (0.15, 0.10, 0.10)",
+  "note": "identical for every architecture; no centre crop"
+}

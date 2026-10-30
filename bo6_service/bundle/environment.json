@@ -1,0 +1,21 @@
+{
+  "run_started_utc": "2026-10-08T01:13:33+00:00",
+  "python": "3.13.15",
+  "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+  "numpy": "2.1.3",
+  "pandas": "2.3.3",
+  "pillow": "12.3.0",
+  "matplotlib": "3.10.0",
+  "torch": "2.11.0+cu128",
+  "torchvision": "0.26.0+cu128",
+  "torch_error": null,
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "vram_gb": 15.6,
+  "bf16_native": false,
+  "amp_dtype": "float16",
+  "cpu_count": 4,
+  "seed": 42,
+  "mode": "STANDARD",
+  "scikit_learn": "1.6.1"
+}

@@ -1,10 +1,13 @@
-﻿# secrets
+# secrets
 .env
+.env.*
+!.env.example
 
 # Python
 .venv/
 __pycache__/
 *.pyc
+*.py[cod]
 
 # editeur / historique
 .history/
@@ -14,3 +17,8 @@ __pycache__/
 # OS
 Thumbs.db
 .DS_Store
+
+# Private integration data and restored model weights
+data/private-images/
+bo6_service/bundle/*.pt
+*.log
