@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Preserve process environment values while applying local development defaults.
+load_dotenv(override=False)
 
 
 def _integer(name: str, default: int, minimum: int, maximum: int) -> int:

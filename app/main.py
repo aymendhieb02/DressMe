@@ -26,6 +26,11 @@ from .auth.dependencies import AuthenticationRequired, InvalidCsrfToken
 from .common.errors import error_response
 
 
+async def cleanup_pass():
+    await asyncio.to_thread(expire_pending_uploads)
+    await asyncio.to_thread(drain_storage_deletions)
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     # Migrations are explicit; the backend never loads the BO6 model or GPU runtime.
@@ -40,7 +45,7 @@ async def lifespan(_app: FastAPI):
                 # The durable cleanup intents remain queued for the next pass.
                 continue
 
-    task = asyncio.create_task(cleanup_loop())
+    task = asyncio.create_task(cleanup_loop(), name="dressme-storage-cleanup")
     yield
     task.cancel()
     try:

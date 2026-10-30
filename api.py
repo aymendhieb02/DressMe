@@ -1,9 +1,15 @@
 """Dress Me : API des 3 idees des notebooks.   Lancer :  uvicorn api:app --port 8000   puis ouvrir http://localhost:8000"""
 import itertools, json, os
 import re
+from contextlib import asynccontextmanager
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlsplit
+from dotenv import load_dotenv
+
+# Load local configuration before importing Studio settings, database engines or services.
+load_dotenv()
+
 import numpy as np, requests, torch, torch.nn as nn, torch.nn.functional as F
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -12,7 +18,6 @@ from pydantic import BaseModel
 from similar import router as similar_router
 from wardrobe import router as wardrobe_router     
 from app.main import app as studio_app
-from dotenv import load_dotenv; load_dotenv()
 
 DATA = Path(os.environ.get("DRESSME_DATA", "data"))
 cat_json = json.load(open(DATA / "catalog.json")); OUTS = json.load(open(DATA / "outfits.json"))
@@ -131,7 +136,14 @@ def complete(ctx, want=None, topn=6, lam=1.0, mu=0.3):
     return [cand[j] for j in ch], cs
 
 # ---------------------------------------------------------------- API
-app = FastAPI(title="Dress Me")
+@asynccontextmanager
+async def lifespan(_app):
+    # Mounting a FastAPI app does not enter its lifespan automatically.
+    async with studio_app.router.lifespan_context(studio_app):
+        yield
+
+
+app = FastAPI(title="Dress Me", lifespan=lifespan)
 app.include_router(similar_router)
 app.include_router(wardrobe_router) 
 app.mount("/studio-api", studio_app, name="studio-api")
