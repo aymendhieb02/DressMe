@@ -1,5 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DressMe — Style Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="/static/studio.css" rel="stylesheet">
 <style>
 :root{--ink:#17283a;--c1:#ff6b4a;--c2:#0e9f9a;--ok:#1fb889;--warn:#f5a524;--bad:#e5484d;--hero:#17283a;--sky:linear-gradient(160deg,#fdebd8,#c9ebe7)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--sky) fixed;min-height:100vh}
@@ -202,6 +203,11 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 </div>
 <div class="wd-stage"><div class="wd-cab" id="wcab"><div class="wd-in" id="win"></div><div class="wd-door l"></div><div class="wd-door r"></div></div></div>
 <div id="wout"></div></section>
+<section id="bo6-wardrobe" class="glass" hidden><div data-studio-page="bo6-wardrobe"></div></section>
+<section id="bo6-add" class="glass" hidden><div data-studio-page="bo6-add"></div></section>
+<section id="bo7-avatar" class="glass" hidden><div data-studio-page="bo7-avatar"></div></section>
+<section id="bo7-tryon" class="glass" hidden><div data-studio-page="bo7-tryon"></div></section>
+<section id="bo7-history" class="glass" hidden><div data-studio-page="bo7-history"></div></section>
 </main></div>
 <script>
 const HASH0=location.hash;
@@ -243,9 +249,15 @@ const MENU=[{label:'Style Engine',items:[
  {id:'comp',title:'Finish the Look',desc:'Complete a partial outfit'}]},
  {label:'Shopping',items:[
  {id:'sim',title:'Find Similar',desc:'Upload a piece, find lookalikes and where to buy it'},
- {id:'wardrobe',title:'Wardrobe Completion',desc:'The missing piece that unlocks the most new outfits'}]}];
+ {id:'wardrobe',title:'Wardrobe Completion',desc:'The missing piece that unlocks the most new outfits'}]},
+ {label:'My Studio',items:[
+ {id:'bo6-wardrobe',title:'My Wardrobe',desc:'Your private garments'},
+ {id:'bo6-add',title:'Add Garment',desc:'Analyze and review a photo'},
+ {id:'bo7-avatar',title:'My Avatar',desc:'Saved avatar and provider status'},
+ {id:'bo7-tryon',title:'Virtual Try-On',desc:'Private mock preview workflow'},
+ {id:'bo7-history',title:'Try-On History',desc:'Your saved jobs'}]}];
 function go(id){tab=id;$$('main section').forEach(s=>{s.hidden=s.id!==id;if(!s.hidden){s.style.animation='none';s.offsetHeight;s.style.animation=''}});
- $$('.mi').forEach(m=>m.classList.toggle('on',m.dataset.t===id));$$('.dd').forEach(d=>d.classList.toggle('on',!!$('.mi.on',d)));applyBg();history.replaceState(null,'','#'+id);if(window.onSection)window.onSection(id)}
+ $$('.mi').forEach(m=>m.classList.toggle('on',m.dataset.t===id));$$('.dd').forEach(d=>d.classList.toggle('on',!!$('.mi.on',d)));applyBg();history.replaceState(null,'','#'+id);if(window.onSection)window.onSection(id);document.dispatchEvent(new CustomEvent('dressme:section',{detail:id}))}
 $('#menu').innerHTML=MENU.map(g=>`<div class="dd"><button>${g.label}</button><div class="dmenu"><div>${g.items.map(i=>`<button class="mi" data-t="${i.id}"><b>${i.title}</b><small>${i.desc||''}</small></button>`).join('')}</div></div></div>`).join('');
 $('#menu').onclick=e=>{const m=e.target.closest('.mi');if(m){go(m.dataset.t);document.activeElement.blur()}};
 /* ---------- sélecteur d'articles ---------- */
@@ -386,4 +398,4 @@ function bombLoop(){if(!introOn)return;for(const o of cards){o.t+=o.v;if(o.t>=1)
 function hideIntro(){introOn=false;const e=$('#intro');e.classList.add('out');setTimeout(()=>{if(!introOn)e.style.display='none'},900)}
 function showIntro(){const e=$('#intro');introOn=true;e.style.display='';requestAnimationFrame(()=>e.classList.remove('out'));bombLoop()}
 $('#enter').onclick=hideIntro;$('.top .logo').onclick=showIntro;if(!introOn)$('#intro').style.display='none';
-</script></body></html>
+</script><script type="module" src="/static/studio.js"></script></body></html>
