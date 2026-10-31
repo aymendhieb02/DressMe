@@ -2,7 +2,7 @@
 
 ## Exact local baseline and checks
 
-Latest UI follow-up (30 October 2026): browser coverage now clicks actual BO6 category and attribute suggestions and confirms each fills only its matching review control. Suggestions remain unselected until clicked. Generated descriptions stay visible and are marked stale when confirmed values change; edited manual text is retained. The browser journey passed after these changes.
+Latest UI follow-up (31 October 2026): browser coverage clicks actual BO6 category and attribute suggestions and verifies exclusive category candidates, selected-chip state, matching-field updates, manual dropdown synchronization, and ineligible sleeve behavior for bottom categories. Suggestions remain unselected until clicked. Generated descriptions stay visible and are marked stale after confirmed-value changes; edits are preserved and regeneration clears the stale state. The real BO6 browser journey passed with a disposable account. Screenshots from reruns remain in the system temporary directory.
 
 Team baseline SHA `6db709ade062bad5c7ca7be7ee85d4b88c2fdfee` was cloned into an initially empty target directory. A local venv was created with `python -m venv --system-site-packages .venv`; `python -m pip install -r requirements.txt` installed the missing `open_clip_torch` and Transformers dependencies. Before integration, TestClient returned `root 200`, `catalog 200`, `examples 200`, `score 200`. Guessed paths `/api/search/status` and `/api/wardrobe` returned 404; the supported search and wardrobe endpoints are under `/api/search/{similar,shops}` and `/api/wardrobe/{sample,complete}`. One baseline `/api/complete` request began a first-use public model download and was stopped before a result; no baseline result is claimed for it.
 

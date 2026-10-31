@@ -57,11 +57,21 @@ function review(){
  const prediction=state.pending?.prediction||{},categoriesSuggested=prediction.suggestions||[],attributes=prediction.attributes||{};
  const target=$('#studio-review',node());
  target.innerHTML=`<h3>Review suggestions</h3>
- <div class="studio-suggestions"><b>AI category suggestions</b><div class="studio-chips">${categoriesSuggested.map(item=>`<button type="button" class="studio-chip" data-action="suggest-category" data-value="${esc(item.category)}">${esc(item.category)} · ${Number(item.score).toFixed(3)}</button>`).join('')||'<span>No category suggestion</span>'}</div>
+ <div class="studio-suggestions"><b>AI category suggestions</b><div class="studio-chips">${categoriesSuggested.map(item=>`<button type="button" class="studio-chip" aria-pressed="false" data-group="category" data-action="suggest-category" data-value="${esc(item.category)}">${esc(item.category)} · ${Number(item.score).toFixed(3)}</button>`).join('')||'<span>No category suggestion</span>'}</div>
  <p>Scores are uncalibrated. Select a suggestion to use it, or choose another value manually.</p>
- ${Object.entries(attributes).map(([field,result])=>`<div class="studio-attribute"><b>${esc(field.replaceAll('_',' '))}</b>${result.eligible?`<div class="studio-chips">${(result.suggestions||[]).map(item=>`<button type="button" class="studio-chip" data-action="suggest-attribute" data-field="${esc(field)}" data-value="${esc(item.value)}">${esc(item.value)}${Number.isFinite(item.score)?` · ${Number(item.score).toFixed(3)}`:''}</button>`).join('')||'<span>No suggestion</span>'}</div>`:`<p>Not estimated: ${esc(result.reason||'not applicable')}</p>`}</div>`).join('')}
+ ${Object.entries(attributes).map(([field,result])=>`<div class="studio-attribute"><b>${esc(field.replaceAll('_',' '))}</b>${result.eligible?`<div class="studio-chips">${(result.suggestions||[]).map(item=>`<button type="button" class="studio-chip" aria-pressed="false" data-group="${esc(field)}" data-action="suggest-attribute" data-field="${esc(field)}" data-value="${esc(item.value)}">${esc(item.value)}${Number.isFinite(item.score)?` · ${Number(item.score).toFixed(3)}`:''}</button>`).join('')||'<span>No suggestion</span>'}</div>`:`<p>Not estimated: ${esc(result.reason||'not applicable')}</p>`}</div>`).join('')}
  ${state.pending?.quality?.warnings?.map(w=>`<p>Photo tip: ${esc(w.message)} ${esc(w.action)}</p>`).join('')||''}</div>
  <form id="studio-confirm" class="studio-form"><div class="studio-fields"><label>Confirmed category<select name="category" required><option value="">Choose a category</option>${categories().map(c=>`<option value="${c}">${c}</option>`).join('')}</select></label><label>Photo type<select name="garment_photo_type" required><option value="">Choose photo type</option><option value="flat-lay">Flat lay</option><option value="model">Worn by model</option></select></label><label>Color (optional)<select name="color"><option value="">Unknown</option>${['beige','black','blue','brown','green','grey','navy','orange','pink','purple','red','white','yellow'].map(c=>`<option>${c}</option>`).join('')}</select></label><label>Pattern (optional)<select name="pattern"><option value="">Unknown</option>${['solid','striped','checked','printed','floral'].map(c=>`<option>${c}</option>`).join('')}</select></label><label>Sleeve length (optional)<select name="sleeve_length"><option value="">Unknown</option>${['sleeveless','short','long'].map(c=>`<option>${c}</option>`).join('')}</select></label><label>Name (optional)<input name="name" maxlength="120"></label></div><div class="studio-actions"><button class="btn ghost" type="button" data-action="describe">Generate description</button><span class="studio-muted" id="studio-description-state" aria-live="polite"></span></div><label>Description<textarea name="description" placeholder="Generate after choosing a category, or enter your own text"></textarea></label><button class="btn">Save garment</button></form>`;
+ syncSuggestionState(target.querySelector('#studio-confirm'));
+}
+function syncSuggestionState(form){
+ if(!form)return;
+ for(const button of form.parentElement.querySelectorAll('.studio-chip[data-group]')){
+   const field=button.dataset.group,control=form.elements[field],selected=!!control&&!control.disabled&&control.value===button.dataset.value;
+   button.disabled=!control||control.disabled;
+   button.setAttribute('aria-pressed',String(selected));
+   button.classList.toggle('is-selected',selected);
+ }
 }
 async function fetchAvatarExport(result){
  const max=50*1024*1024, source=result.url;
@@ -123,6 +133,7 @@ document.addEventListener('change',e=>{
    if(textarea.dataset.generated&&textarea.value===textarea.dataset.generated){textarea.dataset.stale='true';$('#studio-description-state',node()).textContent='Generated text is out of date. Regenerate before saving.';message('Confirmed values changed. Regenerate the description before saving.')}
    const category=f.elements.category.value;
    if(['jeans','shorts','skirt','trousers'].includes(category)){f.elements.sleeve_length.value='';f.elements.sleeve_length.disabled=true}else f.elements.sleeve_length.disabled=false;
+   syncSuggestionState(f);
  }
 });
 document.addEventListener('click',e=>{const button=e.target.closest('[data-action]');if(!button||!button.closest('.studio'))return;const action=button.dataset.action;
@@ -130,6 +141,7 @@ document.addEventListener('click',e=>{const button=e.target.closest('[data-actio
  if(action==='suggest-category'||action==='suggest-attribute'){
    const form=$('#studio-confirm',node()),field=action==='suggest-category'?'category':button.dataset.field,value=button.dataset.value,select=form?.elements[field];
    if(!select||!value)throw Error('That suggestion is unavailable.');
+   if(select.value===value){syncSuggestionState(form);return}
    if(![...select.options].some(option=>option.value===value))select.add(new Option(value,value));
    select.value=value;select.dispatchEvent(new Event('change',{bubbles:true}));
    button.setAttribute('aria-pressed','true');button.classList.add('is-selected');
