@@ -47,10 +47,31 @@ class Settings:
     pending_upload_ttl_seconds: int = _integer("PENDING_UPLOAD_TTL_SECONDS", 3600, 60, 24 * 3600)
     max_avatar_bytes: int = _integer("MAX_AVATAR_BYTES", 50 * 1024 * 1024, 1024 * 1024, 250 * 1024 * 1024)
     storage_path: Path = Path(os.getenv("STORAGE_PATH", "./data/private-images"))
+    password_reset_pepper: str = os.getenv("PASSWORD_RESET_PEPPER", "development-only-change-before-deploy")
+    password_reset_code_ttl_seconds: int = _integer("PASSWORD_RESET_CODE_TTL_SECONDS", 600, 60, 1800)
+    password_reset_attempt_limit: int = _integer("PASSWORD_RESET_ATTEMPT_LIMIT", 5, 1, 20)
+    password_reset_cooldown_seconds: int = _integer("PASSWORD_RESET_COOLDOWN_SECONDS", 60, 10, 3600)
+    password_reset_rate_limit_count: int = _integer("PASSWORD_RESET_RATE_LIMIT_COUNT", 10, 1, 100)
+    password_reset_rate_window_seconds: int = _integer("PASSWORD_RESET_RATE_WINDOW_SECONDS", 900, 60, 86400)
+    email_delivery_mode: str = os.getenv("EMAIL_DELIVERY_MODE", "capture").strip().lower()
+    email_capture_path: Path = Path(os.getenv("EMAIL_CAPTURE_PATH", "./data/mail-capture"))
+    smtp_host: str = os.getenv("SMTP_HOST", "").strip()
+    smtp_port: int = _integer("SMTP_PORT", 587, 1, 65535)
+    smtp_username: str = os.getenv("SMTP_USERNAME", "")
+    smtp_password: str = os.getenv("SMTP_PASSWORD", "")
+    smtp_from: str = os.getenv("SMTP_FROM", "DressMe <noreply@localhost>")
+    smtp_security: str = os.getenv("SMTP_SECURITY", "starttls").strip().lower()
+    smtp_timeout_seconds: int = _integer("SMTP_TIMEOUT_SECONDS", 10, 1, 60)
 
     def __post_init__(self) -> None:
         if self.vton_mode not in {"mock", "real"}:
             raise ValueError("VTON_MODE must be 'mock' or 'real'")
+        if self.email_delivery_mode not in {"capture", "smtp"}:
+            raise ValueError("EMAIL_DELIVERY_MODE must be 'capture' or 'smtp'")
+        if self.smtp_security not in {"starttls", "ssl", "none"}:
+            raise ValueError("SMTP_SECURITY must be 'starttls', 'ssl' or 'none'")
+        if self.email_delivery_mode == "smtp" and not self.smtp_host:
+            raise ValueError("SMTP_HOST is required when EMAIL_DELIVERY_MODE=smtp")
         if self.environment == "production":
             if self.database_url.endswith("dressme:dressme@localhost:5432/dressme"):
                 raise ValueError("production requires an explicit DATABASE_URL and credential")
@@ -58,6 +79,10 @@ class Settings:
                 raise ValueError("production requires an explicit frontend origin")
             if not self.storage_path.is_absolute():
                 raise ValueError("production requires an absolute private storage path")
+            if len(self.password_reset_pepper) < 32 or "replace-with" in self.password_reset_pepper.lower() or self.password_reset_pepper == "development-only-change-before-deploy":
+                raise ValueError("production requires a random private PASSWORD_RESET_PEPPER of at least 32 characters")
+            if self.email_delivery_mode != "smtp" or self.smtp_security == "none":
+                raise ValueError("production password recovery requires SMTP with TLS")
 
     @property
     def cookie_secure(self) -> bool:

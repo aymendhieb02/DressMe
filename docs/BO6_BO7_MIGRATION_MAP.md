@@ -4,7 +4,7 @@
 |---|---|---|
 | `backend/app/**` | `app/**` | Reused Python API, models, auth, owner checks, storage, avatar and try-on queue logic without changing endpoint semantics. |
 | `backend/alembic/**`, `alembic.ini` | `alembic/**`, `alembic.ini` | Existing migrations through `0008_private_avatar_renders` applied to a fresh dedicated database. |
-| `backend/requirements.in` | `requirements-studio.in` | Existing pinned app dependencies included by root `requirements.txt`. |
+| `backend/requirements.in` | `requirements-studio.in`, `requirements-app.in`, `requirements.lock`, `requirements-dev.lock` | The team API's CPU Torch/CLIP stack and Studio dependencies resolve in the application venv. BO6 uses a separate service lock because its FastAPI/Starlette dependency pins differ. Locks were generated from clean Python 3.11 installs. |
 | `ml-service/app/**` | `bo6_service/app/**` | One CPU inference service, private backend dependency. |
 | `ml-service/bundle/**` | `bo6_service/bundle/**` | Code/metadata copied; `.pt` files restored locally but ignored in Git. Manifest and self-test check exact bundle. |
 | `frontend/src/App.tsx`, `GarmentDetail.tsx`, `api.ts` | `static/studio.js`, `static/studio.css` | Vanilla UI for auth, upload/review/description, wardrobe/detail/edit, person photo, mock job/history and partial avatar handling. The existing React app is not embedded. |

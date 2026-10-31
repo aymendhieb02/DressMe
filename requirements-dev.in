@@ -1,0 +1,2 @@
+-r requirements-app.in
+pytest==9.0.2

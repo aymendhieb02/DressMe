@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from .auth.router import router as auth_router
+from .auth.recovery import router as recovery_router
 from .avatars.router import router as avatars_router
 from .common.errors import http_error_handler, unhandled_error_handler, validation_error_handler
 from .common.middleware import RequestContextMiddleware
@@ -75,6 +76,7 @@ async def csrf_error_handler(request: Request, _exc: Exception):
 app.add_exception_handler(AuthenticationRequired, authentication_error_handler)
 app.add_exception_handler(InvalidCsrfToken, csrf_error_handler)
 app.include_router(auth_router)
+app.include_router(recovery_router)
 app.include_router(avatars_router)
 app.include_router(garments_router)
 app.include_router(tryon_router)

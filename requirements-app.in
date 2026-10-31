@@ -1,0 +1,13 @@
+# Complete application environment: the original public Python API plus Studio.
+# ML inference runs from a separate BO6 environment (bo6_service/requirements.lock).
+-r requirements-studio.in
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+numpy==2.1.3
+requests
+torch==2.11.0
+torchvision==0.26.0
+open_clip_torch
+transformers
+python-dotenv

@@ -155,13 +155,13 @@ def studio_config():
     try:
         parsed = urlsplit(raw)
     except ValueError:
-        return {"avaturn_url": None, "export_origins": []}
+        return {"avaturn_url": None, "export_origins": [], **_public_upload_limits()}
     allowed = (parsed.scheme == "https" and parsed.hostname is not None
                and re.fullmatch(r"[a-z0-9-]+\.avaturn\.dev", parsed.hostname, re.I)
                and parsed.netloc.lower() == parsed.hostname.lower() and parsed.path in ("", "/")
                and not parsed.username and not parsed.password and not parsed.query and not parsed.fragment)
     if not allowed:
-        return {"avaturn_url": None, "export_origins": []}
+        return {"avaturn_url": None, "export_origins": [], **_public_upload_limits()}
     origins = {f"https://{parsed.hostname}"}
     for value in os.environ.get("AVATURN_EXPORT_ORIGINS", "").split(","):
         value = value.strip()
@@ -173,7 +173,19 @@ def studio_config():
                 and extra.path in ("", "/")
                 and not extra.username and not extra.password and not extra.query and not extra.fragment):
             origins.add(f"https://{extra.netloc}")
-    return {"avaturn_url": raw, "export_origins": sorted(origins)}
+    return {"avaturn_url": raw, "export_origins": sorted(origins), **_public_upload_limits()}
+
+
+def _public_upload_limits():
+    """Only non-sensitive limits and allow-list values are exposed to the Studio UI."""
+    from app.config import settings as studio_settings
+
+    return {"upload_limits": {
+        "image_bytes": studio_settings.max_upload_bytes,
+        "avatar_bytes": studio_settings.max_avatar_bytes,
+        "image_content_types": ["image/jpeg", "image/png", "image/webp"],
+        "avatar_extensions": [".glb"],
+    }}
 class Items(BaseModel): items: list[int]; want: str | None = None
 class Ootd(BaseModel):
     lat: float | None = None; lon: float | None = None; city: str | None = None; place: str = "My location"

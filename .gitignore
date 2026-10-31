@@ -5,6 +5,7 @@
 
 # Python
 .venv/
+.venv-*/
 __pycache__/
 *.pyc
 *.py[cod]
@@ -20,5 +21,8 @@ Thumbs.db
 
 # Private integration data and restored model weights
 data/private-images/
+data/mail-capture/
+var/
+runtime/
 bo6_service/bundle/*.pt
 *.log

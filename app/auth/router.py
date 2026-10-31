@@ -25,7 +25,7 @@ from .dependencies import (
     session_context,
 )
 from .rate_limit import rate_limit_login
-from .schemas import AccountDelete, AuthResponse, Credentials, CsrfToken, UserPublic
+from .schemas import AccountDelete, AuthResponse, LoginCredentials, RegisterCredentials, CsrfToken, UserPublic
 from .security import new_secret, secret_hash, verify_password
 from .service import authenticate, create_session, create_user, find_user, utc_now
 
@@ -56,7 +56,7 @@ def _origin_ok(request: Request) -> bool:
 
 
 @router.post("/register", response_model=AuthResponse, status_code=201)
-def register(body: Credentials, request: Request, response: Response, db: Session = Depends(get_db)):
+def register(body: RegisterCredentials, request: Request, response: Response, db: Session = Depends(get_db)):
     if not _origin_ok(request):
         raise InvalidCsrfToken()
     email = body.email
@@ -80,7 +80,7 @@ def register(body: Credentials, request: Request, response: Response, db: Sessio
 
 
 @router.post("/login", response_model=AuthResponse)
-def login(body: Credentials, request: Request, response: Response, db: Session = Depends(get_db)):
+def login(body: LoginCredentials, request: Request, response: Response, db: Session = Depends(get_db)):
     if not _origin_ok(request):
         raise InvalidCsrfToken()
     email = body.email

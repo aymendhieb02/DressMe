@@ -1,10 +1,2 @@
-fastapi
-uvicorn
-torch
-open_clip_torch
-numpy
-requests
-python-multipart
-python-dotenv
-transformers
--r requirements-studio.in
+# Backwards-compatible installation entry point; the generated lock is canonical.
+-r requirements.lock
