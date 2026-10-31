@@ -72,11 +72,14 @@ input[type=range]{accent-color:var(--c2);width:220px}
 .hero h1{font:400 2.6rem Fraunces,serif;color:var(--hero);margin:26px 0 0;letter-spacing:-1px}
 main .glass{margin-top:16px}.vibe{margin:16px 0 0;font:italic 600 1.15rem Fraunces,serif;line-height:1.4}.cond{text-transform:capitalize;opacity:.7;margin:-4px 0 6px}
 .spin{width:34px;height:34px;border:4px solid #cfe6e3;border-top-color:var(--c2);border-radius:50%;animation:sp .8s linear infinite;margin:22px}@keyframes sp{to{transform:rotate(360deg)}}
-#wall{position:fixed;inset:-15% -5%;display:flex;gap:18px;justify-content:center;transform:rotate(-7deg) scale(1.1);z-index:0}
+.wall-scene{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+#wall{position:absolute;inset:-15% -5%;display:flex;gap:18px;justify-content:center;transform:rotate(-7deg) scale(1.1);z-index:0}
 #wall .col{display:flex;flex-direction:column;gap:18px;width:200px;flex:none;animation:scr linear infinite}
 #wall img{width:100%;height:260px;object-fit:cover;border-radius:18px;box-shadow:0 10px 26px #17283a30}@keyframes scr{to{transform:translateY(-50%)}}
-#veil{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,#fff6ebd9,#fff6ebb3 35%,#eaf7f4cc)}
-@media(max-width:860px){.top{flex-wrap:wrap}.dmenu{left:0;right:auto;min-width:260px}}
+#veil{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#fff6ebd9,#fff6ebb3 35%,#eaf7f4cc)}
+.menu-toggle{display:none;border:1px solid #cfe6e3;background:#fff;color:var(--ink);border-radius:13px;min-width:44px;min-height:44px;padding:8px 11px;font:600 .85rem Inter;cursor:pointer}
+.menu-toggle:focus-visible{outline:3px solid #087c78;outline-offset:3px}
+@media(max-width:860px){.menu-toggle{display:inline-flex;align-items:center;justify-content:center}}
 
 .logo{display:flex;align-items:center;gap:14px;cursor:pointer;color:var(--ink)}
 .mono{width:46px;height:46px;flex:none}.mono text{font:italic 300 19px Fraunces,serif;fill:currentColor}
@@ -150,8 +153,8 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 <div id="intro"><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
 <div class="copy"><p class="eyebrow">Wardrobe intelligence</p><h1>Where weather, taste and wardrobe <em>finally agree.</em></h1></div>
 <button class="btn enter" id="enter">Enter the atelier</button></div>
-<div id="wall"></div><div id="veil"></div><canvas id="fx"></canvas>
-<div class="wrap"><header class="top"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div><nav id="menu"></nav></header><main>
+<div class="wall-scene" aria-hidden="true"><div id="wall"></div><div id="veil"></div></div><canvas id="fx"></canvas>
+<div class="wrap"><header class="top"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button><nav id="menu" aria-label="Main navigation"></nav></header><main>
 <div class="hero"><h1>Wardrobe intelligence,<br><em>tailored to the day.</em></h1></div>
 
 <section id="ootd" class="glass"><p class="eyebrow">No. 01</p><h2>Daily Edit</h2>
@@ -258,8 +261,55 @@ const MENU=[{label:'Style Engine',items:[
  {id:'bo7-history',title:'Try-On History',desc:'Your saved jobs'}]}];
 function go(id){tab=id;$$('main section').forEach(s=>{s.hidden=s.id!==id;if(!s.hidden){s.style.animation='none';s.offsetHeight;s.style.animation=''}});
  $$('.mi').forEach(m=>m.classList.toggle('on',m.dataset.t===id));$$('.dd').forEach(d=>d.classList.toggle('on',!!$('.mi.on',d)));applyBg();history.replaceState(null,'','#'+id);if(window.onSection)window.onSection(id);document.dispatchEvent(new CustomEvent('dressme:section',{detail:id}))}
-$('#menu').innerHTML=MENU.map(g=>`<div class="dd"><button>${g.label}</button><div class="dmenu"><div>${g.items.map(i=>`<button class="mi" data-t="${i.id}"><b>${i.title}</b><small>${i.desc||''}</small></button>`).join('')}</div></div></div>`).join('');
-$('#menu').onclick=e=>{const m=e.target.closest('.mi');if(m){go(m.dataset.t);document.activeElement.blur()}};
+const menu=$('#menu'),menuToggle=$('#menuToggle'),menuGroups=()=>$$('.dd',menu);
+let mobileMenuOpen=false;
+const mobileMenu=()=>matchMedia('(max-width: 860px)').matches;
+function setGroupOpen(group,open,{dismissFocus=false}={}){
+ if(!group)return;
+ if(open){menuGroups().forEach(other=>{if(other!==group)setGroupOpen(other,false)});group.removeAttribute('data-dismissed-focus')}
+ else if(dismissFocus)group.setAttribute('data-dismissed-focus','true');
+ else group.removeAttribute('data-dismissed-focus');
+ group.classList.toggle('is-open',open);
+ $('.group-toggle',group)?.setAttribute('aria-expanded',String(open));
+}
+function closeGroups(){menuGroups().forEach(group=>setGroupOpen(group,false))}
+function syncMenuMode(){
+ const isMobile=mobileMenu();
+ menuToggle.hidden=!isMobile;
+ menu.hidden=isMobile&&!mobileMenuOpen;
+ menuToggle.setAttribute('aria-expanded',String(isMobile&&mobileMenuOpen));
+ if(!isMobile){mobileMenuOpen=false;menu.hidden=false;menuToggle.setAttribute('aria-expanded','false')}
+}
+function closeMobileMenu(returnFocus=false){
+ closeGroups();mobileMenuOpen=false;syncMenuMode();
+ if(returnFocus&&mobileMenu())menuToggle.focus();
+}
+menu.innerHTML=MENU.map((g,index)=>`<div class="dd"><button class="group-toggle" type="button" aria-expanded="false" aria-controls="nav-panel-${index}">${g.label}</button><div class="dmenu" id="nav-panel-${index}"><div>${g.items.map(i=>`<button class="mi" type="button" data-t="${i.id}"><b>${i.title}</b><small>${i.desc||''}</small></button>`).join('')}</div></div></div>`).join('');
+syncMenuMode();
+menuToggle.addEventListener('click',()=>{mobileMenuOpen=!mobileMenuOpen;closeGroups();syncMenuMode();if(mobileMenuOpen)menuGroups()[0]?.querySelector('.group-toggle')?.focus()});
+menu.addEventListener('click',event=>{
+ const item=event.target.closest('.mi');
+ if(item){const group=item.closest('.dd');go(item.dataset.t);closeMobileMenu(mobileMenu());if(!mobileMenu()){setGroupOpen(group,false,{dismissFocus:true});group.querySelector('.group-toggle')?.focus()}return}
+ const button=event.target.closest('.group-toggle');
+ if(button){const group=button.closest('.dd');if(mobileMenu()){const open=button.getAttribute('aria-expanded')!=='true';setGroupOpen(group,open,{dismissFocus:!open})}else setGroupOpen(group,true)}
+});
+menu.addEventListener('focusin',event=>{const group=event.target.closest('.dd');if(!mobileMenu()&&group&&!group.hasAttribute('data-dismissed-focus'))setGroupOpen(group,true)});
+menu.addEventListener('focusout',event=>{const group=event.target.closest('.dd');if(group&&!group.contains(event.relatedTarget))setGroupOpen(group,false)});
+menuGroups().forEach(group=>{
+ group.addEventListener('pointerenter',()=>{if(!mobileMenu())setGroupOpen(group,true)});
+ group.addEventListener('pointerleave',()=>{if(!mobileMenu()&&!group.contains(document.activeElement))setGroupOpen(group,false)});
+});
+document.addEventListener('keydown',event=>{
+ if(event.key!=='Escape')return;
+ const activeGroup=event.target.closest?.('.dd');
+ if(activeGroup&&activeGroup.classList.contains('is-open')){
+  event.preventDefault();event.stopPropagation();setGroupOpen(activeGroup,false,{dismissFocus:true});activeGroup.querySelector('.group-toggle')?.focus();return;
+ }
+ if(mobileMenu()&&mobileMenuOpen){event.preventDefault();event.stopPropagation();closeMobileMenu(true)}
+},true);
+document.addEventListener('click',event=>{if(mobileMenu()&&mobileMenuOpen&&!event.target.closest('.top'))closeMobileMenu(false)});
+window.addEventListener('resize',()=>{closeGroups();mobileMenuOpen=false;syncMenuMode()},{passive:true});
+window.addEventListener('hashchange',()=>{if(mobileMenu()&&mobileMenuOpen)closeMobileMenu(false)});
 /* ---------- sélecteur d'articles ---------- */
 function picker(cb){let f='all',q='';const m=document.createElement('div');m.className='modal';
  m.innerHTML=`<div><div class="row" style="align-items:center;justify-content:space-between"><h2>Pick an item</h2><button class="btn ghost" id="cl">Close</button></div>

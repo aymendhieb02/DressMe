@@ -1,6 +1,38 @@
 # Integration verification
 
-## Current continuation — 31 October 2026
+## Responsive UI continuation — 31 October 2026
+
+This follow-up was performed only in `D:\5eme\DressMe\projet_integration`, branch `integration_bo6_bo7`, from base commit `604a9b6c8f27de781f963b2dcaa5a8f740da7d84`. The worktree was clean at the start. The separate source checkout `D:\5eme\DressMe\Projet_DressMe` contained unrelated modified and untracked files; it was not edited. The exported model bundle was not modified.
+
+### Findings and changes
+
+- Baseline browser screenshots showed the public navigation continuing horizontally at phone widths, with the `My Studio` button ending beyond the viewport. Before changes, the existing probe measured a 390px viewport with `documentElement.scrollWidth=541`, menu bounds `x=42..381.5`, and clipped Studio navigation; the 768px public page measured 859px wide. Studio page-level `overflow-x:hidden` had masked some document overflow.
+- Added a compact mobile `Menu` disclosure. Its three groups open one at a time, each group and route has keyboard support, Escape closes a group then the global menu and returns focus, outside click closes the menu, and resize resets disclosure state. Desktop group hover/focus remains available. The rotated decorative wall is contained by a fixed background wrapper rather than by clipping the page.
+- Added the five-page native Studio section disclosure for compact widths. Auth routes hide the repeated public hero and remove the nested `main` element. Password inputs and labels remain accessible at narrow widths.
+- Add Garment now uses the available Studio content width: the upload and its single preview sit in one column beside suggestions and confirmation when that content column is at least 760px; narrower content stacks. The review no longer repeats the image already visible in the upload panel. Suggestions, confirmed fields, description, save flow, and BO6 inference behavior remain unchanged.
+
+### Verification
+
+`node scripts/browser_check.cjs` passed with **30 PASS checkpoints**, including the public sections, all ten public/Studio destinations, menu group touch targets and hit tests, keyboard focus/Escape, outside click, resize transitions, login/registration/recovery layouts, five Studio pages, real BO6 analyze → review → generated description → save → edit → reload, and disposable-account cleanup. Every affected view was browser-emulated at 320, 360, 390, 768, 1024 and 1440 CSS pixels, plus a 568×320 short landscape viewport. The browser audit checked document/body scroll width, horizontal control bounds, clipped controls, and center hit tests. Menu and compact Studio targets have CSS minimum heights of 44px.
+
+The BO6 browser journey used the tracked catalog fixture `data/img/P01133864.jpg` and the healthy real service at `127.0.0.1:18022` (`E03_efficientnet_b0`). The application test server used port 8013, the dedicated migrated SQLite file `C:\Users\Msi\AppData\Local\Temp\DressMeResponsiveAcceptance_20261031_01\acceptance.sqlite`, private storage/mail directories under the same temporary root, and no user demo database. The disposable account and its owned records were deleted by the browser check. Both test service sessions were stopped after verification; the earlier bind attempt on 18022 failed because the already-running healthy service owned that port, and it was reused read-only for inference.
+
+The browser was Chromium emulation, not physical-device testing. The UI is served as static HTML/CSS/JavaScript; the repository has no frontend `package.json`, Vite, or separate production build command. No production frontend bundle was generated. Full-page and viewport captures remain outside Git at `C:\Users\Msi\AppData\Local\Temp\DressMeResponsiveAcceptance_20261031_01\screenshots\responsive-after\`, including `public-menu-open-390-viewport.png`, `auth-login-390-full.png`, `bo6-review-390-full.png`, `studio-bo6-wardrobe-390-full.png`, and the avatar/try-on/history captures. These show disposable account data only.
+
+Exact browser command and configuration:
+
+```powershell
+$env:DRESSME_BASE_URL='http://127.0.0.1:8013'
+$env:DRESSME_PLAYWRIGHT_PATH='C:\Users\Msi\AppData\Local\Temp\dressme-browser-tools\node_modules\playwright'
+$env:DRESSME_BROWSER_EXECUTABLE='C:\Users\Msi\AppData\Local\ms-playwright\chromium-1243\chrome-win64\chrome.exe'
+$env:DRESSME_SCREENSHOT_DIR='C:\Users\Msi\AppData\Local\Temp\DressMeResponsiveAcceptance_20261031_01\screenshots'
+$env:DRESSME_CAPTURE_PATH='C:\Users\Msi\AppData\Local\Temp\DressMeResponsiveAcceptance_20261031_01\mail'
+node scripts/browser_check.cjs
+```
+
+Additional checks: browser page-error list empty; `node --check scripts/browser_check.cjs` passed; inline script parsing passed; `git diff --check` passed; `git diff --quiet HEAD -- bo6_service/bundle` passed. The complete application and BO6 Python suites were not rerun because no backend or ML code changed.
+
+## Previous continuation — 31 October 2026 (before responsive follow-up)
 
 Work was performed only in `D:\5eme\DressMe\projet_integration`, on branch `integration_bo6_bo7`, from worktree base `e531446bfc3f69d1e441734058c31f428b4cb30c`. New checks ran against this task worktree before its delivery commit; the delivery SHA is available in Git history and the final task report. The source checkout `D:\5eme\DressMe\Projet_DressMe` was not edited by this task. It had unrelated modified and untracked files when inspected; they were left untouched.
 
