@@ -48,17 +48,48 @@ const base = 'http://127.0.0.1:8002';
     const suggestedCategory=await categorySuggestion.getAttribute('data-value');
     await categorySuggestion.click();
     if(await page.locator('#studio-confirm select[name=category]').inputValue()!==suggestedCategory) throw Error('category suggestion did not fill the review field');
+    if(await categorySuggestion.getAttribute('aria-pressed')!=='true') throw Error('selected category chip is not announced');
+    const categorySuggestions=page.locator('[data-action="suggest-category"]');
+    if(await categorySuggestions.count()>1){
+      const secondCategory=categorySuggestions.nth(1),secondValue=await secondCategory.getAttribute('data-value');
+      await secondCategory.click();
+      if(await categorySuggestion.getAttribute('aria-pressed')!=='false'||await secondCategory.getAttribute('aria-pressed')!=='true') throw Error('category candidate selection is not exclusive');
+      await page.locator('#studio-confirm select[name=category]').selectOption(suggestedCategory);
+      if(await categorySuggestion.getAttribute('aria-pressed')!=='true'||await secondCategory.getAttribute('aria-pressed')!=='false') throw Error('manual category change did not update chip state');
+      await page.locator('#studio-confirm select[name=category]').selectOption(suggestedCategory);
+    }
     const attributeSuggestion=page.locator('[data-action="suggest-attribute"]').first();
     if(await attributeSuggestion.count()){
       const field=await attributeSuggestion.getAttribute('data-field'), value=await attributeSuggestion.getAttribute('data-value');
       await attributeSuggestion.click();
       if(await page.locator(`#studio-confirm [name="${field}"]`).inputValue()!==value) throw Error('attribute suggestion did not fill the review field');
+      if(await attributeSuggestion.getAttribute('aria-pressed')!=='true') throw Error('selected attribute chip is not announced');
+      const group=page.locator(`[data-action="suggest-attribute"][data-field="${field}"]`);
+      if(await group.count()>1){
+        const second=group.nth(1);await second.click();
+        if(await attributeSuggestion.getAttribute('aria-pressed')!=='false'||await second.getAttribute('aria-pressed')!=='true') throw Error('attribute candidate selection is not exclusive');
+        const candidates=await group.evaluateAll(nodes=>nodes.map(n=>n.dataset.value));
+        const control=page.locator(`#studio-confirm [name="${field}"]`);
+        const manual=await control.locator('option').evaluateAll((nodes,values)=>nodes.map(n=>n.value).find(v=>v&&!values.includes(v)),candidates);
+        if(manual){await control.selectOption(manual);if(await group.evaluateAll(nodes=>nodes.some(n=>n.getAttribute('aria-pressed')==='true')))throw Error('manual attribute correction left a false selected chip')}
+      }
+    }
+    if(['jeans','shorts','skirt','trousers'].includes(suggestedCategory)){
+      if(!await page.locator('#studio-confirm select[name=sleeve_length]').isDisabled())throw Error('incompatible sleeve field remained enabled');
+      if(await page.locator('[data-action="suggest-attribute"][data-field="sleeve_length"]').count())throw Error('ineligible sleeve suggestion was rendered');
     }
     await page.locator('#studio-confirm select[name=garment_photo_type]').selectOption('flat-lay');
     await page.getByRole('button',{name:'Generate description'}).click();
     await page.waitForFunction(() => document.querySelector('#studio-confirm textarea[name=description]')?.value);
     const text = await page.locator('#studio-confirm textarea[name=description]').inputValue();
     if (!text.toLowerCase().includes('trousers')) throw Error('description did not reflect category');
+    if(await categorySuggestions.count()>1){
+      await categorySuggestions.nth(1).click();
+      await page.waitForFunction(() => document.querySelector('#studio-description-state')?.textContent.includes('out of date'));
+      if(await page.locator('#studio-confirm textarea[name=description]').inputValue()!==text) throw Error('stale generated text was discarded');
+      await page.getByRole('button',{name:'Generate description'}).click();
+      await page.waitForFunction(() => document.querySelector('#studio-description-state')?.textContent.includes('Generated from your selected values'));
+    }
     await page.screenshot({path:path.join(screenshotDir,'bo6-review-desktop.png')});
     await page.getByRole('button',{name:'Save garment'}).click();
     await page.locator('#bo6-wardrobe').waitFor({state:'visible'});
