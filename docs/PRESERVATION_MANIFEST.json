@@ -1189,19 +1189,19 @@
   "changed_existing": {
     ".env.example": {
       "baseline_blob_sha1": "4f1d58538a569861736416452eefe6dccdf01eda",
-      "current_sha256": "7583bde1f59c53ed71f42efd1b0e654f583968d9f3d21afa013d8c4b230a47b7"
+      "current_sha256": "28dd40790837ae2dc563fd0f204922ed1a8614ddcbe87a96747ddb34f4f2106a"
     },
     ".gitignore": {
       "baseline_blob_sha1": "ad4496f45e5ec14caf9a60095007d36dfdc99661",
-      "current_sha256": "30537feba4d584d0055755ed48d31159b47364203761b0a20076a6833dbf44d1"
+      "current_sha256": "670981c96c453f953e429e91906615441322353a8c973c0add6b1c71fbd64bc4"
     },
     "api.py": {
       "baseline_blob_sha1": "fceb26eeb57c0b9203f42d30a810290f1e01ab60",
-      "current_sha256": "b8400f6edf5443328c5f4ccdde7cd7b716d1d2502a56ddab8869e71e117d5e5e"
+      "current_sha256": "061c39f5545d47fac08e2d02429688de216fb7226e521e47a0a5880671180b27"
     },
     "requirements.txt": {
       "baseline_blob_sha1": "403e230c636239312c5f34093ec7bbffae021079",
-      "current_sha256": "0b31567b7e13d174b1b23f84978c70c3cde5dd5541d2a4b86ae79da670e1b035"
+      "current_sha256": "1162e90e3a8520a00b344f0d773f2d3ab5900a2eaf6b183f54a2f14540e90448"
     },
     "static/index.html": {
       "baseline_blob_sha1": "a41b86e6627d04507e1534021465c50c0df27cfa",
@@ -1210,6 +1210,7 @@
   },
   "new_files": [
     "README.md",
+    "TEAM_SETUP.md",
     "alembic.ini",
     "alembic/env.py",
     "alembic/script.py.mako",
@@ -1221,10 +1222,12 @@
     "alembic/versions/0006_mock_tryon_jobs.py",
     "alembic/versions/0007_private_avatars.py",
     "alembic/versions/0008_private_avatar_renders.py",
+    "alembic/versions/0009_password_recovery.py",
     "app/__init__.py",
     "app/auth/__init__.py",
     "app/auth/dependencies.py",
     "app/auth/rate_limit.py",
+    "app/auth/recovery.py",
     "app/auth/router.py",
     "app/auth/schemas.py",
     "app/auth/security.py",
@@ -1293,6 +1296,10 @@
     "bo6_service/bundle/taxonomy.json",
     "bo6_service/bundle/training_config.json",
     "bo6_service/bundle/validation_metrics.json",
+    "bo6_service/requirements-dev.in",
+    "bo6_service/requirements-dev.lock",
+    "bo6_service/requirements.in",
+    "bo6_service/requirements.lock",
     "bo6_service/requirements.txt",
     "bo6_service/tests/conftest.py",
     "bo6_service/tests/test_analyze.py",
@@ -1308,13 +1315,28 @@
     "docs/integration-screenshots/bo6-wardrobe-mobile.png",
     "docs/integration-screenshots/team-ootd-desktop.png",
     "docs/integration-screenshots/team-ootd-mobile.png",
+    "requirements-app.in",
+    "requirements-dev.in",
+    "requirements-dev.lock",
     "requirements-studio.in",
+    "requirements.lock",
     "scripts/browser_check.cjs",
+    "scripts/dev/check.ps1",
+    "scripts/dev/restore-model-bundle.ps1",
+    "scripts/dev/setup.ps1",
+    "scripts/dev/start.ps1",
+    "scripts/dev/stop.ps1",
     "scripts/preservation_manifest.py",
     "scripts/verify_integration.py",
     "scripts/verify_restart.py",
     "static/studio.css",
     "static/studio.js",
+    "static/studio/auth.js",
+    "static/studio/avatar.js",
+    "static/studio/core.js",
+    "static/studio/tryon.js",
+    "static/studio/upload.js",
+    "static/studio/wardrobe.js",
     "static/vendor/MODEL_VIEWER_LICENSE.txt",
     "static/vendor/README.md",
     "static/vendor/avaturn-sdk.js",
@@ -1326,6 +1348,7 @@
     "tests/fixtures/synthetic_rigged_avatar.glb",
     "tests/test_auth.py",
     "tests/test_avatar.py",
+    "tests/test_combined_lifecycle.py",
     "tests/test_garment_export.py",
     "tests/test_garment_retries.py",
     "tests/test_garment_search.py",
@@ -1333,6 +1356,7 @@
     "tests/test_integration_config.py",
     "tests/test_migrations.py",
     "tests/test_ml_client.py",
+    "tests/test_password_recovery.py",
     "tests/test_redis_probe.py",
     "tests/test_tryon.py",
     "tests/test_tryon_dispatcher.py",

@@ -1,4 +1,77 @@
-# Integration verification — 29 October 2026
+# Integration verification
+
+## Current continuation — 31 October 2026
+
+Work was performed only in `D:\5eme\DressMe\projet_integration`, on branch `integration_bo6_bo7`, from worktree base `e531446bfc3f69d1e441734058c31f428b4cb30c`. New checks ran against this task worktree before its delivery commit; the delivery SHA is available in Git history and the final task report. The source checkout `D:\5eme\DressMe\Projet_DressMe` was not edited by this task. It had unrelated modified and untracked files when inspected; they were left untouched.
+
+### Current results
+
+| Area | Result and evidence |
+|---|---|
+| Application suite | PASS: `87 passed in 16.92s` using the generated developer lock in a new `python -m venv` environment with system site packages disabled. Command: `& $appLockPython -m pytest tests -q`. |
+| BO6 suite | PASS: `16 passed in 5.10s`; one Starlette deprecation warning recommends `httpx2`. Command: `Push-Location .\bo6_service; & $bo6LockPython -m pytest tests -q; Pop-Location`. |
+| Dependency locks | PASS: clean installs of `requirements-dev.lock` and `bo6_service/requirements-dev.lock`; both returned `No broken requirements found.` The runtime locks are separate, and `requirements.txt` points to the app lock. Python 3.11.9 / Windows x64 was tested. |
+| BO6 bundle | PASS: clean BO6 environment verified the complete checksum manifest, then `bundle/selftest.py` returned `passed=true`, `n_checks=17`. `restore-model-bundle.ps1` was exercised against the already-valid target bundle; it reported existing weights unchanged and repeated all 17 self-tests. `git diff --quiet HEAD -- bo6_service/bundle` passed. No model artifacts were modified. |
+| Browser journey | PASS, 13 checkpoints: original five public sections; invalid-login feedback and keyboard registration focus; auth-first route and return; deep links/reload/sidebar/Back/unique IDs; upload format-error announcement, drag/drop preview and keyboard file removal; detail Cancel focus return; real BO6 image analyze → explicit category/attribute confirmation → generated description → save → edit → reload; 360/390/768/1440 CSS-pixel layouts; live unavailable-worker/provider messages; controlled available-worker UI; revoked-session sign-in message; captured-email recovery, old-password rejection and other-session revocation; disposable account/records removed. No browser page errors. |
+| BO6 inference mode | PASS: browser upload used the running local BO6 HTTP service on `127.0.0.1:18022` and returned real bundle suggestions/description. The application test API used a temporary SQLite database on `127.0.0.1:8012`; it did not touch the persistent demo database. |
+| Password recovery | PASS implementation and local capture: generic known/unknown request response, hashed verifier, expiry, cooldown, attempt limit, superseding code, atomic single use, session revocation and subsequent sign-in are covered by backend tests and the captured-email browser journey. Real SMTP delivery was not attempted. |
+| Existing user account | NOT RUN: a presence-only check returned `DRESSME_TEST_PASSWORD is unset`. No attempt was made to sign into `aymen.dhieb@esprit.tn`, and no account data or sessions were changed. |
+| Redis/RQ | BLOCKED live: `/health/try-on` reported `redis_unavailable`; no queue job was submitted. Controlled browser routes exercised the enabled UI only; the script explicitly confirms no job was sent. |
+| Avaturn and real VTON | NOT VERIFIED: Avaturn was unconfigured in the isolated browser origin; real provider initialization/export and PNG rendering remain unavailable/unverified. No real VTON adapter exists; MOCK status remains explicit. |
+| Browser evidence | PASS, browser emulation only. Before screenshots are the committed baseline files listed below. After screenshots were captured outside Git under `C:\Users\Msi\AppData\Local\Temp\DressMeStudioAcceptance_20261031_01\screenshots\` (`team-ootd-desktop.png`, `team-ootd-mobile.png`, `studio-login-desktop.png`, `studio-login-mobile.png`, `bo6-review-desktop.png`, `bo6-wardrobe-mobile.png`). No physical devices or assistive-technology pass is claimed. |
+| Windows scripts | PASS syntax parsing for `setup.ps1`, `start.ps1`, `check.ps1`, `stop.ps1`, and `restore-model-bundle.ps1`. The restore script was run against an already-valid bundle. `start.ps1`/`check.ps1`/`stop.ps1` were not used to manage the user's live demo processes. |
+| Preservation manifest | PASS: regenerated against baseline `6db709ade062bad5c7ca7be7ee85d4b88c2fdfee`; 1,186 original tracked files counted, 1,181 unchanged, five intentional tracked-file changes, and 153 files added since that baseline. The ignored BO6 `.pt` weights were not staged or altered. |
+
+The seven named recovery regressions in `tests/test_password_recovery.py` passed as part of the 87-test application suite: `test_password_recovery_is_generic_single_use_revokes_sessions_and_requires_sign_in`, `test_recovery_cooldown_expiry_attempt_limit_and_replacement`, `test_invalid_code_attempts_are_limited_and_unknown_account_verification_is_generic`, `test_recovery_code_expiry_is_enforced`, `test_atomic_recovery_claim_allows_only_one_concurrent_consumer`, `test_login_accepts_legacy_password_shorter_than_new_account_policy`, and `test_password_recovery_requires_frontend_origin`.
+
+### Commands and outcomes
+
+The lock files were generated from actual successful clean Python 3.11 installs and `pip freeze`; no versions or hashes were hand-invented. A `pip-tools compile --generate-hashes` attempt spent over 2.5 minutes resolving the large PyTorch/index graph without producing a lock and was manually interrupted. The checked-in locks pin the successfully resolved package versions, but do not claim artifact hashes.
+
+Clean locked environments were created under `%TEMP%\dressme-clean-install-20261031`:
+
+```powershell
+$cleanRoot = Join-Path $env:TEMP 'dressme-clean-install-20261031'
+python -m venv (Join-Path $cleanRoot 'app-lock-env')
+& (Join-Path $cleanRoot 'app-lock-env\Scripts\python.exe') -m pip install -r requirements-dev.lock
+& (Join-Path $cleanRoot 'app-lock-env\Scripts\python.exe') -m pip check
+& (Join-Path $cleanRoot 'app-lock-env\Scripts\python.exe') -m pytest tests -q
+
+python -m venv (Join-Path $cleanRoot 'bo6-lock-env')
+& (Join-Path $cleanRoot 'bo6-lock-env\Scripts\python.exe') -m pip install -r bo6_service/requirements-dev.lock
+& (Join-Path $cleanRoot 'bo6-lock-env\Scripts\python.exe') -m pip check
+Push-Location .\bo6_service
+& (Join-Path $cleanRoot 'bo6-lock-env\Scripts\python.exe') -m pytest tests -q
+Pop-Location
+```
+
+Both lock installs printed `Successfully installed`; both `pip check` runs printed `No broken requirements found.` The test commands returned the counts in the results table. No system-site packages, user model cache or original checkout were used by these environments.
+
+The browser run used this isolated command/configuration; the recovery pepper was generated privately in the server process and was not logged:
+
+```powershell
+$env:DRESSME_BASE_URL = 'http://127.0.0.1:8012'
+$env:DRESSME_PLAYWRIGHT_PATH = Join-Path $env:TEMP 'dressme-browser-tools\node_modules\playwright'
+$env:DRESSME_BROWSER_EXECUTABLE = 'C:\Users\Msi\AppData\Local\ms-playwright\chromium-1243\chrome-win64\chrome.exe'
+$env:DRESSME_SCREENSHOT_DIR = 'C:\Users\Msi\AppData\Local\Temp\DressMeStudioAcceptance_20261031_01\screenshots'
+$env:DRESSME_CAPTURE_PATH = 'C:\Users\Msi\AppData\Local\Temp\DressMeStudioAcceptance_20261031_01\mail'
+node scripts/browser_check.cjs
+```
+
+Uvicorn used the existing isolated SQLite database under that temporary root, a private temporary file directory, the real BO6 service URL `http://127.0.0.1:18022`, and frontend origin `http://127.0.0.1:8012`. Its Alembic state was `0009_password_recovery (head)`. The isolated app process was stopped after browser verification; the user's pre-existing processes on ports 8002/18022 were not stopped or reconfigured.
+
+The first full browser run exposed `active is not defined` in the try-on module. The module import was fixed; a focused disposable-account diagnostic then showed `Submission is disabled because the worker is unavailable (redis_unavailable)` and no page errors. The final accessibility checks also exposed that invalid credentials were passed through the session-expiry handler and labelled as an expired session. The shared request helper now reserves that redirect for authenticated requests; the browser test verifies accurate invalid-credential feedback and the separate session-expiry path after a real password-reset revocation. The complete browser journey was rerun afterward and passed.
+
+### Remaining blockers and limitations
+
+- Live Redis/RQ dispatch, worker completion, result ownership under real queued work, cancellation/deletion races and persistence after service/container recreation remain unverified because Redis was unavailable. This does not change the separate browser UI PASS for both unavailable and controlled-available states.
+- The authorized existing-account sign-in/session check is pending the user's private `DRESSME_TEST_PASSWORD` variable. Do not reset this account, revoke its sessions or remove its records.
+- SMTP real delivery, Avaturn provider acceptance/export, saved-avatar viewer with a real private GLB, physical-device behavior and screen-reader behavior were not verified.
+- The inherited public CLIP/SigLIP endpoints lazy-download third-party weights on first model-assisted use. Their weight versions/checksums and explicit offline restoration workflow are not owned by this repository; `TEAM_SETUP.md` calls out this behavior. BO6 itself uses only its separate checksum-verified exported bundle.
+
+Before screenshots from the previous integration run are committed under `docs/integration-screenshots/`, including `bo6-review-desktop.png`, `bo6-wardrobe-mobile.png`, `team-ootd-desktop.png` and `team-ootd-mobile.png`. Current screenshots stay outside Git under the temporary path above.
+
+## Historical verification — 29 October 2026
 
 ## Exact local baseline and checks
 
