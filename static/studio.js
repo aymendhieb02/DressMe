@@ -31,9 +31,11 @@ function content(page) {
 
 function shell(page) {
   if (!state.user) {
-    return `<div class="studio studio-auth-shell" aria-busy="false"><div class="studio-auth-public"><span>DressMe Studio</span><a href="#ootd">Return to Style Engine</a></div><main class="studio-body studio-auth-body"><div class="studio-status" role="status" aria-live="polite"></div>${authForm()}</main></div>`;
+    return `<div class="studio studio-auth-shell" aria-busy="false"><div class="studio-auth-public"><span>DressMe Studio</span><a href="#ootd">Return to Style Engine</a></div><div class="studio-body studio-auth-body"><div class="studio-status" role="status" aria-live="polite"></div>${authForm()}</div></div>`;
   }
-  return `<div class="studio" aria-busy="false"><nav class="studio-nav" aria-label="My Studio">${PAGES.map(([id, title]) => `<a href="#${id}" ${id === page ? 'aria-current="page"' : ''}>${title}</a>`).join('')}<a href="#ootd">Style Engine</a></nav><div class="studio-body"><div class="studio-head"><div><p class="studio-eyebrow">DressMe Studio</p><h2>${esc(PAGES.find(([id]) => id === page)?.[1])}</h2></div><div class="studio-account"><span>${esc(state.user.email)}</span><button class="btn ghost" data-action="logout">Sign out</button></div></div><div class="studio-status" role="status" aria-live="polite"></div>${content(page)}</div></div>`;
+  const currentTitle = PAGES.find(([id]) => id === page)?.[1] || 'My Studio';
+  const studioLinks = PAGES.map(([id, title]) => `<a href="#${id}" ${id === page ? 'aria-current="page"' : ''}>${title}</a>`).join('');
+  return `<div class="studio" aria-busy="false"><details class="studio-nav-mobile"><summary>Studio sections · ${esc(currentTitle)}</summary><nav aria-label="Studio sections">${studioLinks}</nav></details><nav class="studio-nav" aria-label="My Studio">${studioLinks}<a href="#ootd">Style Engine</a></nav><div class="studio-body"><div class="studio-head"><div><p class="studio-eyebrow">DressMe Studio</p><h2>${esc(currentTitle)}</h2></div><div class="studio-account"><span>${esc(state.user.email)}</span><button class="btn ghost" data-action="logout">Sign out</button></div></div><div class="studio-status" role="status" aria-live="polite"></div>${content(page)}</div></div>`;
 }
 
 function runRefresh(page, version = state.renderVersion) {

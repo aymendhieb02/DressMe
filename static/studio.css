@@ -1,6 +1,5 @@
 .studio{display:grid;grid-template-columns:190px minmax(0,1fr);gap:24px;min-width:0}
-html:has(main section[id^="bo6-"]:not([hidden])),html:has(main section[id^="bo7-"]:not([hidden])),body:has(main section[id^="bo6-"]:not([hidden])),body:has(main section[id^="bo7-"]:not([hidden])){overflow-x:hidden}
-body:has(main section[id^="bo6-"]:not([hidden])) #wall,body:has(main section[id^="bo7-"]:not([hidden])) #wall{display:none!important}
+body:has(main section[id^="bo6-"]:not([hidden])) .wall-scene,body:has(main section[id^="bo7-"]:not([hidden])) .wall-scene{display:none!important}
 .studio *{box-sizing:border-box}
 .studio-nav{display:flex;flex-direction:column;gap:7px;align-self:start;min-width:0;max-width:100%}
 .studio-nav a{padding:11px 14px;border-radius:14px;color:var(--ink);text-decoration:none;font-size:.88rem}
@@ -84,9 +83,6 @@ body:has(main section[id^="bo6-"]:not([hidden])) #wall,body:has(main section[id^
 .studio-review-shell>#studio-upload{position:sticky;top:18px}
 .studio-review-layout{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:16px;align-items:start}
 .studio-review-photo-panel,.studio-review-fields{min-width:0}
-.studio-review-image{background:#f2f7f5;border:1px solid #d5e3e0;border-radius:17px;padding:12px;margin-bottom:14px}
-.studio-review-image img{display:block;width:100%;max-height:340px;object-fit:contain;border-radius:12px}
-.studio-review-image p{margin:7px 0 0;overflow-wrap:anywhere}
 .studio-review-fields>h3{margin-top:0}
 .studio-suggestions{padding:16px;background:#f4f8f6;border:1px solid #d3e2de;border-radius:17px;overflow-wrap:anywhere}
 .studio-chip{min-height:44px!important;font-weight:600!important}
@@ -129,3 +125,83 @@ body:has(main section[id^="bo6-"]:not([hidden])) #wall,body:has(main section[id^
 @media(max-width:760px){.studio{grid-template-columns:minmax(0,1fr)}.studio-nav{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.studio-nav a{justify-content:center;text-align:center;min-width:0;padding:8px}.studio-nav a:last-child{grid-column:1/-1}.studio-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,155px),1fr))}.studio-detail-card{grid-template-columns:minmax(0,1fr)}.studio-account{width:100%;justify-content:space-between}}
 @media(max-width:420px){.studio-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.studio-actions{align-items:stretch}.studio-actions .btn{flex:1 1 100%}.studio-grid{grid-template-columns:minmax(0,1fr)}.studio-card img{height:240px}.studio-auth-public{align-items:flex-start}.studio-steps{gap:5px}.studio-steps li{padding:5px 9px;font-size:.72rem}}
 @media(prefers-reduced-motion:reduce){.studio *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Responsive shell fixes: contain decoration, adapt navigation and use the available Studio column. */
+.dd:hover:not([data-dismissed-focus="true"]) .dmenu,
+.dd:focus-within:not([data-dismissed-focus="true"]) .dmenu,
+.dd.is-open:not([data-dismissed-focus="true"]) .dmenu{opacity:1;visibility:visible;transform:none}
+.dd[data-dismissed-focus="true"] .dmenu{opacity:0;visibility:hidden;transform:translateY(8px)}
+#menu[hidden]{display:none!important}
+header.top #menu :is(.group-toggle,.mi):focus-visible{outline:3px solid #d85a45;outline-offset:2px;position:relative;z-index:1}
+.studio-nav-mobile{display:none}
+.studio-review-shell{grid-template-columns:minmax(0,1fr)}
+.studio-review-shell>#studio-upload{position:static;align-self:start}
+.studio-review-layout{grid-template-columns:minmax(0,1fr)}
+.studio-review-photo-panel,.studio-review-fields{min-width:0}
+.studio-body{container-type:inline-size;container-name:studio-content;max-width:100%}
+.studio *, .wrap, main, main section{min-width:0}
+.studio img, .studio iframe, .studio video, .studio canvas{max-width:100%}
+.studio :is(p,span,strong,small,label,button,a,summary){overflow-wrap:anywhere}
+.studio-auth-body{margin:0 auto;max-width:610px}
+.studio-auth-public{padding-bottom:8px}
+.studio-auth-card .studio-form{background:transparent;border:0;border-radius:0;padding:0;box-shadow:none}
+.studio-auth-card .studio-password input{min-width:0}
+.studio-auth-card .studio-password .btn{min-width:68px;flex:none}
+.studio-auth-shell{min-height:0}
+main:has(.studio-auth-shell)>.hero{display:none}
+main>section.glass:has(.studio-auth-shell){margin-top:10px;padding:clamp(14px,3vw,24px)}
+
+@container studio-content (min-width:760px){
+  .studio-review-shell{grid-template-columns:minmax(245px,.78fr) minmax(0,1.22fr);gap:18px}
+  .studio-review-shell>#studio-upload{position:sticky;top:18px}
+}
+
+@media(max-width:860px){
+  .wrap{padding:16px 12px 48px}
+  header.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 12px;border-radius:20px}
+  header.top .logo{min-width:0;gap:9px}
+  header.top .mono{width:42px;height:42px}
+  header.top .wm{font-size:.9rem;letter-spacing:.32em}
+  header.top .wm small{letter-spacing:.24em}
+  header.top .menu-toggle{display:inline-flex;align-items:center;justify-content:center}
+  header.top #menu{grid-column:1/-1;display:flex;flex-direction:column;gap:6px;min-width:0;width:100%}
+  #menu[hidden]{display:none!important}
+  header.top #menu .dd{min-width:0}
+  header.top #menu .dd>button{min-height:44px;width:100%;justify-content:space-between;padding:10px 12px}
+  header.top #menu .dd .dmenu{position:static;top:auto;left:auto;right:auto;width:100%;min-width:0;max-height:none;display:none;opacity:1;visibility:visible;transform:none;padding:0;transition:none}
+  header.top #menu .dd.is-open .dmenu{display:block}
+  header.top #menu .dmenu>div{max-height:min(42vh,320px);overflow:auto;overscroll-behavior:contain;padding:6px;background:#f8fbfa;border-radius:14px}
+  header.top #menu .mi{min-height:44px}
+}
+
+@media(max-width:760px){
+  .studio{grid-template-columns:minmax(0,1fr);gap:12px}
+  .studio-nav{display:none}
+  .studio-nav-mobile{display:block;position:relative;z-index:2;padding:0;border:1px solid #cbdedb;border-radius:15px;background:rgba(255,255,255,.94);box-shadow:0 8px 22px rgba(36,61,68,.07)}
+  .studio-nav-mobile summary{min-height:48px;display:flex;align-items:center;padding:8px 14px;cursor:pointer;font-weight:700;list-style:none;overflow-wrap:anywhere}
+  .studio-nav-mobile summary::-webkit-details-marker{display:none}
+  .studio-nav-mobile summary::after{content:"";width:7px;height:7px;margin-left:auto;flex:none;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .studio-nav-mobile[open] summary::after{transform:rotate(225deg)}
+  .studio-nav-mobile nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:0 8px 8px}
+  .studio-nav-mobile nav a{display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;padding:7px 9px;border-radius:11px;color:var(--ink);font-size:.84rem;text-align:center;text-decoration:none;overflow-wrap:anywhere}
+  .studio-nav-mobile nav a[aria-current=page]{background:#e8f4f2;color:#087c78;font-weight:700}
+  .studio-nav-mobile :focus-visible{outline:3px solid #087c78;outline-offset:2px}
+  .studio-account{width:100%;justify-content:space-between}
+  .studio-review-shell{grid-template-columns:minmax(0,1fr)}
+  .studio-review-shell>#studio-upload{position:static}
+  .studio-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,155px),1fr))}
+  .studio-detail-card{grid-template-columns:minmax(0,1fr)}
+}
+
+@media(max-width:420px){
+  .top .wm{font-size:.83rem;letter-spacing:.25em}
+  .top .wm small{letter-spacing:.17em}
+  .studio-nav-mobile nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .studio-actions{align-items:stretch}
+  .studio-actions .btn{flex:1 1 100%}
+  .studio-grid{grid-template-columns:minmax(0,1fr)}
+  .studio-card img{height:240px}
+  .studio-steps{gap:5px}
+  .studio-steps li{padding:5px 9px;font-size:.72rem}
+  .studio input,.studio select,.studio textarea{font-size:16px}
+}
