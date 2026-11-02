@@ -9,6 +9,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from similar import router as similar_router
 from wardrobe import router as wardrobe_router     
+from redundancy import router as redundancy_router   # BO3 : redondance
+from donate import router as donate_router            # BO3 : ou deposer les pieces laissees partir (OpenStreetMap)
 from dotenv import load_dotenv; load_dotenv()
 
 DATA = Path(os.environ.get("DRESSME_DATA", "data"))
@@ -131,6 +133,8 @@ def complete(ctx, want=None, topn=6, lam=1.0, mu=0.3):
 app = FastAPI(title="Dress Me")
 app.include_router(similar_router)
 app.include_router(wardrobe_router) 
+app.include_router(redundancy_router)
+app.include_router(donate_router)
 class Items(BaseModel): items: list[int]; want: str | None = None
 class Ootd(BaseModel):
     lat: float | None = None; lon: float | None = None; city: str | None = None; place: str = "My location"

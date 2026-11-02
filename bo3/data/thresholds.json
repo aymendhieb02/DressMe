@@ -1,0 +1,64 @@
+{
+ "primary": "fashionclip",
+ "models": {
+  "dinov2": {
+   "T_DUP": 0.8875625729560852,
+   "T_SIM": 0.8220909237861633,
+   "source": "augmentations"
+  },
+  "clip": {
+   "T_DUP": 0.9308499693870544,
+   "T_SIM": 0.9143763780593872,
+   "source": "augmentations"
+  },
+  "fashionclip": {
+   "T_DUP": 0.8851675987243652,
+   "T_SIM": 0.8010538220405579,
+   "source": "augmentations",
+   "T_GRISE": 0.851,
+   "T_GRISE_note": "plus haute valeur gardant au plus 25 % de paires redondantes dans la bande similaire (155 paires annotees de meme categorie) ; validation croisee 0,839 +/- 0,014"
+  },
+  "dinov2_crop": {
+   "T_DUP": 0.8927805423736572,
+   "T_SIM": 0.8315847516059875,
+   "source": "augmentations"
+  }
+ },
+ "fusion": {
+  "variante": "dinov2_crop",
+  "couleur": "pixels",
+  "beta": 0.15,
+  "sigma": 20.0,
+  "equivalences": [
+   [
+    "Black",
+    "Charcoal",
+    "Navy Blue"
+   ],
+   [
+    "Grey",
+    "Grey Melange",
+    "Silver"
+   ],
+   [
+    "Beige",
+    "Cream",
+    "Off White"
+   ]
+  ],
+  "AUC": 0.937799043062201
+ },
+ "primary_note": "FashionCLIP impose (l'appli a besoin de son encodeur texte) ; ecarts d'AUC entre modeles inclus dans l'IC95",
+ "fusion_status": "non valide : beta=0,15 propose avant les 198 paires ; a confirmer par la partie 7 (le bloc fusion ci-dessous date du run Colab avec dinov2_crop)",
+ "recalibrage_humain": {
+  "fashionclip": {
+   "T_DUP_F1max": 0.846,
+   "F1": 0.761,
+   "precision": 0.747,
+   "rappel": 0.775,
+   "n_paires": 198,
+   "n_redondantes": 80,
+   "note": "meilleur F1 sur annotations humaines (un annotateur) : optimiste car seuil et evaluation sur les memes paires ; ne remplace pas T_DUP tant que non confirme par second annotateur et photos reelles"
+  }
+ }
+}

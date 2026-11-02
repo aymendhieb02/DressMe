@@ -1,0 +1,22 @@
+{
+ "T_DUP": 0.8424,
+ "T_SIM": 0.8009,
+ "T_GRISE": 0.8255,
+ "F1": 0.831,
+ "n_positifs": 100,
+ "n_negatifs": 4960,
+ "model": "fashionclip",
+ "beta": 0.0,
+ "sigma_colour": 20.0,
+ "colour_tau": 12.4,
+ "colour_tau_p99": 12.4,
+ "checks": {
+  "recall_doublons_fabriques": 0.86,
+  "meme_type_doublon": 0.057,
+  "meme_type_zone_grise": 0.021,
+  "meme_type_similaire": 0.036,
+  "n_paires_meme_type": 796
+ },
+ "source": "calibrated on this catalogue with FashionCLIP (100 synthetic duplicates, seed 42)",
+ "T_GRISE_note": "provisoire : meme position relative entre T_SIM et T_DUP que dans l'etude (pas d'annotations humaines pour ce catalogue)"
+}
