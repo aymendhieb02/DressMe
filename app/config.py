@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import os
 from pathlib import Path
+import secrets
 from dotenv import load_dotenv
 
 # Preserve process environment values while applying local development defaults.
@@ -20,19 +21,22 @@ class Settings:
     environment: str = os.getenv("APP_ENV", "development").strip().lower()
     database_url: str = os.getenv(
         "DATABASE_URL",
-        "postgresql+psycopg://dressme:dressme@localhost:5432/dressme",
+        "sqlite:///./var/dressme.sqlite",
     )
     frontend_origins: tuple[str, ...] = tuple(
         origin.strip().rstrip("/")
-        for origin in os.getenv("FRONTEND_ORIGINS", "http://localhost:5173").split(",")
+        for origin in os.getenv("FRONTEND_ORIGINS", "http://localhost:8001").split(",")
         if origin.strip()
     )
     session_ttl_seconds: int = _integer("SESSION_TTL_SECONDS", 12 * 60 * 60, 300, 30 * 24 * 60 * 60)
     login_limit_count: int = _integer("LOGIN_LIMIT_COUNT", 10, 1, 100)
     login_window_seconds: int = _integer("LOGIN_WINDOW_SECONDS", 60, 1, 3600)
     auth_cookie_name: str = "dressme_session"
+    access_cookie_name: str = "dressme_access"
+    access_ttl_seconds: int = _integer("ACCESS_TTL_SECONDS", 15 * 60, 60, 3600)
+    jwt_secret: str = os.getenv("JWT_SECRET", "") or secrets.token_urlsafe(48)
     csrf_header_name: str = "X-CSRF-Token"
-    bo6_service_url: str = os.getenv("BO6_SERVICE_URL", "http://ml-service:8000").rstrip("/")
+    bo6_service_url: str = os.getenv("BO6_SERVICE_URL", "http://localhost:18022").rstrip("/")
     bo6_connect_timeout_seconds: float = 2.0
     bo6_read_timeout_seconds: float = 30.0
     bo6_write_timeout_seconds: float = 10.0
@@ -59,7 +63,7 @@ class Settings:
     smtp_port: int = _integer("SMTP_PORT", 587, 1, 65535)
     smtp_username: str = os.getenv("SMTP_USERNAME", "")
     smtp_password: str = os.getenv("SMTP_PASSWORD", "")
-    smtp_from: str = os.getenv("SMTP_FROM", "DressMe <noreply@localhost>")
+    smtp_from: str = os.getenv("SMTP_FROM", "").strip() or "DressMe <noreply@localhost>"
     smtp_security: str = os.getenv("SMTP_SECURITY", "starttls").strip().lower()
     smtp_timeout_seconds: int = _integer("SMTP_TIMEOUT_SECONDS", 10, 1, 60)
 
@@ -72,9 +76,13 @@ class Settings:
             raise ValueError("SMTP_SECURITY must be 'starttls', 'ssl' or 'none'")
         if self.email_delivery_mode == "smtp" and not self.smtp_host:
             raise ValueError("SMTP_HOST is required when EMAIL_DELIVERY_MODE=smtp")
+        if self.email_delivery_mode == "smtp" and ("@localhost" in self.smtp_from or "@example.com" in self.smtp_from):
+            raise ValueError("SMTP_FROM must be a configured sender address for SMTP delivery")
         if self.environment == "production":
-            if self.database_url.endswith("dressme:dressme@localhost:5432/dressme"):
-                raise ValueError("production requires an explicit DATABASE_URL and credential")
+            if not os.getenv("JWT_SECRET") or len(self.jwt_secret) < 32:
+                raise ValueError("production requires a random JWT_SECRET of at least 32 characters")
+            if not os.getenv("DATABASE_URL"):
+                raise ValueError("production requires an explicit DATABASE_URL")
             if not self.frontend_origins:
                 raise ValueError("production requires an explicit frontend origin")
             if not self.storage_path.is_absolute():

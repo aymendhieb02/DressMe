@@ -27,7 +27,7 @@ def _register(client, origin, email="alice@example.com"):
     assert response.status_code == 201, response.text
     return (
         {**origin, "X-CSRF-Token": response.json()["csrf_token"]},
-        response.cookies.get("dressme_session"),
+        dict(response.cookies),
     )
 
 
@@ -161,16 +161,16 @@ def test_avatar_consent_private_owner_retrieval_and_delete(client, origin, monke
     )
     assert denied_replacement.status_code == 403
     assert client.delete("/avatars/current", headers=bob_headers).status_code == 204
-    assert client.get("/avatars/current", cookies={"dressme_session": alice_cookie}).json()["id"] == avatar["id"]
-    assert client.get(avatar["model_url"], cookies={"dressme_session": alice_cookie}).content == FIXTURE.read_bytes()
+    assert client.get("/avatars/current", cookies=alice_cookie).json()["id"] == avatar["id"]
+    assert client.get(avatar["model_url"], cookies=alice_cookie).content == FIXTURE.read_bytes()
 
     # Restore the original authenticated user and prove that deletion still needs CSRF.
-    assert client.get("/avatars/current", cookies={"dressme_session": alice_cookie}).json()["id"] == avatar["id"]
-    denied_delete = client.delete("/avatars/current", headers=origin, cookies={"dressme_session": alice_cookie})
+    assert client.get("/avatars/current", cookies=alice_cookie).json()["id"] == avatar["id"]
+    denied_delete = client.delete("/avatars/current", headers=origin, cookies=alice_cookie)
     assert denied_delete.status_code == 403
-    deleted = client.delete("/avatars/current", headers=alice_headers, cookies={"dressme_session": alice_cookie})
+    deleted = client.delete("/avatars/current", headers=alice_headers, cookies=alice_cookie)
     assert deleted.status_code == 204
-    assert client.get("/avatars/current", cookies={"dressme_session": alice_cookie}).json() is None
+    assert client.get("/avatars/current", cookies=alice_cookie).json() is None
     assert list(tmp_path.iterdir()) == []
 
 
@@ -228,11 +228,11 @@ def test_avatar_delete_revokes_access_and_retries_failed_private_file_cleanup(cl
 
     with monkeypatch.context() as failed_storage:
         failed_storage.setattr(LocalPrivateStorage, "delete", fail_delete)
-        removed = client.delete("/avatars/current", headers=headers, cookies={"dressme_session": cookie})
+        removed = client.delete("/avatars/current", headers=headers, cookies=cookie)
     assert removed.status_code == 202
     assert removed.json()["status"] == "deletion_queued"
-    assert client.get("/avatars/current", cookies={"dressme_session": cookie}).json() is None
-    assert client.get(avatar["model_url"], cookies={"dressme_session": cookie}).status_code == 404
+    assert client.get("/avatars/current", cookies=cookie).json() is None
+    assert client.get(avatar["model_url"], cookies=cookie).status_code == 404
     with client.app.state.testing_session_factory() as db:
         queued = db.scalars(select(StorageDeletion)).all()
         assert len(queued) == 1 and queued[0].attempts == 1
@@ -286,17 +286,17 @@ def test_account_deletion_removes_avatar_file_and_metadata(client, origin, monke
     assert client.get(avatar["model_url"]).status_code == 200
 
     removed = client.request(
-        "DELETE", "/auth/account", headers=headers, cookies={"dressme_session": cookie},
+        "DELETE", "/auth/account", headers=headers, cookies=cookie,
         json={"password": "correct horse battery staple", "confirmation": "DELETE"},
     )
     assert removed.status_code == 204
-    assert client.get("/avatars/current", cookies={"dressme_session": cookie}).status_code == 401
+    assert client.get("/avatars/current", cookies=cookie).status_code == 401
     assert list(tmp_path.iterdir()) == []
     with client.app.state.testing_session_factory() as db:
         assert db.scalars(select(Avatar)).all() == []
         assert db.scalars(select(AvatarConsent)).all() == []
         assert db.scalars(select(AvatarRender)).all() == []
-    assert client.get(render["image_url"], cookies={"dressme_session": cookie}).status_code == 401
+    assert client.get(render["image_url"], cookies=cookie).status_code == 401
 
 
 def test_private_avatar_render_is_validated_owner_scoped_and_deletable_without_touching_source(
@@ -340,7 +340,7 @@ def test_private_avatar_render_is_validated_owner_scoped_and_deletable_without_t
     assert image.headers["x-content-type-options"] == "nosniff"
     assert hashlib.sha256(client.get(avatar["model_url"]).content).hexdigest() == original_hash
 
-    export = client.get("/avatars/current/render/export", cookies={"dressme_session": alice_cookie})
+    export = client.get("/avatars/current/render/export", cookies=alice_cookie)
     assert export.status_code == 200
     assert export.headers["content-type"] == "application/zip"
     assert export.headers["cache-control"] == "private, no-store"
@@ -360,17 +360,17 @@ def test_private_avatar_render_is_validated_owner_scoped_and_deletable_without_t
     assert "email" not in json.dumps(manifest).lower()
 
     _bob_headers, bob_cookie = _register(client, origin, "render-other@example.com")
-    assert client.get(render["image_url"], cookies={"dressme_session": bob_cookie}).status_code == 404
-    assert client.get("/avatars/current/render", cookies={"dressme_session": bob_cookie}).json() is None
-    assert client.get("/avatars/current/render/export", cookies={"dressme_session": bob_cookie}).status_code == 404
-    assert client.delete("/avatars/current/render", headers=origin, cookies={"dressme_session": bob_cookie}).status_code == 403
-    assert client.get(render["image_url"], cookies={"dressme_session": alice_cookie}).status_code == 200
+    assert client.get(render["image_url"], cookies=bob_cookie).status_code == 404
+    assert client.get("/avatars/current/render", cookies=bob_cookie).json() is None
+    assert client.get("/avatars/current/render/export", cookies=bob_cookie).status_code == 404
+    assert client.delete("/avatars/current/render", headers=origin, cookies=bob_cookie).status_code == 403
+    assert client.get(render["image_url"], cookies=alice_cookie).status_code == 200
 
-    removed = client.delete("/avatars/current/render", headers=alice_headers, cookies={"dressme_session": alice_cookie})
+    removed = client.delete("/avatars/current/render", headers=alice_headers, cookies=alice_cookie)
     assert removed.status_code == 204
-    assert client.get("/avatars/current/render", cookies={"dressme_session": alice_cookie}).json() is None
-    assert client.get(render["image_url"], cookies={"dressme_session": alice_cookie}).status_code == 404
-    assert client.get(avatar["model_url"], cookies={"dressme_session": alice_cookie}).content == original_glb
+    assert client.get("/avatars/current/render", cookies=alice_cookie).json() is None
+    assert client.get(render["image_url"], cookies=alice_cookie).status_code == 404
+    assert client.get(avatar["model_url"], cookies=alice_cookie).content == original_glb
     assert len(list(tmp_path.iterdir())) == 1
 
 
@@ -386,18 +386,18 @@ def test_stale_avatar_render_is_rejected_and_replacement_or_avatar_delete_cleans
 
     avatar_v2 = _save(client, headers, consent, asset=_variant(), provider_avatar_id="avaturn-avatar-v2").json()
     assert avatar_v2["version"] == 2
-    assert client.get("/avatars/current/render", cookies={"dressme_session": cookie}).json() is None
-    assert client.get(first["image_url"], cookies={"dressme_session": cookie}).status_code == 404
+    assert client.get("/avatars/current/render", cookies=cookie).json() is None
+    assert client.get(first["image_url"], cookies=cookie).status_code == 404
     stale = _save_render(client, headers, avatar_v1)
     assert stale.status_code == 409
     assert stale.json()["error"]["code"] == "avatar_render_source_changed"
     assert len(list(tmp_path.iterdir())) == 1
 
     second = _save_render(client, headers, avatar_v2).json()
-    assert client.get(second["image_url"], cookies={"dressme_session": cookie}).status_code == 200
-    deleted = client.delete("/avatars/current", headers=headers, cookies={"dressme_session": cookie})
+    assert client.get(second["image_url"], cookies=cookie).status_code == 200
+    deleted = client.delete("/avatars/current", headers=headers, cookies=cookie)
     assert deleted.status_code == 204
-    assert client.get(second["image_url"], cookies={"dressme_session": cookie}).status_code == 404
+    assert client.get(second["image_url"], cookies=cookie).status_code == 404
     assert list(tmp_path.iterdir()) == []
     late = _save_render(client, headers, avatar_v2)
     assert late.status_code == 409
@@ -433,9 +433,9 @@ def test_failed_avatar_render_cleanup_revokes_access_then_shared_retry_removes_f
 
     with monkeypatch.context() as failed_storage:
         failed_storage.setattr(LocalPrivateStorage, "delete", fail_delete)
-        response = client.delete("/avatars/current/render", headers=headers, cookies={"dressme_session": cookie})
+        response = client.delete("/avatars/current/render", headers=headers, cookies=cookie)
     assert response.status_code == 202
-    assert client.get(render["image_url"], cookies={"dressme_session": cookie}).status_code == 404
+    assert client.get(render["image_url"], cookies=cookie).status_code == 404
     with client.app.state.testing_session_factory() as db:
         queued = db.scalars(select(StorageDeletion)).all()
         assert len(queued) == 1 and queued[0].attempts == 1

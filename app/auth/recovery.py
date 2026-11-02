@@ -20,13 +20,13 @@ from ..config import settings
 from ..database import get_db
 from ..models import AuthSession, PasswordRecoveryChallenge, User
 from .dependencies import InvalidCsrfToken
-from .schemas import PasswordResetComplete, PasswordResetRequest
+from .schemas import PasswordResetComplete, PasswordResetRequest, PasswordResetVerify
 from .security import hash_password
 from .service import utc_now
 
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
-_GENERIC_RESPONSE = {"message": "If an account exists for that email, recovery instructions have been sent."}
+_GENERIC_RESPONSE = {"message": "If an account exists for that email, you'll receive recovery instructions."}
 _INVALID_RESPONSE = {"error": {"code": "password_reset_invalid", "message": "The recovery request is invalid or expired."}}
 
 
@@ -166,6 +166,34 @@ def request_password_reset(body: PasswordResetRequest, request: Request, db: Ses
             db.rollback()
             # Do not reveal whether an account exists or whether its mail provider failed.
     return JSONResponse(status_code=202, content=_GENERIC_RESPONSE)
+
+
+@router.post("/password-reset/verify")
+def verify_password_reset(body: PasswordResetVerify, request: Request, db: Session = Depends(get_db)):
+    _origin_allowed(request)
+    address_key = _email_key(body.email)
+    if not rate_limiter.allow(f"verify-ip:{_remote_key(request)}") or not rate_limiter.allow(f"verify-email:{address_key}"):
+        return JSONResponse(status_code=429, content=_INVALID_RESPONSE)
+    user = db.scalar(select(User).where(User.email == body.email))
+    challenge = db.get(PasswordRecoveryChallenge, user.id) if user else None
+    now = utc_now()
+    valid = (challenge is not None and challenge.consumed_at is None
+             and challenge.attempts < settings.password_reset_attempt_limit
+             and _as_utc(challenge.expires_at) > now
+             and hmac.compare_digest(_code_verifier(body.code), challenge.code_verifier))
+    if valid:
+        return {"status": "verified"}
+    if challenge is not None:
+        db.execute(update(PasswordRecoveryChallenge)
+                   .where(PasswordRecoveryChallenge.user_id == user.id,
+                          PasswordRecoveryChallenge.consumed_at.is_(None),
+                          PasswordRecoveryChallenge.attempts < settings.password_reset_attempt_limit)
+                   .values(attempts=PasswordRecoveryChallenge.attempts + 1,
+                           consumed_at=now if challenge.attempts + 1 >= settings.password_reset_attempt_limit else None))
+        db.commit()
+    else:
+        hmac.compare_digest(_code_verifier(body.code), _code_verifier("00000000"))
+    return JSONResponse(status_code=400, content=_INVALID_RESPONSE)
 
 
 @router.post("/password-reset/complete")

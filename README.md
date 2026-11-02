@@ -1,28 +1,61 @@
 # DressMe
 
-This integration branch preserves the five original public team features and adds an authentication-first private Studio for BO6 garments and the currently available BO7 avatar/try-on workflows. The application remains FastAPI with a plain HTML/CSS/JavaScript frontend. BO6 inference runs as a separate FastAPI service; PostgreSQL/SQLAlchemy/Alembic and private local storage back Studio records. Redis/RQ is optional and produces MOCK jobs only.
+Integrated DressMe app for Windows. The landing page, sign-in, Style Engine, Shopping, BO6 wardrobe and BO7 Studio run from one FastAPI app on port **8001**. The app uses SQLite; BO6 garment inference runs as a separate local service on port **18022**.
 
-## Set up a teammate checkout
+## Install first
 
-Follow [TEAM_SETUP.md](TEAM_SETUP.md) for Python 3.11 Windows setup, independent pinned environments, local credentials and PostgreSQL configuration, checksum-verified BO6 weight restoration, explicit migrations, service startup/health/shutdown commands, optional SMTP/Avaturn/Redis setup, and current capability limits.
+- Git
+- Python 3.11, 64-bit
+- Node.js 20.19+ or 22.12+ (npm is included)
+- PowerShell
+- The approved BO6 model bundle from the team (`model_weights.pt` and `attribute_heads.pt`); these large private artifacts are not stored in Git.
+
+The setup script installs the Python dependencies into isolated environments, installs the landing page dependencies, builds the landing page, and creates `.env` from `.env.example` with a local secret. Network access is needed during installation. The default database is SQLite at `var/dressme.sqlite`.
+
+## First run after cloning
+
+Run from the repository root in PowerShell:
 
 ```powershell
+git clone <repository-url> projet_integration
+cd projet_integration
 .\scripts\dev\setup.ps1 -Developer -IncludeBo6
 ```
 
-Setup does not modify an existing `.env`, create a database, run migrations, access the original source checkout or download model weights. The runtime and developer dependency locks are separate for the application and BO6 service.
+Restore the model files from the approved team bundle location. The script verifies their checksums before copying them:
 
-## Current capability notes
+```powershell
+.\scripts\dev\restore-model-bundle.ps1 -SourceBundlePath 'D:\path\to\approved\bundle'
+```
 
-- BO6 performs real CPU classification and description with the existing checksum-verified exported bundle; the model weights are not tracked in Git.
-- The five public sections remain in the same application.
-- Studio provides private auth, upload/review/describe/save/edit, wardrobe export, and account recovery through local email capture or configured SMTP.
-- The avatar creator depends on an approved Avaturn origin. PNG rendering is not implemented.
-- Try-on is labeled MOCK. Redis/RQ must be available for queue completion. A real BO7 VTON adapter is unavailable.
-- The legacy public Style Engine and Find Similar flows can download upstream CLIP/SigLIP weights on their first model-assisted request; details and the current limitation are documented in [TEAM_SETUP.md](TEAM_SETUP.md).
+Apply database migrations, start both services, then check them:
 
-## Verification records
+```powershell
+& .\.venv-app\Scripts\python.exe -m alembic upgrade head
+.\scripts\dev\start.ps1 -AppPort 8001 -Bo6Port 18022
+.\scripts\dev\check.ps1 -AppPort 8001 -Bo6Port 18022
+```
 
-- [Integration verification and outstanding blockers](docs/INTEGRATION_VERIFICATION.md)
-- [Project state](docs/PROJECT_STATE.md)
-- [BO6/BO7 migration map](docs/BO6_BO7_MIGRATION_MAP.md)
+Open **http://localhost:8001/**. The BO6 service on port 18022 is internal; the browser stays on port 8001. Do not start a separate Vite server for the integrated app.
+
+## After pulling updates
+
+```powershell
+git pull
+.\scripts\dev\setup.ps1 -Developer -IncludeBo6
+& .\.venv-app\Scripts\python.exe -m alembic upgrade head
+.\scripts\dev\start.ps1 -AppPort 8001 -Bo6Port 18022
+.\scripts\dev\check.ps1 -AppPort 8001 -Bo6Port 18022
+```
+
+Keep the local `.env`, SQLite database, private image folder, and restored BO6 weights when updating. They are machine-specific and are not pulled from Git. If model files are already restored and pass checksum verification, the restore step can be skipped.
+
+To stop services started by the project scripts:
+
+```powershell
+.\scripts\dev\stop.ps1
+```
+
+## Local configuration
+
+Password recovery saves messages to a local `.eml` mailbox by default; it does not send email externally. SMTP delivery needs private SMTP settings in `.env`. Redis and Avaturn are optional; virtual try-on runs in mock mode unless separately configured. Some inherited Style Engine and Shopping features may download model weights the first time they are used.

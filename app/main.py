@@ -66,6 +66,8 @@ app.add_exception_handler(Exception, unhandled_error_handler)
 
 
 async def authentication_error_handler(request: Request, _exc: Exception):
+    if str(_exc) == "session_replaced":
+        return error_response(request, 401, "session_replaced", "Your account was signed in elsewhere. Sign in again to continue.")
     return error_response(request, 401, "authentication_required", "A valid session is required.")
 
 

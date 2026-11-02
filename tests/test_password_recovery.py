@@ -190,3 +190,18 @@ def test_login_accepts_legacy_password_shorter_than_new_account_policy(client, o
 def test_password_recovery_requires_frontend_origin(client):
     response = client.post("/auth/password-reset/request", json={"email": "nobody@example.invalid"})
     assert response.status_code == 403
+
+def test_code_verification_precedes_password_choice_without_consuming_code(client, origin, monkeypatch, tmp_path):
+    mail_path = _configure_capture(monkeypatch, tmp_path)
+    assert _register(client, origin, 'verify-step@example.invalid').status_code == 201
+    assert _request(client, origin, 'verify-step@example.invalid').status_code == 202
+    code = _captured_code(mail_path)
+    wrong = '00000000' if code != '00000000' else '11111111'
+    assert client.post('/auth/password-reset/verify', headers=origin,
+                       json={'email': 'verify-step@example.invalid', 'code': wrong}).status_code == 400
+    for _ in range(2):
+        assert client.post('/auth/password-reset/verify', headers=origin,
+                           json={'email': 'verify-step@example.invalid', 'code': code}).status_code == 200
+    assert _complete(client, origin, 'verify-step@example.invalid', code).status_code == 204
+    assert client.post('/auth/password-reset/verify', headers=origin,
+                       json={'email': 'verify-step@example.invalid', 'code': code}).status_code == 400

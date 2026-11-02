@@ -99,7 +99,7 @@ The first full browser run exposed `active is not defined` in the try-on module.
 - Live Redis/RQ dispatch, worker completion, result ownership under real queued work, cancellation/deletion races and persistence after service/container recreation remain unverified because Redis was unavailable. This does not change the separate browser UI PASS for both unavailable and controlled-available states.
 - The authorized existing-account sign-in/session check is pending the user's private `DRESSME_TEST_PASSWORD` variable. Do not reset this account, revoke its sessions or remove its records.
 - SMTP real delivery, Avaturn provider acceptance/export, saved-avatar viewer with a real private GLB, physical-device behavior and screen-reader behavior were not verified.
-- The inherited public CLIP/SigLIP endpoints lazy-download third-party weights on first model-assisted use. Their weight versions/checksums and explicit offline restoration workflow are not owned by this repository; `TEAM_SETUP.md` calls out this behavior. BO6 itself uses only its separate checksum-verified exported bundle.
+- The inherited public CLIP/SigLIP endpoints lazy-download third-party weights on first model-assisted use. Their weight versions/checksums and explicit offline restoration workflow are not owned by this repository; `README.md` calls out this behavior. BO6 itself uses only its separate checksum-verified exported bundle.
 
 Before screenshots from the previous integration run are committed under `docs/integration-screenshots/`, including `bo6-review-desktop.png`, `bo6-wardrobe-mobile.png`, `team-ootd-desktop.png` and `team-ootd-mobile.png`. Current screenshots stay outside Git under the temporary path above.
 

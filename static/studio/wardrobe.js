@@ -1,5 +1,5 @@
-import {state, $, esc, image, node, active, request, message} from './core.js';
-import {uploadPicker, clearUpload} from './upload.js';
+import {state, $, esc, image, node, active, request, message} from './core.js?v=integrated-11';
+import {uploadPicker, clearUpload} from './upload.js?v=integrated-11';
 
 const CATEGORY = ['dress', 'jacket', 'jeans', 'shirt', 'shorts', 'skirt', 'sweater', 'sweatshirt', 't-shirt', 'top', 'trousers'];
 const COLORS = ['beige', 'black', 'blue', 'brown', 'green', 'grey', 'navy', 'orange', 'pink', 'purple', 'red', 'white', 'yellow'];

@@ -66,4 +66,4 @@ def client(monkeypatch):
 
 @pytest.fixture
 def origin():
-    return {"Origin": "http://localhost:5173"}
+    return {"Origin": "http://localhost:8001"}
