@@ -159,5 +159,5 @@ def test_completed_mock_result_is_retrievable_only_by_its_owner(client, origin, 
     _login(client, "bob@example.com", origin)
     assert client.get(result_url).status_code == 404
     client.cookies.clear()
-    client.cookies.set("dressme_session", alice_cookie)
+    client.cookies.update(alice_cookie)
     assert client.get(result_url).content == result.content

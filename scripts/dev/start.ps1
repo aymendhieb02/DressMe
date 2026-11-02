@@ -1,5 +1,5 @@
 param(
-    [ValidateRange(1024, 65535)][int]$AppPort = 8000,
+    [ValidateRange(1024, 65535)][int]$AppPort = 8001,
     [ValidateRange(1024, 65535)][int]$Bo6Port = 18022
 )
 
@@ -101,15 +101,15 @@ function Start-Service([string]$Name, [int]$Port, [string]$HealthUrl, [string]$P
 }
 
 if ($AppPort -eq $Bo6Port) { throw 'Application and BO6 ports must be different.' }
-$frontendOrigin = "http://127.0.0.1:$AppPort"
+$frontendOrigin = "http://localhost:$AppPort"
 $bo6Url = "http://127.0.0.1:$Bo6Port"
 Start-Service 'bo6' $Bo6Port "$bo6Url/health" $bo6Python (Join-Path $repoRoot 'bo6_service') `
     @('-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', [string]$Bo6Port, '--workers', '1') `
     @{ MODEL_BUNDLE_DIR = $bundlePath } 180
 Start-Service 'app' $AppPort "$frontendOrigin/studio-api/health/ready" $appPython $repoRoot `
-    @('-m', 'uvicorn', 'api:app', '--host', '127.0.0.1', '--port', [string]$AppPort, '--workers', '1') `
+    @('-m', 'uvicorn', 'api:app', '--host', 'localhost', '--port', [string]$AppPort, '--workers', '1') `
     @{ BO6_SERVICE_URL = $bo6Url; FRONTEND_ORIGINS = $frontendOrigin } 90
 
-Write-Host "Application: $frontendOrigin/#bo6-wardrobe"
+Write-Host "DressMe: $frontendOrigin/"
 Write-Host "BO6 health:  $bo6Url/health"
 Write-Host 'Database migrations are explicit; this script does not run them.'

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DressMe — Style Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="/static/studio.css" rel="stylesheet">
+<link href="/static/studio.css?v=integrated-11" rel="stylesheet">
 <style>
 :root{--ink:#17283a;--c1:#ff6b4a;--c2:#0e9f9a;--ok:#1fb889;--warn:#f5a524;--bad:#e5484d;--hero:#17283a;--sky:linear-gradient(160deg,#fdebd8,#c9ebe7)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--sky) fixed;min-height:100vh}
@@ -150,11 +150,11 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 .wd-ex{display:flex;gap:6px;margin-top:6px}.wd-ex img{width:36px;height:46px;border-radius:8px}
 @media(max-width:760px){.wd-rails{grid-template-columns:1fr 1fr}.wd-stage{padding:0}}
 </style></head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
-<div id="intro"><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
+<div id="intro" hidden><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
 <div class="copy"><p class="eyebrow">Wardrobe intelligence</p><h1>Where weather, taste and wardrobe <em>finally agree.</em></h1></div>
-<button class="btn enter" id="enter">Enter the atelier</button></div>
+<div class="landing-actions"><a class="btn studio-enter" id="studioEnter" href="/login">Sign in</a><button class="btn enter" id="enter" type="button">Explore DressMe</button></div></div>
 <div class="wall-scene" aria-hidden="true"><div id="wall"></div><div id="veil"></div></div><canvas id="fx"></canvas>
-<div class="wrap"><header class="top"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button><nav id="menu" aria-label="Main navigation"></nav></header><main>
+<div class="wrap"><header class="top"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div><details class="app-account" id="accountMenu"><summary>Account</summary><div class="app-account-panel"><span id="accountEmail"></span><a href="/">Landing page</a><button type="button" id="headerSignout">Sign out</button></div></details><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button><nav id="menu" aria-label="Main navigation"></nav></header><main>
 <div class="hero"><h1>Wardrobe intelligence,<br><em>tailored to the day.</em></h1></div>
 
 <section id="ootd" class="glass"><p class="eyebrow">No. 01</p><h2>Daily Edit</h2>
@@ -213,9 +213,9 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 <section id="bo7-history" class="glass" hidden><div data-studio-page="bo7-history"></div></section>
 </main></div>
 <script>
-const HASH0=location.hash;
+const HASH0=location.hash;const isLoginRoute=location.pathname==="/login";document.body.classList.toggle("auth-route",isLoginRoute);
 const $=(s,e=document)=>e.querySelector(s),$$=(s,e=document)=>[...e.querySelectorAll(s)];
-const api=(p,b)=>fetch('/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(async r=>{if(!r.ok)throw new Error((await r.json()).detail||r.status);return r.json()});
+const api=async(p,b)=>{const options=b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{};let r=await fetch('/api/'+p,options);if(r.status===401&&window.refreshDressMe){try{await window.refreshDressMe();r=await fetch('/api/'+p,options)}catch{location.replace('/login?next='+encodeURIComponent('/app'+location.hash));throw new Error('Sign in again to continue.')}}if(!r.ok)throw new Error((await r.json()).detail||r.status);return r.json()};
 const FR={shoes:'Shoes',bag:'Bag',dress:'Dress',outer:'Outerwear',top:'Top',bottom:'Bottom',other:'Accessory'},img=k=>`/img/${k}.jpg`;
 const verdict=s=>s>=8?['EXCELLENT','var(--ok)']:s>=5?['FAIR','var(--warn)']:['NEEDS WORK','var(--bad)'];
 let C=[];const cat=i=>C[i];
@@ -245,6 +245,7 @@ function loop(){const w=cv.width=innerWidth,h=cv.height=innerHeight;tt+=.016;
  requestAnimationFrame(loop)}loop();
 function wall(){const L=[...C].sort(()=>Math.random()-.5).slice(0,48);
  $('#wall').innerHTML=Array.from({length:7},(_,c)=>{const a=L.slice(c*6,c*6+6).map(x=>`<img src="${img(x.k)}">`).join('');return `<div class="col" style="animation-duration:${70+c*8}s;${c%2?'animation-direction:reverse;':''}">${a+a}</div>`}).join('')}
+window.renderPublicStyleWall=items=>{$('#wall').innerHTML=Array.from({length:7},(_,c)=>{const a=items.slice(c*6,c*6+6).map(x=>`<img src="/public-wall/${encodeURIComponent(x.k)}.jpg" alt="">`).join('');return `<div class="col" style="animation-duration:${70+c*8}s;${c%2?'animation-direction:reverse;':''}">${a+a}</div>`}).join('')}
 /* ---------- top menu : colleagues add groups / items here, plus a <section id="..."> in the page ---------- */
 const MENU=[{label:'Style Engine',items:[
  {id:'ootd',title:'Daily Edit',desc:'Your outfit for today’s weather'},
@@ -259,8 +260,8 @@ const MENU=[{label:'Style Engine',items:[
  {id:'bo7-avatar',title:'My Avatar',desc:'Saved avatar and provider status'},
  {id:'bo7-tryon',title:'Virtual Try-On',desc:'Private mock preview workflow'},
  {id:'bo7-history',title:'Try-On History',desc:'Your saved jobs'}]}];
-function go(id){tab=id;$$('main section').forEach(s=>{s.hidden=s.id!==id;if(!s.hidden){s.style.animation='none';s.offsetHeight;s.style.animation=''}});
- $$('.mi').forEach(m=>m.classList.toggle('on',m.dataset.t===id));$$('.dd').forEach(d=>d.classList.toggle('on',!!$('.mi.on',d)));applyBg();history.replaceState(null,'','#'+id);if(window.onSection)window.onSection(id);document.dispatchEvent(new CustomEvent('dressme:section',{detail:id}))}
+function go(id,replace=false){tab=id;document.body.classList.toggle('studio-mode',id.startsWith('bo6-')||id.startsWith('bo7-'));$$('main section').forEach(s=>{s.hidden=s.id!==id;if(!s.hidden){s.style.animation='none';s.offsetHeight;s.style.animation=''}});
+ $$('.mi').forEach(m=>m.classList.toggle('on',m.dataset.t===id));$$('.dd').forEach(d=>d.classList.toggle('on',!!$('.mi.on',d)));applyBg();if(!isLoginRoute)history[replace?'replaceState':'pushState'](null,'','#'+id);if(window.onSection)window.onSection(id);document.dispatchEvent(new CustomEvent('dressme:section',{detail:id}))}
 const menu=$('#menu'),menuToggle=$('#menuToggle'),menuGroups=()=>$$('.dd',menu);
 let mobileMenuOpen=false;
 const mobileMenu=()=>matchMedia('(max-width: 860px)').matches;
@@ -374,7 +375,7 @@ function ootd(body){$('#ootdout').innerHTML='<div class="spin"></div>';
 
 /* ---------- IDÉE 4 : similarité + boutiques ---------- */
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const upl=(p,fd)=>fetch('/api/search/'+p,{method:'POST',body:fd}).then(async r=>{if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(d.detail||r.status)}return r.json()});
+const upl=async(p,fd)=>{let r=await fetch('/api/search/'+p,{method:'POST',body:fd});if(r.status===401&&window.refreshDressMe){try{await window.refreshDressMe();r=await fetch('/api/search/'+p,{method:'POST',body:fd})}catch{location.replace('/login?next='+encodeURIComponent('/app'+location.hash));throw new Error('Sign in again to continue.')}}if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(d.detail||r.status)}return r.json()};
 let simCat='';
 const SC={'':'Auto',top:'Top',bottom:'Bottom',dress:'Dress',shoes:'Shoes',bag:'Bag',outerwear:'Outerwear',accessory:'Accessory'};
 $('#simcat').innerHTML=Object.entries(SC).map(([k,v])=>`<button class="cc ${k===''?'on':''}" data-sc="${k}">${v}</button>`).join('');
@@ -431,10 +432,10 @@ $('#wrun').onclick=async()=>{const btn=$('#wrun');
  btn.disabled=false};
 window.onSection=id=>{if(id==='wardrobe'&&!WD.init&&C.length){WD.init=true;wdSample()}};
 
-go(MENU.flatMap(g=>g.items).some(i=>i.id===location.hash.slice(1))?location.hash.slice(1):'ootd');srcUI();api('catalog').then(c=>{C=c;wall();bombard();pile();if(tab==='wardrobe'&&!WD.init){WD.init=true;wdSample()}}).catch(()=>document.body.insertAdjacentHTML('afterbegin','<div class="err">API unreachable: run <code>uvicorn api:app --port 8000</code></div>'));
+go(isLoginRoute?'bo6-wardrobe':MENU.flatMap(g=>g.items).some(i=>i.id===location.hash.slice(1))?location.hash.slice(1):'ootd',true);srcUI();window.startAppCatalog=()=>api('catalog').then(c=>{C=c;wall();bombard();pile();if(tab==='wardrobe'&&!WD.init){WD.init=true;wdSample()}}).catch(()=>document.body.insertAdjacentHTML('afterbegin','<div class="err">Catalog unavailable. Try again later.</div>'));
 
 /* ---------- landing : garments bombarding the two figures ---------- */
-let introOn=!HASH0,cards=[];
+let introOn=false,cards=[];
 function spawn(o){const W=innerWidth,H=innerHeight,R=Math.random,e=R()*3|0;
  o.sx=e==0?R()*W:e==1?-220:W+220;o.sy=e==0?-260:R()*H*.8;o.tx=W*.5+(R()<.5?-1:1)*(W*.14+R()*W*.3);o.ty=H*.78+(R()-.5)*H*.14;
  o.r=R()*360;o.spin=(R()<.5?-1:1)*(120+R()*300);o.v=.0016+R()*.0028;o.t=0}
@@ -447,5 +448,5 @@ function bombLoop(){if(!introOn)return;for(const o of cards){o.t+=o.v;if(o.t>=1)
   o.im.style.opacity=t<.08?t*12:t>.8?(1-t)/.2:1;o.im.style.transform=`translate(${x-o.w/2}px,${y-o.h/2}px) rotate(${o.r+o.spin*t}deg) scale(${sc})`}requestAnimationFrame(bombLoop)}
 function hideIntro(){introOn=false;const e=$('#intro');e.classList.add('out');setTimeout(()=>{if(!introOn)e.style.display='none'},900)}
 function showIntro(){const e=$('#intro');introOn=true;e.style.display='';requestAnimationFrame(()=>e.classList.remove('out'));bombLoop()}
-$('#enter').onclick=hideIntro;$('.top .logo').onclick=showIntro;if(!introOn)$('#intro').style.display='none';
-</script><script type="module" src="/static/studio.js"></script></body></html>
+$('#enter').onclick=hideIntro;$('.top .logo').onclick=()=>location.assign('/');$('#intro').style.display='none';
+</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=integrated-11"></script></body></html>

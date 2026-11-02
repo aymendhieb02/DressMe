@@ -1,6 +1,9 @@
 """Dress Me : API des 3 idees des notebooks.   Lancer :  uvicorn api:app --port 8000   puis ouvrir http://localhost:8000"""
 import itertools, json, os
 import re
+import time
+from email import policy
+from email.parser import BytesParser
 from contextlib import asynccontextmanager
 from functools import lru_cache
 from pathlib import Path
@@ -11,15 +14,19 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import numpy as np, requests, torch, torch.nn as nn, torch.nn.functional as F
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from similar import router as similar_router
 from wardrobe import router as wardrobe_router     
 from app.main import app as studio_app
+from app.database import SessionLocal
+from app.auth.dependencies import session_context
+from app.config import settings as studio_settings
 
-DATA = Path(os.environ.get("DRESSME_DATA", "data"))
+ROOT_DIR = Path(__file__).resolve().parent
+DATA = Path(os.environ.get("DRESSME_DATA", ROOT_DIR / "data"))
 cat_json = json.load(open(DATA / "catalog.json")); OUTS = json.load(open(DATA / "outfits.json"))
 CODES, DESC, CAT = cat_json["codes"], cat_json["desc"], cat_json["cat"]
 EMB, EMB_FT = np.load(DATA / "emb_clip.npy"), np.load(DATA / "emb_ft.npy")
@@ -144,6 +151,18 @@ async def lifespan(_app):
 
 
 app = FastAPI(title="Dress Me", lifespan=lifespan)
+
+@app.middleware("http")
+async def integrated_auth_boundary(request: Request, call_next):
+    path = request.url.path
+    protected = path.startswith(("/api/", "/img/", "/search_img/"))
+    if not protected or path in {"/api/studio-config", "/api/public-style-wall", "/api/dev-recovery-message"}:
+        return await call_next(request)
+    with SessionLocal() as db:
+        context = session_context(request, db)
+    if context is None:
+        return JSONResponse({"error": {"code": "authentication_required", "message": "Sign in to use DressMe."}}, status_code=401)
+    return await call_next(request)
 app.include_router(similar_router)
 app.include_router(wardrobe_router) 
 app.mount("/studio-api", studio_app, name="studio-api")
@@ -176,6 +195,60 @@ def studio_config():
     return {"avaturn_url": raw, "export_origins": sorted(origins), **_public_upload_limits()}
 
 
+@app.get("/api/public-style-wall")
+def public_style_wall():
+    """Small public sample set used only to paint the login page background."""
+    return [dict(k=key) for key in CODES[:42] if (DATA / "img" / f"{key}.jpg").is_file()]
+
+
+@app.get("/public-wall/{key}.jpg")
+def public_wall_image(key: str):
+    # These are the bundled fashion catalog samples, never user wardrobe uploads.
+    if key not in CODES[:42]:
+        raise HTTPException(404, "Image not found")
+    image_path = DATA / "img" / f"{key}.jpg"
+    if not image_path.is_file():
+        raise HTTPException(404, "Image not found")
+    return FileResponse(image_path, media_type="image/jpeg")
+
+
+@app.get("/api/dev-recovery-message")
+def dev_recovery_message(email: str, request: Request):
+    """Read the matching local captured email; available only in loopback dev mode."""
+    client_host = request.client.host if request.client else ""
+    if (studio_settings.environment != "development"
+            or studio_settings.email_delivery_mode != "capture"
+            or client_host not in {"127.0.0.1", "::1"}):
+        raise HTTPException(404, "Local mailbox is unavailable")
+
+    address = email.strip().lower()
+    now = time.time()
+    cutoff = now - studio_settings.password_reset_code_ttl_seconds
+    try:
+        messages = sorted(studio_settings.email_capture_path.glob("*.eml"), key=lambda path: path.stat().st_mtime, reverse=True)
+    except OSError:
+        messages = []
+    for mail_path in messages[:100]:
+        try:
+            if mail_path.stat().st_mtime < cutoff or mail_path.stat().st_size > 32_768:
+                continue
+            message = BytesParser(policy=policy.default).parsebytes(mail_path.read_bytes())
+            recipient = str(message.get("To", "")).strip().lower()
+            if recipient != address:
+                continue
+            body_part = message.get_body(preferencelist=("plain",))
+            body = body_part.get_content() if body_part else ""
+            match = re.search(r"(?<!\d)\d{8}(?!\d)", body)
+            if match:
+                return JSONResponse(
+                    {"code": match.group(0), "sent_at": int(mail_path.stat().st_mtime)},
+                    headers={"Cache-Control": "no-store"},
+                )
+        except (OSError, ValueError, TypeError):
+            continue
+    raise HTTPException(404, "No recent local recovery email was found for that address")
+
+
 def _public_upload_limits():
     """Only non-sensitive limits and allow-list values are exposed to the Studio UI."""
     from app.config import settings as studio_settings
@@ -185,7 +258,7 @@ def _public_upload_limits():
         "avatar_bytes": studio_settings.max_avatar_bytes,
         "image_content_types": ["image/jpeg", "image/png", "image/webp"],
         "avatar_extensions": [".glb"],
-    }}
+    }, "recovery_delivery_mode": studio_settings.email_delivery_mode}
 class Items(BaseModel): items: list[int]; want: str | None = None
 class Ootd(BaseModel):
     lat: float | None = None; lon: float | None = None; city: str | None = None; place: str = "My location"
@@ -245,8 +318,15 @@ def api_ootd(b: Ootd):
     text = f"{band(w['feels'])} {w['label']} day, feels like {w['feels']:.0f} degrees celsius" + (", windy" if is_wind(w) else "")
     return dict(weather=w, text=text, pick=[dict(slot=s, **it(i), prompts=[p for g in groups(s, w) for p in g]) for s, i in pick.items()])
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=ROOT_DIR / "static"), name="static")
+app.mount("/landing", StaticFiles(directory=ROOT_DIR / "static/landing"), name="landing")
 app.mount("/img", StaticFiles(directory=DATA / "img"), name="img")
 app.mount("/search_img", StaticFiles(directory=DATA / "search_img"), name="search_img")
 @app.get("/")
-def index(): return FileResponse("static/index.html")
+def index(): return FileResponse(ROOT_DIR / "static/landing/index.html")
+
+@app.get("/login")
+def login_page(): return FileResponse(ROOT_DIR / "static/index.html")
+
+@app.get("/app")
+def application(): return FileResponse(ROOT_DIR / "static/index.html")

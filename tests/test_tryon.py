@@ -52,7 +52,7 @@ def _setup_inputs(client, origin, monkeypatch, tmp_path):
     monkeypatch.setattr("app.garments.router.BO6Client.analyze", analyze)
     monkeypatch.setattr("app.garments.router.BO6Client.describe", describe)
     csrf = _login(client, "alice@example.com", origin)
-    alice_cookie = client.cookies.get("dressme_session")
+    alice_cookie = dict(client.cookies)
     headers = {**origin, "X-CSRF-Token": csrf}
     uploaded = client.post("/garments/analyze", headers=headers,
                            files={"image": ("garment.jpg", _jpeg(), "image/jpeg")})
@@ -204,7 +204,7 @@ def test_job_and_person_photo_are_owner_scoped_and_photo_deletion_cascades(clien
     assert client.delete(f"/person-photos/{photo['id']}", headers=bob_headers).status_code == 404
 
     client.cookies.clear()
-    client.cookies.set("dressme_session", alice_cookie)
+    client.cookies.update(alice_cookie)
     alice_headers = {**origin, "X-CSRF-Token": headers["X-CSRF-Token"]}
     assert client.delete(f"/person-photos/{photo['id']}", headers=alice_headers).status_code == 204
     assert client.get(photo["image_url"]).status_code == 404

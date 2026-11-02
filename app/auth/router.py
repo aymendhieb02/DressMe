@@ -23,18 +23,20 @@ from .dependencies import (
     require_csrf,
     require_request_origin,
     session_context,
+    refresh_context,
 )
 from .rate_limit import rate_limit_login
 from .schemas import AccountDelete, AuthResponse, LoginCredentials, RegisterCredentials, CsrfToken, UserPublic
 from .security import new_secret, secret_hash, verify_password
 from .service import authenticate, create_session, create_user, find_user, utc_now
+from .tokens import create_access
 
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 _EMAIL_SHAPE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
-def _cookie(response: Response, value: str) -> None:
+def _cookie(response: Response, value: str, user_id, session_id) -> None:
     response.set_cookie(
         settings.auth_cookie_name,
         value,
@@ -44,6 +46,14 @@ def _cookie(response: Response, value: str) -> None:
         samesite="lax",
         path="/",
     )
+    response.set_cookie(settings.access_cookie_name, create_access(user_id, session_id),
+                        max_age=settings.access_ttl_seconds, httponly=True,
+                        secure=settings.cookie_secure, samesite="lax", path="/")
+
+
+def _clear_cookies(response: Response) -> None:
+    for name in (settings.auth_cookie_name, settings.access_cookie_name):
+        response.delete_cookie(name, path="/", secure=settings.cookie_secure, httponly=True, samesite="lax")
 
 
 def _public(user) -> UserPublic:
@@ -70,12 +80,12 @@ def register(body: RegisterCredentials, request: Request, response: Response, db
         return error_response(request, 409, "account_unavailable", "An account with that email cannot be created.")
     try:
         user = create_user(db, email, body.password)
-        _, cookie_token, csrf_token = create_session(db, user)
+        session, cookie_token, csrf_token = create_session(db, user)
         db.commit()
     except IntegrityError:
         db.rollback()
         return error_response(request, 409, "account_unavailable", "An account with that email cannot be created.")
-    _cookie(response, cookie_token)
+    _cookie(response, cookie_token, user.id, session.id)
     return AuthResponse(user=_public(user), csrf_token=csrf_token)
 
 
@@ -91,9 +101,11 @@ def login(body: LoginCredentials, request: Request, response: Response, db: Sess
     user = authenticate(db, email, body.password)
     if user is None:
         return error_response(request, 401, "invalid_credentials", "Email or password is incorrect.")
-    _, cookie_token, csrf_token = create_session(db, user)
+    # Serialize independent logins for this account on databases with row locks.
+    user = db.scalar(select(User).where(User.id == user.id).with_for_update())
+    session, cookie_token, csrf_token = create_session(db, user)
     db.commit()
-    _cookie(response, cookie_token)
+    _cookie(response, cookie_token, user.id, session.id)
     return AuthResponse(user=_public(user), csrf_token=csrf_token)
 
 
@@ -119,28 +131,28 @@ def bootstrap_csrf(
 
 @router.post("/logout", status_code=204)
 def logout(request: Request, response: Response, db: Session = Depends(get_db)):
-    context = session_context(request, db)
+    context = session_context(request, db) or refresh_context(request, db)
     if context is not None:
         require_csrf(request, context)
         context.session.revoked_at = utc_now()
         db.commit()
     elif request.cookies.get(settings.auth_cookie_name) and not _origin_ok(request):
         raise InvalidCsrfToken()
-    response.delete_cookie(
-        settings.auth_cookie_name,
-        path="/",
-        secure=settings.cookie_secure,
-        httponly=True,
-        samesite="lax",
-    )
+    _clear_cookies(response)
 
 
 @router.post("/refresh", response_model=AuthResponse)
 def refresh(request: Request, response: Response, db: Session = Depends(get_db)):
-    context = session_context(request, db)
+    context = refresh_context(request, db)
     if context is None:
         raw_cookie = request.cookies.get(settings.auth_cookie_name)
+        if not raw_cookie:
+            return error_response(request, 401, "authentication_required", "Sign in to continue.")
         old = db.scalar(select(AuthSession).where(AuthSession.token_hash == secret_hash(raw_cookie))) if raw_cookie else None
+        replaced = False
+        if old is not None and old.revoked_at is not None:
+            family_id = old.family_id or old.id
+            replaced = db.scalar(select(AuthSession.id).where(AuthSession.family_id == family_id, AuthSession.revoked_at.is_(None))) is None
         # A previously valid, revoked cookie replayed with its CSRF proof revokes the family.
         if old is not None and old.revoked_at is not None and _origin_ok(request):
             supplied = request.headers.get(settings.csrf_header_name, "")
@@ -148,8 +160,13 @@ def refresh(request: Request, response: Response, db: Session = Depends(get_db))
                 family_id = old.family_id or old.id
                 db.execute(update(AuthSession).where(AuthSession.family_id == family_id, AuthSession.revoked_at.is_(None)).values(revoked_at=utc_now()))
                 db.commit()
+        if replaced:
+            return error_response(request, 401, "session_replaced", "Your account was signed in elsewhere. Sign in again to continue.")
         return error_response(request, 401, "refresh_invalid", "The session cannot be refreshed.")
-    require_csrf(request, context)
+    if request.headers.get("X-CSRF-Bootstrap") == "1":
+        require_request_origin(request)
+    else:
+        require_csrf(request, context)
     old = context.session
     family_id = old.family_id or old.id
     now = utc_now()
@@ -168,7 +185,7 @@ def refresh(request: Request, response: Response, db: Session = Depends(get_db))
         return error_response(request, 401, "refresh_invalid", "The session cannot be refreshed.")
     _session, cookie_token, csrf_token = create_session(db, context.user, family_id=family_id)
     db.commit()
-    _cookie(response, cookie_token)
+    _cookie(response, cookie_token, context.user.id, _session.id)
     return AuthResponse(user=_public(context.user), csrf_token=csrf_token)
 
 
@@ -224,8 +241,8 @@ def delete_account(
         acknowledge_storage_deletion(db, key)
     if cleanup_pending:
         result = JSONResponse(status_code=202, content={"status": "deletion_queued", "message": "The account was deleted; private file cleanup is queued for retry."})
-        result.delete_cookie(settings.auth_cookie_name, path="/", secure=settings.cookie_secure, httponly=True, samesite="lax")
+        _clear_cookies(result)
         return result
-    response.delete_cookie(settings.auth_cookie_name, path="/", secure=settings.cookie_secure, httponly=True, samesite="lax")
+    _clear_cookies(response)
     response.status_code = 204
     return response

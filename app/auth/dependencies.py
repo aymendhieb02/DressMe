@@ -10,6 +10,7 @@ from ..database import get_db
 from ..models import AuthSession, User
 from .security import secret_hash, secret_matches
 from .service import utc_now
+from .tokens import verify_access
 
 
 class AuthenticationRequired(Exception):
@@ -26,7 +27,7 @@ class AuthContext:
     session: AuthSession
 
 
-def session_context(request: Request, db: Session) -> AuthContext | None:
+def refresh_context(request: Request, db: Session) -> AuthContext | None:
     raw = request.cookies.get(settings.auth_cookie_name)
     if not raw:
         return None
@@ -44,9 +45,31 @@ def session_context(request: Request, db: Session) -> AuthContext | None:
     return AuthContext(user=user, session=session)
 
 
+def session_context(request: Request, db: Session) -> AuthContext | None:
+    token = request.cookies.get(settings.access_cookie_name)
+    ids = verify_access(token) if token else None
+    if ids is None:
+        return None
+    user_id, session_id = ids
+    session = db.get(AuthSession, session_id)
+    if session is None or session.user_id != user_id or session.revoked_at is not None:
+        return None
+    expires = session.expires_at
+    if (expires.replace(tzinfo=timezone.utc) if expires.tzinfo is None else expires) <= utc_now():
+        return None
+    user = db.get(User, user_id)
+    return AuthContext(user, session) if user else None
+
+
 def get_auth_context(request: Request, db: Session = Depends(get_db)) -> AuthContext:
     context = session_context(request, db)
     if context is None:
+        raw = request.cookies.get(settings.access_cookie_name)
+        ids = verify_access(raw) if raw else None
+        if ids:
+            session = db.get(AuthSession, ids[1])
+            if session and session.user_id == ids[0] and session.revoked_at is not None:
+                raise AuthenticationRequired("session_replaced")
         raise AuthenticationRequired()
     return context
 

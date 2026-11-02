@@ -32,6 +32,10 @@ class PasswordResetRequest(_EmailModel):
     pass
 
 
+class PasswordResetVerify(_EmailModel):
+    code: str = Field(pattern=r"^[0-9]{8}$")
+
+
 class PasswordResetComplete(_EmailModel):
     code: str = Field(pattern=r"^[0-9]{8}$")
     new_password: str = Field(min_length=12, max_length=128)

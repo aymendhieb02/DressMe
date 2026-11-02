@@ -2,24 +2,26 @@
 import {
   PAGES, state, $, esc, active, node, message, request, loadPublicConfig,
   loadSession, clearPrivateState, clearLoadedPrivateData, studioPage,
-} from './studio/core.js';
-import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility} from './studio/auth.js';
+  refreshSession,
+} from './studio/core.js?v=integrated-11';
+window.refreshDressMe = refreshSession;
+import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=integrated-11';
 import {
   wardrobeContent, addGarmentContent, renderWardrobe, review, detail,
   syncSuggestionState, chooseSuggestion, handleConfirmedChange, generateDescription,
   saveReview, saveEdit, regenerateDetailDescription,
-} from './studio/wardrobe.js';
+} from './studio/wardrobe.js?v=integrated-11';
 import {
   avatarContent, refreshAvatar, closeAvatarSdk, saveAvatarImport, handleAvatarAction,
-} from './studio/avatar.js';
+} from './studio/avatar.js?v=integrated-11';
 import {
   tryonContent, historyContent, refreshTryon, refreshHistory, savePersonPhoto,
   updateSubmitAvailability, handleTryonAction,
-} from './studio/tryon.js';
+} from './studio/tryon.js?v=integrated-11';
 import {
   abandonPending, clearUpload, handleUploadSelection, handleDrop, handleDragOver,
   clearDrag, validateUpload,
-} from './studio/upload.js';
+} from './studio/upload.js?v=integrated-11';
 
 function content(page) {
   if (page === 'bo6-wardrobe') return wardrobeContent();
@@ -31,12 +33,14 @@ function content(page) {
 
 function shell(page) {
   if (!state.user) {
-    return `<div class="studio studio-auth-shell" aria-busy="false"><div class="studio-auth-public"><span>DressMe Studio</span><a href="#ootd">Return to Style Engine</a></div><div class="studio-body studio-auth-body"><div class="studio-status" role="status" aria-live="polite"></div>${authForm()}</div></div>`;
+    return `<div class="studio studio-auth-shell" aria-busy="false"><div class="studio-auth-public"><a class="studio-auth-brand" href="/" aria-label="DressMe landing page">DressMe <span>Your workspace</span></a><a href="/">Back to landing page</a></div><div class="studio-auth-layout"><aside class="studio-auth-story"><p class="studio-eyebrow">The DressMe experience</p><h2>Style starts with what you own.</h2><p>Explore your daily edit, refine a look, and keep your wardrobe together in one place.</p><ol><li><span>01</span> Find your daily edit</li><li><span>02</span> Explore your style</li><li><span>03</span> Build your wardrobe</li></ol></aside><div class="studio-body studio-auth-body">${authForm()}</div></div></div>`;
   }
   const currentTitle = PAGES.find(([id]) => id === page)?.[1] || 'My Studio';
   const studioLinks = PAGES.map(([id, title]) => `<a href="#${id}" ${id === page ? 'aria-current="page"' : ''}>${title}</a>`).join('');
-  return `<div class="studio" aria-busy="false"><details class="studio-nav-mobile"><summary>Studio sections · ${esc(currentTitle)}</summary><nav aria-label="Studio sections">${studioLinks}</nav></details><nav class="studio-nav" aria-label="My Studio">${studioLinks}<a href="#ootd">Style Engine</a></nav><div class="studio-body"><div class="studio-head"><div><p class="studio-eyebrow">DressMe Studio</p><h2>${esc(currentTitle)}</h2></div><div class="studio-account"><span>${esc(state.user.email)}</span><button class="btn ghost" data-action="logout">Sign out</button></div></div><div class="studio-status" role="status" aria-live="polite"></div>${content(page)}</div></div>`;
+  return `<div class="studio" aria-busy="false"><div class="studio-body"><div class="studio-head"><div><p class="studio-eyebrow">Your workspace</p><h2>${esc(currentTitle)}</h2></div></div><div class="studio-status" role="status" aria-live="polite"></div>${content(page)}</div></div>`;
 }
+
+let authAnimation;
 
 function runRefresh(page, version = state.renderVersion) {
   const work = page === 'bo6-wardrobe' ? renderWardrobe(state.filters.page, version)
@@ -58,6 +62,15 @@ function render() {
     if (other !== target) other.replaceChildren();
   });
   target.innerHTML = shell(page);
+  if (!state.user) {
+    $('.studio-auth-card', target)?.insertAdjacentHTML('beforeend', '<div class="studio-status" role="status" aria-live="polite"></div>');
+    authAnimation?.kill();
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches && window.gsap) {
+      authAnimation = window.gsap.timeline({defaults: {ease: 'power3.out'}})
+        .fromTo('.studio-auth-story', {opacity: 0, x: -28}, {opacity: 1, x: 0, duration: .65})
+        .fromTo('.studio-auth-card', {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: .55}, .12);
+    }
+  }
   if (state.user) {
     runRefresh(page, version);
     if (page === 'bo6-add' && state.pending) review();
@@ -97,7 +110,7 @@ document.addEventListener('submit', event => {
   event.preventDefault();
   const formId = form.getAttribute('id');
   safe(async () => {
-    if (formId === 'studio-auth' || formId === 'studio-recovery-request' || formId === 'studio-recovery-complete') {
+    if (['studio-auth', 'studio-recovery-request', 'studio-recovery-verify', 'studio-recovery-complete'].includes(formId)) {
       return handleAuthSubmit(form, render);
     }
     if (formId === 'studio-upload') {
@@ -158,14 +171,20 @@ document.addEventListener('click', event => {
   if (!button || !button.closest('.studio')) return;
   const action = button.dataset.action;
   safe(async () => {
+    if (action === 'show-local-recovery') {
+      const query = new URLSearchParams({email: state.authEmail});
+      const response = await fetch('/api/dev-recovery-message?' + query, {credentials: 'same-origin'});
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.detail || 'No recent local recovery email was found. Request another code after the one-minute cooldown.');
+      message(`Local recovery code: ${result.code}. Enter it above to continue.`);
+      return;
+    }
     if (action === 'logout') {
       await abandonPending();
       await request('/auth/logout', {method: 'POST'});
       closeAvatarSdk();
       clearPrivateState();
-      state.authView = 'login';
-      render();
-      message('You have signed out.');
+      window.location.replace('/');
       return;
     }
     if (action === 'clear-upload') return clearUpload(button.dataset.uploadKey);
@@ -251,13 +270,44 @@ document.addEventListener('change', event => {
 document.addEventListener('dressme:session-expired', () => {
   closeAvatarSdk();
   state.authView = 'login';
-  render();
-  message('Your session expired. Sign in again to continue.');
+  const next = encodeURIComponent('/app' + location.hash);
+  location.replace('/login?next=' + next + '&reason=' + (state.sessionReason || 'expired'));
 });
 
+$('#headerSignout')?.addEventListener('click', () => safe(async () => {
+  await request('/auth/logout', {method: 'POST'});
+  clearPrivateState();
+  location.replace('/');
+}));
+
 window.addEventListener('hashchange', () => {
-  if (document.getElementById(active()) && typeof window.go === 'function') window.go(active());
+  if (document.getElementById(active()) && typeof window.go === 'function') window.go(active(), true);
 });
 
 state.returnPage = studioPage(active());
-Promise.all([loadPublicConfig(), loadSession()]).then(render);
+if (location.pathname === '/login') {
+  const requested = new URLSearchParams(location.search).get('view');
+  if (['register', 'forgot', 'reset'].includes(requested)) state.authView = requested;
+}
+Promise.all([loadPublicConfig(), loadSession()]).then(() => {
+  if (location.pathname === '/login' && state.user) { location.replace(safeDestination()); return; }
+  if (location.pathname === '/app' && !state.user) {
+    location.replace('/login?next=' + encodeURIComponent('/app' + location.hash)
+      + (state.sessionReason ? '&reason=' + state.sessionReason : ''));
+    return;
+  }
+  $('#accountEmail').textContent = state.user?.email || '';
+  render();
+  if (location.pathname === '/login' && new URLSearchParams(location.search).get('reason')) {
+    message(new URLSearchParams(location.search).get('reason') === 'elsewhere'
+      ? 'Your account was signed in elsewhere. Sign in again to continue.'
+      : 'Your session expired. Sign in again to continue.');
+  }
+  if (state.user) window.startAppCatalog?.();
+  else if (location.pathname === '/login') {
+    fetch('/api/public-style-wall', {credentials: 'same-origin'})
+      .then(response => response.ok ? response.json() : [])
+      .then(items => { if (items.length) window.renderPublicStyleWall?.(items); })
+      .catch(() => {});
+  }
+});

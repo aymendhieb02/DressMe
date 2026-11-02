@@ -78,6 +78,7 @@ print(json.dumps({
     assert output["public_config"] == {
         "avaturn_url": "https://demo.avaturn.dev",
         "export_origins": ["https://demo.avaturn.dev"],
+        "recovery_delivery_mode": "capture",
         "upload_limits": {
             "image_bytes": 10 * 1024 * 1024,
             "avatar_bytes": 50 * 1024 * 1024,

@@ -10,6 +10,8 @@ export const state = {
   selected: null, busy: false, avatarConfig: null, avatarSdk: null,
   avatarGate: null, avatarConsent: null, authView: 'login', authEmail: '',
   returnPage: 'bo6-wardrobe', focusAfterRender: null,
+  recoveryCode: null,
+  sessionReason: null,
   renderVersion: 0,
   filters: {q: '', category: '', color: '', sort: 'newest', page: 1},
   tryOnIdempotencyKey: null,
@@ -20,9 +22,38 @@ export const $$ = (selector, root = document) => root ? [...root.querySelectorAl
 export const esc = value => String(value ?? '').replace(/[&<>"']/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[character]));
-export const active = () => location.hash.slice(1);
+export const active = () => location.pathname === '/login' ? 'bo6-wardrobe' : location.hash.slice(1);
 export const node = () => document.querySelector(`[data-studio-page="${active()}"]`);
 export const image = url => ROOT + url;
+
+let refreshPromise;
+export function refreshSession() {
+  if (refreshPromise) return refreshPromise;
+  const renew = async () => {
+    const probe = await fetch(ROOT + '/auth/me', {credentials: 'same-origin'});
+    if (probe.ok) {
+      state.user = await probe.json();
+      await csrf();
+      return;
+    }
+    const response = await fetch(ROOT + '/auth/refresh', {
+      method: 'POST', headers: {'X-CSRF-Bootstrap': '1'}, credentials: 'same-origin',
+    });
+    if (!response.ok) {
+      const detail = await response.json().catch(() => ({}));
+      if (detail.error?.code === 'session_replaced') state.sessionReason = 'elsewhere';
+      else if (detail.error?.code === 'refresh_invalid') state.sessionReason = 'expired';
+      throw new Error('Your session could not be renewed.');
+    }
+    const result = await response.json();
+    state.user = result.user;
+    state.csrf = result.csrf_token;
+  };
+  refreshPromise = (navigator.locks?.request
+    ? navigator.locks.request('dressme-session-refresh', renew)
+    : renew()).finally(() => { refreshPromise = null; });
+  return refreshPromise;
+}
 
 export function message(text, error = false) {
   const target = $('.studio-status', node()) || document.querySelector('.studio-status');
@@ -55,6 +86,14 @@ export async function request(path, {method = 'GET', body, key, retry = true} = 
     }
   }
   if (response.status === 401 && state.user) {
+    const detail = await response.clone().json().catch(() => ({}));
+    if (detail.error?.code !== 'session_replaced' && retry && !path.startsWith('/auth/')) {
+      try {
+        await refreshSession();
+        return request(path, {method, body, key, retry: false});
+      } catch { /* the revoked or expired session is handled below */ }
+    }
+    state.sessionReason = detail.error?.code === 'session_replaced' ? 'elsewhere' : 'expired';
     clearPrivateState();
     document.dispatchEvent(new CustomEvent('dressme:session-expired'));
     throw new Error('Your session expired. Sign in again to continue.');
@@ -92,8 +131,15 @@ export async function loadPublicConfig() {
 
 export async function loadSession() {
   try {
-    state.user = await request('/auth/me');
-    await csrf();
+    const probe = await fetch(ROOT + '/auth/me', {credentials: 'same-origin'});
+    if (probe.ok) {
+      state.user = await probe.json();
+      await csrf();
+    } else {
+      const detail = await probe.json().catch(() => ({}));
+      if (detail.error?.code === 'session_replaced') state.sessionReason = 'elsewhere';
+      await refreshSession();
+    }
   } catch {
     state.user = null;
     state.csrf = null;

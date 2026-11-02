@@ -9,6 +9,7 @@
 __pycache__/
 *.pyc
 *.py[cod]
+.pytest_cache/
 
 # editeur / historique
 .history/
@@ -26,3 +27,5 @@ var/
 runtime/
 bo6_service/bundle/*.pt
 *.log
+landing/node_modules/
+/static/landing/
