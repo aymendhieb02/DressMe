@@ -79,6 +79,9 @@ async def lifespan(_app):
         yield
 
 
+from redundancy import router as redundancy_router   # BO3
+from donate import router as donate_router            # BO3
+
 app = FastAPI(title="Dress Me", lifespan=lifespan)
 
 @app.middleware("http")
@@ -109,6 +112,8 @@ app.include_router(wardrobe_router)
 app.include_router(ootd.router)         # POST /api/ootd
 app.include_router(scoring.router)      # POST /api/score, /api/score/explain
 app.include_router(completion.router)   # GET /api/complete/options, POST /api/complete
+app.include_router(redundancy_router)   # BO3 : /api/redundancy/*
+app.include_router(donate_router)       # BO3 : /api/donate/*
 app.mount("/studio-api", studio_app, name="studio-api")
 
 @app.get("/api/studio-config")
@@ -224,6 +229,9 @@ def index(): return FileResponse(ROOT_DIR / "static/landing/index.html")
 
 @app.get("/login")
 def login_page(): return FileResponse(ROOT_DIR / "static/index.html")
+
+@app.get("/bo3")
+def bo3_page(): return FileResponse(ROOT_DIR / "static/bo3.html")
 
 @app.get("/app")
 def application(): return FileResponse(ROOT_DIR / "static/index.html")
