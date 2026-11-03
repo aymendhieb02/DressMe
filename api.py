@@ -41,7 +41,24 @@ for o in OUTS: o.setdefault("test", o.get("split") == "test")   # nouveau format
 TEST = [o for o in OUTS if o["test"]] or OUTS
 MAX_ITEMS = 5
 
+# ============================================================
+# WARDROBE — Shared category index
+# ============================================================
 
+import numpy as np
+
+CAT = np.asarray(CAT)
+
+BYCAT = {
+    category: np.flatnonzero(CAT == category).tolist()
+    for category in np.unique(CAT)
+}
+
+print(
+    f"[wardrobe] BYCAT ready: "
+    f"{len(BYCAT)} categories, "
+    f"{sum(len(v) for v in BYCAT.values())} articles"
+)
 # ---------------------------------------------------------------- CLIP (public, sans token) : utilisé par ootd.py
 @lru_cache(1)
 def clip():
@@ -210,3 +227,5 @@ def login_page(): return FileResponse(ROOT_DIR / "static/index.html")
 
 @app.get("/app")
 def application(): return FileResponse(ROOT_DIR / "static/index.html")
+
+

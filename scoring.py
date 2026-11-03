@@ -53,6 +53,56 @@ def configure(*, data_dir, cat, desc, item):
     analyze.cache_clear()
 
 
+@torch.no_grad()
+def score_outfits(outfits):
+    """Calcule la note de chaque tenue avec le modèle OutfitScorer."""
+    if not _S:
+        raise RuntimeError(
+            "Scoring model not initialized. "
+            "Check data/scorer.pt, data/emb_ft.npy, "
+            "data/config.json and data/dressme_core.py."
+        )
+
+    if not outfits:
+        return np.zeros(0, dtype=float)
+
+    model = _S["model"]
+    E = _S["E"]
+    K = _S["K"]
+
+    results = np.zeros(len(outfits), dtype=float)
+    groups = defaultdict(list)
+
+    for j, outfit in enumerate(outfits):
+        if not 2 <= len(outfit) <= K:
+            raise ValueError(f"Invalid outfit size: {len(outfit)}")
+
+        if len(set(outfit)) != len(outfit):
+            raise ValueError(f"Duplicate items in outfit: {outfit}")
+
+        if any(i < 0 or i >= len(E) for i in outfit):
+            raise ValueError(f"Invalid item index in outfit: {outfit}")
+
+        groups[len(outfit)].append(j)
+
+    for length, indices in groups.items():
+        for start in range(0, len(indices), 512):
+            batch_indices = indices[start:start + 512]
+
+            items = torch.tensor(
+                [list(outfits[j]) for j in batch_indices],
+                dtype=torch.long
+            )
+
+            mask = torch.ones_like(items, dtype=torch.bool)
+            scores, _ = model(E[items], mask)
+
+            results[batch_indices] = (
+                scores.detach().cpu().numpy().reshape(-1)
+            )
+
+    return results
+
 # ------------------------------------------------------------------ note + intrus + suggestions
 def _check(items):
     if not _S:

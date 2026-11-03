@@ -566,11 +566,11 @@ document.addEventListener('click',event=>{if(mobileMenu()&&mobileMenuOpen&&!even
 window.addEventListener('resize',()=>{closeGroups();mobileMenuOpen=false;syncMenuMode()},{passive:true});
 window.addEventListener('hashchange',()=>{if(mobileMenu()&&mobileMenuOpen)closeMobileMenu(false)});
 /* ---------- sélecteur d'articles (hide = catégories à masquer, ex. ['dress'] pour une garde-robe homme) ---------- */
-function picker(cb,hide=[]){let f='all',q='';const m=document.createElement('div');m.className='modal';
+function picker(cb,hide=[],allow=null){let f='all',q='';const m=document.createElement('div');m.className='modal';
  m.innerHTML=`<div><div class="row" style="align-items:center;justify-content:space-between"><h2>Pick an item</h2><button class="btn ghost" id="cl">Close</button></div>
  <input type="search" placeholder="Search (coat, silk, boots…)" id="q"><div class="chips" id="fc"></div><div class="grid" id="g"></div></div>`;document.body.appendChild(m);
  const cats=['all',...Object.keys(FR).filter(c=>!hide.includes(c))];$('#fc',m).innerHTML=cats.map(c=>`<button class="cc ${c=='all'?'on':''}" data-c="${c}">${c=='all'?'All':FR[c]}</button>`).join('');
- const draw=()=>{const L=C.filter(x=>!hide.includes(x.c)&&(f=='all'||x.c==f)&&x.d.toLowerCase().includes(q)).slice(0,120);
+ const draw=()=>{const L=C.filter(x=>!hide.includes(x.c)&&(!allow||allow.has(x.i))&&(f=='all'||x.c==f)&&x.d.toLowerCase().includes(q)).slice(0,120);
   $('#g',m).innerHTML=L.map(x=>`<div class="card" data-i="${x.i}"><img loading="lazy" src="${img(x.k)}"><p><em>${FR[x.c]}</em><br>${x.d.slice(0,46)}</p></div>`).join('')||'<p>No results</p>'};
  m.onclick=e=>{if(e.target===m||e.target.id=='cl')return m.remove();const c=e.target.closest('[data-c]');if(c){f=c.dataset.c;$$('.cc',m).forEach(x=>x.classList.toggle('on',x===c));draw()}
   const k=e.target.closest('[data-i]');if(k){m.remove();cb(+k.dataset.i)}};$('#q',m).oninput=e=>{q=e.target.value.toLowerCase();draw()};draw()}
@@ -751,8 +751,14 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function countTo(el,a,b){let t=0;const id=setInterval(()=>{t+=.04;if(t>=1){t=1;clearInterval(id)}el.textContent=Math.round(a+(b-a)*t)},30)}
 async function wdSample(force){
  if(force!==true&&WD.items.length&&!confirm('Replace your saved wardrobe with a sample wardrobe?'))return;
- try{const r=await api('wardrobe/sample?gender='+WD.gender);WD.items=r.items;WD.fresh.clear();$('#wout').innerHTML='';wdRender();wdSave();
-  if(!WD.open){await sleep(500);wdOpen(true)}}catch(e){$('#wout').innerHTML=`<div class="err">${esc(e.message)}</div>`}}
+ try{
+   // On demande l'échantillon du genre choisi
+   const r=await api('wardrobe/sample?gender='+WD.gender);
+   // On filtre par sécurité : pas de robes pour les hommes
+   WD.items = r.items.filter(x => !(WD.gender === 'men' && x.c === 'dress'));
+   WD.fresh.clear();$('#wout').innerHTML='';wdRender();wdSave();
+   if(!WD.open){await sleep(500);wdOpen(true)}
+ }catch(e){$('#wout').innerHTML=`<div class="err">${esc(e.message)}</div>`}}
 
 /* ---- compte : type de garde-robe (women / men) + sauvegarde automatique ---- */
 let wdSaveT=null;
@@ -776,20 +782,46 @@ function wdChooseGender(){return new Promise(res=>{const m=document.createElemen
   try{await api('wardrobe/profile',{gender:g});m.remove();res(g)}catch(er){$('#gerr',m).innerHTML=`<div class="err">${esc(er.message)}</div>`}}})}
 let wdLoadP=null;
 function wdLoad(){if(wdLoadP)return wdLoadP;
- wdLoadP=(async()=>{try{await wdFlush();wdStatus('Loading your wardrobe…');
-   let r=await api('wardrobe/me');
-   if(!r.gender){const g=await wdChooseGender();wdApplyGender(g);r=await api('wardrobe/me')}
-   wdApplyGender(r.gender);WD.items=r.items;WD.fresh.clear();WD.ready=true;$('#wout').innerHTML='';wdRender();
-   wdStatus(r.items.length?'Saved to your account ✓':'');
+ wdLoadP=(async()=>{
+  try{
+   await wdFlush();
+   wdStatus('Loading your wardrobe…');
+   
+   // Force un rechargement à chaque fois (pas de cache côté fetch)
+   let r=await api('wardrobe/me', null, {cache: 'no-store'});
+   
+   if(!r.gender){
+     const g=await wdChooseGender();
+     wdApplyGender(g);
+     r=await api('wardrobe/me', null, {cache: 'no-store'});
+   }
+   
+   wdApplyGender(r.gender);
+   WD.items = r.items || [];
+   WD.fresh.clear();
+   WD.ready=true;
+   $('#wout').innerHTML='';
+   wdRender();
+   wdStatus(r.items.length ? `Saved to your account ✓ (${r.items.length} pieces)` : 'Your wardrobe is empty');
+   
    if(!WD.open){await sleep(400);wdOpen(true)}
-  }catch(e){WD.ready=false;wdStatus('Could not load your wardrobe: '+e.message,true);
-   $('#wout').innerHTML=`<div class="err">Could not load your saved wardrobe: ${esc(e.message)}</div>`}
-  finally{wdLoadP=null}})();
- return wdLoadP}
+  }catch(e){
+   WD.ready=false;
+   wdStatus('Could not load your wardrobe: '+e.message, true);
+   $('#wout').innerHTML=`<div class="err">Could not load your saved wardrobe: ${esc(e.message)}</div>`;
+  }finally{
+   wdLoadP=null;
+  }
+ })();
+ return wdLoadP;
+}
 
 /* ---- ajout d'une pièce : catalogue ou vraie photo ---- */
 function wdAddItem(x){WD.items.push(x);wdPut(x,false,0);wdStats(true);wdSave();if(!WD.open)wdOpen(true)}
-function wdFromCatalog(){picker(i=>{if(WD.items.some(x=>x.i===i))return;wdAddItem(C[i])},wdHide())}
+async function wdFromCatalog(){
+ let ids=null;try{ids=new Set((await api('wardrobe/allowed?gender='+WD.gender)).ids)}catch{}
+ picker(i=>{if(WD.items.some(x=>x.i===i))return;wdAddItem(C[i])},wdHide(),ids)}
+
 const wdUpload=async fd=>{const send=()=>fetch('/api/wardrobe/add_photo',{method:'POST',body:fd});let r=await send();
  if(r.status===401&&window.refreshDressMe){try{await window.refreshDressMe();r=await send()}catch{location.replace('/login?next='+encodeURIComponent('/app'+location.hash));throw new Error('Sign in again to continue.')}}
  if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(d.detail||r.status)}return r.json()};
@@ -844,26 +876,48 @@ $$('.wd-door').forEach(d=>{d.title='Click to open / close';d.onclick=()=>wdOpen(
 $('#wcab').onclick=e=>{if(e.target===e.currentTarget&&WD.open)wdOpen(false)};
 /* garde-robe homme : pas de robes */
 $('#wgd').onclick=async e=>{const b=e.target.closest('[data-g]');if(!b||b.dataset.g===WD.gender)return;const g=b.dataset.g;
- if(g==='men'&&WD.items.some(x=>x.c==='dress')&&!confirm('Dresses will be removed from this wardrobe. Continue?'))return;
+ if(WD.items.length&&!confirm('Switching wardrobe type replaces your current wardrobe with a new '+(g==='men'?'men':'women')+'’s starter wardrobe. Continue?'))return;
  try{await api('wardrobe/profile',{gender:g})}catch(er){$('#wout').innerHTML=`<div class="err">${esc(er.message)}</div>`;return}
- wdApplyGender(g);if(g==='men')WD.items=WD.items.filter(x=>x.c!=='dress');
- $('#wout').innerHTML='';wdRender();wdSave()};
+ wdApplyGender(g);await wdSample(true)};
 $('#wnn').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;WD.n=+b.dataset.n;$$('.cc',$('#wnn')).forEach(x=>x.classList.toggle('on',x===b))};
 $('#win').onclick=e=>{const x=e.target.closest('.gx');if(!x)return;const i=+x.dataset.x;WD.items=WD.items.filter(v=>v.i!==i);WD.fresh.delete(i);x.closest('.gi').remove();wdStats(true);wdSave()};
 $('#wrun').onclick=async()=>{const btn=$('#wrun');
  if(WD.items.length<3){$('#wout').innerHTML='<div class="err">Add at least 3 pieces (or load the sample wardrobe).</div>';return}
  btn.disabled=true;$('#wout').innerHTML='';if(!WD.open){wdOpen(true);await sleep(1000)}
  $('#wcab').classList.add('scan');
- try{const r=await api('wardrobe/complete',{items:WD.items.map(x=>x.i),n:WD.n,gender:WD.gender});
+ 
+ try{
+  // On envoie le genre actuel (women ou men) au serveur
+  const r=await api('wardrobe/complete',{items:WD.items.map(x=>x.i),n:WD.n,gender:WD.gender});
   $('#wcab').classList.remove('scan');
-  r.recs.forEach((q,k)=>setTimeout(()=>{if(WD.items.some(x=>x.i===q.item.i))return;WD.items.push(q.item);WD.fresh.add(q.item.i);wdPut(q.item,true,0);$('#wn').textContent=WD.items.length},k*1000));
-  await sleep(r.recs.length*1000);wdSave();
+
+  // Si le serveur n'a pas respecté le genre, on filtre par sécurité
+  const validRecs = r.recs.filter(q => {
+    if (WD.gender === 'men' && q.item.c === 'dress') return false;
+    // On suppose que l'item a une propriété 'g' (genre) ou on vérifie via le catalogue
+    const catItem = C.find(x => x.i === q.item.i);
+    if (catItem && catItem.g && catItem.g !== 'unisex' && catItem.g !== WD.gender) return false;
+    return true;
+  });
+
+  if (validRecs.length === 0) {
+    $('#wout').innerHTML = '<div class="err">No valid recommendations for your wardrobe type. Try adding more pieces or switching wardrobe type.</div>';
+    btn.disabled = false;
+    return;
+  }
+
+  validRecs.forEach((q,k)=>setTimeout(()=>{if(WD.items.some(x=>x.i===q.item.i))return;WD.items.push(q.item);WD.fresh.add(q.item.i);wdPut(q.item,true,0);$('#wn').textContent=WD.items.length},k*1000));
+  await sleep(validRecs.length*1000);wdSave();
+  
   const wo=$('#wo');wo.textContent=r.before;countTo(wo,r.before,r.after);
-  $('#wout').innerHTML=`<h3>Pieces your wardrobe was missing · <span style="color:var(--ok)">+${r.after-r.before} outfits</span></h3>`+r.recs.map((q,k)=>`<div class="sug" style="animation-delay:${k*.15}s"><img src="${img(q.item.k)}"><div><b>${FR[q.item.c]}</b> · ${esc(q.item.d.slice(0,50))}<br><small>${q.gain?`Unlocks <b>${q.gain}</b> new outfit${q.gain>1?'s':''}`:'Foundation piece your closet was lacking'}${q.best_score!=null?` · best look ${q.best_score.toFixed(1)}/10`:''}</small>${q.look.length?`<div class="wd-ex">${q.look.map(x=>`<img src="${img(x.k)}">`).join('')}</div>`:''}</div><span class="pill" style="background:var(--ok)">+${q.gain}</span></div>`).join('')+wdLooks(r.looks);
-  setTimeout(wdAnalyze,1500);   // rafraîchit « Missing essentials » après l'ajout des pièces
- }catch(e){$('#wcab').classList.remove('scan');$('#wout').innerHTML=`<div class="err">${esc(e.message)}</div>`}
+  
+  $('#wout').innerHTML=`<h3>Pieces your wardrobe was missing · <span style="color:var(--ok)">+${r.after-r.before} outfits</span></h3>`+validRecs.map((q,k)=>`<div class="sug" style="animation-delay:${k*.15}s"><img src="${img(q.item.k)}"><div><b>${FR[q.item.c]}</b> · ${esc(q.item.d.slice(0,50))}<br><small>${q.gain?`Unlocks <b>${q.gain}</b> new outfit${q.gain>1?'s':''}`:'Foundation piece your closet was lacking'}${q.best_score!=null?` · best look ${q.best_score.toFixed(1)}/10`:''}</small>${q.look.length?`<div class="wd-ex">${q.look.map(x=>`<img src="${img(x.k)}">`).join('')}</div>`:''}</div><span class="pill" style="background:var(--ok)">+${q.gain}</span></div>`).join('')+wdLooks(r.looks);
+  setTimeout(wdAnalyze,1500);
+ }catch(e){
+  $('#wcab').classList.remove('scan');
+  $('#wout').innerHTML=`<div class="err">${esc(e.message)}</div>`
+ }
  btn.disabled=false};
-window.onSection=id=>{if(id==='wardrobe')wdLoad();else wdFlush()};
 
 go(isLoginRoute?'bo6-wardrobe':MENU.flatMap(g=>g.items).some(i=>i.id===location.hash.slice(1))?location.hash.slice(1):'ootd',true);srcUI();window.startAppCatalog=()=>api('catalog').then(c=>{C=c;wall();bombard();pile();if(tab==='wardrobe')wdLoad()}).catch(()=>document.body.insertAdjacentHTML('afterbegin','<div class="err">Catalog unavailable. Try again later.</div>'));
 
