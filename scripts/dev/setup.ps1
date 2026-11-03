@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $pythonCommand = Get-Command python -ErrorAction Stop
 $python = $pythonCommand.Source
-$versionText = & $python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")'
+$versionText = & $python -c 'import sys; print(str(sys.version_info.major)+chr(46)+str(sys.version_info.minor))'
 if ($versionText -ne '3.11') {
     throw "Python 3.11 is required for the validated Windows setup; found $versionText."
 }
