@@ -145,7 +145,17 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 .wd-cab.open .wd-door.l{transform:rotateY(-100deg)}.wd-cab.open .wd-door.r{transform:rotateY(100deg)}
 .wd-ex{display:flex;gap:6px;margin-top:6px}.wd-ex img{width:36px;height:46px;border-radius:8px}
 @media(max-width:760px){.wd-rails{grid-template-columns:1fr 1fr}.wd-stage{padding:0}}
-</style></head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
+/* ---------- Taste Studio ---------- */
+.rc-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:8px 0 4px}
+.rc-n{margin-right:auto;font-size:.9rem}.rc-n b{font:400 1.5rem Fraunces,serif;color:var(--c2)}
+.rx{display:flex;gap:8px;padding:0 10px 12px}
+.rx button{flex:1;border:0;border-radius:999px;padding:8px 0;font:500 .9rem Inter;cursor:pointer;background:#e8f4f2;color:var(--ink);transition:.2s}
+.rx button:hover{transform:translateY(-2px);color:#fff}.rx .lk:hover{background:var(--ok)}.rx .dl:hover{background:var(--bad)}.rx .sv:hover{background:var(--warn)}
+.because{padding:0 10px 8px;font-size:.7rem;line-height:1.35;opacity:.65}
+.bar{display:flex;align-items:center;gap:12px;margin:8px 0;font-size:.85rem}.bar span{width:110px;text-transform:capitalize}
+.bar div{height:10px;background:#dcefec;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+</style>
+</head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
 <div id="intro"><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
 <div class="copy"><p class="eyebrow">Wardrobe intelligence</p><h1>Where weather, taste and wardrobe <em>finally agree.</em></h1></div>
 <button class="btn enter" id="enter">Enter the atelier</button></div>
@@ -202,6 +212,21 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 </div>
 <div class="wd-stage"><div class="wd-cab" id="wcab"><div class="wd-in" id="win"></div><div class="wd-door l"></div><div class="wd-door r"></div></div></div>
 <div id="wout"></div></section>
+<section id="reco" class="glass" hidden><p class="eyebrow">No. 06</p><h2>Taste Studio</h2>
+<p class="sub">Browse pieces from every style. Like, dislike or save: the more you react, the better we know your taste.</p>
+<div class="rc-bar"><div class="rc-n"><b id="rcn">0</b> reactions</div><div class="chips" id="rcg" style="margin:0"></div><button class="btn ghost" id="rcreset">Start over</button></div>
+<div class="chips" id="rctabs"></div><div class="chips" id="rcslot"></div><div id="rcout"></div></section>
+<section id="style" class="glass" hidden><p class="eyebrow">No. 07</p><h2>Style Profile</h2>
+<p class="sub">Show us pieces you love. A neural network reads the photos, reveals your dominant style and suggests pieces to match.</p>
+<div class="chips" id="spmode"></div>
+<div id="spup"><div class="upload-row">
+ <input class="file-input" type="file" id="spfile" accept="image/*" multiple aria-label="Upload photos of garments">
+ <label class="upload-label" for="spfile"><span class="upload-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg></span><span class="upload-copy"><strong>Upload photos of your pieces</strong><small>Up to 12 images · JPG, PNG or WEBP</small></span></label>
+ <span class="file-name" id="spname">No image selected</span></div>
+ <div class="row" id="spprev" style="margin-bottom:12px"></div>
+ <button class="btn" id="spgo">Analyse my style</button></div>
+<div id="splk" style="display:none"><button class="btn" id="splkgo">Analyse my likes</button> <small style="opacity:.6;margin-left:10px"></small></div>
+<div id="spout"></div></section>
 </main></div>
 <script>
 const HASH0=location.hash;
@@ -243,7 +268,12 @@ const MENU=[{label:'Style Engine',items:[
  {id:'comp',title:'Finish the Look',desc:'Complete a partial outfit'}]},
  {label:'Shopping',items:[
  {id:'sim',title:'Find Similar',desc:'Upload a piece, find lookalikes and where to buy it'},
- {id:'wardrobe',title:'Wardrobe Completion',desc:'The missing piece that unlocks the most new outfits'}]}];
+ {id:'wardrobe',title:'Wardrobe Completion',desc:'The missing piece that unlocks the most new outfits'}]},
+ {label:'Taste',items:[
+ {id:'reco',title:'Taste Studio',desc:'Like, dislike and get recommendations in your style'},
+ {id:'style',title:'Style Profile',desc:'Your dominant style, read from photos'}]}
+];
+ 
 function go(id){tab=id;$$('main section').forEach(s=>{s.hidden=s.id!==id;if(!s.hidden){s.style.animation='none';s.offsetHeight;s.style.animation=''}});
  $$('.mi').forEach(m=>m.classList.toggle('on',m.dataset.t===id));$$('.dd').forEach(d=>d.classList.toggle('on',!!$('.mi.on',d)));applyBg();history.replaceState(null,'','#'+id);if(window.onSection)window.onSection(id)}
 $('#menu').innerHTML=MENU.map(g=>`<div class="dd"><button>${g.label}</button><div class="dmenu"><div>${g.items.map(i=>`<button class="mi" data-t="${i.id}"><b>${i.title}</b><small>${i.desc||''}</small></button>`).join('')}</div></div></div>`).join('');
@@ -368,8 +398,78 @@ $('#wrun').onclick=async()=>{const btn=$('#wrun');
  }catch(e){$('#wcab').classList.remove('scan');$('#wout').innerHTML=`<div class="err">${esc(e.message)}</div>`}
  btn.disabled=false};
 window.onSection=id=>{if(id==='wardrobe'&&!WD.init&&C.length){WD.init=true;wdSample()}};
+/* ---------- IDÉE 6 : Taste Studio (apprentissage des goûts) ---------- */
+const RSL={'':'All',haut:'Tops',bas:'Bottoms',robe:'Dresses',veste:'Jackets',chaussures:'Shoes',sac:'Bags',montre:'Watches',bijou:'Jewellery',accessoire:'Accessories'};
+const RG={all:'Everyone',Women:'Women',Men:'Men'},RV={disc:'Discover',you:'For you',me:'My taste'};
+const RC=(()=>{try{return JSON.parse(localStorage.getItem('dm_reco'))}catch{return null}})()||{};
+Object.assign(RC,{gender:RC.gender||'all',liked:RC.liked||[],disliked:RC.disliked||[],seen:RC.seen||[],saved:RC.saved||[],view:'disc',slot:'',cur:[],same:true,init:false,busy:false});
+const rcSave=()=>{try{localStorage.setItem('dm_reco',JSON.stringify({gender:RC.gender,liked:RC.liked,disliked:RC.disliked,seen:RC.seen,saved:RC.saved}))}catch{}};
+const rcBody=n=>({gender:RC.gender,liked:RC.liked,disliked:RC.disliked,seen:RC.seen,slot:RC.slot||null,n,same:RC.same});
+const rcCount=()=>{$('#rcn').textContent=RC.liked.length+RC.disliked.length};
+const rcPills=(id,obj,cur,attr)=>{$(id).innerHTML=Object.entries(obj).map(([k,v])=>`<button class="cc ${k===cur?'on':''}" data-${attr}="${k}">${v}</button>`).join('')};
+function rcChips(){rcPills('#rcg',RG,RC.gender,'g');rcPills('#rctabs',RV,RC.view,'v');rcPills('#rcslot',RSL,RC.slot,'s');$('#rcslot').style.display=RC.view==='me'?'none':''}
+const rcCard=(x,k,why)=>`<div class="card" style="animation-delay:${k*.05}s" data-i="${x.i}"><img loading="lazy" src="${esc(x.img)}" alt=""><p><em>${esc(x.type)}</em><br>${esc(x.name).slice(0,46)}<br><small>${esc(x.colour)}</small></p>${why?`<div class="because">Close to what you liked: ${esc(why.name).slice(0,34)}</div>`:''}<div class="rx"><button class="lk" data-r="like" title="Like">♥</button><button class="dl" data-r="dislike" title="Dislike">✕</button><button class="sv" data-r="save" title="Save">★</button></div></div>`;
+async function rcView(){const o=$('#rcout');o.innerHTML='<div class="spin"></div>';rcChips();
+ try{
+  if(RC.view==='disc'){const r=await api('reco/feed',rcBody(12));RC.cur=r.items;
+   o.innerHTML=(r.items.length?`<div class="grid" id="rcgrid">${r.items.map((x,k)=>rcCard(x,k)).join('')}</div>`:'<p class="sub">You have seen everything here. Try another shelf or start over.</p>')+'<p><button class="btn ghost" id="rcnew">Show other pieces</button></p>'}
+  else if(RC.view==='you'){const r=await api('reco/foryou',rcBody(12));RC.cur=r.items;
+   if(!r.ready){o.innerHTML=`<p class="sub">Like ${r.need} more piece${r.need>1?'s':''} in Discover to unlock your recommendations.</p>`;return}
+   o.innerHTML=`<p class="sub">Your styles: ${r.styles.map(s=>`<b>${esc(s)}</b>`).join(' · ')} <label style="margin-left:14px"><input type="checkbox" id="rcsame" ${RC.same?'checked':''}> Stay in my styles</label></p>`+
+    (r.items.length?`<div class="grid">${r.items.map((x,k)=>rcCard(x,k,x.because)).join('')}</div>`:'<p class="sub">Nothing left to suggest on this shelf.</p>')+'<p class="sub">Styles are estimated automatically and can be wrong.</p>'}
+  else{const r=await api('reco/profile',rcBody(1));RC.cur=[];
+   o.innerHTML=(r.ready?'<h3>Styles in what you like</h3>'+(mx=>r.styles.slice(0,8).map(s=>`<div class="bar"><span>${esc(s.style)}</span><div style="flex:1"><i style="width:${Math.max(3,s.share/mx*100)}%"></i></div><b>${(s.share*100).toFixed(0)}%</b></div>`).join(''))(r.styles[0].share||1)+'<p class="sub">Automatic estimate, not yet validated by a study.</p>'
+    :`<p class="sub">Like ${r.need} more piece${r.need>1?'s':''} to reveal your taste profile.</p>`)+
+    (RC.saved.length?'<h3>Saved</h3><div class="grid">'+RC.saved.slice(-12).map((x,k)=>`<div class="card" style="animation-delay:${k*.05}s"><img src="${esc(x.img)}" alt=""><p><em>${esc(x.type)}</em><br>${esc(x.name).slice(0,46)}</p></div>`).join('')+'</div>':'')}
+ }catch(e){o.innerHTML=`<div class="err">${esc(e.message)}</div>`}}
+async function rcMore(){if(RC.busy)return;RC.busy=true;
+ try{const r=await api('reco/feed',rcBody(12)),have=new Set(RC.cur.map(v=>v.i)),add=r.items.filter(v=>!have.has(v.i));RC.cur.push(...add);
+  const g=$('#rcgrid');if(g)g.insertAdjacentHTML('beforeend',add.map((x,k)=>rcCard(x,k)).join(''))}catch{}
+ RC.busy=false}
+function rcReact(i,kind){const x=RC.cur.find(v=>v.i===i);if(!x)return;
+ if(kind==='dislike')RC.disliked.push(i);else{RC.liked.push(i);if(kind==='save')RC.saved.push({i:x.i,name:x.name,type:x.type,img:x.img})}
+ RC.seen.push(i);rcSave();rcCount();RC.cur=RC.cur.filter(v=>v.i!==i);
+const el=$(`#rcout [data-i="${i}"]`);if(el)el.remove();
+ if(RC.view==='disc'&&RC.cur.length<4)rcMore();else if(RC.view==='you'&&!RC.cur.length)rcView()}
+$('#rcout').onclick=e=>{const b=e.target.closest('[data-r]');if(b){const c=b.closest('[data-i]');if(c)rcReact(+c.dataset.i,b.dataset.r);return}
+ if(e.target.id==='rcnew'){RC.seen.push(...RC.cur.map(v=>v.i));rcSave();rcView()}};
+$('#rcout').onchange=e=>{if(e.target.id==='rcsame'){RC.same=e.target.checked;rcView()}};
+$('#rcg').onclick=e=>{const b=e.target.closest('[data-g]');if(b){RC.gender=b.dataset.g;rcSave();rcView()}};
+$('#rctabs').onclick=e=>{const b=e.target.closest('[data-v]');if(b){RC.view=b.dataset.v;rcView()}};
+$('#rcslot').onclick=e=>{const b=e.target.closest('[data-s]');if(b){RC.slot=b.dataset.s;rcView()}};
+$('#rcreset').onclick=()=>{Object.assign(RC,{liked:[],disliked:[],seen:[],saved:[],cur:[]});rcSave();rcCount();rcView()};
+const _os=window.onSection;window.onSection=id=>{if(_os)_os(id);if(id==='reco'&&!RC.init){RC.init=true;rcCount();rcView()}};
 
 go(MENU.flatMap(g=>g.items).some(i=>i.id===location.hash.slice(1))?location.hash.slice(1):'ootd');srcUI();api('catalog').then(c=>{C=c;wall();bombard();pile();if(tab==='wardrobe'&&!WD.init){WD.init=true;wdSample()}}).catch(()=>document.body.insertAdjacentHTML('afterbegin','<div class="err">API unreachable: run <code>uvicorn api:app --port 8000</code></div>'));
+
+/* ---------- IDÉE 7 : Style Profile (CNN : style d'un utilisateur à partir de photos) ---------- */
+const SP={mode:'photos',files:[],urls:[]};
+const SPM={photos:'Upload photos',likes:'Use my Taste Studio likes'};
+function spChips(){$('#spmode').innerHTML=Object.entries(SPM).map(([k,v])=>`<button class="cc ${k===SP.mode?'on':''}" data-m="${k}">${v}</button>`).join('');
+ $('#spup').style.display=SP.mode==='photos'?'':'none';$('#splk').style.display=SP.mode==='likes'?'':'none';
+ $('#splk small').textContent=`${typeof RC!=='undefined'?RC.liked.length:0} liked piece(s) available`}
+$('#spmode').onclick=e=>{const b=e.target.closest('[data-m]');if(b){SP.mode=b.dataset.m;spChips()}};
+$('#spfile').onchange=e=>{SP.urls.forEach(u=>URL.revokeObjectURL(u));SP.files=[...e.target.files].slice(0,12);SP.urls=SP.files.map(f=>URL.createObjectURL(f));
+ $('#spprev').innerHTML=SP.urls.map(u=>`<img src="${u}" alt="" style="height:90px;border-radius:12px;box-shadow:0 6px 16px #17283a20">`).join('');
+ $('#spname').textContent=SP.files.length?`${SP.files.length} photo(s) selected`:'No image selected'};
+const spPct=s=>(s*100).toFixed(0)+'%';
+function spRender(r,urls){
+ const sec=r.profile[1]&&r.profile[1].share>=.25?` Second influence: <b>${esc(r.profile[1].style)}</b>.`:'';
+ $('#spout').innerHTML=`<div class="res"><div><span class="pill" style="background:var(--c2)">${esc(r.dominant)}</span> <b style="font:400 2rem Fraunces,serif">${spPct(r.dominant_share)}</b>
+  <p class="sub" style="max-width:380px">Dominant style over ${r.items.length} piece${r.items.length>1?'s':''}.${sec}</p></div>
+  <div style="flex:1;min-width:260px">${r.profile.map(s=>`<div class="bar"><span>${esc(s.style)}</span><div style="flex:1"><i style="width:${Math.max(2,s.share*100)}%"></i></div><b>${spPct(s.share)}</b></div>`).join('')}</div></div>
+  <h3>What the model saw</h3><div class="grid">${r.items.map((x,k)=>`<div class="card" style="animation-delay:${k*.05}s"><img src="${esc(x.img||urls[k]||'')}" alt=""><p><em>${esc(x.type)}</em> · ${spPct(x.type_conf)}<br>${esc(x.style)} · ${spPct(x.style_conf)}</p></div>`).join('')}</div>
+  <h3>Pieces in your style</h3>${r.recs.length?`<div class="grid">${r.recs.map((x,k)=>`<div class="card" style="animation-delay:${k*.05}s"><img loading="lazy" src="${esc(x.img)}" alt=""><p><em>${esc(x.type)}</em><br>${esc(x.name).slice(0,46)}</p></div>`).join('')}</div>`:'<p class="sub">No piece found for this style and shelf.</p>'}
+  <p class="sub">Four styles only (labels come from the catalogue's “usage” field). The model learned on studio product photos: pictures taken at home may be less accurate.</p>`}
+const spFail=e=>{$('#spout').innerHTML=`<div class="err">${esc(e.message)}</div>`};
+const spJson=r=>r.ok?r.json():r.json().catch(()=>({})).then(d=>{throw new Error(d.detail||r.status)});
+$('#spgo').onclick=()=>{if(!SP.files.length){$('#spout').innerHTML='<div class="err">Choose at least one photo first.</div>';return}
+ $('#spout').innerHTML='<div class="spin"></div>';const fd=new FormData();SP.files.forEach(f=>fd.append('files',f));fd.append('gender',typeof RC!=='undefined'?RC.gender:'all');
+ fetch('/api/style/photos',{method:'POST',body:fd}).then(spJson).then(r=>spRender(r,SP.urls)).catch(spFail)};
+$('#splkgo').onclick=()=>{const L=typeof RC!=='undefined'?RC.liked.slice(-12):[];if(!L.length){$('#spout').innerHTML='<div class="err">Like some pieces in Taste Studio first.</div>';return}
+ $('#spout').innerHTML='<div class="spin"></div>';api('style/likes',{items:L,gender:RC.gender}).then(r=>spRender(r,[])).catch(spFail)};
+spChips();
+const _os2=window.onSection;window.onSection=id=>{if(_os2)_os2(id);if(id==='style')spChips()};
 
 /* ---------- landing : garments bombarding the two figures ---------- */
 let introOn=!HASH0,cards=[];
@@ -387,3 +487,5 @@ function hideIntro(){introOn=false;const e=$('#intro');e.classList.add('out');se
 function showIntro(){const e=$('#intro');introOn=true;e.style.display='';requestAnimationFrame(()=>e.classList.remove('out'));bombLoop()}
 $('#enter').onclick=hideIntro;$('.top .logo').onclick=showIntro;if(!introOn)$('#intro').style.display='none';
 </script></body></html>
+
+

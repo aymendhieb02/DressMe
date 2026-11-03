@@ -7,3 +7,6 @@ requests
 python-multipart
 python-dotenv
 transformers
+pandas
+onnxruntime
+pillow

@@ -10,6 +10,8 @@ from pydantic import BaseModel
 from similar import router as similar_router
 from wardrobe import router as wardrobe_router     
 from dotenv import load_dotenv; load_dotenv()
+from reco import router as reco_router
+from style import router as style_router
 
 DATA = Path(os.environ.get("DRESSME_DATA", "data"))
 cat_json = json.load(open(DATA / "catalog.json")); OUTS = json.load(open(DATA / "outfits.json"))
@@ -131,6 +133,15 @@ def complete(ctx, want=None, topn=6, lam=1.0, mu=0.3):
 app = FastAPI(title="Dress Me")
 app.include_router(similar_router)
 app.include_router(wardrobe_router) 
+app.include_router(reco_router)
+app.include_router(style_router)
+
+
+app.mount(
+    "/reco_img",
+    StaticFiles(directory=DATA / "reco" / "thumbs"),
+    name="reco_img"
+)
 class Items(BaseModel): items: list[int]; want: str | None = None
 class Ootd(BaseModel):
     lat: float | None = None; lon: float | None = None; city: str | None = None; place: str = "My location"
