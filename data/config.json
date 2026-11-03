@@ -1,0 +1,19 @@
+{
+ "clip_name": "ViT-B-32",
+ "clip_pretrained": "laion2b_s34b_b79k",
+ "scorer": {
+  "d": 256,
+  "heads": 4,
+  "layers": 2
+ },
+ "K": 5,
+ "acc_cats": [
+  "accessory",
+  "bag"
+ ],
+ "acc_thr": {
+  "p_odd": 0.1,
+  "delta": -1.5
+ },
+ "finetuned": false
+}
