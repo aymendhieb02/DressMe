@@ -15,7 +15,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile
 from pydantic import BaseModel
 
 
@@ -132,30 +132,65 @@ GENDER_PATH = Path(
 )
 
 
+def split_by_gender(a, Ew=None, Em=None, k=5):
+    """
+    Sépare le catalogue en pièces femme / homme avec CLIP.
+    - Ew / Em : embeddings d'images des dossiers women / men (si fournis, méthode précise).
+    - Sinon : seulement une comparaison de texte (méthode de repli, moins précise).
+    Règles : robe = femme ; hauts, bas, vestes = un seul genre ; chaussures et sacs
+    ambigus = disponibles pour les deux.
+    """
+    E = a.EMB
+
+    def txt(prompts):
+        v = a.enc_text(prompts).numpy().mean(0)
+        return v / (np.linalg.norm(v) + 1e-9)
+
+    prior = E @ txt(["a photo of women's clothing", "a photo of a woman's fashion item",
+                     "a feminine garment"]) \
+          - E @ txt(["a photo of men's clothing", "a photo of a man's fashion item",
+                     "a masculine garment"])
+    d = 0.5 * prior
+
+    if Ew is not None and Em is not None and len(Ew) and len(Em):
+        def topk(X):
+            s = E @ X.T
+            kk = min(k, s.shape[1])
+            return np.sort(s, axis=1)[:, -kk:].mean(1)
+        d = topk(Ew) - topk(Em) + 0.5 * prior
+
+    soft = 0.3 * float(np.std(d))
+    women, men = [], []
+    for i in range(len(a.CAT)):
+        c = str(a.CAT[i])
+        if c == "dress":
+            women.append(i)
+        elif c in ("shoes", "bag", "other") and abs(float(d[i])) < soft:
+            women.append(i)
+            men.append(i)
+        elif d[i] >= 0:
+            women.append(i)
+        else:
+            men.append(i)
+    return dict(women=women, men=men), d
+
+
 @lru_cache(1)
 def gender_ids():
-    """
-    Charge les IDs du catalogue :
-    - women : vêtements féminins
-    - men   : vêtements masculins
-    """
-
+    """IDs autorisés par genre. Lit catalog_gender.json ; s'il manque, repli automatique."""
     try:
         d = json.loads(GENDER_PATH.read_text(encoding="utf-8"))
-
-        return {
-            "women": {int(i) for i in d["women"]},
-            "men": {int(i) for i in d["men"]}
-        }
-
+        return {"women": {int(i) for i in d["women"]}, "men": {int(i) for i in d["men"]}}
     except Exception as e:
-        print(
-            f"[wardrobe] WARNING: impossible de charger {GENDER_PATH}: {e}"
-        )
-        print(
-            "[wardrobe] Lance : python -m scripts.build_gender"
-        )
-        return None
+        print(f"[wardrobe] WARNING: {GENDER_PATH.name} introuvable ({e!r}).")
+        print("[wardrobe] Repli temporaire (texte CLIP seulement, moins précis).")
+        print("[wardrobe] Pour la version précise : python -m scripts.build_gender")
+        try:
+            split, _ = split_by_gender(A())
+            return {"women": set(split["women"]), "men": set(split["men"])}
+        except Exception as e2:
+            print(f"[wardrobe] ERREUR repli genre : {e2!r}")
+            return None
 
 
 def ok_item(a, i, gender):
@@ -1107,6 +1142,22 @@ with_db(
     """)
 )
 
+
+# ---------------------------------------------------------------------------
+# MIGRATION : ajout de la colonne `seeded`
+# ---------------------------------------------------------------------------
+
+def _migrate(c):
+    cols = {r["name"] for r in c.execute("PRAGMA table_info(wardrobe_profile)").fetchall()}
+    if "seeded" not in cols:
+        c.execute("ALTER TABLE wardrobe_profile ADD COLUMN seeded INTEGER NOT NULL DEFAULT 0")
+        # les comptes qui ont déjà des pièces sont considérés comme initialisés
+        c.execute("""UPDATE wardrobe_profile SET seeded=1
+                     WHERE user_id IN (SELECT DISTINCT user_id FROM wardrobe_items)""")
+
+
+with_db(_migrate)
+
 print(f"[wardrobe] database: {DB_PATH}")
 
 
@@ -1211,73 +1262,64 @@ def random_wardrobe(a, gender, n_outfits=4, cap=14):
     return ids[:cap]
 
 
-def ensure_profile(uid, gender):
+def seed_wardrobe(uid, gender):
     """
-    Crée le profil du compte si nécessaire.
-
-    Premier choix :
-    - Enregistre le genre.
-    - Génère une garde-robe adaptée.
+    Crée le profil ET les pièces de départ dans UNE SEULE transaction.
+    Aucune requête concurrente ne peut donc voir un profil sans pièces.
+    Retourne (genre, créé).
     """
-
     a = A()
-
     g = norm_gender(gender)
-
     if g is None:
-        raise HTTPException(
-            400,
-            "gender must be 'women' or 'men'"
-        )
+        raise HTTPException(400, "gender must be 'women' or 'men'")
+
+    row = with_db(lambda c: c.execute(
+        "SELECT gender, seeded FROM wardrobe_profile WHERE user_id=?", (uid,)).fetchone())
+    if row and row["seeded"]:
+        return row["gender"], False
+
+    ids = random_wardrobe(a, row["gender"] if row else g)
 
     def f(c):
-
-        p = c.execute(
-            "SELECT gender FROM wardrobe_profile WHERE user_id=?",
-            (uid,)
-        ).fetchone()
-
-        if p:
+        p = c.execute("SELECT gender, seeded FROM wardrobe_profile WHERE user_id=?", (uid,)).fetchone()
+        if p and p["seeded"]:                      # une autre requête a déjà fait le travail
             return p["gender"], False
+        gg = p["gender"] if p else g
+        if p:
+            c.execute("UPDATE wardrobe_profile SET seeded=1 WHERE user_id=?", (uid,))
+        else:
+            c.execute("INSERT INTO wardrobe_profile(user_id, gender, updated_at, seeded) "
+                      "VALUES(?,?,datetime('now'),1)", (uid, gg))
+        c.execute("DELETE FROM wardrobe_items WHERE user_id=?", (uid,))
+        c.executemany("INSERT INTO wardrobe_items(user_id,item_id,photo,pos) VALUES(?,?,?,?)",
+                      [(uid, i, None, k) for k, i in enumerate(ids)])
+        return gg, True
 
-        c.execute(
-            """
-            INSERT INTO wardrobe_profile(user_id, gender, updated_at)
-            VALUES(?,?,datetime('now'))
-            """,
-            (uid, g)
-        )
-
-        return g, True
-
-    current_gender, created = with_db(f)
-
+    gg, created = with_db(f)
     if created:
+        print(f"[wardrobe] new {gg} wardrobe for user {uid}: {len(ids)} starter pieces")
+    return gg, created
 
-        rows = [
-            (uid, i, None, k)
-            for k, i in enumerate(
-                random_wardrobe(a, current_gender)
-            )
-        ]
 
-        with_db(
-            lambda c: c.executemany(
-                """
-                INSERT OR IGNORE INTO wardrobe_items
-                (user_id,item_id,photo,pos)
-                VALUES(?,?,?,?)
-                """,
-                rows
-            )
-        )
+def ensure_profile(uid, gender):          # nom conservé pour compatibilité
+    return seed_wardrobe(uid, gender)
 
-        print(
-            f"[wardrobe] new {current_gender} wardrobe "
-            f"for user {uid}: {len(rows)} starter pieces"
-        )
 
-    return current_gender, created
+def load_items(uid, gender):
+    """Pièces sauvegardées du compte, filtrées selon le genre."""
+    a = A()
+    rows = with_db(lambda c: c.execute(
+        "SELECT item_id, photo FROM wardrobe_items WHERE user_id=? ORDER BY pos", (uid,)).fetchall())
+    items = []
+    for r in rows:
+        i = int(r["item_id"])
+        if not ok_item(a, i, gender or "women"):
+            continue
+        d = a.it(i)
+        if r["photo"]:
+            d["photo"] = r["photo"]
+        items.append(d)
+    return items
 
 
 # ---------------------------------------------------------------------------
@@ -1314,68 +1356,25 @@ def thumb_data_url(raw):
 # ---------------------------------------------------------------------------
 
 @router.get("/me")
-def me(ctx: dict = Depends(current_ctx)):
-    """
-    Retourne le genre et la garde-robe sauvegardée.
-
-    Crée automatiquement une garde-robe de départ
-    si le compte est nouveau et que le genre est connu.
-    """
-
+def me(response: Response, ctx: dict = Depends(current_ctx)):
+    """Profil + garde-robe sauvegardée. Jamais mise en cache."""
+    response.headers["Cache-Control"] = "no-store"
     uid = ctx["uid"]
-    a = A()
 
-    p = with_db(
-        lambda c: c.execute(
-            "SELECT gender FROM wardrobe_profile WHERE user_id=?",
-            (uid,)
-        ).fetchone()
-    )
+    def read():
+        return with_db(lambda c: c.execute(
+            "SELECT gender, seeded FROM wardrobe_profile WHERE user_id=?", (uid,)).fetchone())
 
-    if not p and ctx["gender"]:
-        ensure_profile(uid, ctx["gender"])
-
-    p = with_db(
-        lambda c: c.execute(
-            "SELECT gender FROM wardrobe_profile WHERE user_id=?",
-            (uid,)
-        ).fetchone()
-    )
-
-    rows = with_db(
-        lambda c: c.execute(
-            """
-            SELECT item_id, photo
-            FROM wardrobe_items
-            WHERE user_id=?
-            ORDER BY pos
-            """,
-            (uid,)
-        ).fetchall()
-    )
+    p = read()
+    if p and not p["seeded"]:
+        seed_wardrobe(uid, p["gender"])                 # compte resté vide : on le remplit
+        p = read()
+    elif not p and ctx["gender"]:
+        seed_wardrobe(uid, ctx["gender"])               # genre connu depuis l'inscription
+        p = read()
 
     gender = p["gender"] if p else None
-
-    items = []
-
-    for r in rows:
-
-        i = r["item_id"]
-
-        if not ok_item(a, i, gender or "women"):
-            continue
-
-        d = a.it(i)
-
-        if r["photo"]:
-            d["photo"] = r["photo"]
-
-        items.append(d)
-
-    return dict(
-        gender=gender,
-        items=items
-    )
+    return dict(gender=gender, items=load_items(uid, gender) if gender else [])
 
 
 # ---------------------------------------------------------------------------
@@ -1383,79 +1382,28 @@ def me(ctx: dict = Depends(current_ctx)):
 # ---------------------------------------------------------------------------
 
 @router.post("/profile")
-def set_profile(
-    b: ProfileIn,
-    ctx: dict = Depends(current_ctx)
-):
+def set_profile(b: ProfileIn, response: Response, ctx: dict = Depends(current_ctx)):
     """
-    Choisit ou change le type de garde-robe.
-
-    Si le genre change :
-    - L'ancienne garde-robe est supprimée.
-    - Une nouvelle garde-robe adaptée est créée.
+    Choisit / change le type de garde-robe.
+    Retourne directement les pièces : le front n'a plus besoin d'un second appel.
     """
-
-    g = norm_gender(b.gender)
-
-    uid = ctx["uid"]
-    a = A()
-
+    response.headers["Cache-Control"] = "no-store"
+    g, uid, a = norm_gender(b.gender), ctx["uid"], A()
     if g is None:
-        raise HTTPException(
-            400,
-            "gender must be 'women' or 'men'"
-        )
+        raise HTTPException(400, "gender must be 'women' or 'men'")
 
-    cur, created = ensure_profile(uid, g)
-
-    if not created and cur != g:
-
-        # Nouvelle garde-robe adaptée au genre.
-        rows = [
-            (uid, i, None, k)
-            for k, i in enumerate(
-                random_wardrobe(a, g)
-            )
-        ]
+    cur, created = seed_wardrobe(uid, g)
+    if not created and cur != g:                        # changement de type : nouvelle garde-robe adaptée
+        ids = random_wardrobe(a, g)
 
         def f(c):
-
-            c.execute(
-                """
-                UPDATE wardrobe_profile
-                SET gender=?, updated_at=datetime('now')
-                WHERE user_id=?
-                """,
-                (g, uid)
-            )
-
-            # Suppression de toutes les anciennes pièces.
-            c.execute(
-                "DELETE FROM wardrobe_items WHERE user_id=?",
-                (uid,)
-            )
-
-            # Insertion des nouvelles pièces.
-            c.executemany(
-                """
-                INSERT INTO wardrobe_items
-                (user_id,item_id,photo,pos)
-                VALUES(?,?,?,?)
-                """,
-                rows
-            )
-
+            c.execute("UPDATE wardrobe_profile SET gender=?, updated_at=datetime('now') WHERE user_id=?", (g, uid))
+            c.execute("DELETE FROM wardrobe_items WHERE user_id=?", (uid,))
+            c.executemany("INSERT INTO wardrobe_items(user_id,item_id,photo,pos) VALUES(?,?,?,?)",
+                          [(uid, i, None, k) for k, i in enumerate(ids)])
         with_db(f)
 
-        print(
-            f"[wardrobe] user {uid} switched to {g}: "
-            f"{len(rows)} new pieces"
-        )
-
-    return dict(
-        gender=g,
-        created=created
-    )
+    return dict(gender=g, created=created, items=load_items(uid, g))
 
 
 # ---------------------------------------------------------------------------
@@ -1569,7 +1517,7 @@ def debug(ctx: dict = Depends(current_ctx)):
 
     p = with_db(
         lambda c: c.execute(
-            "SELECT gender FROM wardrobe_profile WHERE user_id=?",
+            "SELECT gender, seeded FROM wardrobe_profile WHERE user_id=?",
             (uid,)
         ).fetchone()
     )
@@ -1587,6 +1535,7 @@ def debug(ctx: dict = Depends(current_ctx)):
         gender_columns=gv,
         user_columns=cols,
         saved_profile=p["gender"] if p else None,
+        seeded=bool(p["seeded"]) if p else None,
         saved_pieces=n,
         database=str(DB_PATH),
         gender_catalog_exists=GENDER_PATH.exists()
