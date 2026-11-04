@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "checks": {
+    "contract_at_least_95_percent": true,
+    "strict_facet_f1_improvement": true,
+    "action_not_worse": true,
+    "structure_not_worse": true
+  },
+  "selection_split": "validation",
+  "thresholds_are": "declared engineering choices, not statistical proof",
+  "human_validation": false
+}

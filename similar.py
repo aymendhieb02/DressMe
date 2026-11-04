@@ -5,8 +5,9 @@ from pathlib import Path
 import numpy as np, requests, torch
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from PIL import Image
+from dressme.config import ROOT, hf_auth
 
-DATA = Path(os.environ.get("DRESSME_DATA", "data"))
+DATA = Path(os.environ.get("DRESSME_DATA", str(ROOT / "data"))).resolve()
 router = APIRouter(prefix="/api/search", tags=["similarity"])
 
 COLOR_MAPPING = {'Black': 'black', 'White': 'white', 'Red': 'red', 'Blue': 'blue', 'Green': 'green', 'Yellow': 'yellow',
@@ -32,7 +33,7 @@ def models():          # chargés au 1er appel seulement (n'alourdit pas le dém
     from transformers import AutoImageProcessor, SiglipForImageClassification
     m, _, pre = open_clip.create_model_and_transforms("hf-hub:Marqo/marqo-fashionCLIP")
     name = "prithivMLmods/Fashion-Product-baseColour"
-    return m.eval(), pre, AutoImageProcessor.from_pretrained(name), SiglipForImageClassification.from_pretrained(name).eval()
+    return m.eval(), pre, AutoImageProcessor.from_pretrained(name, token=hf_auth()), SiglipForImageClassification.from_pretrained(name, token=hf_auth()).eval()
 
 def predict_color(img):
     _, _, cp, cm = models()

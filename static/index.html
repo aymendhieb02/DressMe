@@ -202,12 +202,31 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 </div>
 <div class="wd-stage"><div class="wd-cab" id="wcab"><div class="wd-in" id="win"></div><div class="wd-door l"></div><div class="wd-door r"></div></div></div>
 <div id="wout"></div></section>
+<section id="assistant" class="glass" hidden>
+<p class="eyebrow">No. 06 · Conversation</p><h2>Your Style Assistant</h2>
+<p class="sub">Parle en français ou en anglais. Explore les vrais articles, compare les calculs et personnalise ton dressing.</p>
+<div id="assistant-health" class="sub" role="status">Lecture des capacités locales…</div>
+<details class="assistant-settings"><summary>Mon dressing et mes préférences</summary>
+<p class="sub">Le catalogue de démonstration et tes pièces possédées restent distincts. Ajouter une pièce au dressing est une déclaration explicite de possession.</p>
+<div class="row"><button class="btn ghost" id="assistant-add">+ Article du catalogue</button><button class="btn ghost" id="assistant-import">Reprendre ma sélection Wardrobe</button>
+<label class="btn ghost">+ Ma photo<input id="assistant-photo" type="file" accept="image/jpeg,image/png,image/webp" hidden></label></div>
+<div id="assistant-wardrobe" class="assistant-products"></div>
+<form id="assistant-prefs" class="row"><label>Couleurs préférées (facultatives)<input id="assistant-colors" placeholder="beige, blue…" maxlength="150"></label>
+<button class="btn" type="submit">Enregistrer les préférences</button></form>
+<div id="assistant-profile-status" class="sub" role="status"></div></details>
+<div id="assistant-messages" class="assistant-messages" aria-live="polite"></div>
+<form id="assistant-form" class="assistant-compose"><label class="sub" for="assistant-message">Ta demande</label>
+<textarea id="assistant-message" rows="3" maxlength="2500" required placeholder="Compose une tenue. Puis : remplace seulement les chaussures."></textarea>
+<div class="row"><button class="btn" id="assistant-send" type="submit" disabled>Envoyer</button><button class="btn ghost" type="button" id="assistant-reset" disabled>Nouvelle conversation</button></div></form>
+<details class="assistant-settings"><summary>Diagnostic des modèles et du catalogue</summary><pre id="assistant-diagnostics"></pre></details>
+</section>
 </main></div>
+<link rel="stylesheet" href="/static/assistant.css">
 <script>
 const HASH0=location.hash;
 const $=(s,e=document)=>e.querySelector(s),$$=(s,e=document)=>[...e.querySelectorAll(s)];
 const api=(p,b)=>fetch('/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(async r=>{if(!r.ok)throw new Error((await r.json()).detail||r.status);return r.json()});
-const FR={shoes:'Shoes',bag:'Bag',dress:'Dress',outer:'Outerwear',top:'Top',bottom:'Bottom',other:'Accessory'},img=k=>`/img/${k}.jpg`;
+const FR={shoes:'Shoes',bag:'Bag',dress:'Dress',outer:'Outerwear',top:'Top',bottom:'Bottom',other:'Accessory',accessory:'Accessory'},img=k=>`/img/${k}.jpg`;
 const verdict=s=>s>=8?['EXCELLENT','var(--ok)']:s>=5?['FAIR','var(--warn)']:['NEEDS WORK','var(--bad)'];
 let C=[];const cat=i=>C[i];
 /* ---------- backgrounds : weather scene (Daily Edit only) / wardrobe wall (everywhere else) ---------- */
@@ -238,6 +257,7 @@ function wall(){const L=[...C].sort(()=>Math.random()-.5).slice(0,48);
  $('#wall').innerHTML=Array.from({length:7},(_,c)=>{const a=L.slice(c*6,c*6+6).map(x=>`<img src="${img(x.k)}">`).join('');return `<div class="col" style="animation-duration:${70+c*8}s;${c%2?'animation-direction:reverse;':''}">${a+a}</div>`}).join('')}
 /* ---------- top menu : colleagues add groups / items here, plus a <section id="..."> in the page ---------- */
 const MENU=[{label:'Style Engine',items:[
+ {id:'assistant',title:'Style Assistant',desc:'Conversation, dressing et explications BO5'},
  {id:'ootd',title:'Daily Edit',desc:'Your outfit for today’s weather'},
  {id:'score',title:'The Verdict',desc:'Rate any outfit and improve it'},
  {id:'comp',title:'Finish the Look',desc:'Complete a partial outfit'}]},
@@ -266,7 +286,7 @@ function Builder(root,max,onChange){const st={it:Array(max).fill(null),bad:-1,go
  st.set=a=>{st.it=Array.from({length:max},(_,j)=>a[j]??null);st.bad=st.good=-1;draw();onChange()};
  st.put=(id,j)=>{if(j==null)j=st.it.indexOf(null);if(j<0)return false;st.it[j]=id;st.bad=-1;st.good=j;draw();onChange();return true};draw();return st}
 /* ---------- IDÉE 1 : note ---------- */
-const B1=Builder($('#b1'),4,()=>rate());let tm;
+const B1=Builder($('#b1'),5,()=>rate());let tm;
 function rate(){clearTimeout(tm);const it=B1.get();if(it.length<2){$('#sout').innerHTML='';return}
  $('#sout').innerHTML='<div class="spin"></div>';
  tm=setTimeout(()=>api('score',{items:it}).then(r=>{const [v,c]=verdict(r.score),ix=B1.idx();B1.bad=r.odd>0&&r.score<8?ix[r.odd-1]:-1;B1.good=-1;
@@ -386,4 +406,4 @@ function bombLoop(){if(!introOn)return;for(const o of cards){o.t+=o.v;if(o.t>=1)
 function hideIntro(){introOn=false;const e=$('#intro');e.classList.add('out');setTimeout(()=>{if(!introOn)e.style.display='none'},900)}
 function showIntro(){const e=$('#intro');introOn=true;e.style.display='';requestAnimationFrame(()=>e.classList.remove('out'));bombLoop()}
 $('#enter').onclick=hideIntro;$('.top .logo').onclick=showIntro;if(!introOn)$('#intro').style.display='none';
-</script></body></html>
+</script><script src="/static/assistant.js" defer></script></body></html>

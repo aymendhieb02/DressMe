@@ -2,6 +2,7 @@
 import itertools, json, os
 from functools import lru_cache
 from pathlib import Path
+from dressme.config import ROOT
 import numpy as np, requests, torch, torch.nn as nn, torch.nn.functional as F
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -9,10 +10,11 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from similar import router as similar_router
 from wardrobe import router as wardrobe_router     
+from dressme.routes import router as assistant_router, bo1_router
 from dotenv import load_dotenv; load_dotenv()
 
-DATA = Path(os.environ.get("DRESSME_DATA", "data"))
-cat_json = json.load(open(DATA / "catalog.json")); OUTS = json.load(open(DATA / "outfits.json"))
+DATA = Path(os.environ.get("DRESSME_DATA", str(ROOT / "data"))).resolve()
+cat_json = json.loads((DATA / "catalog.json").read_text(encoding="utf-8")); OUTS = json.loads((DATA / "outfits.json").read_text(encoding="utf-8"))
 CODES, DESC, CAT = cat_json["codes"], cat_json["desc"], cat_json["cat"]
 EMB, EMB_FT = np.load(DATA / "emb_clip.npy"), np.load(DATA / "emb_ft.npy")
 TEST = [o for o in OUTS if o["test"]] or OUTS
@@ -131,7 +133,13 @@ def complete(ctx, want=None, topn=6, lam=1.0, mu=0.3):
 app = FastAPI(title="Dress Me")
 app.include_router(similar_router)
 app.include_router(wardrobe_router) 
+app.include_router(assistant_router)
+app.include_router(bo1_router)
 class Items(BaseModel): items: list[int]; want: str | None = None
+
+def validate_items(items, maximum=5):
+    if len(items) > maximum or len(set(items)) != len(items) or any(i < 0 or i >= len(CODES) for i in items):
+        raise HTTPException(422, "Articles inconnus, dupliques ou limite de 5 pieces depassee")
 class Ootd(BaseModel):
     lat: float | None = None; lon: float | None = None; city: str | None = None; place: str = "My location"
     temp: float | None = None; kind: str = "clear"; wind: float = 10
@@ -145,6 +153,7 @@ def examples(): return [dict(items=o["items"][:4], style=o["style"], season=o["s
 @app.post("/api/score")
 def api_score(b: Items):
     x = b.items
+    validate_items(x)
     if len(x) < 2: raise HTTPException(400, "Pick at least 2 items")
     s, odd = score(x); swaps = []
     if s < 8:
@@ -163,6 +172,7 @@ def api_score(b: Items):
 
 @app.post("/api/complete")
 def api_complete(b: Items):
+    validate_items(b.items, 4)
     if not b.items: raise HTTPException(400, "Add at least 1 item")
     res, cs = complete(b.items, b.want if b.want in CATS else None)
     return dict(items=[it(i) for i in res], cats=sorted(cs.items(), key=lambda kv: -kv[1])[:3])
@@ -190,8 +200,8 @@ def api_ootd(b: Ootd):
     text = f"{band(w['feels'])} {w['label']} day, feels like {w['feels']:.0f} degrees celsius" + (", windy" if is_wind(w) else "")
     return dict(weather=w, text=text, pick=[dict(slot=s, **it(i), prompts=[p for g in groups(s, w) for p in g]) for s, i in pick.items()])
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=ROOT / "static"), name="static")
 app.mount("/img", StaticFiles(directory=DATA / "img"), name="img")
 app.mount("/search_img", StaticFiles(directory=DATA / "search_img"), name="search_img")
 @app.get("/")
-def index(): return FileResponse("static/index.html")
+def index(): return FileResponse(ROOT / "static/index.html")

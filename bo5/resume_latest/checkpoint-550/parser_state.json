@@ -1,0 +1,31 @@
+{
+  "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+  "data_identity": "488b2557c891a60b2c2b77924da7fcda214ded0ab25137c52981614b1be9b9ff",
+  "base_model": "Qwen/Qwen3-1.7B",
+  "base_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "global_steps": 550,
+  "training_complete": false,
+  "training_config": {
+    "base": "Qwen/Qwen3-1.7B",
+    "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "data_identity": "488b2557c891a60b2c2b77924da7fcda214ded0ab25137c52981614b1be9b9ff",
+    "seed": 42,
+    "precision": "NF4 double quant + FP16 compute; LoRA FP32",
+    "attention": "sdpa",
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "learning_rate": 0.0001,
+    "optimizer": "adamw_torch",
+    "max_length": 2048,
+    "batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "epochs": 6.0,
+    "eval_steps": 50,
+    "patience": 3,
+    "min_delta": 0.001,
+    "prompt": "Translate the CURRENT clothing-assistant request into one JSON Turn.\nReturn JSON only. English canonical values; each quote is a SHORT EXACT span of the current message.\nNever infer availability, price, ownership, gender or a more specific occasion.\nActions: compose=outfit request; products=individual garment search; replace=replace a previous garment;\ncompare=explicit scenarios/what-if; explain=explain a previous choice; preferences=explicitly save preferences;\ngeneral=general question; clarify=clarification request. explain/general/clarify have no facets.\nFacets: field in gender,color,type,role,style,occasion,season,goal,scope,budget,currency,count,item_id;\nvalues=list of English strings; mode=any/all/only/exclude/clear; strength=must/prefer;\nquote=exact span; roles=list of explicitly affected top,bottom,shoes,onepiece,outerwear,layer,bag,accessory.\nany=presence/alternatives; all=each value present; only=every affected item matches; exclude=prohibition;\nclear=remove a prior constraint. A single outfit color means only unless presence/touch is requested.\nAn exclusive multiple-color palette needs both all and only facets. A preference is prefer, not must.\nA garment-specific color uses its role. Replacement changes ONLY the target garment: do not turn\nthe word 'only' into an outfit-wide color rule. Save preferences with nonempty prefer facets.\nBudget values=[number,ISO currency if explicitly known]; strict under uses exclude; inclusive max uses any.\nAn unqualified $ has no inferred currency. A currency-only follow-up fills the pending slot.\nStandalone requests reset prior filters; dependent follow-ups reuse_previous=true with exact reference_quote.\nreplace has target_role and exact target_quote. before_facets are only an explicitly supplied first scenario.\nselection_number defaults to 1. query_en may be empty: the original message is preserved by retrieval.\nOutput keys: action,reuse_previous,reference_quote,query_en,facets,before_facets,selection_number,\ntarget_role,target_quote,clarification. Use false,\"\",[],1 as appropriate defaults. No extra keys.",
+    "method": "response-only-qlora-early-stopping-v2",
+    "requested_eval_steps": 50
+  }
+}

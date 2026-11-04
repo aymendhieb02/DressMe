@@ -1,0 +1,580 @@
+{
+  "catalog": {
+    "products": 653,
+    "documents": 653,
+    "missing_images": 0,
+    "categories": {
+      "accessory": 25,
+      "bag": 56,
+      "outer": 104,
+      "bottom": 138,
+      "shoes": 106,
+      "top": 171,
+      "other": 32,
+      "dress": 21
+    },
+    "known_gender": 0,
+    "known_prices": 0,
+    "complete_color_palettes": 0,
+    "metadata_limit": "Unknown values stay unknown; demo products are not owned."
+  },
+  "bo1": {
+    "ready": true,
+    "can_score": true,
+    "can_propose": false,
+    "can_complete": false,
+    "can_encode_photo": false,
+    "max_items": 5,
+    "scale": [
+      0,
+      10
+    ],
+    "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+    "visual_finetuned": false,
+    "embeddings_identical": true,
+    "reason": "MiniGPT/RQ-VAE inference export absent. BO5 bounded assembly is a separate method.",
+    "photo_status": "not_verified: notebook/export cosine discrepancy; personal photos cannot be scored",
+    "score_meaning": "Learned compatibility on source outfits/artificial corruptions; not a human aesthetic rating."
+  },
+  "exported_reference": {
+    "actual": [
+      {
+        "item_ids": [
+          "P01130437",
+          "P01132492",
+          "P01118538"
+        ],
+        "value": 3.418086528778076,
+        "scale": [
+          0,
+          10
+        ],
+        "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+        "odd_position": 3,
+        "embedding_source": "exported_emb_ft"
+      },
+      {
+        "item_ids": [
+          "P01130437",
+          "P01132492",
+          "P01118538",
+          "P01125434"
+        ],
+        "value": 3.318662166595459,
+        "scale": [
+          0,
+          10
+        ],
+        "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+        "odd_position": 3,
+        "embedding_source": "exported_emb_ft"
+      }
+    ],
+    "notebook_rounded": [
+      3.42,
+      3.32
+    ],
+    "passed": true
+  },
+  "photos": {
+    "ids": [
+      "P01130437",
+      "P01132492",
+      "P01118538",
+      "P01125434",
+      "P01136651",
+      "P01135001",
+      "P01130748",
+      "P01126474"
+    ],
+    "cosines": [
+      0.9620262980461121,
+      0.9252610206604004,
+      0.9294148087501526,
+      0.9187276363372803,
+      0.9386782050132751,
+      0.9580303430557251,
+      0.918701171875,
+      0.9543569684028625
+    ],
+    "photo_score": 3.2798264026641846,
+    "exported_embedding_score": 3.318662166595459,
+    "image_input": "exported 320px JPEG (original 448px quality90 images absent)",
+    "visual_weights": "strict loaded exported visual.pt (FP16 storage converted to FP32)",
+    "preprocess": "Compose(\n    Resize(size=224, interpolation=bicubic, max_size=None, antialias=True)\n    CenterCrop(size=(224, 224))\n    MaybeConvertMode()\n    MaybeToTensor()\n    Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))\n)",
+    "eval": true,
+    "passed": false,
+    "required_next": "Recover original 448px images for these IDs; isolate JPEG/resize vs storage precision. No training needed."
+  },
+  "rag": {
+    "documents": 653,
+    "encoder": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3:512:passages-v2",
+    "query": "une chemise bleue en lin",
+    "results": [
+      {
+        "id": "P01138418",
+        "name": "blue linen shirt",
+        "relevance": 0.7856197953224182,
+        "dense_cosine": 0.8485170602798462,
+        "bm25": 0.0,
+        "retrieval_mode": "hybrid",
+        "encoder_identity": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3:512:passages-v2"
+      },
+      {
+        "id": "P01124593",
+        "name": "blue floral linen shirt",
+        "relevance": 0.7852371335029602,
+        "dense_cosine": 0.8476167917251587,
+        "bm25": 0.0,
+        "retrieval_mode": "hybrid",
+        "encoder_identity": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3:512:passages-v2"
+      },
+      {
+        "id": "P01138432",
+        "name": "blue striped linen bowling shirt",
+        "relevance": 0.7844081521034241,
+        "dense_cosine": 0.8456661701202393,
+        "bm25": 0.0,
+        "retrieval_mode": "hybrid",
+        "encoder_identity": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3:512:passages-v2"
+      },
+      {
+        "id": "P01138442",
+        "name": "blue linen and cotton polo shirt",
+        "relevance": 0.7806315422058105,
+        "dense_cosine": 0.8367800116539001,
+        "bm25": 0.0,
+        "retrieval_mode": "hybrid",
+        "encoder_identity": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3:512:passages-v2"
+      },
+      {
+        "id": "P01138271",
+        "name": "black floral linen bowling shirt",
+        "relevance": 0.7775911092758179,
+        "dense_cosine": 0.8296260237693787,
+        "bm25": 0.0,
+        "retrieval_mode": "hybrid",
+        "encoder_identity": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3:512:passages-v2"
+      }
+    ],
+    "human_relevance_evaluation": false
+  },
+  "parser": {
+    "health": {
+      "loaded": true,
+      "configured": true,
+      "attempted": true,
+      "error": null,
+      "model": "Qwen/Qwen3-1.7B",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+      "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+      "selected_checkpoint": "checkpoint-400",
+      "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+      "precision": "nf4",
+      "reviewer": null,
+      "writer": "deterministic evidence templates",
+      "fallback": null,
+      "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle.",
+      "gpu_free_mib_at_load": 7106,
+      "device": "cuda:0",
+      "tokenizer_verified": true
+    },
+    "cases": [
+      {
+        "message": "Trouve une veste bleue pour homme.",
+        "passed": false,
+        "error": "PlanRejected: Un type de vêtement explicite a été perdu par le parseur. Précise la pièce recherchée.",
+        "contract_valid": true,
+        "rejected_plan": {
+          "action": "products",
+          "reuse_previous": false,
+          "reference_quote": "",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "color",
+              "values": [
+                "blue"
+              ],
+              "mode": "only",
+              "strength": "must",
+              "quote": "une veste bleue",
+              "roles": []
+            },
+            {
+              "field": "gender",
+              "values": [
+                "men"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "pour homme",
+              "roles": []
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "",
+          "target_quote": "",
+          "clarification": ""
+        },
+        "seconds": 23.531999999999925
+      },
+      {
+        "message": "Compose une tenue sans blanc.",
+        "plan": {
+          "action": "compose",
+          "reuse_previous": false,
+          "reference_quote": "",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "color",
+              "values": [
+                "white"
+              ],
+              "mode": "exclude",
+              "strength": "must",
+              "quote": "sans blanc",
+              "roles": []
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "",
+          "target_quote": "",
+          "clarification": ""
+        },
+        "checks": {
+          "action": true,
+          "negation": true
+        },
+        "passed": true,
+        "seconds": 7.8279999999999745
+      },
+      {
+        "message": "Find an outfit, preferably beige.",
+        "plan": {
+          "action": "compose",
+          "reuse_previous": false,
+          "reference_quote": "",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "color",
+              "values": [
+                "beige"
+              ],
+              "mode": "any",
+              "strength": "prefer",
+              "quote": "preferably beige",
+              "roles": []
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "",
+          "target_quote": "",
+          "clarification": ""
+        },
+        "checks": {
+          "action": true,
+          "preference": true
+        },
+        "passed": true,
+        "seconds": 8.062000000000126
+      },
+      {
+        "message": "Une tenue à moins de 100 EUR.",
+        "plan": {
+          "action": "compose",
+          "reuse_previous": false,
+          "reference_quote": "",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "budget",
+              "values": [
+                "100",
+                "EUR"
+              ],
+              "mode": "exclude",
+              "strength": "must",
+              "quote": "à moins de 100 EUR",
+              "roles": []
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "",
+          "target_quote": "",
+          "clarification": ""
+        },
+        "checks": {
+          "action": true,
+          "required_fields": true
+        },
+        "passed": true,
+        "seconds": 9.437999999999874
+      },
+      {
+        "message": "Find a black or white shirt.",
+        "passed": false,
+        "error": "PlanRejected: Un type de vêtement explicite a été perdu par le parseur. Précise la pièce recherchée.",
+        "contract_valid": true,
+        "rejected_plan": {
+          "action": "compose",
+          "reuse_previous": false,
+          "reference_quote": "",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "color",
+              "values": [
+                "black",
+                "white"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "black or white",
+              "roles": []
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "",
+          "target_quote": "",
+          "clarification": ""
+        },
+        "seconds": 8.968000000000075
+      },
+      {
+        "message": "Remplace seulement les chaussures.",
+        "plan": {
+          "action": "replace",
+          "reuse_previous": true,
+          "reference_quote": "Remplace seulement",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "type",
+              "values": [
+                "shoes"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "chaussures",
+              "roles": [
+                "shoes"
+              ]
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "shoes",
+          "target_quote": "chaussures",
+          "clarification": ""
+        },
+        "checks": {
+          "action": true,
+          "target": true
+        },
+        "passed": true,
+        "seconds": 9.094000000000051
+      }
+    ],
+    "meaning": "Small engineering regression set; not a human-labelled accuracy benchmark."
+  },
+  "integration_tests": {
+    "executed": 82,
+    "passed": 82,
+    "command": "python -m unittest discover -s tests",
+    "state_isolated": true
+  },
+  "environment": {
+    "python": "3.11.9",
+    "torch": "2.8.0+cu126",
+    "cuda_verified": true,
+    "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "parser_test_downloads_disabled": true
+  },
+  "additional_ui_findings": [
+    {
+      "finding": "Explicit outfit count lost in a real chat request",
+      "action": "Generic quantity guard added; controlled regression passes"
+    },
+    {
+      "finding": "Description color is a partial palette",
+      "action": "Strict color exclusions/only require an explicitly complete user palette"
+    }
+  ],
+  "end_to_end": {
+    "before": [
+      {
+        "loaded": true,
+        "name": "multicoloured floral silk-blend cloqué midi dress",
+        "src": "/api/assistant/images/P01124908"
+      },
+      {
+        "loaded": true,
+        "name": "black studded leather Mary Jane pumps",
+        "src": "/api/assistant/images/P01133629"
+      }
+    ],
+    "after": [
+      {
+        "loaded": true,
+        "name": "multicoloured floral silk-blend cloqué midi dress",
+        "src": "/api/assistant/images/P01124908"
+      },
+      {
+        "loaded": true,
+        "name": "red slim suede sandals",
+        "src": "/api/assistant/images/P01126806"
+      }
+    ],
+    "keptDress": true,
+    "changedShoes": true,
+    "visibleResult": "Tenues assemblées à partir des articles locaux et notées par BO1.\n\nProposition 1\nCritères explicites vérifiés\n\nmulticoloured floral silk-blend cloqué midi dress\nRobe / combinaison · couleur inconnue\nprix inconnu\ngenre inconnu\n\nred slim suede sandals\nChaussures · red\nprix inconnu\ngenre inconnu\n\nCompatibilité BO1 : 9.563/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 13 candidats.\n\nScore, préférences et preuves\n\nRemplacement recalculé : 9.635 → 9.563/10 ; variation -0.072. 1 pièce(s) conservée(s).\n\nAssemblage borné BO5 ; complétion MiniGPT BO1 indisponible. Score appris de compatibilité, pas une note esthétique humaine. Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle. Genre, prix et palette complète inconnus ne passent pas un filtre strict.\n\nPlan compris et diagnostic",
+    "exact_scores": [
+      {
+        "item_ids": [
+          "P01124908",
+          "P01133629"
+        ],
+        "value": 9.634781837463379,
+        "scale": [
+          0,
+          10
+        ],
+        "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+        "odd_position": 0,
+        "embedding_source": "exported_emb_ft"
+      },
+      {
+        "item_ids": [
+          "P01124908",
+          "P01126806"
+        ],
+        "value": 9.563246726989746,
+        "scale": [
+          0,
+          10
+        ],
+        "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+        "odd_position": 0,
+        "embedding_source": "exported_emb_ft"
+      }
+    ],
+    "delta_bo1": -0.07153511047363281,
+    "displayed_score_matches": true
+  },
+  "final_health": {
+    "catalog": {
+      "products": 653,
+      "documents": 653,
+      "missing_images": 0,
+      "categories": {
+        "accessory": 25,
+        "bag": 56,
+        "outer": 104,
+        "bottom": 138,
+        "shoes": 106,
+        "top": 171,
+        "other": 32,
+        "dress": 21
+      },
+      "known_gender": 0,
+      "known_prices": 0,
+      "complete_color_palettes": 0,
+      "metadata_limit": "Unknown values stay unknown; demo products are not owned."
+    },
+    "parser": {
+      "loaded": true,
+      "configured": true,
+      "attempted": true,
+      "error": null,
+      "model": "Qwen/Qwen3-1.7B",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+      "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+      "selected_checkpoint": "checkpoint-400",
+      "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+      "precision": "nf4",
+      "reviewer": null,
+      "writer": "deterministic evidence templates",
+      "fallback": null,
+      "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle.",
+      "gpu_free_mib_at_load": 7106,
+      "device": "cuda:0",
+      "tokenizer_verified": true
+    },
+    "bo1": {
+      "ready": true,
+      "can_score": true,
+      "can_propose": false,
+      "can_complete": false,
+      "can_encode_photo": false,
+      "max_items": 5,
+      "scale": [
+        0,
+        10
+      ],
+      "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+      "visual_finetuned": false,
+      "embeddings_identical": true,
+      "reason": "MiniGPT/RQ-VAE inference export absent. BO5 bounded assembly is a separate method.",
+      "photo_status": "not_verified: notebook/export cosine discrepancy; personal photos cannot be scored",
+      "score_meaning": "Learned compatibility on source outfits/artificial corruptions; not a human aesthetic rating."
+    },
+    "rag": {
+      "mode": "hybrid",
+      "documents": 653,
+      "indexed": true,
+      "error": null,
+      "encoder": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3:512:passages-v2"
+    },
+    "assembly": {
+      "available": true,
+      "method": "BO5 bounded catalog assembly + exported BO1 score",
+      "trained_generator": false,
+      "exhaustive": false,
+      "pool_per_role": 8,
+      "max_examined": 20000,
+      "max_scored": 512,
+      "weights": {
+        "bo1": 0.65,
+        "relevance": 0.25,
+        "preference": 0.1
+      }
+    },
+    "session": "Local browser cookie; no account authentication in the original application."
+  },
+  "extended_chat": {
+    "report": "diagnostics/chat-parser-fixed.json",
+    "distinct_cases": 50,
+    "totals": {
+      "passed": 49,
+      "rejected_as_expected": 1
+    },
+    "current_code_replay_passed": true,
+    "real_models": true,
+    "benchmark": false,
+    "note": "Integrated LoRA + grounded reconciliation, not raw LoRA accuracy."
+  },
+  "conversation_v2": {
+    "report": "diagnostics/CONVERSATION_FIXES.md",
+    "real_api_report": "diagnostics/conversation-fixed.json",
+    "real_api_cases": {
+      "passed": 15,
+      "failed": 0
+    },
+    "deployed_exact_report": "diagnostics/conversation-deployed.json",
+    "deployed_exact_cases": {
+      "passed": 5,
+      "failed": 0
+    },
+    "scope": "Behavioral and score/identity invariants, not a human aesthetic benchmark."
+  }
+}

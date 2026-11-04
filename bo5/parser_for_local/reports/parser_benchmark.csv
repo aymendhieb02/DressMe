@@ -1,0 +1,4 @@
+phase,contract_valid,action_acc,reuse_acc,quotes_ok,facet_f1_strict,facet_f1_structure,exact_structure
+before_validation,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+after_validation,1.0,0.925,1.0,1.0,0.9583333333333334,0.9583333333333334,0.925
+heldout_test,1.0,0.75,0.975,0.975,0.9229166666666668,0.95625,0.7125

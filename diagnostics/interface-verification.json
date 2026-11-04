@@ -1,0 +1,61 @@
+{
+  "before": [
+    {
+      "loaded": true,
+      "name": "multicoloured floral silk-blend cloqué midi dress",
+      "src": "/api/assistant/images/P01124908"
+    },
+    {
+      "loaded": true,
+      "name": "black studded leather Mary Jane pumps",
+      "src": "/api/assistant/images/P01133629"
+    }
+  ],
+  "after": [
+    {
+      "loaded": true,
+      "name": "multicoloured floral silk-blend cloqué midi dress",
+      "src": "/api/assistant/images/P01124908"
+    },
+    {
+      "loaded": true,
+      "name": "red slim suede sandals",
+      "src": "/api/assistant/images/P01126806"
+    }
+  ],
+  "keptDress": true,
+  "changedShoes": true,
+  "visibleResult": "Tenues assemblées à partir des articles locaux et notées par BO1.\n\nProposition 1\nCritères explicites vérifiés\n\nmulticoloured floral silk-blend cloqué midi dress\nRobe / combinaison · couleur inconnue\nprix inconnu\ngenre inconnu\n\nred slim suede sandals\nChaussures · red\nprix inconnu\ngenre inconnu\n\nCompatibilité BO1 : 9.563/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 13 candidats.\n\nScore, préférences et preuves\n\nRemplacement recalculé : 9.635 → 9.563/10 ; variation -0.072. 1 pièce(s) conservée(s).\n\nAssemblage borné BO5 ; complétion MiniGPT BO1 indisponible. Score appris de compatibilité, pas une note esthétique humaine. Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle. Genre, prix et palette complète inconnus ne passent pas un filtre strict.\n\nPlan compris et diagnostic",
+  "exact_scores": [
+    {
+      "item_ids": [
+        "P01124908",
+        "P01133629"
+      ],
+      "value": 9.634781837463379,
+      "scale": [
+        0,
+        10
+      ],
+      "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+      "odd_position": 0,
+      "embedding_source": "exported_emb_ft"
+    },
+    {
+      "item_ids": [
+        "P01124908",
+        "P01126806"
+      ],
+      "value": 9.563246726989746,
+      "scale": [
+        0,
+        10
+      ],
+      "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+      "odd_position": 0,
+      "embedding_source": "exported_emb_ft"
+    }
+  ],
+  "delta_bo1": -0.07153511047363281,
+  "displayed_score_matches": true
+}

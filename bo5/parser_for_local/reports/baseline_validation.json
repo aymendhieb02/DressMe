@@ -1,0 +1,3374 @@
+{
+  "n": 40,
+  "summary": {
+    "contract_valid": 0.0,
+    "action_acc": 0.0,
+    "reuse_acc": 0.0,
+    "quotes_ok": 0.0,
+    "facet_f1_strict": 0.0,
+    "facet_f1_structure": 0.0,
+    "exact_structure": 0.0
+  },
+  "records": [
+    {
+      "input": {
+        "message": "Search for a garment : dress, grey, women",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "products",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "type",
+            "values": [
+              "dress"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dress",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "grey",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "women",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Search for a garment : dress, grey, women\",\"query_en\":\"Search for a garment : dress, grey, women\",\"facets\":{\"field\":\"color\",\"values\":[\"grey\"],\"mode\":\"exclude\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"dress\",\"target_quote\":\"dress, grey, women\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'value...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 7.701552140000047,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Quelle différence entre femme : un look classique et un look minimaliste",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compare",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "minimaliste",
+            "roles": []
+          }
+        ],
+        "before_facets": [
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "classique",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "femme",
+            "roles": []
+          }
+        ],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Quelle différence entre femme : un look classique et un look minimaliste\",\"query_en\":\"Quelle différence entre femme : un look classique et un look minimaliste\",\"facets\":{\"field\":\"gender\",\"values\":[\"men\",\"women\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"gender\",\"values\":[\"men\",\"women\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Quelle différence entre femme : un look classique et un look minimaliste\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'gender', 'valu...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'gender', 'valu...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 10.047269239000002,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, style chic, avec gris et noir, si possible confortable",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey",
+              "black"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "avec gris et noir",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "comfortable"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "si possible confortable",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Propose-moi un ensemble, style chic, avec gris et noir, si possible confortable\",\"query_en\":\"style chic, avec gris et noir, si possible confortable\",\"facets\":{\"field\":\"color\",\"values\":[\"black\",\"blue\",\"beige\",\"red\",\"white\",\"green\",\"pink\",\"grey\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Propose-moi un ensemble, style chic, avec gris et noir, si possible confortable\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'value...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 10.148973523999985,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Swap only bottom in outfit 3 with bottom green",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "green"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bottom green",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 3,
+        "target_role": "bottom",
+        "target_quote": "bottom",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Swap only bottom in outfit 3 with bottom green\",\"query_en\":\"Swap only bottom in outfit 3 with bottom green\",\"facets\":{\"field\":\"role\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"top\",\"bottom\",\"shoes\"],\"exclude\":[]},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"bottom\",\"target_quote\":\"bottom green\",\"clarification\":\"\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'mode':...'shoes'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 7.679920528000025,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Why was that chosen?",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "explain",
+        "reuse_previous": true,
+        "reference_quote": "Why was that chosen?",
+        "query_en": "",
+        "facets": [],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Why was that chosen?\",\"query_en\":\"Why was that chosen?\",\"facets\":{\"field\":\"role\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"top\",\"bottom\",\"shoes\"],\"count\":1},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"shoes\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'mode':...', 'shoes'], 'count': 1}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 6.498535638999954,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "How do you explain a ranking?",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "general",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"How do you explain a ranking?\",\"query_en\":\"How do you explain a ranking?\",\"facets\":{\"field\":\"role\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"top\",\"bottom\",\"shoes\"],\"count\":1},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"shoes\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'mode':...', 'shoes'], 'count': 1}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 6.941237430000001,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Save : I prefer green, I prefer sporty chic style",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "green"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer green",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer sporty chic style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Save : I prefer green, I prefer sporty chic style\",\"query_en\":\"Save : I prefer green, I prefer sporty chic style\",\"facets\":{\"field\":\"color\",\"values\":[\"green\"],\"mode\":\"prefer\",\"strength\":\"must\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\"],\"mode\":\"any\",\"strength\":\"exclude\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Save : I prefer green, I prefer sporty chic style\",\"clarification\":false}",
+      "decode_errors": [
+        "3 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'value...er', 'strength': 'must'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values..., 'strength': 'exclude'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nclarification\n  Input should be a valid string [type=string_type, input_value=False, input_type=bool]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_type"
+      ],
+      "seconds": 9.267239113000016,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, style sport chic, uniquement rose et vert",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style sport chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink",
+              "green"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "uniquement rose et vert",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink",
+              "green"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "uniquement rose et vert",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Propose-moi un ensemble, style sport chic, uniquement rose et vert\",\"query_en\":\"Propose-moi un ensemble, style sport chic, uniquement rose et vert\",\"facets\":{\"field\":\"color\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"rose\",\"green\"],\"exclude\":[]},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Propose-moi un ensemble, style sport chic, uniquement rose et vert\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'mode'...'green'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 9.17528067699999,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, pour femme, style bohème, pour fête, bas noir, pour été, protection contre la pluie",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style bohème",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour fête",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas noir",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "season",
+            "values": [
+              "summer"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour été",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "rain protection"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "protection contre la pluie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Aide-moi à choisir un look, pour femme, style bohème, pour fête, bas noir, pour été, protection contre la pluie\",\"query_en\":\"Aide-moi à choisir un look, pour femme, style bohème, pour fête, bas noir, pour été, protection contre la pluie\",\"facets\":{\"field\":\"gender\",\"values\":[\"men\",\"women\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"bottom\",\"target_quote\":\"bas noir\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'gender', 'valu...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 12.929182026999968,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, pour femme, pour sport, noir ou rouge",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "sport"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour sport",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "red"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "noir ou rouge",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Aide-moi à choisir un look, pour femme, pour sport, noir ou rouge\",\"query_en\":\"Aide-moi à choisir un look, pour femme, pour sport, noir ou rouge\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Aide-moi à choisir un look, pour femme, pour sport, noir ou rouge\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 10.581273405000047,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Help me select a look, for men, style chic, for wedding, preferably black, for autumn",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for wedding",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "preferably black",
+            "roles": []
+          },
+          {
+            "field": "season",
+            "values": [
+              "autumn"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for autumn",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Help me select a look, for men, style chic, for wedding, preferably black, for autumn\",\"query_en\":\"Help me select a look, for men, style chic, for wedding, preferably black, for autumn\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Help me select a look, for men, style chic, for wedding, preferably black, for autumn\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 13.712861913999973,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour homme, une touche de blanc, si possible qui tient chaud",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "une touche de blanc",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "warm"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "si possible qui tient chaud",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Propose-moi un ensemble, pour homme, une touche de blanc, si possible qui tient chaud\",\"query_en\":\"Propose-moi un ensemble, pour homme, une touche de blanc, si possible qui tient chaud\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Propose-moi un ensemble, pour homme, une touche de blanc, si possible qui tient chaud\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 14.349070501000028,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour femme, style minimaliste, sans rose, maximum 150 USD",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style minimaliste",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sans rose",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "150",
+              "USD"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "maximum 150 USD",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Propose-moi un ensemble, pour femme, style minimaliste, sans rose, maximum 150 USD\",\"query_en\":\"Propose-moi un ensemble, pour femme, style minimaliste, sans rose, maximum 150 USD\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"gender\",\"values\":[\"men\",\"women\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Propose-moi un ensemble, pour femme, style minimaliste, sans rose, maximum 150 USD\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'gender', 'valu...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 13.153295560000004,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour femme, style chic, sans rose, avec robe",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sans rose",
+            "roles": []
+          },
+          {
+            "field": "type",
+            "values": [
+              "dress"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "avec robe",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Propose-moi un ensemble, pour femme, style chic, sans rose, avec robe\",\"query_en\":\"Propose-moi un ensemble, pour femme, style chic, sans rose, avec robe\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"robe\",\"target_quote\":\"robe\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 9.235109740999974,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for women, style elegant, only black and blue, if possible comfortable, 3 suggestions",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "elegant"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style elegant",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "blue"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "only black and blue",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "blue"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "only black and blue",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "comfortable"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "if possible comfortable",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "3"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "3 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Put together a look, for women, style elegant, only black and blue, if possible comfortable, 3 suggestions\",\"query_en\":\"Put together a look, for women, style elegant, only black and blue, if possible comfortable, 3 suggestions\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Put together a look, for women, style elegant, only black and blue, if possible comfortable, 3 suggestions\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 14.978846853999983,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Help me select a look, for women, style casual, for dinner, from my wardrobe",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "dinner"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for dinner",
+            "roles": []
+          },
+          {
+            "field": "scope",
+            "values": [
+              "wardrobe"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "from my wardrobe",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Help me select a look, for women, style casual, for dinner, from my wardrobe\",\"query_en\":\"Help me select a look, for women, style casual, for dinner, from my wardrobe\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Help me select a look, for women, style casual, for dinner, from my wardrobe\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 10.697204488000011,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "What differs between men : a bohemian look and a casual look",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compare",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "casual",
+            "roles": []
+          }
+        ],
+        "before_facets": [
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bohemian",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "men",
+            "roles": []
+          }
+        ],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"What differs between men : a bohemian look and a casual look\",\"query_en\":\"What differs between men : a bohemian look and a casual look\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"What differs between men : a bohemian look and a casual look\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 12.345357059000037,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, pour homme, style élégant, pour mariage, bas blanc, maximum 80 USD",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "elegant"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style élégant",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas blanc",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "budget",
+            "values": [
+              "80",
+              "USD"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "maximum 80 USD",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Aide-moi à choisir un look, pour homme, style élégant, pour mariage, bas blanc, maximum 80 USD\",\"query_en\":\"Aide-moi à choisir un look, pour homme, style élégant, pour mariage, bas blanc, maximum 80 USD\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"bottom\",\"target_quote\":\"bas blanc\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 13.677638136000041,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for women, bottom grey",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bottom grey",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Put together a look, for women, bottom grey\",\"query_en\":\"Put together a look, for women, bottom grey\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"bottom\",\"target_quote\":\"bottom grey\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 10.782953880000036,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, style chic, blanc ou rose, pour hiver, dans ma garde-robe, 2 propositions",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white",
+              "pink"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "blanc ou rose",
+            "roles": []
+          },
+          {
+            "field": "season",
+            "values": [
+              "winter"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour hiver",
+            "roles": []
+          },
+          {
+            "field": "scope",
+            "values": [
+              "wardrobe"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dans ma garde-robe",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "2 propositions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Aide-moi à choisir un look, style chic, blanc ou rose, pour hiver, dans ma garde-robe, 2 propositions\",\"query_en\":\"Aide-moi à choisir un look, style chic, blanc ou rose, pour hiver, dans ma garde-robe, 2 propositions\",\"facets\":{\"field\":\"color\",\"values\":[\"white\",\"pink\"],\"mode\":\"exclude\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"must\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Aide-moi à choisir un look, style chic, blanc ou rose, pour hiver, dans ma garde-robe, 2 propositions\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'value...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...ny', 'strength': 'must'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 15.101465381000025,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Help me select a look, for men, for sport, top blue",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "sport"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for sport",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "top blue",
+            "roles": [
+              "top"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Help me select a look, for men, for sport, top blue\",\"query_en\":\"Help me select a look, for men, for sport, top blue\",\"facets\":{\"field\":\"role\",\"values\":[\"top\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"top blue\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 8.409096722999948,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Swap only shoes in outfit 2 with shoes blue",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "shoes blue",
+            "roles": [
+              "shoes"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 2,
+        "target_role": "shoes",
+        "target_quote": "shoes",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Swap only shoes in outfit 2 with shoes blue\",\"query_en\":\"Swap only shoes in outfit 2 with shoes blue\",\"facets\":{\"field\":\"role\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"shoes\"],\"count\":1},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"shoes blue\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'mode':...: ['shoes'], 'count': 1}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 7.085317600000053,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Save : I dislike grey, I prefer sporty chic style",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "exclude",
+            "strength": "prefer",
+            "quote": "I dislike grey",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer sporty chic style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Save : I dislike grey, I prefer sporty chic style\",\"query_en\":\"Save : I dislike grey, I prefer sporty chic style\",\"facets\":{\"field\":\"color\",\"values\":[\"black\",\"blue\",\"beige\",\"red\",\"white\",\"green\",\"pink\",\"grey\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Save : I dislike grey, I prefer sporty chic style\",\"clarification\":false}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'value...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nclarification\n  Input should be a valid string [type=string_type, input_value=False, input_type=bool]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_type"
+      ],
+      "seconds": 9.399907127000006,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Swap only shoes in outfit 1 with shoes blue",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "shoes blue",
+            "roles": [
+              "shoes"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "shoes",
+        "target_quote": "shoes",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Swap only shoes in outfit 1 with shoes blue\",\"query_en\":\"Swap only shoes in outfit 1 with shoes blue\",\"facets\":{\"field\":\"role\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"shoes\"],\"count\":1},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"shoes blue\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'mode':...: ['shoes'], 'count': 1}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 7.094205079999938,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour bureau, bas beige",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "office"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour bureau",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "beige"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas beige",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Propose-moi un ensemble, pour bureau, bas beige\",\"query_en\":\"Propose-moi un ensemble, pour bureau, bas beige\",\"facets\":{\"field\":\"color\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"beige\"],\"exclude\":[]},\"before_facets\":{\"field\":\"role\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"top\"],\"exclude\":[]},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"bas beige\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'mode'...'beige'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'mode':... ['top'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 8.805808282000044,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Help me select a look, style classic, for wedding, grey or green, under 50 USD, 5 suggestions",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style classic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for wedding",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey",
+              "green"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "grey or green",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "50",
+              "USD"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "under 50 USD",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "5"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "5 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Help me select a look, style classic, for wedding, grey or green, under 50 USD, 5 suggestions\",\"query_en\":\"Help me select a look, style classic, for wedding, grey or green, under 50 USD, 5 suggestions\",\"facets\":{\"field\":\"color\",\"values\":[\"grey\",\"green\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Help me select a look, style classic, for wedding, grey or green, under 50 USD, 5 suggestions\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'value...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 11.004989746999968,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for women, style casual, blue or white",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "blue",
+              "white"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "blue or white",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Put together a look, for women, style casual, blue or white\",\"query_en\":\"Put together a look, for women, style casual, blue or white\",\"facets\":{\"field\":\"color\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"blue\",\"white\"],\"exclude\":[]},\"before_facets\":{\"field\":\"role\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"exclude\":[]},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Put together a look, for women, style casual, blue or white\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'mode'...'white'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'mode':...essory'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 11.586602325000058,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, pour mariage, bas rose",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas rose",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Aide-moi à choisir un look, pour mariage, bas rose\",\"query_en\":\"Aide-moi à choisir un look, pour mariage, bas rose\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"bottom\",\"target_quote\":\"bas rose\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 11.214090585000008,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Save : I prefer pink, I prefer bohemian style",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer pink",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer bohemian style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Save : I prefer pink, I prefer bohemian style\",\"query_en\":\"Save : I prefer pink, I prefer bohemian style\",\"facets\":{\"field\":\"color\",\"values\":[\"pink\"],\"mode\":\"prefer\",\"strength\":\"must\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Save : I prefer pink, I prefer bohemian style\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'value...er', 'strength': 'must'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 7.708958540999902,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Keep the rest but without a color constraint for men",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "Keep the rest but",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [],
+            "mode": "clear",
+            "strength": "must",
+            "quote": "without a color constraint",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Keep the rest but without a color constraint for men\",\"query_en\":\"Keep the rest but without a color constraint for men\",\"facets\":{\"field\":\"role\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"top\",\"bottom\",\"shoes\"],\"exclude\":[]},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"Keep the rest but without a color constraint for men\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'mode':...'shoes'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 7.973102066000024,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for women, style sporty chic, for hiking, top black",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style sporty chic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "hiking"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for hiking",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "top black",
+            "roles": [
+              "top"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Put together a look, for women, style sporty chic, for hiking, top black\",\"query_en\":\"style sporty chic, for hiking, top black\",\"facets\":{\"field\":\"role\",\"values\":[\"top\"]},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"black\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values': ['top']}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 6.495774888000028,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Enregistre : je préfère noir, je préfère le style casual",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "je préfère noir",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "je préfère le style casual",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Enregistre : je préfère noir, je préfère le style casual\",\"query_en\":\"Enregistre : je préfère noir, je préfère le style casual\",\"facets\":{\"field\":\"color\",\"values\":[\"black\",\"blue\",\"beige\",\"red\",\"white\",\"green\",\"pink\",\"grey\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Enregistre : je préfère noir, je préfère le style casual\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'value...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 10.080000851000023,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, style casual, only red and green",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "red",
+              "green"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "only red and green",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "red",
+              "green"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "only red and green",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Put together a look, style casual, only red and green\",\"query_en\":\"Put together a look, style casual, only red and green\",\"facets\":{\"field\":\"color\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"red\",\"green\"],\"exclude\":[]},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Put together a look, style casual, only red and green\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'mode'...'green'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 8.162563011999964,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Keep the rest but entirely grey for women",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "Keep the rest but",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "entirely grey",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Keep the rest but entirely grey for women\",\"query_en\":\"Keep the rest but entirely grey for women\",\"facets\":{\"field\":\"color\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"grey\"],\"exclude\":[]},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Keep the rest but entirely grey for women\",\"clarification\":\"\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'mode'...['grey'], 'exclude': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 7.2795373760000075,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour homme, style classique, pour dîner, tout en gris, moins de 200 EUR",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style classique",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "dinner"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour dîner",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "tout en gris",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "200",
+              "EUR"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "moins de 200 EUR",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Propose-moi un ensemble, pour homme, style classique, pour dîner, tout en gris, moins de 200 EUR\",\"query_en\":\"Propose-moi un ensemble, pour homme, style classique, pour dîner, tout en gris, moins de 200 EUR\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"Propose-moi un ensemble, pour homme, style classique, pour dîner, tout en gris, moins de 200 EUR\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 16.05016786500005,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Save : I prefer white, I prefer minimalist style",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer white",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer minimalist style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Save : I prefer white, I prefer minimalist style\",\"query_en\":\"Save : I prefer white, I prefer minimalist style\",\"facets\":{\"field\":\"gender\",\"values\":[\"men\",\"women\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"gender\",\"values\":[\"men\",\"women\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Save : I prefer white, I prefer minimalist style\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'gender', 'valu...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'gender', 'valu...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 8.671391113000027,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour homme, bas blanc, moins de 150 $",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas blanc",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "budget",
+            "values": [
+              "150"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "moins de 150 $",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Propose-moi un ensemble, pour homme, bas blanc, moins de 150 $\",\"query_en\":\"Propose-moi un ensemble, pour homme, bas blanc, moins de 150 $\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"top\",\"target_quote\":\"bas blanc\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 9.522770562999995,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Change bas dans la tenue 3 par bas noir",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Change",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bas noir",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 3,
+        "target_role": "bottom",
+        "target_quote": "bas",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Change bas dans la tenue 3 par bas noir\",\"query_en\":\"Change bas dans la tenue 3 par bas noir\",\"facets\":{\"field\":\"color\",\"mode\":\"any\",\"strength\":\"prefer\",\"values\":[\"black\",\"blue\",\"beige\",\"red\",\"white\",\"green\",\"pink\",\"grey\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":[],\"selection_number\":1,\"target_role\":\"bottom\",\"target_quote\":\"bas noir\"}",
+      "decode_errors": [
+        "1 validation error for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'color', 'mode'...green', 'pink', 'grey']}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 8.524046002999967,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for men, shoes beige, 2 suggestions",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "beige"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "shoes beige",
+            "roles": [
+              "shoes"
+            ]
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "2 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Put together a look, for men, shoes beige, 2 suggestions\",\"query_en\":\"Put together a look, for men, shoes beige, 2 suggestions\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"beige\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 11.308977602000027,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, style streetwear, pour mariage",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "streetwear"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style streetwear",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": null,
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"Aide-moi à choisir un look, style streetwear, pour mariage\",\"query_en\":\"Aide-moi à choisir un look, style streetwear, pour mariage\",\"facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"before_facets\":{\"field\":\"role\",\"values\":[\"top\",\"bottom\",\"shoes\",\"onepiece\",\"outerwear\",\"layer\",\"bag\",\"accessory\"],\"mode\":\"any\",\"strength\":\"prefer\"},\"selection_number\":1,\"target_role\":\"onepiece\",\"target_quote\":\"Aide-moi à choisir un look, style streetwear, pour mariage\"}",
+      "decode_errors": [
+        "2 validation errors for Turn\nfacets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\nbefore_facets\n  Input should be a valid list [type=list_type, input_value={'field': 'role', 'values...', 'strength': 'prefer'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type"
+      ],
+      "seconds": 12.506984795999983,
+      "metrics": {
+        "contract_valid": 0.0,
+        "action_acc": 0.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 0.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    }
+  ],
+  "mean_seconds": 10.197213984525003,
+  "scope": "synthetic unless origin=human_labeled; generation without repair",
+  "evaluation_identity": "c32b7d1b0b22670e141f22a41ab3ede71976e95252b7dc7a62c33df328187d80"
+}

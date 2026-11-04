@@ -14,3 +14,19 @@ __pycache__/
 # OS
 Thumbs.db
 .DS_Store
+
+# Local inference caches, private wardrobes and generated diagnostics
+.cache/
+.runtime/
+diagnostics/*_source.txt
+diagnostics/*.txt
+bo1/**/img/
+bo1/**/*.pt
+bo1/**/*.npy
+bo5/**/adapter_model.safetensors
+bo5/**/optimizer.pt
+bo5/**/scheduler.pt
+bo5/**/rng_state.pth
+bo5/**/training_args.bin
+bo5/**/rng_state.pth
+*.log
