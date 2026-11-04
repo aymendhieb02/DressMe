@@ -65,7 +65,7 @@ class LocalParser:
                                  selected_checkpoint='checkpoint-400', adapter_path=str(ADAPTER),
                                  precision=os.getenv('DRESSME_PARSER_PRECISION', 'nf4'),
                                  reviewer=None, writer='deterministic evidence templates', fallback=None,
-                                 postprocessing='grounded-request-v2 (typed replacements, explicit words, audited edits)',
+                                 postprocessing='grounded-request-v3 (count aliases, scenario slots, typed replacements, audited edits)',
                                  prompt_sha256=hashlib.sha256(receipt['training_config']['prompt'].encode()).hexdigest(),
                                  semantic_validation='Exact citations and conservative guards; no independent LLM oracle.')
         except Exception as exc:
@@ -174,6 +174,10 @@ class LocalParser:
             self.request_trace.value = dict(previous_selection_roles=selections, raw_output=raw)
             model_json = json.loads(raw)
             contract, contract_changes = normalize_contract(model_json, message)
+            # Keep the exact failed contract available even when schema
+            # validation rejects it before semantic reconciliation can run.
+            self.request_trace.value.update(model_plan=model_json, normalized_contract_plan=contract,
+                                            corrections=contract_changes)
             original = Turn.model_validate(contract, strict=True)
             turn, changes = reconcile_turn(original, message, COLOR_EVIDENCE, pending_question)
             self.request_trace.value.update(model_plan=model_json, normalized_contract_plan=original.model_dump(),

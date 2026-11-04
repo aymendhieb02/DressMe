@@ -28,7 +28,7 @@ class User(Base):
     )
     sessions: Mapped[list["RefreshSession"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
-    __table_args__ = (CheckConstraint("gender IS NULL OR gender IN ('men', 'women', 'unisex')", name="ck_users_gender"),)
+    __table_args__ = (CheckConstraint("gender IS NULL OR gender IN ('men', 'women')", name="ck_users_gender"),)
 
 
 class PasswordRecoveryChallenge(Base):

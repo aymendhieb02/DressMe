@@ -1,0 +1,12 @@
+{
+  "automatic_tests": 269,
+  "real_cases_passed": 10,
+  "real_cases_failed": 0,
+  "source_sha256": {
+    "dressme/grounding.py": "863b34b5d85053cd5afb8dd5a38a0fea2601537e26f09bca2c4ee75ecbe1e986",
+    "dressme/parser.py": "495d74c54ca2b73d119cda356866bbbdf0faff37d243c9779845661797f4e60f",
+    "tests/test_conversation.py": "0a86484708aaccc2cb9caaf87f5901fc5c3814635a099dcff31eccca5864d2c6",
+    "tests/test_integration.py": "4faed9917e90a30d599f1e166206977cd6bca1d24889ee807aac5d37f8f7fcbe",
+    "scripts/verify_count_parser.py": "f8b15bbc1d431ec62f4e9abb0893d1a5661d17e58311701259fea691885b1d1d"
+  }
+}

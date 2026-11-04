@@ -35,7 +35,7 @@ def register(browser, gender='men', email='chat@example.com'):
     return {"Origin":"http://localhost:8001", "X-CSRF-Token":response.json()['csrf_token']}
 
 
-@pytest.mark.parametrize('gender',['men','women','unisex',None])
+@pytest.mark.parametrize('gender',['men','women',None])
 def test_gender_survives_registration_login_and_refresh(integrated, gender):
     browser, _ = integrated
     headers=register(browser,gender)
@@ -52,10 +52,24 @@ def test_profile_update_is_validated_and_requires_csrf(integrated):
     browser, _=integrated
     headers=register(browser,None)
     assert browser.patch('/studio-api/auth/me',json={'gender':'women'}).status_code==403
-    for body in [{'gender':'invalid'},{'gender':'men','id':'another-account'}]:
+    for body in [{'gender':'invalid'},{'gender':'unisex'},{'gender':None},{'gender':'men','id':'another-account'}]:
         assert browser.patch('/studio-api/auth/me',headers=headers,json=body).status_code==422
     assert browser.patch('/studio-api/auth/me',headers=headers,json={'gender':'women'}).json()['gender']=='women'
     assert browser.get('/api/assistant/profile').json()['gender']=='women'
+
+
+def test_user_forms_have_exactly_two_choices_and_api_rejects_third_choice(integrated):
+    from pathlib import Path
+    browser,_=integrated
+    response=browser.post('/studio-api/auth/register',headers={'Origin':'http://localhost:8001'},
+                          json=dict(email='third-choice@example.com',password=PASSWORD,gender='unisex'))
+    assert response.status_code==422
+    form=Path('static/studio/auth.js').read_text(encoding='utf-8').split('const genderInput = ',1)[1].split('\n',1)[0]
+    import re
+    assert re.findall(r'<option value="([^"]*)"',form)==['women','men']
+    page=Path('static/index.html').read_text(encoding='utf-8')
+    account_form=page.split('<form id="account-gender-form">',1)[1].split('</form>',1)[0]
+    assert re.findall(r'<option value="([^"]*)"',account_form)==['women','men']
 
 
 @pytest.mark.parametrize('gender',['men','women'])

@@ -427,6 +427,12 @@ class APITests(unittest.TestCase):
         from dressme.routes import router, bo1_router
         from similar import router as similar_router
         import scoring
+        # Initialize the real legacy scorer explicitly: this fixture must also
+        # work when api.py has not been imported by an unrelated earlier test.
+        data=Path(__file__).resolve().parents[1]/'data'
+        source=json.loads((data/'catalog.json').read_text(encoding='utf-8'))
+        scoring.configure(data_dir=data,cat=source['cat'],desc=source['desc'],
+            item=lambda i:dict(i=i,c=source['cat'][i],d=source['desc'][i],k=source['codes'][i]))
         cls.app = FastAPI()
         cls.app.include_router(router); cls.app.include_router(bo1_router)
         cls.app.include_router(similar_router); cls.app.include_router(scoring.router)

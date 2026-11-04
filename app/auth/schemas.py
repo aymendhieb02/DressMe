@@ -21,7 +21,7 @@ class _EmailModel(BaseModel):
 
 class RegisterCredentials(_EmailModel):
     password: str = Field(min_length=12, max_length=128)
-    gender: Literal["men", "women", "unisex"] | None = None
+    gender: Literal["men", "women"] | None = None
 
 
 class LoginCredentials(_EmailModel):
@@ -46,7 +46,7 @@ class UserPublic(BaseModel):
     id: UUID
     email: str
     role: str
-    gender: Literal["men", "women", "unisex"] | None = None
+    gender: Literal["men", "women"] | None = None
     created_at: datetime
 
 
@@ -61,7 +61,7 @@ class CsrfToken(BaseModel):
 
 class UserUpdate(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    gender: Literal["men", "women", "unisex"] | None
+    gender: Literal["men", "women"]
 
 
 class AccountDelete(BaseModel):

@@ -16,7 +16,7 @@ def with_account_gender(spec, turn, state):
     spec = without_account_defaults(spec)
     gender = state.get('account_gender')
     # Explicit message criteria (including a deliberate clearing) take precedence.
-    # Unisex/no preference on the account leaves the catalogue unrestricted.
+    # Legacy accounts with no recorded choice leave the catalogue unrestricted.
     if gender not in {'men', 'women'} or any(f.field == 'gender' for f in spec.facets + turn.facets):
         return spec
     spec.facets.append(Facet(field='gender', values=[gender, 'unisex'],

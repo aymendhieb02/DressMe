@@ -1,4 +1,4 @@
-import {state, esc, request, message} from './core.js?v=integrated-12';
+import {state, esc, request, message} from './core.js?v=integrated-13';
 
 function passwordField(name, label, autocomplete, minimum = '') {
   return `<label>${label}<span class="studio-password"><input name="${name}" type="password" autocomplete="${autocomplete}" ${minimum} required><button type="button" class="btn ghost" data-auth-toggle="${name}" aria-label="Show ${label.toLowerCase()}">Show</button></span></label>`;
@@ -6,7 +6,7 @@ function passwordField(name, label, autocomplete, minimum = '') {
 const card = (eyebrow, title, intro, inner) => `<section class="studio-auth-card" aria-labelledby="studio-auth-title"><p class="studio-eyebrow">${eyebrow}</p><h2 id="studio-auth-title" tabindex="-1">${title}</h2><p class="studio-muted">${intro}</p>${inner}</section>`;
 const emailInput = email => `<label>Email<input name="email" type="email" autocomplete="email" value="${email}" required maxlength="254"></label>`;
 const back = '<button class="studio-link" data-auth-view="login">Back to sign in</button>';
-const genderInput = '<label>Genre des tenues<select name="gender" required><option value="" disabled selected>Choisir</option><option value="women">Femme</option><option value="men">Homme</option><option value="unisex">Sans préférence</option></select><small>Utilisé par défaut dans le chat. Une demande explicite reste prioritaire.</small></label>';
+const genderInput = '<label>Genre des tenues<select name="gender" required><option value="women">Femme</option><option value="men">Homme</option></select><small>Utilisé par défaut dans le chat. Une demande explicite reste prioritaire.</small></label>';
 
 export function authForm() {
   const email = esc(state.authEmail);

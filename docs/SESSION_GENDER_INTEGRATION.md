@@ -11,7 +11,7 @@ Le module utilisateur de l'équipe et le chat BO1/BO5 fonctionnent dans la même
 - Le serveur lit le genre dans le compte authentifié à chaque requête. Le navigateur ne fournit ni identifiant utilisateur ni genre dans la requête de chat.
 - « Compose deux tenues » utilise le genre du compte, avec les articles classés unisexes également admissibles.
 - Une demande explicite telle que « Compose deux tenues pour femme » prend la priorité sur un compte homme. Les modifications suivantes de cette sélection conservent ce critère explicite.
-- Une nouvelle demande indépendante reprend le défaut du compte. Un compte sans genre ou sans préférence ne reçoit pas de filtre automatique.
+- Une nouvelle demande indépendante reprend le défaut du compte. Un ancien compte dont le genre n’est pas encore renseigné ne reçoit pas de filtre automatique tant que son propriétaire n’a pas choisi Homme ou Femme.
 - La conversation, les préférences et les pièces déclarées possédées sont isolées par compte et retrouvées après reconnexion.
 
 ## Résolution des conflits
@@ -39,7 +39,7 @@ Le mode isolé utilisé par les tests BO5 garde un cookie distinct `dressme_chat
 
 ## Stockage et migration
 
-La migration Alembic `0010_user_gender`, après `0009_password_recovery`, ajoute `users.gender`, nullable, avec validation `men`, `women`, `unisex`.
+La migration Alembic `0010_user_gender` ajoute `users.gender`. La migration suivante, `0011_binary_account_gender`, limite les choix du compte à `men` ou `women`. Les anciens comptes sans valeur restent préservés ; une ancienne valeur `unisex` devient non renseignée, sans inventer un choix homme/femme. L’API de modification refuse `unisex` et une valeur vide.
 
 Les anciens comptes et leurs sessions sont conservés. Le genre n'est pas deviné pour ces comptes : il se renseigne dans **Account**. L'aller-retour de migration sur une base contenant un utilisateur et une session est couvert par un test.
 
@@ -61,7 +61,9 @@ Les corrections précédentes de remplacement d'une seule proposition, de la deu
 
 ## Vérifications
 
-La suite finale passe **261 tests** (modules de l’équipe, BO3, BO1/BO5, comptes et genre). Le rapport est enregistré dans `diagnostics/merge-tests.xml`. Un avertissement de dépréciation du client de test Starlette/httpx reste présent, sans échec.
+Après restriction aux deux choix Homme/Femme, les **37 tests ciblés réussis** des formulaires, de l’API, des sessions et des migrations sont enregistrés séparément dans `diagnostics/binary-gender-tests.xml`.
+
+La validation initiale de la fusion passe **261 tests** (modules de l’équipe, BO3, BO1/BO5, comptes et genre). Le rapport est enregistré dans `diagnostics/merge-tests.xml`. Un avertissement de dépréciation du client de test Starlette/httpx reste présent, sans échec.
 
 Le rejeu `diagnostics/authenticated-chat-replay.json` utilise les **vrais modèles**, sans téléchargement ni réentraînement : Qwen3 avec l'adaptateur LoRA NF4, RAG hybride E5/BM25, embeddings et score BO1 exportés.
 

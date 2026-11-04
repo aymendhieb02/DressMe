@@ -1,0 +1,427 @@
+[
+  {
+    "message": "ompose deux tenues pour une sortie",
+    "context": [],
+    "seconds": 80.97,
+    "ok": true,
+    "plan": {
+      "action": "compose",
+      "reuse_previous": false,
+      "reference_quote": "",
+      "query_en": "",
+      "facets": [
+        {
+          "field": "occasion",
+          "values": [
+            "party"
+          ],
+          "mode": "any",
+          "strength": "must",
+          "quote": "pour une sortie",
+          "roles": []
+        },
+        {
+          "field": "count",
+          "values": [
+            "2"
+          ],
+          "mode": "any",
+          "strength": "must",
+          "quote": "deux tenues",
+          "roles": []
+        }
+      ],
+      "before_facets": [],
+      "selection_number": 1,
+      "target_role": "",
+      "target_quote": "",
+      "clarification": ""
+    },
+    "trace": {
+      "previous_selection_roles": [],
+      "raw_output": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"occasion\",\"values\":[\"party\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour une sortie\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "model_plan": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "normalized_contract_plan": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "corrections": [
+        {
+          "rule": "explicit_quantity",
+          "evidence": "deux tenues",
+          "before": [],
+          "after": [
+            {
+              "field": "count",
+              "values": [
+                "2"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "deux tenues",
+              "roles": []
+            }
+          ]
+        }
+      ],
+      "reconciled_plan": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "deux tenues",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      }
+    }
+  },
+  {
+    "message": "Compose deux tenues pour une sortie",
+    "context": [],
+    "seconds": 14.19,
+    "ok": true,
+    "plan": {
+      "action": "compose",
+      "reuse_previous": false,
+      "reference_quote": "",
+      "query_en": "",
+      "facets": [
+        {
+          "field": "occasion",
+          "values": [
+            "party"
+          ],
+          "mode": "any",
+          "strength": "must",
+          "quote": "pour une sortie",
+          "roles": []
+        },
+        {
+          "field": "count",
+          "values": [
+            "2"
+          ],
+          "mode": "any",
+          "strength": "must",
+          "quote": "deux tenues",
+          "roles": []
+        }
+      ],
+      "before_facets": [],
+      "selection_number": 1,
+      "target_role": "",
+      "target_quote": "",
+      "clarification": ""
+    },
+    "trace": {
+      "previous_selection_roles": [],
+      "raw_output": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"occasion\",\"values\":[\"party\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour une sortie\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "model_plan": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "normalized_contract_plan": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "corrections": [
+        {
+          "rule": "explicit_quantity",
+          "evidence": "deux tenues",
+          "before": [],
+          "after": [
+            {
+              "field": "count",
+              "values": [
+                "2"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "deux tenues",
+              "roles": []
+            }
+          ]
+        }
+      ],
+      "reconciled_plan": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "deux tenues",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      }
+    }
+  },
+  {
+    "message": "ompose deux tenues pour une sortie",
+    "context": [
+      {
+        "number": 1,
+        "roles": [
+          "top",
+          "bottom",
+          "shoes"
+        ]
+      },
+      {
+        "number": 2,
+        "roles": [
+          "top",
+          "bottom",
+          "shoes"
+        ]
+      }
+    ],
+    "seconds": 14.23,
+    "ok": false,
+    "error": "Référence au contexte précédent non vérifiable.",
+    "trace": {
+      "previous_selection_roles": [
+        {
+          "number": 1,
+          "roles": [
+            "top",
+            "bottom",
+            "shoes"
+          ]
+        },
+        {
+          "number": 2,
+          "roles": [
+            "top",
+            "bottom",
+            "shoes"
+          ]
+        }
+      ],
+      "raw_output": "{\"action\":\"compose\",\"reuse_previous\":true,\"reference_quote\":\"compose\",\"query_en\":\"\",\"facets\":[{\"field\":\"occasion\",\"values\":[\"party\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour une sortie\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "model_plan": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "compose",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "normalized_contract_plan": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "compose",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "corrections": [
+        {
+          "rule": "explicit_quantity",
+          "evidence": "deux tenues",
+          "before": [],
+          "after": [
+            {
+              "field": "count",
+              "values": [
+                "2"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "deux tenues",
+              "roles": []
+            }
+          ]
+        }
+      ],
+      "reconciled_plan": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "compose",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour une sortie",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "deux tenues",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      }
+    }
+  }
+]

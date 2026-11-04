@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DressMe — Style Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="/static/studio.css?v=integrated-12" rel="stylesheet">
+<link href="/static/studio.css?v=integrated-13" rel="stylesheet">
 <style>
 :root{--ink:#17283a;--c1:#ff6b4a;--c2:#0e9f9a;--ok:#1fb889;--warn:#f5a524;--bad:#e5484d;--hero:#17283a;--sky:linear-gradient(160deg,#fdebd8,#c9ebe7)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--sky) fixed;min-height:100vh}
@@ -531,13 +531,13 @@ label.btn input{display:none}
   #wardrobe .wd-door,#wardrobe .wd-cab,#wardrobe .wd-in{transition-duration:.01s}
   #wardrobe .wd-door,#wardrobe .wd-plaque,#wardrobe #wrun::after{animation:none}
 }
-</style><link rel="stylesheet" href="/static/assistant.css?v=integrated-12">
+</style><link rel="stylesheet" href="/static/assistant.css?v=integrated-13">
 </head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
 <div id="intro" hidden><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
 <div class="copy"><p class="eyebrow">Wardrobe intelligence</p><h1>Where weather, taste and wardrobe <em>finally agree.</em></h1></div>
 <div class="landing-actions"><a class="btn studio-enter" id="studioEnter" href="/login">Sign in</a><button class="btn enter" id="enter" type="button">Explore DressMe</button></div></div>
 <div class="wall-scene" aria-hidden="true"><div id="wall"></div><div id="veil"></div></div><canvas id="fx"></canvas>
-<div class="wrap"><header class="top"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div><details class="app-account" id="accountMenu"><summary>Account</summary><div class="app-account-panel"><span id="accountEmail"></span><form id="account-gender-form"><label>Genre des tenues<select name="gender"><option value="">Non renseigné</option><option value="women">Femme</option><option value="men">Homme</option><option value="unisex">Sans préférence</option></select></label><button type="submit">Enregistrer</button><small id="account-gender-status" role="status"></small></form><a href="/">Landing page</a><button type="button" id="headerSignout">Sign out</button></div></details><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button><nav id="menu" aria-label="Main navigation"></nav></header><main>
+<div class="wrap"><header class="top"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div><details class="app-account" id="accountMenu"><summary>Account</summary><div class="app-account-panel"><span id="accountEmail"></span><form id="account-gender-form"><label>Genre des tenues<select name="gender" required><option value="women">Femme</option><option value="men">Homme</option></select></label><button type="submit">Enregistrer</button><small id="account-gender-status" role="status"></small></form><a href="/">Landing page</a><button type="button" id="headerSignout">Sign out</button></div></details><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button><nav id="menu" aria-label="Main navigation"></nav></header><main>
 <div class="hero"><h1>Wardrobe intelligence,<br><em>tailored to the day.</em></h1></div>
 
 <section id="ootd" class="glass"><div class="chead"><div><p class="eyebrow">No. 01</p><h2>Outfit of the Day</h2></div>
@@ -1296,5 +1296,5 @@ $('#vd-x').onclick=()=>vdEl.classList.add('mini');
 $('#vd-av').onclick=()=>vdEl.classList.toggle('mini');
 document.addEventListener('dressme:section',e=>{if(e.detail!=='score')vdHide();else if(vdLast&&B1.get().length>=2){vdThink();vdSay(vdLast)}});
 
-</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=integrated-12"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
-<script type="module" src="/static/assistant.js?v=integrated-12"></script></body></html>
+</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=integrated-13"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
+<script type="module" src="/static/assistant.js?v=integrated-13"></script></body></html>

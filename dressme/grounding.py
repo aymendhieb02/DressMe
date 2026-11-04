@@ -41,7 +41,7 @@ GARMENTS = (
 REPLACE = re.compile(r'\b(remplace\w*|change\w*|modifie\w*|[ée]change\w*|replace\w*|swap\w*|switch\w*)\b', re.I)
 SEARCH = re.compile(r'\b(trouve\w*|cherche\w*|recherche\w*|montre\w*|voudrais|veux|find|search|show|looking for|want|need)\b', re.I)
 OUTFIT = re.compile(r'\b(tenues?|outfits?|looks?|propositions? vestimentaires?)\b', re.I)
-COMPOSE = re.compile(r'\b(compose\w*|assemble\w*|compos\w*|create|build|put together)\b', re.I)
+COMPOSE = re.compile(r'\b(compose\w*|ompose\w*|assemble\w*|compos\w*|create|build|put together)\b', re.I)
 DEPENDENT = re.compile(r'\b(m[êe]mes?|cette|ces|celle\w*|ceux|pr[ée]c[ée]dent\w*|same|this|these|those|previous|keep|garde\w*|conserve\w*)\b', re.I)
 OPTIONAL = re.compile(r'\b(si possible|de pr[ée]f[ée]rence|preferably|ideally|if possible)\b[^,.;!?]*', re.I)
 ORDINAL = re.compile(r'\b(premi[èe]re?|deuxi[èe]me|seconde?|troisi[èe]me|quatri[èe]me|cinqui[èe]me|first|second|third|fourth|fifth|[1-5](?:er|re|e|ème|eme|st|nd|rd|th))\b', re.I)
@@ -85,24 +85,46 @@ def color_mentions(message, evidence):
 
 
 def normalize_contract(value, message):
-    """Repair only a grounded structural slot misplaced in the facet field.
+    """Repair grounded structural aliases in either scenario's facet list.
 
     Unknown fields, malformed JSON and ungrounded values remain invalid.
     """
     result = copy.deepcopy(value)
     changes = []
-    if isinstance(result, dict) and isinstance(result.get('facets'), list):
-        for f in result['facets']:
-            if not isinstance(f, dict) or f.get('field') != 'target_role':
+    if not isinstance(result, dict):
+        return result,changes
+    quantities=list(re.finditer(r'\b(\d+|'+'|'.join(COUNT_WORDS)+r')\s+(?:tenues?|outfits?|looks?|propositions?)\b',message,re.I))
+    for collection in ('facets','before_facets'):
+        if not isinstance(result.get(collection),list):
+            continue
+        for f in result[collection]:
+            if not isinstance(f, dict):
                 continue
             quote = f.get('quote')
-            if not isinstance(quote, str) or quote not in message:
+            if not isinstance(quote, str) or not quote or quote not in message:
                 continue
-            roles = {m['role'] for m in garment_mentions(quote)}
-            if len(roles) == 1 and f.get('values') == [next(iter(roles))]:
+            if f.get('field') == 'target_role':
+                roles = {m['role'] for m in garment_mentions(quote)}
+                if len(roles) != 1 or f.get('values') != [next(iter(roles))]:
+                    continue
                 before = copy.deepcopy(f)
                 f['field'] = 'role'
-                changes.append(dict(rule='misplaced_structural_role', evidence=quote, before=before, after=copy.deepcopy(f)))
+                changes.append(dict(rule='misplaced_structural_role', collection=collection, evidence=quote, before=before, after=copy.deepcopy(f)))
+            elif f.get('field') in {'number','quantity','nombre'}:
+                values=f.get('values')
+                if not isinstance(values,list) or len(values)!=1 or not isinstance(values[0],str):
+                    continue
+                literal=norm(values[0])
+                number=int(literal) if re.fullmatch(r'\d+',literal) else COUNT_WORDS.get(literal)
+                quoted={int(w) if w.isdigit() else COUNT_WORDS[w] for w in re.findall(r'\b(?:\d+|'+'|'.join(COUNT_WORDS)+r')\b',norm(quote))}
+                evidence=next((m.group() for m in quantities
+                               if (int(m[1]) if m[1].isdigit() else COUNT_WORDS[norm(m[1])])==number
+                               and (quote in m.group() or m.group() in quote)),None)
+                if number is None or number not in quoted or evidence is None:
+                    continue
+                before=copy.deepcopy(f)
+                f.update(field='count',values=[str(number)])
+                changes.append(dict(rule='grounded_count_alias',collection=collection,evidence=evidence,before=before,after=copy.deepcopy(f)))
     return result, changes
 
 
@@ -218,6 +240,21 @@ def reconcile_turn(original, message, color_evidence, pending_question=''):
     if turn.action in {'compose','products'} and request and not DEPENDENT.search(message) and not re.match(r'\s*(et\b|and\b|also\b|aussi\b|what if\b)', message, re.I):
         set_field('reuse_previous', False, 'standalone_request', request.group())
         set_field('reference_quote', '', 'standalone_request', request.group())
+        # A single independent request has only a current scenario. The model
+        # sometimes places its criteria in before_facets; keep those criteria
+        # and audit them normally instead of silently dropping the requested
+        # occasion or quantity. Real comparison scenarios keep both lists.
+        comparing=re.search(r'\b(?:compare\w*|comparaison|avant|apres|before|after|versus|vs|plutot que|rather than|au lieu)\b',norm(message))
+        if turn.before_facets and not comparing:
+            before=[f.model_dump() for f in turn.before_facets]
+            seen={(f.field,tuple(f.values),f.mode,f.strength,tuple(f.roles)) for f in turn.facets}
+            for f in turn.before_facets:
+                key=(f.field,tuple(f.values),f.mode,f.strength,tuple(f.roles))
+                if key not in seen:
+                    turn.facets.append(f)
+                    seen.add(key)
+            turn.before_facets=[]
+            edit('single_scenario_current_facets',request.group(),before,[f.model_dump() for f in turn.facets])
 
     if turn.action not in {'compose','products','replace','compare','preferences'}:
         return turn, changes
