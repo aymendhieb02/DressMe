@@ -1,0 +1,78 @@
+{
+  "version": "tmpl-v0.4-attributes",
+  "generator": "deterministic template over structured fields \u2014 not a generative language model",
+  "fields": {
+    "category": {
+      "source": "classifier or user",
+      "allowed": [
+        "dress",
+        "jacket",
+        "jeans",
+        "shirt",
+        "shorts",
+        "skirt",
+        "sweater",
+        "sweatshirt",
+        "t-shirt",
+        "top",
+        "trousers",
+        "unknown"
+      ]
+    },
+    "color": {
+      "source": "user confirmation only (the model offers suggestions, never states it)",
+      "allowed": [
+        "beige",
+        "black",
+        "blue",
+        "brown",
+        "green",
+        "grey",
+        "navy",
+        "orange",
+        "pink",
+        "purple",
+        "red",
+        "white",
+        "yellow",
+        "unknown"
+      ]
+    },
+    "pattern": {
+      "source": "attribute head above its threshold, or user",
+      "allowed": [
+        "solid",
+        "striped",
+        "checked",
+        "printed",
+        "floral",
+        "unknown",
+        "not_visible"
+      ]
+    },
+    "sleeve_length": {
+      "source": "attribute head for eligible garment types, or user",
+      "allowed": [
+        "sleeveless",
+        "short",
+        "long",
+        "unknown",
+        "not_visible"
+      ]
+    }
+  },
+  "plural_categories": [
+    "jeans",
+    "trousers",
+    "shorts"
+  ],
+  "forbidden_claims": [
+    "material",
+    "fabric_composition",
+    "brand",
+    "size",
+    "fit",
+    "season_suitability"
+  ],
+  "unknown_policy": "omitted from the text; kept as 'unknown' in the structured output"
+}

@@ -39,6 +39,23 @@ class Catalog:
                             'gender': 'unknown', 'price': 'unknown'},
                 scoreable=True)
         metadata_file = ROOT / 'data' / 'product_metadata.json'
+        # The team export stores row indices. Resolve those through its own
+        # catalogue's stable IDs, never assume row positions match this export.
+        gender_file = ROOT / 'data' / 'catalog_gender.json'
+        team_catalog_file = ROOT / 'data' / 'catalog.json'
+        if gender_file.is_file() and team_catalog_file.is_file():
+            team_ids = json.loads(team_catalog_file.read_text(encoding='utf-8'))['codes']
+            groups = json.loads(gender_file.read_text(encoding='utf-8'))
+            membership = {}
+            for gender in ('men', 'women'):
+                for index in groups.get(gender, []):
+                    if type(index) is not int or not 0 <= index < len(team_ids):
+                        raise ValueError('catalog_gender.json contains an invalid catalogue index')
+                    membership.setdefault(team_ids[index], set()).add(gender)
+            for key, genders in membership.items():
+                if key in self.products:
+                    self.products[key]['gender'] = 'unisex' if len(genders) == 2 else next(iter(genders))
+                    self.products[key]['provenance']['gender'] = 'data/catalog_gender.json: team CLIP-derived classification (not user-verified)'
         if metadata_file.is_file():
             metadata = json.loads(metadata_file.read_text(encoding='utf-8'))
             for key, values in metadata.items():

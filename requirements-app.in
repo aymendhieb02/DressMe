@@ -1,0 +1,2 @@
+# Unified Studio + BO1/BO5 application. BO6 keeps its separate environment.
+-r requirements-integrated.in

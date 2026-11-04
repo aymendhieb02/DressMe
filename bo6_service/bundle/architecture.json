@@ -1,0 +1,10 @@
+{
+  "architecture": "efficientnet_b0",
+  "experiment_id": "E03_efficientnet_b0",
+  "num_classes": 11,
+  "head": "final Linear layer replaced",
+  "pretrained_source": "torchvision:EfficientNet_B0_Weights.IMAGENET1K_V1",
+  "smoke_only": false,
+  "weights_format": "torch state_dict under key 'state_dict'",
+  "weights_sha256": "4a4d129d0346f3cd6f416d37be30154c2243ae4a5e1a8b21d61c99b511d04477"
+}

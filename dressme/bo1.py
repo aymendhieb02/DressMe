@@ -40,7 +40,7 @@ class BO1Backend:
                     can_encode_photo=False, max_items=self.max_items, scale=[0, 10],
                     model_id=self.model_id, visual_finetuned=self.config['finetuned'],
                     embeddings_identical=bool(np.array_equal(self.emb, self.clip_emb)),
-                    reason='MiniGPT/RQ-VAE inference export absent. BO5 bounded assembly is a separate method.',
+                    reason='This stable-ID contract exposes scoring only. The separate Studio /api/complete endpoint uses its own trained export when configured.',
                     photo_status='not_verified: notebook/export cosine discrepancy; personal photos cannot be scored',
                     score_meaning='Learned compatibility on source outfits/artificial corruptions; not a human aesthetic rating.')
 
@@ -67,7 +67,7 @@ class BO1Backend:
         return results
 
     def propose(self, request):
-        raise RuntimeError('BO1 trained proposal unavailable: export MiniGPT/RQ-VAE first')
+        raise RuntimeError('Proposal is not exposed by this stable-ID contract')
 
     def complete(self, request):
-        raise RuntimeError('BO1 trained completion unavailable: export MiniGPT/RQ-VAE first')
+        raise RuntimeError('Completion is served separately by /api/complete, not this stable-ID contract')

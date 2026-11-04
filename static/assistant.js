@@ -1,3 +1,4 @@
+import {request as authenticatedRequest, state as authState} from './studio/core.js?v=integrated-12';
 (() => {
   'use strict';
   const q = s => document.querySelector(s);
@@ -5,13 +6,7 @@
   let profile = {wardrobe_ids: [], wardrobe: [], preferences: []}, catalog = [], busy = true;
   const labels = {top:'Haut',bottom:'Bas',onepiece:'Robe / combinaison',shoes:'Chaussures',outerwear:'Veste / manteau',layer:'Couche',bag:'Sac',accessory:'Accessoire',unknown:'À renseigner'};
   async function request(path, method = 'GET', body) {
-    const options = {method, credentials:'same-origin'};
-    if (body instanceof FormData) options.body = body;
-    else if (body !== undefined) { options.headers = {'Content-Type':'application/json'}; options.body = JSON.stringify(body); }
-    const response = await fetch('/api/assistant/' + path, options);
-    const data = await response.json();
-    if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail));
-    return data;
+    return authenticatedRequest('/' + path, {method, body, base:'/api/assistant'});
   }
   function errorText(error) { q('#assistant-profile-status').textContent = error.message; }
   function message(text, user = false) {
@@ -70,10 +65,11 @@
     const data = await request('health');
     q('#assistant-diagnostics').textContent = JSON.stringify(data, null, 2);
     if (!data.catalog) { q('#assistant-health').textContent = 'Service indisponible : ' + (data.error || data.status); return; }
-    q('#assistant-health').textContent = `${data.catalog.products} articles · BO1 : score disponible · MiniGPT : export absent · parseur : ${data.parser.loaded ? 'Qwen3 + ton adaptateur chargé' : data.parser.error ? 'indisponible (voir diagnostic)' : 'Qwen3 + ton adaptateur, chargement au premier message'} · recherche : ${data.rag.error ? 'indisponible' : data.rag.mode}.`;
+    q('#assistant-health').textContent = `${data.catalog.products} articles · BO1 : score disponible · parseur : ${data.parser.loaded ? 'Qwen3 + ton adaptateur chargé' : data.parser.error ? 'indisponible (voir diagnostic)' : 'Qwen3 + ton adaptateur, chargement au premier message'} · recherche : ${data.rag.error ? 'indisponible' : data.rag.mode}.`;
   }
   async function loadProfile() {
     profile = await request('profile');
+    q('#assistant-gender').textContent = {men:'Genre du compte : homme.', women:'Genre du compte : femme.'}[profile.gender] || 'Aucun filtre de genre par défaut. Tu peux le renseigner dans Account.';
     q('#assistant-colors').value = profile.preferences.filter(p => p.field === 'color' && p.mode !== 'exclude').flatMap(p => p.values).join(', ');
     q('#assistant-wardrobe').innerHTML = profile.wardrobe.length ? profile.wardrobe.map(p => productCard(p, `<button class="btn ghost" data-edit="${esc(p.image_id)}">Modifier</button><button class="btn ghost" data-remove="${esc(p.image_id)}">Retirer</button>${p.scoreable ? '' : '<p>Encodage BO1 non vérifié.</p>'}`)).join('') : '<p class="sub">Ton dressing est vide. Le catalogue de démonstration reste disponible.</p>';
   }
@@ -149,10 +145,18 @@
     try { await request('preferences','PUT',{preferences}); await loadProfile(); q('#assistant-profile-status').textContent = 'Préférences enregistrées, facultatives pour le classement.'; } catch(error) { errorText(error); }
   };
   q('#assistant-send').disabled=q('#assistant-reset').disabled=true;
-  Promise.all([health(), loadProfile()]).then(()=> {
+  let initialized = false;
+  function initialize() {
+    if (initialized || !authState.user) return;
+    initialized = true;
+    Promise.all([health(), loadProfile()]).then(()=> {
     if (profile.history.length) profile.history.forEach(h=>message(h.text,h.role==='user'));
     else message('Décris la tenue que tu cherches. Tu peux ensuite demander une explication, comparer un scénario ou remplacer une seule pièce.');
     if (profile.current_results?.length) renderResult({message:'Sélection conservée dans cette conversation.',results:profile.current_results});
   }).catch(error=>{q('#assistant-health').textContent='Service local indisponible : '+error.message;})
     .finally(()=>{busy=false;q('#assistant-send').disabled=q('#assistant-reset').disabled=false;});
+  }
+  document.addEventListener('dressme:authenticated', initialize);
+  document.addEventListener('dressme:session-expired', () => q('#assistant-messages').replaceChildren());
+  initialize();
 })();

@@ -1,0 +1,2 @@
+# Backwards-compatible install entry point; use requirements-dev.lock for tests.
+-r requirements.lock

@@ -34,10 +34,25 @@ def session(request, response):
     if request.method not in {'GET', 'HEAD'} and origin and urlparse(origin).netloc != request.headers.get('host'):
         raise HTTPException(403, 'Cross-origin mutation refused')
     app = service()
-    sid = request.cookies.get('dressme_session', '')
+    identity = getattr(request.state, 'assistant_identity', None)
+    if identity:
+        # Only the server-authenticated account selects this namespace. Cookies,
+        # request bodies and client-provided user IDs cannot select another account.
+        sid = 'user_' + identity['id']
+        with app.sessions.lock(sid):
+            state = app.sessions.get(sid)
+            if state is None:
+                app.sessions.create(sid)
+                state = app.sessions.get(sid)
+            state['account_gender'] = identity['gender']
+            app.sessions.save(sid, state)
+        return app, sid
+    if getattr(request.app.state, 'assistant_auth_required', False):
+        raise HTTPException(401, 'Sign in to use DressMe')
+    sid = request.cookies.get('dressme_chat', '')
     if not sid or app.sessions.get(sid) is None:
         sid = app.sessions.create()
-        response.set_cookie('dressme_session', sid, httponly=True, samesite='strict',
+        response.set_cookie('dressme_chat', sid, httponly=True, samesite='strict',
                             secure=request.url.scheme == 'https', max_age=365 * 86400)
     return app, sid
 
@@ -72,7 +87,7 @@ def profile(request: Request, response: Response):
     app, sid = session(request, response)
     state = app.sessions.get(sid)
     products = app.products_for(state)
-    return dict(preferences=state['preferences'], wardrobe_ids=state['wardrobe_ids'],
+    return dict(gender=state.get('account_gender'), preferences=state['preferences'], wardrobe_ids=state['wardrobe_ids'],
                 wardrobe=[{k: v for k, v in products[key].items() if k != 'image_path'}
                           for key in state['wardrobe_ids'] if key in products],
                 history=state['history'],
@@ -205,9 +220,9 @@ def product_image(item_id: str):
 
 
 @router.get('/personal-images/{item_id}')
-def personal_image(item_id: str, request: Request):
-    app = service()
-    state = app.sessions.get(request.cookies.get('dressme_session', ''))
+def personal_image(item_id: str, request: Request, response: Response):
+    app, sid = session(request, response)
+    state = app.sessions.get(sid)
     product = state.get('personal', {}).get(item_id) if state else None
     if not product:
         raise HTTPException(404, 'Personal image unavailable in this session')

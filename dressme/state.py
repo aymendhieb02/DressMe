@@ -27,8 +27,8 @@ class Sessions:
             row = db.execute('SELECT value FROM sessions WHERE id=?', (sid,)).fetchone()
         return json.loads(row[0]) if row else None
 
-    def create(self):
-        sid = secrets.token_urlsafe(32)
+    def create(self, sid=None):
+        sid = sid or secrets.token_urlsafe(32)
         self.save(sid, dict(preferences=[], wardrobe_ids=[], overrides={}, personal={},
                             conversation={}, history=[]))
         return sid

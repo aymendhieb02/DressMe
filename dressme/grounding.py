@@ -126,6 +126,29 @@ def reconcile_turn(original, message, color_evidence, pending_question=''):
                 f.quote = optional.group()
                 edit('optional_attribute', f.quote, before, f.model_dump())
 
+    # A pure request to explain an existing numbered outfit supplies no new
+    # product criteria. The LoRA can invent a style facet when the previous
+    # outfit has top/bottom/shoes rather than a dress; discard it only when the
+    # complete message is an explanation operation plus a structural reference.
+    explaining = re.match(r'^\s*(?:explique(?:z)?(?:[- ]moi)?|explain(?:\s+to\s+me)?)\s+', message, re.I)
+    if turn.action == 'explain' and explaining and OUTFIT.search(message) and structural_quote(message[explaining.end():]):
+        for name in ('facets', 'before_facets'):
+            edit('explanation_has_no_new_criteria', message, [f.model_dump() for f in getattr(turn,name)], [])
+            setattr(turn,name,[])
+        ordinal=ORDINAL.search(message)
+        number=re.search(r'\b(?:numero|num[ée]ro|number|n[°o]?)\s*([1-5])\b',message,re.I)
+        if number:
+            set_field('selection_number',int(number[1]),'explanation_selection',number.group())
+        elif ordinal:
+            value=norm(ordinal.group())
+            index=int(value[0]) if value[0].isdigit() else ORDINAL_VALUES[value]
+            set_field('selection_number',index,'explanation_selection',ordinal.group())
+        set_field('reuse_previous',True,'explanation_reference',message)
+        set_field('reference_quote',message,'explanation_reference',message)
+        set_field('target_role','','explanation_reference',message)
+        set_field('target_quote','','explanation_reference',message)
+        return turn,changes
+
     # A currency reply is a unit, resolved only against an actual pending slot.
     if pending_question and re.fullmatch(r'\s*(?:en |in )?(?:[A-Za-z]{3}|euros?)\s*[.!]?\s*', message, re.I):
         from .constraints import resolve_currency

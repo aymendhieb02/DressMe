@@ -1,0 +1,29 @@
+{
+  "classes": [
+    "dress",
+    "jacket",
+    "jeans",
+    "shirt",
+    "shorts",
+    "skirt",
+    "sweater",
+    "sweatshirt",
+    "t-shirt",
+    "top",
+    "trousers"
+  ],
+  "class_to_idx": {
+    "dress": 0,
+    "jacket": 1,
+    "jeans": 2,
+    "shirt": 3,
+    "shorts": 4,
+    "skirt": 5,
+    "sweater": 6,
+    "sweatshirt": 7,
+    "t-shirt": 8,
+    "top": 9,
+    "trousers": 10
+  },
+  "ordering": "list position = model output index"
+}

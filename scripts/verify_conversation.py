@@ -76,12 +76,12 @@ def main():
             if source['preferences']:
                 client.put('/api/assistant/preferences',json={'preferences':source['preferences']}).raise_for_status()
             if app_service and (source['overrides'] or source['personal']):
-                sid=client.cookies.get('dressme_session')
+                sid=client.cookies.get('dressme_chat')
                 state=app_service().sessions.get(sid)
                 state['overrides']=copy.deepcopy(source['overrides']);state['personal']=copy.deepcopy(source['personal'])
                 app_service().sessions.save(sid,state)
         else:
-            app_service().sessions.save(client.cookies.get('dressme_session'),copy.deepcopy(snapshot))
+            app_service().sessions.save(client.cookies.get('dressme_chat'),copy.deepcopy(snapshot))
         return client
     def call(client,name,message,*,slot=None,role=None,preference=None,unavailable=False):
         before=client.get('/api/assistant/profile').json()['current_results']
@@ -135,7 +135,7 @@ def main():
             call(exact,f'exact_{index}',message,slot=1 if index==3 else 2 if index==4 else None,
                  role='shoes' if index in {3,4} else None,preference=('color','blue') if index==5 else None)
             if index==4 and app_service:
-                snapshot=app_service().sessions.get(exact.cookies.get('dressme_session'))
+                snapshot=app_service().sessions.get(exact.cookies.get('dressme_chat'))
     if app_service:
         variants=[('red','Et si je préférais le rouge ?',('color','red'),False),
                   ('green','Et si je préférais le vert ?',('color','green'),False),

@@ -1,4 +1,4 @@
-"""BO5 orchestration; bounded assembly is explicitly distinct from missing BO1 MiniGPT."""
+"""BO5 orchestration; bounded assembly is distinct from the separate MiniGPT endpoint."""
 import copy
 import itertools
 import os
@@ -17,6 +17,7 @@ from .preferences import PreferenceEvidence, coverage_messages
 from .rag import E5Encoder, ProductRAG
 from .schemas import CORE_TEMPLATES, ComposeSpec, Facet, ROLES, digest
 from .state import Sessions
+from .identity import without_account_defaults, with_account_gender
 
 
 class Assistant:
@@ -43,7 +44,7 @@ class Assistant:
                     assembly=dict(available=True, method='BO5 bounded catalog assembly + exported BO1 score',
                                   trained_generator=False, exhaustive=False, pool_per_role=self.per_role,
                                   max_examined=20000, max_scored=512, weights=self.weights),
-                    session='Local browser cookie; no account authentication in the original application.')
+                    session='Isolated assistant state; integrated deployment uses the authenticated account identity.')
 
     def retrieval(self, query):
         with self.rag_lock:
@@ -265,6 +266,7 @@ class Assistant:
             trace = dict(plan=turn.model_dump(), original_message=message, parser=self.parser.health(),
                          parsing=self.parser.last_trace(),
                          semantic_audit='Conservative deterministic guards; no independent semantic oracle.')
+            trace['account_context'] = dict(gender=state.get('account_gender'), source='authenticated_session' if 'account_gender' in state else None)
             if turn.action == 'clarify':
                 return dict(status='clarification', message=turn.clarification or 'Précise ta demande.', diagnostics=trace)
             if turn.action == 'preferences':
@@ -316,7 +318,7 @@ class Assistant:
                     for f in turn.facets:
                         if f.field not in {'gender', 'budget', 'currency', 'count', 'scope', 'role'} and not f.roles:
                             f.roles = [turn.target_role]
-                spec = compile_spec(turn, base, message)
+                spec = with_account_gender(compile_spec(turn, without_account_defaults(base), message), turn, state)
                 if turn.action == 'replace' and not any(f.field=='role' and turn.target_role in f.values for f in spec.facets):
                     spec.facets.append(Facet(field='role', values=[turn.target_role], quote=turn.target_quote))
                 if spec.budget is not None and not spec.currency:
@@ -362,8 +364,8 @@ class Assistant:
                 before_rows = None
                 if turn.action == 'compare':
                     if turn.before_facets:
-                        before_spec = compile_spec(turn, message=message, before=True)
-                        spec = compile_spec(turn, before_spec, message)
+                        before_spec = with_account_gender(compile_spec(turn, message=message, before=True), turn, state)
+                        spec = with_account_gender(compile_spec(turn, without_account_defaults(before_spec), message), turn, state)
                         signals = self.retrieval(spec.query)
                         before_preferences=self._unique_preferences(state['preferences']+[f.model_dump() for f in before_spec.facets if f.strength=='prefer'])
                         before_pool, _ = self._assemble(before_spec, state, self.retrieval(before_spec.query),preferences=before_preferences)
@@ -458,7 +460,7 @@ class Assistant:
                 result = dict(status='results_with_limits' if displayed else 'no_conforming_candidates',
                               message=' '.join([message_text,*notes]),preference_coverage=coverage,
                               results=self._public(displayed, products), comparison=comparison,
-                              limits=['Assemblage borné BO5 ; complétion MiniGPT BO1 indisponible.',
+                              limits=['Assemblage borné BO5 et score BO1 ; la complétion entraînée reste un outil séparé.',
                                       'Score appris de compatibilité, pas une note esthétique humaine.',
                                       'Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.',
                                       'Genre, prix et palette complète inconnus ne passent pas un filtre strict.'],

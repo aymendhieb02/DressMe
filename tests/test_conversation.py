@@ -19,6 +19,21 @@ def facet(field,values,**kwargs):
 
 
 class ReplacementGroundingTests(unittest.TestCase):
+    def test_pure_numbered_explanation_does_not_invent_style_constraints(self):
+        for message,number in [('Explique la première tenue.',1),('Explique la deuxième tenue.',2),('Explain the third outfit.',3)]:
+            original=Turn(action='explain',facets=[facet('style',['classic'],quote='style')])
+            turn,edits=reconcile_turn(original,message,COLOR_EVIDENCE)
+            validate_turn(turn,message)
+            self.assertEqual(turn.facets,[])
+            self.assertEqual(turn.selection_number,number)
+            self.assertTrue(edits)
+
+    def test_descriptive_explanation_does_not_bypass_citation_validation(self):
+        original=Turn(action='explain',facets=[facet('style',['classic'],quote='invented style')])
+        message='Explique la tenue bleue.'
+        turn,_=reconcile_turn(original,message,COLOR_EVIDENCE)
+        with self.assertRaises(ValueError):validate_turn(turn,message)
+
     def test_observed_bad_plan_is_repaired_from_structural_evidence(self):
         for selector,number in [('deuxième tenue',2),('3e tenue',3),('tenue numéro 4',4),('fifth outfit',5)]:
             with self.subTest(selector=selector):
@@ -215,8 +230,10 @@ class ConversationTests(unittest.TestCase):
         self.assertIn('attributs connus',result['message'])
 
     def test_unknown_gender_is_not_fabricated_for_preference_coverage(self):
-        sid,_=self.start()
-        result=self.compare(sid,facet('gender',['women'],strength='prefer'))
+        unknown = {k: {**p, 'gender': None} for k,p in self.app.catalog.products.items()}
+        with patch.dict(self.app.catalog.products,unknown):
+            sid,_=self.start()
+            result=self.compare(sid,facet('gender',['women'],strength='prefer'))
         self.assertTrue(result['results'])
         self.assertEqual(result['preference_coverage'][0]['available_products'],0)
         self.assertTrue(all(r['score_details']['components']['preference']==0 for r in result['results']))

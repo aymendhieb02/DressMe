@@ -1,10 +1,15 @@
-﻿# secrets
+# secrets
 .env
+.env.*
+!.env.example
 
 # Python
 .venv/
+.venv-*/
 __pycache__/
 *.pyc
+*.py[cod]
+.pytest_cache/
 
 # editeur / historique
 .history/
@@ -14,6 +19,25 @@ __pycache__/
 # OS
 Thumbs.db
 .DS_Store
+
+# Private integration data and restored model weights
+data/private-images/
+data/mail-capture/
+var/
+runtime/
+bo6_service/bundle/*.pt
+*.log
+landing/node_modules/
+/static/landing/
+
+# BO1/BO5 local runtime and model artifacts
+# secrets
+
+# Python
+
+# editeur / historique
+
+# OS
 
 # Local inference caches, private wardrobes and generated diagnostics
 .cache/
@@ -28,5 +52,6 @@ bo5/**/optimizer.pt
 bo5/**/scheduler.pt
 bo5/**/rng_state.pth
 bo5/**/training_args.bin
-bo5/**/rng_state.pth
-*.log
+
+/tmp/
+/bo5/resume_latest/

@@ -1,47 +1,66 @@
-"""Dress Me : API des 3 idees des notebooks.   Lancer :  uvicorn api:app --port 8000   puis ouvrir http://localhost:8000"""
-import itertools, json, os
+"""Dress Me : API.   Lancer :  uvicorn api:app --port 8000   puis ouvrir http://localhost:8000
+
+Les 3 idées vivent chacune dans leur module :
+    ootd.py        Daily Edit      (météo + occasion + genre, tenue de 4-5 pièces)
+    scoring.py     The Verdict     (note d'une tenue de 2 à 5 pièces + styliste LLM)
+    completion.py  Finish the Look (le GPT devine 1 ou 2 pièces, tenue de 5 pièces max)
+"""
+import json, os
+import re
+import time
+from email import policy
+from email.parser import BytesParser
+from contextlib import asynccontextmanager
 from functools import lru_cache
 from pathlib import Path
-from dressme.config import ROOT
-import numpy as np, requests, torch, torch.nn as nn, torch.nn.functional as F
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from urllib.parse import urlsplit
+from dotenv import load_dotenv
+
+# Load local configuration before importing Studio settings, database engines or services.
+load_dotenv()
+
+import numpy as np, torch
+import torch.nn.functional as F
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
 from similar import router as similar_router
-from wardrobe import router as wardrobe_router     
+from wardrobe import router as wardrobe_router
+import ootd, scoring, completion
+from app.main import app as studio_app
+from app.database import SessionLocal
+from app.auth.dependencies import session_context, require_csrf, InvalidCsrfToken
+from app.config import settings as studio_settings
 from dressme.routes import router as assistant_router, bo1_router
-from dotenv import load_dotenv; load_dotenv()
 
-DATA = Path(os.environ.get("DRESSME_DATA", str(ROOT / "data"))).resolve()
-cat_json = json.loads((DATA / "catalog.json").read_text(encoding="utf-8")); OUTS = json.loads((DATA / "outfits.json").read_text(encoding="utf-8"))
+ROOT_DIR = Path(__file__).resolve().parent
+DATA = Path(os.environ.get("DRESSME_DATA", ROOT_DIR / "data"))
+cat_json = json.load(open(DATA / "catalog.json")); OUTS = json.load(open(DATA / "outfits.json"))
 CODES, DESC, CAT = cat_json["codes"], cat_json["desc"], cat_json["cat"]
-EMB, EMB_FT = np.load(DATA / "emb_clip.npy"), np.load(DATA / "emb_ft.npy")
+EMB = np.load(DATA / "emb_clip.npy")
+for o in OUTS: o.setdefault("test", o.get("split") == "test")   # nouveau format : "split" au lieu de "test"
 TEST = [o for o in OUTS if o["test"]] or OUTS
-BYCAT = {c: [i for i, x in enumerate(CAT) if x == c] for c in set(CAT)}
-zs = lambda x: (x - x.mean()) / (x.std() if x.std() > 1e-6 else 1.0)
+MAX_ITEMS = 5
 
-# ---------------------------------------------------------------- IDEE 1 : OutfitScorer (notebook idee-scoring-vald)
-class Scorer(nn.Module):   # meme architecture que OutfitScorer, sans CLIP (embeddings deja fine-tunes dans emb_ft.npy)
-    def __init__(s, d=256):
-        super().__init__()
-        s.proj = nn.Linear(512, d); s.cls = nn.Parameter(torch.zeros(1, 1, d))
-        s.tf = nn.TransformerEncoder(nn.TransformerEncoderLayer(d, 4, 4 * d, 0.1, batch_first=True), 2, enable_nested_tensor=False)
-        s.score_head, s.none_head, s.odd_head = nn.Linear(d, 1), nn.Linear(d, 1), nn.Linear(d, 1)
-    def forward(s, emb, mask):
-        B = emb.shape[0]
-        h = s.tf(torch.cat([s.cls.expand(B, -1, -1), s.proj(emb)], 1),
-                 src_key_padding_mask=torch.cat([torch.zeros(B, 1, dtype=torch.bool), ~mask], 1))
-        odd = s.odd_head(h[:, 1:]).squeeze(-1).masked_fill(~mask, -1e4)
-        return 10 * torch.sigmoid(s.score_head(h[:, 0]).squeeze(-1)), torch.cat([s.none_head(h[:, 0]), odd], 1)
-SC = Scorer(); SC.load_state_dict(torch.load(DATA / "scorer.pt", map_location="cpu")); SC.eval()
+# ============================================================
+# WARDROBE — Shared category index
+# ============================================================
 
-@torch.no_grad()
-def score(items):
-    s, odd = SC(torch.tensor(EMB_FT[items]).float()[None], torch.ones(1, len(items), dtype=torch.bool))
-    return s.item(), int(odd.argmax(1))
+import numpy as np
 
-# ---------------------------------------------------------------- CLIP (public, sans token) pour la tenue du jour
+CAT = np.asarray(CAT)
+
+BYCAT = {
+    category: np.flatnonzero(CAT == category).tolist()
+    for category in np.unique(CAT)
+}
+
+print(
+    f"[wardrobe] BYCAT ready: "
+    f"{len(BYCAT)} categories, "
+    f"{sum(len(v) for v in BYCAT.values())} articles"
+)
+# ---------------------------------------------------------------- CLIP (public, sans token) : utilisé par ootd.py
 @lru_cache(1)
 def clip():
     import open_clip
@@ -51,157 +70,181 @@ def clip():
 def enc_text(t):
     m, tok = clip(); return F.normalize(m.encode_text(tok(t)).float(), dim=-1)
 
-# ---------------------------------------------------------------- IDEE 3 : tenue du jour (notebook outfit-of-the-day)
-UA = {"User-Agent": "dressme/1.0"}
-def wmo(c):
-    if c in (0, 1): return "clear", "clear sky"
-    if c in (45, 48): return "fog", "foggy"
-    if 51 <= c <= 67 or 80 <= c <= 82: return "rain", "rainy"
-    if 71 <= c <= 77 or c in (85, 86): return "snow", "snowy"
-    if c >= 95: return "storm", "stormy"
-    return "cloudy", "cloudy"
-BANDS = [(-99, 5, "freezing"), (5, 12, "cold"), (12, 18, "cool"), (18, 25, "mild"), (25, 99, "hot")]
-band = lambda t: next(n for lo, hi, n in BANDS if lo <= t < hi)
-PROMPTS = {
- "top": {"freezing": ["a thick warm wool sweater", "a heavy knit turtleneck"], "cold": ["a warm knit sweater", "a long sleeve warm top", "a cardigan"],
-         "cool": ["a long sleeve shirt", "a light sweater"], "mild": ["a light blouse", "a short sleeve top", "a cotton shirt"],
-         "hot": ["a light sleeveless top", "a thin short sleeve t-shirt", "a linen shirt"]},
- "bottom": {"freezing": ["thick warm wool trousers", "warm lined pants"], "cold": ["long trousers", "jeans"], "cool": ["jeans", "trousers"],
-            "mild": ["light trousers", "a midi skirt"], "hot": ["shorts", "a short light skirt", "light linen trousers"]},
- "shoes": {"freezing": ["warm winter boots"], "cold": ["ankle boots", "leather boots"], "cool": ["sneakers", "loafers"],
-           "mild": ["sneakers", "flat shoes"], "hot": ["sandals", "open toe slides"]},
- "outer": {"freezing": ["a heavy winter coat", "a puffer jacket"], "cold": ["a warm coat", "a wool coat"], "cool": ["a light jacket", "a blazer"],
-           "mild": ["a thin light jacket"], "hot": ["a thin light jacket"]}}
-EXTRA = {("outer", "rain"): ["a waterproof raincoat", "a trench coat"], ("shoes", "rain"): ["waterproof rain boots"],
-         ("outer", "snow"): ["a thick puffer coat"], ("shoes", "snow"): ["snow boots"], ("outer", "wind"): ["a windbreaker jacket"]}
-is_rain = lambda w: w["kind"] in ("rain", "storm") or w["rain"] >= 60
-is_snow, is_wind = (lambda w: w["kind"] == "snow"), (lambda w: w["wind"] >= 30)
-def slots_needed(w): return ["top", "bottom", "shoes"] + (["outer"] if w["feels"] < 18 or is_rain(w) or is_snow(w) or is_wind(w) else [])
-def groups(slot, w):
-    g = [PROMPTS[slot][band(w["feels"])]]
-    for cond, on in (("rain", is_rain(w)), ("snow", is_snow(w)), ("wind", is_wind(w))):
-        if on and (slot, cond) in EXTRA: g.append(EXTRA[(slot, cond)])
-    return [[f"a product photo of {x}" for x in gi] for gi in g]
-
-def pick_outfit(w, topk=5, gamma=0.5):
-    cand = {}
-    for s in slots_needed(w):
-        idx = BYCAT.get(s, [])
-        if not idx: continue
-        z = 0
-        for k, g in enumerate(groups(s, w)):
-            z = z + (1.0 if k == 0 else 1.5) * zs(EMB[idx] @ F.normalize(enc_text(g).mean(0), dim=0).numpy())
-        z = zs(z); cand[s] = [(idx[j], float(z[j])) for j in np.argsort(-z)[:topk]]
-    names = list(cand); combos = list(itertools.product(*[cand[s] for s in names]))
-    ws = np.array([sum(z for _, z in c) / len(names) for c in combos]); coh = []
-    for c in combos:
-        E = EMB[[i for i, _ in c]]; n = len(c); coh.append(((E @ E.T).sum() - n) / (n * (n - 1)) if n > 1 else 0)
-    best = combos[int((ws + gamma * zs(np.array(coh))).argmax())]
-    return dict(zip(names, [i for i, _ in best]))
-
-# ---------------------------------------------------------------- IDEE 2 : completion (regles + couleurs + MMR)
-CATS = ["shoes", "bag", "dress", "outer", "top", "bottom", "other"]
-PRESENT = [{CAT[i] for i in o["items"]} for o in OUTS if not o["test"]]
-COLORS = ["black", "white", "beige", "brown", "grey", "navy", "blue", "green", "red", "pink", "yellow", "orange", "purple", "gold", "silver", "cream"]
-@lru_cache(1)
-def color_model():
-    P = torch.softmax(torch.tensor(100 * EMB @ enc_text([f"a photo of a {c} fashion item" for c in COLORS]).numpy().T), -1).numpy()
-    co = np.full((len(COLORS),) * 2, 0.5)
-    for o in OUTS:
-        if o["test"]: continue
-        p = P[o["items"]]; s = p.sum(0); co += np.outer(s, s) - p.T @ p
-    co /= co.sum(); m = co.sum(1)
-    return P, np.clip(np.log(co / np.outer(m, m)), -2, 2)
-def cat_scores(ctx):
-    have = {CAT[i] for i in ctx}; sub = [p for p in PRESENT if have <= p] or PRESENT
-    pen = {c: 3.0 if c in have and c != "other" else 0.0 for c in CATS}
-    if "dress" in have: pen["top"] = pen["bottom"] = 3.0
-    if have & {"top", "bottom"}: pen["dress"] = 3.0
-    return {c: float(np.log((sum(c in p for p in sub) + 1) / (len(sub) + 7)) - pen[c]) for c in CATS}
-def complete(ctx, want=None, topn=6, lam=1.0, mu=0.3):
-    cs = cat_scores(ctx); cats = [want] if want else sorted(cs, key=cs.get, reverse=True)[:3]
-    cand = [i for c in cats for i in BYCAT.get(c, []) if i not in ctx]
-    P, PMI = color_model()
-    sim = EMB[cand] @ F.normalize(torch.tensor(EMB[ctx]).mean(0), dim=0).numpy()
-    sc = zs(sim) + lam * zs((P[cand] @ PMI @ P[ctx].T).mean(1)) + (0 if want else np.array([cs[CAT[i]] for i in cand]))
-    S = EMB[cand] @ EMB[cand].T; ch = []
-    while len(ch) < min(topn, len(cand)):
-        v = sc - mu * (S[:, ch].max(1) if ch else 0); v[ch] = -1e9; ch.append(int(np.argmax(v)))
-    return [cand[j] for j in ch], cs
 
 # ---------------------------------------------------------------- API
-app = FastAPI(title="Dress Me")
-app.include_router(similar_router)
-app.include_router(wardrobe_router) 
-app.include_router(assistant_router)
-app.include_router(bo1_router)
-class Items(BaseModel): items: list[int]; want: str | None = None
+@asynccontextmanager
+async def lifespan(_app):
+    scoring.warmup()          # charge le LLM du styliste en arrière-plan (la 1re réponse ne sera pas lente)
+    # Mounting a FastAPI app does not enter its lifespan automatically.
+    async with studio_app.router.lifespan_context(studio_app):
+        yield
 
-def validate_items(items, maximum=5):
-    if len(items) > maximum or len(set(items)) != len(items) or any(i < 0 or i >= len(CODES) for i in items):
-        raise HTTPException(422, "Articles inconnus, dupliques ou limite de 5 pieces depassee")
-class Ootd(BaseModel):
-    lat: float | None = None; lon: float | None = None; city: str | None = None; place: str = "My location"
-    temp: float | None = None; kind: str = "clear"; wind: float = 10
+
+from redundancy import router as redundancy_router   # BO3
+from donate import router as donate_router            # BO3
+
+app = FastAPI(title="Dress Me", lifespan=lifespan)
+app.state.assistant_auth_required = True
+
+@app.middleware("http")
+async def integrated_auth_boundary(request: Request, call_next):
+    path = request.url.path
+    protected = path.startswith(("/api/", "/img/", "/search_img/"))
+    if not protected or path in {"/api/studio-config", "/api/public-style-wall", "/api/dev-recovery-message"}:
+        return await call_next(request)
+    with SessionLocal() as db:
+        context = session_context(request, db)
+        if context is not None:
+            request.state.assistant_identity = dict(id=str(context.user.id), gender=context.user.gender)
+            if path.startswith('/api/assistant/') and request.method not in {'GET', 'HEAD', 'OPTIONS'}:
+                try:
+                    require_csrf(request, context)
+                except InvalidCsrfToken:
+                    return JSONResponse({'error': {'code': 'csrf_failed', 'message': 'The request origin or CSRF token is invalid.'}}, status_code=403)
+    if context is None:
+        return JSONResponse({"error": {"code": "authentication_required", "message": "Sign in to use DressMe."}}, status_code=401)
+    return await call_next(request)
+
+
 def it(i): return dict(i=i, c=CAT[i], d=DESC[i], k=CODES[i])
+
+# Les modules doivent être configurés AVANT de brancher leurs routes.
+ootd.configure(emb=EMB, cat=CAT, desc=DESC, enc_text=enc_text, item=it)
+try:
+    scoring.configure(data_dir=DATA, cat=CAT, desc=DESC, item=it)
+except Exception as e:      # données du Verdict absentes : l'app démarre quand même (le Verdict ne marchera pas)
+    print(f"[scoring] DISABLED - copy dressme_core.py, config.json, scorer.pt, emb_ft.npy into {DATA} : {e!r}")
+completion.configure(data_dir=DATA, codes=CODES, item=it)      # si data/completion/ manque : /api/complete répond 503, l'app démarre quand même
+
+app.include_router(similar_router)
+app.include_router(wardrobe_router)
+app.include_router(ootd.router)         # POST /api/ootd
+app.include_router(scoring.router)      # POST /api/score, /api/score/explain
+app.include_router(completion.router)   # GET /api/complete/options, POST /api/complete
+app.include_router(redundancy_router)   # BO3 : /api/redundancy/*
+app.include_router(donate_router)       # BO3 : /api/donate/*
+app.include_router(assistant_router)    # BO5 : authenticated conversation
+app.include_router(bo1_router)          # BO1 : stable-ID scoring contract
+app.mount("/studio-api", studio_app, name="studio-api")
+
+@app.get("/api/studio-config")
+def studio_config():
+    """Expose only validated, public provider origins; credentials remain server-side."""
+    raw = os.environ.get("AVATURN_URL", "").strip()
+    try:
+        parsed = urlsplit(raw)
+    except ValueError:
+        return {"avaturn_url": None, "export_origins": [], **_public_upload_limits()}
+    allowed = (parsed.scheme == "https" and parsed.hostname is not None
+               and re.fullmatch(r"[a-z0-9-]+\.avaturn\.dev", parsed.hostname, re.I)
+               and parsed.netloc.lower() == parsed.hostname.lower() and parsed.path in ("", "/")
+               and not parsed.username and not parsed.password and not parsed.query and not parsed.fragment)
+    if not allowed:
+        return {"avaturn_url": None, "export_origins": [], **_public_upload_limits()}
+    origins = {f"https://{parsed.hostname}"}
+    for value in os.environ.get("AVATURN_EXPORT_ORIGINS", "").split(","):
+        value = value.strip()
+        try:
+            extra = urlsplit(value)
+        except ValueError:
+            continue
+        if (extra.scheme == "https" and extra.hostname and extra.netloc.lower() == extra.hostname.lower()
+                and extra.path in ("", "/")
+                and not extra.username and not extra.password and not extra.query and not extra.fragment):
+            origins.add(f"https://{extra.netloc}")
+    return {"avaturn_url": raw, "export_origins": sorted(origins), **_public_upload_limits()}
+
+
+@app.get("/api/public-style-wall")
+def public_style_wall():
+    """Small public sample set used only to paint the login page background."""
+    return [dict(k=key) for key in CODES[:42] if (DATA / "img" / f"{key}.jpg").is_file()]
+
+
+@app.get("/public-wall/{key}.jpg")
+def public_wall_image(key: str):
+    # These are the bundled fashion catalog samples, never user wardrobe uploads.
+    if key not in CODES[:42]:
+        raise HTTPException(404, "Image not found")
+    image_path = DATA / "img" / f"{key}.jpg"
+    if not image_path.is_file():
+        raise HTTPException(404, "Image not found")
+    return FileResponse(image_path, media_type="image/jpeg")
+
+
+@app.get("/api/dev-recovery-message")
+def dev_recovery_message(email: str, request: Request):
+    """Read the matching local captured email; available only in loopback dev mode."""
+    client_host = request.client.host if request.client else ""
+    if (studio_settings.environment != "development"
+            or studio_settings.email_delivery_mode != "capture"
+            or client_host not in {"127.0.0.1", "::1"}):
+        raise HTTPException(404, "Local mailbox is unavailable")
+
+    address = email.strip().lower()
+    now = time.time()
+    cutoff = now - studio_settings.password_reset_code_ttl_seconds
+    try:
+        messages = sorted(studio_settings.email_capture_path.glob("*.eml"), key=lambda path: path.stat().st_mtime, reverse=True)
+    except OSError:
+        messages = []
+    for mail_path in messages[:100]:
+        try:
+            if mail_path.stat().st_mtime < cutoff or mail_path.stat().st_size > 32_768:
+                continue
+            message = BytesParser(policy=policy.default).parsebytes(mail_path.read_bytes())
+            recipient = str(message.get("To", "")).strip().lower()
+            if recipient != address:
+                continue
+            body_part = message.get_body(preferencelist=("plain",))
+            body = body_part.get_content() if body_part else ""
+            match = re.search(r"(?<!\d)\d{8}(?!\d)", body)
+            if match:
+                return JSONResponse(
+                    {"code": match.group(0), "sent_at": int(mail_path.stat().st_mtime)},
+                    headers={"Cache-Control": "no-store"},
+                )
+        except (OSError, ValueError, TypeError):
+            continue
+    raise HTTPException(404, "No recent local recovery email was found for that address")
+
+
+def _public_upload_limits():
+    """Only non-sensitive limits and allow-list values are exposed to the Studio UI."""
+    from app.config import settings as studio_settings
+
+    return {"upload_limits": {
+        "image_bytes": studio_settings.max_upload_bytes,
+        "avatar_bytes": studio_settings.max_avatar_bytes,
+        "image_content_types": ["image/jpeg", "image/png", "image/webp"],
+        "avatar_extensions": [".glb"],
+    }, "recovery_delivery_mode": studio_settings.email_delivery_mode}
+
 
 @app.get("/api/catalog")
 def catalog(): return [dict(i=i, c=CAT[i], d=DESC[i], k=CODES[i]) for i in range(len(CODES))]
+
 @app.get("/api/examples")
-def examples(): return [dict(items=o["items"][:4], style=o["style"], season=o["season"]) for o in TEST[:60]]
+def examples(): return [dict(items=o["items"][:MAX_ITEMS], style=o["style"], season=o["season"]) for o in TEST[:60]]
 
-@app.post("/api/score")
-def api_score(b: Items):
-    x = b.items
-    validate_items(x)
-    if len(x) < 2: raise HTTPException(400, "Pick at least 2 items")
-    s, odd = score(x); swaps = []
-    if s < 8:
-        rows, meta = [], []
-        for pos, i in enumerate(x):
-            if CAT[i] == "other": continue
-            for c in BYCAT.get(CAT[i], []):
-                if c not in x: rows.append(x[:pos] + [c] + x[pos + 1:]); meta.append((pos, c))
-        if rows:
-            with torch.no_grad():
-                sc, _ = SC(torch.tensor(EMB_FT[rows]).float(), torch.ones(len(rows), len(x), dtype=torch.bool))
-            for j in sc.argsort(descending=True).tolist():
-                if sc[j] - s < 0.3 or len(swaps) == 3: break
-                swaps.append(dict(pos=meta[j][0], item=it(meta[j][1]), score=sc[j].item()))
-    return dict(score=s, odd=odd, swaps=swaps)
+# NB : /api/score, /api/score/explain, /api/complete, /api/complete/options et /api/ootd viennent des routeurs ci-dessus.
+# L'ancien code (complete(), color_model(), cat_scores(), anciens /api/score et /api/complete) a été supprimé :
+# il faisait doublon avec les modules et appelait des variables qui n'existaient plus (score, SC, EMB_FT).
 
-@app.post("/api/complete")
-def api_complete(b: Items):
-    validate_items(b.items, 4)
-    if not b.items: raise HTTPException(400, "Add at least 1 item")
-    res, cs = complete(b.items, b.want if b.want in CATS else None)
-    return dict(items=[it(i) for i in res], cats=sorted(cs.items(), key=lambda kv: -kv[1])[:3])
-
-@app.post("/api/ootd")
-def api_ootd(b: Ootd):
-    try:
-        if b.temp is not None:
-            w = dict(place="Simulated weather", temp=b.temp, feels=b.temp, wind=b.wind, kind=b.kind, label=dict(clear="clear sky", rain="rainy", snow="snowy", storm="stormy", fog="foggy").get(b.kind, "cloudy"),
-                     tmin=b.temp, tmax=b.temp, rain=100 if b.kind in ("rain", "storm") else 0, lat=None, lon=None)
-        else:
-            lat, lon, place = b.lat, b.lon, b.place
-            if b.city:
-                g = requests.get("https://geocoding-api.open-meteo.com/v1/search", headers=UA, timeout=10, params=dict(name=b.city, count=1, language="en", format="json")).json()
-                if not g.get("results"): raise HTTPException(404, f"Place not found : {b.city}")
-                g = g["results"][0]; lat, lon, place = g["latitude"], g["longitude"], f"{g['name']}, {g.get('country', '')}"
-            r = requests.get("https://api.open-meteo.com/v1/forecast", headers=UA, timeout=10, params=dict(latitude=lat, longitude=lon, timezone="auto", forecast_days=1,
-                current="temperature_2m,apparent_temperature,weather_code,wind_speed_10m", daily="temperature_2m_max,temperature_2m_min,precipitation_probability_max")).json()
-            c, d = r["current"], r["daily"]; kind, label = wmo(int(c["weather_code"]))
-            w = dict(place=place, temp=c["temperature_2m"], feels=c["apparent_temperature"], wind=c["wind_speed_10m"], kind=kind, label=label,
-                     tmin=d["temperature_2m_min"][0], tmax=d["temperature_2m_max"][0], rain=(d["precipitation_probability_max"] or [0])[0] or 0, lat=lat, lon=lon)
-    except requests.RequestException as e:
-        raise HTTPException(502, f"Weather unavailable : {e}")
-    pick = pick_outfit(w)
-    text = f"{band(w['feels'])} {w['label']} day, feels like {w['feels']:.0f} degrees celsius" + (", windy" if is_wind(w) else "")
-    return dict(weather=w, text=text, pick=[dict(slot=s, **it(i), prompts=[p for g in groups(s, w) for p in g]) for s, i in pick.items()])
-
-app.mount("/static", StaticFiles(directory=ROOT / "static"), name="static")
+app.mount("/static", StaticFiles(directory=ROOT_DIR / "static"), name="static")
+app.mount("/landing", StaticFiles(directory=ROOT_DIR / "static/landing", check_dir=False), name="landing")
 app.mount("/img", StaticFiles(directory=DATA / "img"), name="img")
 app.mount("/search_img", StaticFiles(directory=DATA / "search_img"), name="search_img")
 @app.get("/")
-def index(): return FileResponse(ROOT / "static/index.html")
+def index():
+    landing = ROOT_DIR / 'static/landing/index.html'
+    return FileResponse(landing if landing.is_file() else ROOT_DIR / 'static/index.html')
+
+@app.get("/login")
+def login_page(): return FileResponse(ROOT_DIR / "static/index.html")
+
+@app.get("/bo3")
+def bo3_page(): return FileResponse(ROOT_DIR / "static/bo3.html")
+
+@app.get("/app")
+def application(): return FileResponse(ROOT_DIR / "static/index.html")
