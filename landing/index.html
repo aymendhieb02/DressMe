@@ -1,1 +1,96 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DressMe — Your wardrobe, reimagined</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DressMe — Style Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#17283a;--c1:#ff6b4a;--c2:#0e9f9a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font:400 1rem/1.6 Inter,sans-serif;color:var(--ink);background:#fdebd8}
+a{color:inherit}
+.nav{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:20;width:min(1180px,94vw);display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 22px;border-radius:22px;background:#ffffffd9;backdrop-filter:blur(16px);box-shadow:0 10px 34px #17283a22}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}.mono{width:42px;height:42px;flex:none}.mono text{font:italic 300 19px Fraunces,serif;fill:var(--ink)}
+.wm{font:300 1rem Inter;letter-spacing:.4em;text-transform:uppercase;line-height:1}.wm i{font-style:normal;font-weight:500;color:var(--c1)}
+.wm small{display:block;margin-top:7px;font-size:.5rem;letter-spacing:.38em;opacity:.55}
+.links{display:flex;gap:2px}.links a{text-decoration:none;font-size:.9rem;font-weight:500;padding:9px 14px;border-radius:12px;transition:background .2s}
+.links a:hover,.links a:focus-visible{background:#e8f4f2;outline:none}
+.btn{display:inline-block;border:0;text-decoration:none;cursor:pointer;color:#fff;background:linear-gradient(120deg,#ff6b4a,#ff9f43);padding:12px 26px;border-radius:999px;font:500 .92rem Inter;box-shadow:0 8px 20px #ff6b4a55;transition:transform .2s}
+.btn:hover{transform:translateY(-2px)}.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px #fff,0 8px 20px #17283a1a}
+.hero{position:relative;min-height:100vh;overflow:hidden;background:radial-gradient(120% 90% at 50% 100%,#ffd2b8 0,#fdebd8 42%,#cbe9e5 100%);display:flex;flex-direction:column;align-items:center;padding:112px 20px 0;text-align:center}
+.fl{position:absolute;inset:0;pointer-events:none}.pc{position:absolute;left:0;top:0;object-fit:cover;border-radius:14px;box-shadow:0 16px 38px #17283a35;will-change:transform}
+.copy{position:relative;z-index:6;max-width:760px}
+.copy::before{content:"";position:absolute;inset:-40px -70px;z-index:-1;background:radial-gradient(closest-side,#fdebd8f5 62%,#fdebd800)}
+.copy h1{font:300 clamp(2rem,4.4vw,3.6rem)/1.08 Fraunces,serif;letter-spacing:-.025em;margin:0 0 16px}.copy h1 em{color:var(--c1)}
+.story{font:300 1.12rem/1.7 Fraunces,serif;max-width:60ch;margin:0 auto 22px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.figs{position:absolute;left:50%;bottom:0;transform:translateX(-50%);z-index:3;display:flex;align-items:flex-end;gap:1vw;height:46vh}
+.figs>div{position:relative;height:100%}.figs img{height:100%;width:auto;display:block;filter:drop-shadow(0 22px 34px #17283a55);transform-origin:50% 100%;animation:sway 6s ease-in-out infinite alternate}.figs>div+div img{height:96%;animation-delay:-3s}
+@keyframes sway{to{transform:rotate(1.3deg)}}
+.bub{position:absolute;top:4%;z-index:4;white-space:nowrap;background:#fff;padding:10px 20px;border-radius:20px;font:italic 400 1rem Fraunces,serif;box-shadow:0 14px 34px #17283a30;animation:bob 3s ease-in-out infinite alternate}
+.bub.l{right:100%;margin-right:8px}.bub.r{left:100%;margin-left:8px;animation-delay:-1.5s}@keyframes bob{to{transform:translateY(-9px)}}
+.pile{position:absolute;left:0;right:0;bottom:0;height:0;z-index:5;pointer-events:none}.pile .pc{position:absolute}
+section.s{position:relative;padding:96px 20px;background:#fff6eb}section.s:nth-of-type(even){background:#eaf7f4}
+.in{max-width:1000px;margin:0 auto}.s h2{font:300 clamp(1.8rem,3.4vw,2.6rem)/1.1 Fraunces,serif;letter-spacing:-.02em;margin:0 0 12px}
+.s p.lead{max-width:56ch;opacity:.8;margin:0 0 30px}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.box{background:#fff;border-radius:26px;padding:24px;box-shadow:0 14px 40px #17283a1a}.box h3{font:400 1.25rem Fraunces,serif;margin:0 0 6px}.box p{margin:0;font-size:.92rem;opacity:.75}
+.step{display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-top:1px solid #17283a22}.step b{font:300 2rem/1 Fraunces,serif;color:var(--c1);min-width:34px}
+.nn{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:700px){.nn{grid-template-columns:1fr}.links{display:none}}
+.tag{display:inline-block;font-size:.72rem;font-weight:500;padding:4px 12px;border-radius:999px;background:var(--ink);color:#fff;margin-bottom:10px}.tag.next{background:var(--c2)}
+.mock{display:flex;gap:26px;flex-wrap:wrap;align-items:center}.phone{width:210px;height:340px;border-radius:30px;background:linear-gradient(160deg,#fff,#dff1ee);box-shadow:0 24px 60px #17283a33;display:grid;place-items:center;position:relative;overflow:hidden}
+.phone::after{content:"";position:absolute;left:0;right:0;height:60px;top:-60px;background:linear-gradient(transparent,#0e9f9a66,transparent);animation:scan 2.6s linear infinite}@keyframes scan{to{top:100%}}
+.phone span{font:italic 300 1.1rem Fraunces,serif;opacity:.6;text-align:center;padding:20px}
+footer{padding:30px 20px;text-align:center;font-size:.8rem;opacity:.6;background:#fff6eb}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto}}
+@media(max-width:700px){.figs{height:34vh}.bub{font-size:.8rem;padding:7px 12px}.bub.l{right:auto;left:0;top:-14%}.bub.r{left:auto;right:0;top:-14%}}
+
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient></defs></svg>
+<header class="nav">
+ <a class="logo" href="#home" aria-label="DressMe home"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></a>
+ <nav class="links" aria-label="Sections"><a href="#home">Home</a><a href="#atelier">The Atelier</a><a href="#how">How it works</a><a href="#next">Now and next</a><a href="#tryon">Try-on mock</a></nav>
+ <a class="btn" href="/login">Sign in</a>
+</header>
+
+<div class="hero" id="home">
+ <div class="fl" id="fl" aria-hidden="true"></div>
+ <div class="copy">
+  <h1>Where weather, taste and wardrobe <em>finally agree.</em></h1>
+  <p class="story">Every morning, someone stands in front of a full closet and says the same sentence: <i>I have nothing to wear.</i> DressMe listens to the sky, learns your taste, and quietly reshuffles what you already own into looks you would never have tried. Open the door. Your wardrobe has been waiting.</p>
+  <div class="cta"><a class="btn" href="/login">Sign in</a><a class="btn ghost" href="/login?mode=signup">Create account</a><a class="btn ghost" href="#atelier">Enter the Atelier</a></div>
+ </div>
+ <div class="figs"><div><span class="bub l">I have nothing to wear.</span><img src="/static/woman.png" alt=""></div><div><span class="bub r">I’m late, I have a meeting.</span><img src="/static/man.png" alt="" onerror="this.remove()"></div></div>
+ <div class="pile" id="pile" aria-hidden="true"></div>
+</div>
+
+<section class="s" id="atelier"><div class="in"><h2>The Atelier</h2><p class="lead">One studio, three quiet talents. Each one starts from what is already in your closet.</p>
+ <div class="three"><div class="box"><h3>Outfit of the Day</h3><p>Your city’s sky, your occasion, one complete look.</p></div><div class="box"><h3>Rate and complete</h3><p>Score any outfit, then let the model find the missing piece.</p></div><div class="box"><h3>Wardrobe Completion</h3><p>The few pieces that unlock the most new outfits.</p></div></div></div></section>
+
+<section class="s" id="how"><div class="in"><h2>How it works</h2>
+ <div class="step"><b>1</b><div><strong>Add a photo of a garment.</strong><br>We read the category and colour; you review the details.</div></div>
+ <div class="step"><b>2</b><div><strong>Tell us the day.</strong><br>Weather and occasion shape the look.</div></div>
+ <div class="step"><b>3</b><div><strong>Wear it.</strong><br>Get a scored outfit, swaps that raise it, and gaps worth filling.</div></div></div></section>
+
+<section class="s" id="next"><div class="in"><h2>Now and next</h2><div class="nn">
+ <div class="box"><span class="tag">Now</span><h3>Available today</h3><p>Outfit of the Day, Rate My Look, Complete My Outfit, Find Similar, Wardrobe Completion and your private studio.</p></div>
+ <div class="box"><span class="tag next">Next</span><h3>On the way</h3><p>A personal avatar and real virtual try-on, so you see the look before you wear it.</p></div></div></div></section>
+
+<section class="s" id="tryon"><div class="in"><h2>Try-on mock</h2><p class="lead">A private preview of the try-on workflow: pick a saved avatar, pick a garment, see the mock result.</p>
+ <div class="mock"><div class="phone"><span>Your avatar, wearing tomorrow’s look</span></div><a class="btn" href="/login">Sign in to preview</a></div></div></section>
+<footer>© DressMe — Style Intelligence</footer>
+
+<script>
+(async()=>{
+ let ks=[];try{ks=(await (await fetch('/api/public-style-wall')).json()).map(x=>x.k)}catch{}
+ if(!ks.length)return;
+ const fl=document.getElementById('fl'),pile=document.getElementById('pile'),R=Math.random,W=innerWidth,H=innerHeight;
+ const src=k=>`/public-wall/${encodeURIComponent(k)}.jpg`;
+ const cards=ks.slice(0,30).map((k,n)=>{const w=(n%4?80:150)+R()*90,im=new Image();im.src=src(k);im.className='pc';im.style.cssText=`width:${w}px;height:${w*1.25}px;z-index:${n%4?1:2}`;fl.appendChild(im);
+  const o={im,w,h:w*1.25};sp(o);o.t=R();return o});
+ function sp(o){const e=R()*3|0;o.sx=e==0?R()*W:e==1?-220:W+220;o.sy=e==0?-260:R()*H*.8;o.tx=W*.5+(R()<.5?-1:1)*(W*.12+R()*W*.3);o.ty=H*.75+(R()-.5)*H*.12;o.r=R()*360;o.spin=(R()<.5?-1:1)*(120+R()*260);o.v=.0016+R()*.0026;o.t=0}
+ const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ function tick(){for(const o of cards){if(!rm)o.t+=o.v;if(o.t>=1)sp(o);const t=o.t,e=Math.pow(t,1.25),x=o.sx+(o.tx-o.sx)*e,y=o.sy+(o.ty-o.sy)*e;
+  o.im.style.opacity=t<.08?t*12:t>.8?(1-t)/.2:1;o.im.style.transform=`translate(${x-o.w/2}px,${y-o.h/2}px) rotate(${o.r+o.spin*t}deg) scale(${1-.55*t})`}
+  if(!rm)requestAnimationFrame(tick)}tick();
+ ks.slice(30,42).forEach((k,i)=>{const im=new Image(),w=110+R()*70,x=(R()-.5)*54,c=1-Math.min(Math.abs(x)/27,1);im.src=src(k);im.className='pc';
+  im.style.cssText=`width:${w}px;height:${w*1.2}px;left:calc(50% + ${x}vw - ${w/2}px);bottom:${-30+c*(30+R()*50)}px;transform:rotate(${(R()-.5)*90}deg);z-index:${i}`;pile.appendChild(im)});
+})();
+</script></body></html>

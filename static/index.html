@@ -44,19 +44,86 @@ input[type=range]{accent-color:var(--c2);width:220px}
 .modal>div{background:#fff;border-radius:26px;padding:22px;max-width:900px;width:100%;max-height:86vh;overflow:auto}
 .err{background:#ffe5e5;color:#a11;padding:10px 16px;border-radius:14px;margin-top:12px}.load{opacity:.6;padding:20px}
 
-/* Find Similar — custom, accessible upload control */
-.upload-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:16px 0 10px}
-.file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.upload-label{display:inline-flex;align-items:center;gap:11px;padding:12px 18px;border:1px solid #cfe6e3;border-radius:16px;background:linear-gradient(135deg,#ffffff,#f0f8f6);color:var(--ink);font:500 .9rem Inter,sans-serif;cursor:pointer;box-shadow:0 6px 18px #17283a0d;transition:transform .2s,border-color .2s,box-shadow .2s}
-.upload-label:hover{transform:translateY(-2px);border-color:#0e9f9a;box-shadow:0 10px 22px #17283a16}
-.upload-label:focus-within,.file-input:focus-visible+.upload-label{outline:3px solid #0e9f9a55;outline-offset:3px}
-.upload-icon{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:12px;background:#e4f3f0;color:#0e827e}
-.upload-copy{display:flex;flex-direction:column;gap:3px}
-.upload-copy strong{font-size:.9rem;font-weight:600}
-.upload-copy small{font-size:.72rem;color:#687889;font-weight:400}
-.file-name{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem;color:#607080}
-#simprev{max-width:100%;object-fit:cover;border:2px solid #fff}
-@media(max-width:520px){.upload-label{width:100%}.file-name{max-width:100%}}
+/* Where to Buy */
+.file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.sh-drop{display:grid;grid-template-columns:auto 1fr;gap:18px 26px;align-items:center;margin-top:18px;padding:22px;border-radius:28px;
+ background:linear-gradient(135deg,#fff7f1,#e9f6f4);border:2px dashed #b9dcd7;transition:.25s}
+.sh-drop.drag{border-color:var(--c1);background:linear-gradient(135deg,#fff0e8,#e0f4f1);transform:scale(1.01)}
+.sh-drop.has{border-style:solid;border-color:#fff}
+.sh-label{display:contents;cursor:pointer}
+.sh-frame{position:relative;width:190px;height:240px;border-radius:22px;background:#fff;display:grid;place-items:center;
+ box-shadow:0 14px 34px #17283a22;overflow:visible;transition:transform .3s}
+.sh-label:hover .sh-frame{transform:translateY(-4px) rotate(-1deg)}
+.sh-frame img{width:100%;height:100%;object-fit:cover;border-radius:22px}
+.sh-ph{color:#4f9d97;animation:shfloat 3s ease-in-out infinite alternate}
+@keyframes shfloat{to{transform:translateY(-8px)}}
+.sh-corner{position:absolute;width:22px;height:22px;border:solid var(--c1);pointer-events:none;transition:.3s}
+.sh-corner.a{top:-7px;left:-7px;border-width:3px 0 0 3px;border-radius:10px 0 0 0}
+.sh-corner.b{top:-7px;right:-7px;border-width:3px 3px 0 0;border-radius:0 10px 0 0}
+.sh-corner.c{bottom:-7px;left:-7px;border-width:0 0 3px 3px;border-radius:0 0 0 10px}
+.sh-corner.d{bottom:-7px;right:-7px;border-width:0 3px 3px 0;border-radius:0 0 10px 0}
+.sh-drop.scanning .sh-frame::after{content:"";position:absolute;left:0;right:0;top:0;height:60px;border-radius:22px;
+ background:linear-gradient(transparent,#0e9f9a33 60%,#0e9f9a88);border-bottom:2px solid #7ff5ec;box-shadow:0 6px 22px #0e9f9a;animation:shscan 1.4s linear infinite}
+@keyframes shscan{from{transform:translateY(-60px)}to{transform:translateY(240px)}}
+.sh-copy{display:flex;flex-direction:column;gap:6px;min-width:0}
+.sh-copy strong{font:300 1.6rem Fraunces,serif;letter-spacing:-.01em}
+.sh-copy small{font-size:.8rem;opacity:.6}
+.file-name{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem;color:#607080}
+.sh-actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap}
+.sh-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:26px 0 8px}
+.sh-stat{background:#fff;border-radius:20px;padding:14px 18px;box-shadow:inset 0 0 0 1px #e1eeec;animation:up .4s both}
+.sh-stat small{display:block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;opacity:.55}
+.sh-stat b{font:300 1.9rem/1.2 Fraunces,serif;font-variant-numeric:tabular-nums}
+.sh-stat.best b{color:var(--ok)}.sh-stat.top b{color:var(--c1)}
+.sh-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:14px 0}
+.sh-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sh-card{position:relative;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:#fff;text-decoration:none;color:inherit;
+ box-shadow:0 10px 26px #17283a1c;transition:transform .25s,box-shadow .25s;animation:up .45s both}
+.sh-card:hover{transform:translateY(-6px);box-shadow:0 22px 40px #17283a30}
+.sh-card .ph{height:210px;background:#f1f8f7}.sh-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.sh-card:hover img{transform:scale(1.06)}
+.sh-body{display:flex;flex-direction:column;gap:6px;padding:12px 14px 14px;flex:1}
+.sh-shop{font:600 .64rem Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--c2)}
+.sh-title{font-size:.82rem;line-height:1.35;flex:1}
+.sh-price{font:400 1.5rem Fraunces,serif}
+.sh-go{font-size:.74rem;font-weight:600;color:var(--c1)}
+.sh-badge{position:absolute;top:10px;left:10px;z-index:2;padding:5px 12px;border-radius:999px;background:linear-gradient(120deg,var(--ok),#3fcfb0);
+ color:#fff;font:700 .68rem Inter;letter-spacing:.06em;box-shadow:0 6px 14px #1fb88955}
+.sh-skel{height:330px;border-radius:22px;background:linear-gradient(100deg,#e8f4f2 30%,#f8fcfb 50%,#e8f4f2 70%) 0 0/200% 100%;animation:shimmer 1.2s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+@media(max-width:620px){.sh-drop{grid-template-columns:1fr;justify-items:center;text-align:center}.sh-frame{width:160px;height:204px}}
+
+/* --- extras "Where to Buy" (tools, budget, comparateur, liste, crop, historique) --- */
+.sh-card .sh-tools{position:absolute;top:10px;right:10px;z-index:3;display:flex;flex-direction:column;gap:6px}
+.sh-tool{width:34px;height:34px;border:0;border-radius:50%;cursor:pointer;background:#ffffffe6;color:var(--ink);font-size:1rem;
+ box-shadow:0 6px 14px #17283a30;transition:.2s;display:grid;place-items:center}
+.sh-tool:hover{transform:scale(1.12)}
+.sh-tool.on{background:var(--c1);color:#fff}
+.sh-card .ph,.sh-card .sh-body{color:inherit;text-decoration:none;display:block}
+.sh-card .sh-body{display:flex}
+.sh-orig{font-size:.7rem;opacity:.55}
+.sh-budget{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:6px 0 16px;font-size:.88rem}
+.sh-budget b{min-width:70px;font:400 1.2rem Fraunces,serif;color:var(--c1)}
+.sh-budget input{flex:1;min-width:180px;max-width:420px}
+.sh-cmpbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:12;display:flex;align-items:center;gap:12px;padding:10px 12px 10px 22px;
+ border-radius:999px;background:var(--ink);color:#fff;box-shadow:0 18px 40px #17283a66;animation:up .3s both}
+.sh-cmpbar[hidden]{display:none}
+.sh-cmpbar .btn{padding:8px 18px;font-size:.82rem}
+.sh-toast{position:fixed;left:50%;top:22px;transform:translateX(-50%);z-index:50;padding:12px 22px;border-radius:999px;background:var(--ink);color:#fff;
+ font:500 .86rem Inter;box-shadow:0 14px 34px #17283a55;animation:up .3s both}
+.sh-hist{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:26px}
+.sh-hist>span{font:500 .66rem Inter;letter-spacing:.28em;text-transform:uppercase;color:var(--c1)}
+.sh-h{width:62px;height:78px;padding:0;border:3px solid #fff;border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:0 8px 18px #17283a28;transition:.2s;background:#fff}
+.sh-h:hover{transform:translateY(-4px) rotate(-2deg)}.sh-h img{width:100%;height:100%;object-fit:cover;display:block}
+.sh-cmp{width:100%;border-collapse:collapse;font-size:.85rem}
+.sh-cmp td,.sh-cmp th{padding:10px;text-align:center;border-bottom:1px solid #e6f0ee;vertical-align:top}
+.sh-cmp th{font:500 .66rem Inter;letter-spacing:.2em;text-transform:uppercase;color:var(--c1);text-align:left}
+.sh-cmp img{width:110px;height:140px;object-fit:cover;border-radius:12px}
+.sh-cmp .low{color:var(--ok);font-weight:700}
+.sh-lrow{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #e6f0ee}
+.sh-lrow img{width:56px;height:70px;object-fit:cover;border-radius:10px}.sh-lrow div{flex:1;font-size:.85rem}
+.sh-crop{position:relative;display:inline-block;touch-action:none;cursor:crosshair;max-width:100%}
+.sh-crop canvas{display:block;max-width:100%;border-radius:14px}
 
 .wrap{max-width:1180px}
 .top{position:sticky;top:12px;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#ffffffe8;backdrop-filter:blur(16px);border-radius:22px;padding:14px 24px;box-shadow:0 10px 34px #17283a22}
@@ -636,30 +703,39 @@ label.btn input{display:none}
   <button class="occp-skip" id="gp-x" type="button" style="position:static;transform:none;margin-top:30px">Never mind</button>
  </div>
 </div>
-<section id="sim" class="glass" hidden><p class="eyebrow">No. 04</p><h2>Find Similar</h2>
-<p class="sub">Upload a photo of a garment: we find similar pieces and the shops that sell it.</p>
-<div class="upload-row">
+<section id="sim" class="glass" hidden>
+ <p class="eyebrow">No. 04</p><h2>Where to Buy It</h2>
+ <p class="sub">Drop a photo of any garment. We scan the web and line up the shops, cheapest first.</p>
+
+ <div class="sh-drop" id="simdrop">
   <input class="file-input" type="file" id="simfile" accept="image/*" aria-label="Upload a garment photo">
-  <label class="upload-label" for="simfile">
-    <span class="upload-icon" aria-hidden="true">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-        <path d="m21 15-5-5L5 21"></path>
-      </svg>
-    </span>
-    <span class="upload-copy">
-      <strong>Upload a garment photo</strong>
-      <small>Choose an image · JPG, PNG or WEBP</small>
-    </span>
+  <label class="sh-label" for="simfile">
+   <div class="sh-frame">
+    <img id="simprev" hidden alt="Garment photo preview">
+    <div class="sh-ph" id="simph">
+     <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.5 16 2a4 4 0 0 1-8 0L3.6 3.5a2 2 0 0 0-1.3 2.2l.6 3.5a1 1 0 0 0 1 .8H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.1a1 1 0 0 0 1-.8l.6-3.5a2 2 0 0 0-1.3-2.2z"/></svg>
+    </div>
+    <i class="sh-corner a"></i><i class="sh-corner b"></i><i class="sh-corner c"></i><i class="sh-corner d"></i>
+   </div>
+   <div class="sh-copy">
+    <strong id="simtitle">Drop a garment photo</strong>
+    <small>or click to browse · or paste with Ctrl+V · JPG, PNG, WEBP</small>
+    <span class="file-name" id="simfilename" aria-live="polite"></span>
+   </div>
   </label>
-  <span class="file-name" id="simfilename" aria-live="polite">No image selected</span>
-  <img id="simprev" hidden alt="Garment photo preview" style="height:110px;border-radius:14px;box-shadow:0 8px 22px #17283a20">
-</div>
-<div class="chips" id="simcat"></div>
-<button class="btn" id="simgo">Find similar pieces</button>
-<button class="btn ghost" id="shopgo">Where to buy it</button>
-<div id="simout"></div><div id="shopout"></div></section>
+  <div class="sh-actions">
+   <button class="btn" id="shopgo" type="button">Where to buy it</button>
+   <button class="btn ghost" id="shopcrop" type="button" hidden>✂ Crop</button>
+   <button class="btn ghost" id="shwd" type="button" hidden>+ Add to my wardrobe</button>
+   <button class="btn ghost" id="shopclear" type="button" hidden>Remove photo</button>
+   <button class="btn ghost" id="shlist" type="button">♥ My list <b id="shlistn">0</b></button>
+  </div>
+ </div>
+
+ <div id="shopout" aria-live="polite"></div>
+ <div id="shhist"></div>
+ <div class="sh-cmpbar" id="shcmp" hidden></div>
+</section>
 
 <section id="wardrobe" class="glass" hidden><p class="eyebrow">No. 05</p><h2>Wardrobe Completion</h2>
 <p class="sub">Open your digital wardrobe. We find the pieces that unlock the most new outfits and add them to your closet.</p>
@@ -800,7 +876,7 @@ const MENU=[{label:'Style Me',items:[
  {id:'score',title:'Rate My Look',desc:'Rate any outfit and improve it'},
  {id:'comp',title:'Complete My Outfit',desc:'Complete a partial outfit'}]},
  {label:'Shopping',items:[
- {id:'sim',title:'Find Similar',desc:'Upload a piece, find lookalikes and where to buy it'},
+ {id:'sim',title:'Where to Buy',desc:'Upload a piece, compare prices across shops'},
  {id:'wardrobe',title:'Wardrobe Completion',desc:'The missing piece that unlocks the most new outfits'},
  ]},
  {label:'Wardrobe Check',items:[
@@ -968,7 +1044,7 @@ $('#go2').onclick=async()=>{const it=B2.get(),out=$('#cout');
   const full=()=>out.insertAdjacentHTML('afterbegin','<div class="err">Remove an item first.</div>');
   $$('.card',out).forEach(c=>c.onclick=()=>{if(!B2.put(+c.dataset.i))full()});
   const all=$('#addall',out);if(all)all.onclick=()=>{if(5-B2.get().length<r.items.length)return full();r.items.forEach(x=>B2.put(x.i))}
- }).catch(e=>out.innerHTML=`<div class="err">${esc(e.message)}</div>`)};
+ }).catch(e=>out.innerHTML=`<div class="err">${esc(e.message)}</div>`)}
 $('#ex2').onclick=async()=>{try{B2.set(await mineLook(2))}catch(e){$('#cout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
  /* ---------- IDÉE 3 : tenue du jour ---------- */
 let src='geo';
@@ -986,7 +1062,7 @@ $('#src').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;src=b.da
 function vibe(w){const f=w.feels,t=f<5?'Bitterly cold out there. Wrap up properly.':f<12?'Chilly all day. Real layers are your friend.':f<18?'Fresh and breezy. One good layer does the job.':f<25?'Easy, mild weather. Dress light and move freely.':'A hot one. Keep it light and breathable.';
  const x=w.kind==='rain'||w.kind==='storm'||w.rain>=60?' Keep something waterproof close.':w.kind==='snow'?' Boots and a proper coat, no debate.':w.wind>=30?' The wind is up too.':w.kind==='clear'?' Sunshine all day.':'';return t+x}
 let OCC='',lastBody=null;
-const gapsHtml=g=>(g||[]).map(x=>`<div class="nores" style="margin-top:14px"><b>${esc(x.title)}</b><p class="sub" style="margin:4px 0 8px">${esc(x.message)}</p><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))">${x.suggestions.map(s=>`<div class="card"><img src="${img(s.k)}" alt=""><p><em>${FR[s.c]}</em><br>${esc(s.d.slice(0,40))}</p></div>`).join('')}</div><p class="sub" style="margin:10px 0 0">You could check the availability of this item in <a href="#sim" data-go="sim"><b>Shopping → Find Similar</b></a>.</p></div>`).join('');
+const gapsHtml=g=>(g||[]).map(x=>`<div class="nores" style="margin-top:14px"><b>${esc(x.title)}</b><p class="sub" style="margin:4px 0 8px">${esc(x.message)}</p><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))">${x.suggestions.map(s=>`<div class="card"><img src="${img(s.k)}" alt=""><p><em>${FR[s.c]}</em><br>${esc(s.d.slice(0,40))}</p></div>`).join('')}</div><p class="sub" style="margin:10px 0 0">You could check the availability of this item in <a href="#sim" data-go="sim"><b>Shopping → Where to Buy</b></a>.</p></div>`).join('');
 /* ---------- Gap panel : 3 suggestions à droite → Find Similar ---------- */
 const gapEl=document.createElement('aside');gapEl.className='gapx';gapEl.setAttribute('aria-label','Suggestions');
 const gapTab=document.createElement('button');gapTab.className='gapx-tab';gapTab.type='button';
@@ -997,16 +1073,15 @@ const gapOpen=v=>{gapEl.classList.toggle('show',v);gapTab.classList.toggle('show
 function gapClear(){gapData=[];gapSel=null;gapEl.classList.remove('show');gapTab.classList.remove('show')}
 function gapDraw(){
  const g=gapData[gapI];if(!g)return;
- const word=g.slot==='dress'?'dress':g.slot==='outer'?'coat':'piece';
- gapEl.innerHTML=`<div class="gapx-head"><p class="eyebrow">Missing piece</p>
-  <h3>Your wardrobe needs <em>a ${word}</em></h3><p>${esc(g.message)}</p>
+ gapEl.innerHTML=`<div class="gapx-head"><p class="eyebrow">Missing piece${gapData.length>1?`s · ${gapData.length}`:''}</p>
+  <h3>Your wardrobe needs <em>${esc(g.noun||'a piece')}</em></h3><p>${esc(g.message)}</p>
   <button class="gapx-x" type="button" aria-label="Minimise">&times;</button></div>
-  ${gapData.length>1?`<div class="gapx-tabs">${gapData.map((x,n)=>`<button type="button" data-n="${n}" class="${n===gapI?'on':''}">${esc(x.slot==='dress'?'Dress':x.slot==='outer'?'Coat':x.slot)}</button>`).join('')}</div>`:''}
+  ${gapData.length>1?`<div class="gapx-tabs">${gapData.map((x,n)=>`<button type="button" data-n="${n}" class="${n===gapI?'on':''}">${esc(x.tab||x.slot)}</button>`).join('')}</div>`:''}
   <div class="gapx-grid ${gapSel!=null?'has':''}">${g.suggestions.slice(0,3).map((s,k)=>`<button type="button" class="gapx-card ${gapSel===k?'on':''}" data-k="${k}" style="--k:${k}">
    <span class="ck"></span><img src="${img(s.k)}" alt=""><p><em>${esc(FR[s.c]||s.c)}</em>${esc(String(s.d||'').slice(0,42))}</p></button>`).join('')}</div>
-  <div class="gapx-foot"><button class="btn gapx-cta" type="button" ${gapSel==null?'disabled':''}>Find similar
+  <div class="gapx-foot"><button class="btn gapx-cta" type="button" ${gapSel==null?'disabled':''}>Where to buy
    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-   <p class="gapx-hint">${gapSel==null?'Tap a piece to select it':'We’ll load this photo into Find Similar'}</p></div>`;
+   <p class="gapx-hint">${gapSel==null?'Tap a piece to select it':'We’ll load this photo into Where to Buy'}</p></div>`;
  gapTab.textContent=`${gapData.length} missing piece${gapData.length>1?'s':''}`;
 }
 function gapPanel(gaps){
@@ -1022,8 +1097,6 @@ gapEl.addEventListener('click',async e=>{
   try{
    const blob=await (await fetch(img(s.k))).blob(),f=new File([blob],`${s.k}.jpg`,{type:blob.type||'image/jpeg'}),dt=new DataTransfer();
    dt.items.add(f);const inp=$('#simfile');inp.files=dt.files;inp.dispatchEvent(new Event('change'));
-   simCat=GAP_CAT[g.slot]||'';$$('#simcat .cc').forEach(x=>x.classList.toggle('on',x.dataset.sc===simCat));
-   $('#simout').innerHTML='';$('#shopout').innerHTML='';
    gapOpen(false);go('sim');scrollTo({top:0,behavior:'smooth'});
   }catch(err){go_.disabled=false;alert('Could not load this photo: '+err.message)}}});
 gapTab.onclick=()=>gapOpen(true);
@@ -1039,30 +1112,155 @@ function ootd(body){lastBody=body;gapClear();$('#ootdout').innerHTML='<div class
   <p class="vibe">${vibe(w)}</p></div></div>`;gapPanel(r.gaps)})
  .catch(e=>$('#ootdout').innerHTML=`<div class="err">${esc(e.message)}</div>`)}
 
-/* ---------- IDÉE 4 : similarité + boutiques ---------- */
+/* ---------- IDÉE 4 : Where to Buy : photo -> SerpApi -> boutiques + prix ---------- */
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const upl=async(p,fd)=>{let r=await fetch('/api/search/'+p,{method:'POST',body:fd});if(r.status===401&&window.refreshDressMe){try{await window.refreshDressMe();r=await fetch('/api/search/'+p,{method:'POST',body:fd})}catch{location.replace('/login?next='+encodeURIComponent('/app'+location.hash));throw new Error('Sign in again to continue.')}}if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(d.detail||r.status)}return r.json()};
-let simCat='';
-const SC={'':'Auto',top:'Top',bottom:'Bottom',dress:'Dress',shoes:'Shoes',bag:'Bag',outerwear:'Outerwear',accessory:'Accessory'};
-$('#simcat').innerHTML=Object.entries(SC).map(([k,v])=>`<button class="cc ${k===''?'on':''}" data-sc="${k}">${v}</button>`).join('');
-$('#simcat').onclick=e=>{const b=e.target.closest('[data-sc]');if(!b)return;simCat=b.dataset.sc;$$('.cc',$('#simcat')).forEach(x=>x.classList.toggle('on',x===b))};
-$('#simfile').onchange=e=>{const f=e.target.files[0],p=$('#simprev'),n=$('#simfilename');p.hidden=!f;if(f){p.src=URL.createObjectURL(f);n.textContent=f.name;n.title=f.name}else{p.removeAttribute('src');n.textContent='No image selected';n.removeAttribute('title')}};
-const simFD=()=>{const f=$('#simfile').files[0];if(!f)throw new Error('Choose a photo first.');const d=new FormData();d.append('file',f);return d};
+const LS=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch{return null}};
+const SH={file:null,list:[],sort:'low',shop:'',cur:'€',budget:null,fav:LS('dm_fav')||[],hist:LS('dm_hist')||[],alerts:LS('dm_alerts')||[],cmp:[]};
+/* taux approximatifs, à remplacer idéalement par une conversion côté backend */
+const RATES={'€':1,EUR:1,'$':.92,USD:.92,'£':1.17,GBP:1.17,TND:.30,DT:.30};
+const TARGETS=['€','$','TND'];
+const shEls={drop:$('#simdrop'),inp:$('#simfile'),prev:$('#simprev'),ph:$('#simph'),name:$('#simfilename'),title:$('#simtitle'),out:$('#shopout'),clr:$('#shopclear'),crop:$('#shopcrop'),wd:$('#shwd')};
+const shNum=p=>{if(typeof p.extracted_price==='number')return p.extracted_price;
+ const m=String(p.price||'').replace(/\s/g,'').match(/\d[\d.,]*/);if(!m)return null;let s=m[0];
+ s=/,\d{1,2}$/.test(s)?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'');const n=parseFloat(s);return isNaN(n)?null:n};
+const shCur=p=>{const m=String(p.price||'').match(/[^\d\s.,]+/);return m?m[0]:''};
+const shVal=p=>p.n==null?null:p.n*(RATES[p.cur]??RATES[SH.cur])/RATES[SH.cur];
+const shFmt=v=>SH.cur==='TND'?`${v.toFixed(2)} TND`:`${SH.cur}${v.toFixed(2)}`;
+function shToast(t){const e=document.createElement('div');e.className='sh-toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2400)}
+const shMini=p=>({link:p.link,title:p.title,shop:p.shop,price:p.price,thumb:p.thumb,n:p.n,cur:p.cur});
+const shThumb=src=>new Promise(res=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas'),s=96/Math.max(i.width,i.height);
+ c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};i.onerror=()=>res('');i.src=src});
 
-$('#simgo').onclick=async()=>{$('#simout').innerHTML='<div class="spin"></div>';
- try{const d=simFD();d.append('category',simCat);d.append('k',8);
-  const r=await upl('similar',d);
-  $('#simout').innerHTML=r.results.length?`<p class="sub">Detected: <b>${esc(r.category)}</b> · colour <b>${esc(r.color)}</b></p><div class="grid">`+
-   r.results.map((x,k)=>`<div class="card" style="animation-delay:${k*.08}s"><img src="${esc(x.img)}"><p><em>${esc(x.mid||x.category)}</em><br>${esc(x.category).slice(0,46)}<br><b style="color:var(--c2)">${(x.score*100).toFixed(0)}% match</b></p></div>`).join('')+'</div>'
-   :'<p class="sub">No match. Try another category or a cleaner photo.</p>'}
- catch(e){$('#simout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+/* --- fichier : drop / clic / coller --- */
+function shSetFile(f){
+ if(!f||!f.type.startsWith('image/')){shEls.out.innerHTML='<div class="err">Please choose an image file.</div>';return}
+ SH.file=f;shEls.prev.src=URL.createObjectURL(f);shEls.prev.hidden=false;shEls.ph.hidden=true;
+ shEls.name.textContent=f.name;shEls.title.textContent='Looks great. Scanning the shops…';
+ shEls.drop.classList.add('has');[shEls.clr,shEls.crop,shEls.wd].forEach(b=>b.hidden=false);shRun()}
+function shClear(){SH.file=null;SH.list=[];shEls.inp.value='';shEls.prev.hidden=true;shEls.prev.removeAttribute('src');shEls.ph.hidden=false;
+ shEls.name.textContent='';shEls.title.textContent='Drop a garment photo';shEls.drop.classList.remove('has','scanning');
+ [shEls.clr,shEls.crop,shEls.wd].forEach(b=>b.hidden=true);shEls.out.innerHTML='';SH.cmp=[];shCmpBar()}
+shEls.inp.onchange=e=>shSetFile(e.target.files[0]);shEls.clr.onclick=shClear;
+['dragenter','dragover'].forEach(t=>shEls.drop.addEventListener(t,e=>{e.preventDefault();shEls.drop.classList.add('drag')}));
+['dragleave','drop'].forEach(t=>shEls.drop.addEventListener(t,e=>{e.preventDefault();shEls.drop.classList.remove('drag')}));
+shEls.drop.addEventListener('drop',e=>shSetFile(e.dataTransfer.files[0]));
+document.addEventListener('paste',e=>{if(tab!=='sim')return;const f=[...(e.clipboardData?.files||[])].find(x=>x.type.startsWith('image/'));if(f)shSetFile(f)});
 
-$('#shopgo').onclick=async()=>{$('#shopout').innerHTML='<div class="spin"></div>';
- try{const d=simFD();d.append('max_results',10);
+/* --- recadrage --- */
+shEls.crop.onclick=()=>{if(!SH.file)return;const m=document.createElement('div');m.className='modal';
+ m.innerHTML=`<div style="max-width:620px"><div class="row" style="align-items:center;justify-content:space-between"><h2>Crop the garment</h2><button class="btn ghost" id="cl">Close</button></div>
+ <p class="sub">Drag to select only the garment. A tighter photo gives better results.</p><div class="sh-crop"><canvas id="cc"></canvas></div>
+ <div class="row" style="margin-top:12px"><button class="btn" id="cuse">Use this crop</button><button class="btn ghost" id="cfull">Keep full photo</button></div></div>`;
+ document.body.appendChild(m);
+ const img=new Image();img.src=shEls.prev.src;const cv=$('#cc',m),g=cv.getContext('2d');let R=null,a=null,k=1;
+ const draw=()=>{g.drawImage(img,0,0,cv.width,cv.height);if(R){g.fillStyle='#17283a99';g.fillRect(0,0,cv.width,cv.height);g.drawImage(img,R.x/k,R.y/k,R.w/k,R.h/k,R.x,R.y,R.w,R.h);g.strokeStyle='#ff6b4a';g.lineWidth=3;g.strokeRect(R.x,R.y,R.w,R.h)}};
+ img.onload=()=>{k=img.width/Math.min(560,img.width);cv.width=img.width/k;cv.height=img.height/k;draw()};
+ const pt=e=>{const b=cv.getBoundingClientRect();return{x:(e.clientX-b.left)*cv.width/b.width,y:(e.clientY-b.top)*cv.height/b.height}};
+ cv.onpointerdown=e=>{a=pt(e);cv.setPointerCapture(e.pointerId)};
+ cv.onpointermove=e=>{if(!a)return;const p=pt(e);R={x:Math.min(a.x,p.x),y:Math.min(a.y,p.y),w:Math.abs(p.x-a.x),h:Math.abs(p.y-a.y)};draw()};
+ cv.onpointerup=()=>{a=null};
+ m.onclick=e=>{if(e.target===m||e.target.id==='cl'||e.target.id==='cfull')return m.remove();
+  if(e.target.id==='cuse'){if(!R||R.w<20||R.h<20)return m.remove();const o=document.createElement('canvas');o.width=R.w*k;o.height=R.h*k;
+   o.getContext('2d').drawImage(img,R.x*k,R.y*k,R.w*k,R.h*k,0,0,o.width,o.height);
+   o.toBlob(b=>{m.remove();shSetFile(new File([b],'crop.jpg',{type:'image/jpeg'}))},'image/jpeg',.92)}}};
+
+/* --- recherche --- */
+async function shRun(){
+ if(!SH.file){shEls.out.innerHTML='<div class="err">Choose a photo first.</div>';return}
+ shEls.drop.classList.add('scanning');$('#shopgo').disabled=true;
+ shEls.out.innerHTML='<div class="grid">'+'<div class="sh-skel"></div>'.repeat(6)+'</div>';
+ try{const d=new FormData();d.append('file',SH.file);d.append('max_results',12);
   const r=await upl('shops',d);
-  $('#shopout').innerHTML=r.products.length?'<h3>Where to buy it</h3><div class="grid">'+r.products.map((p,k)=>`<a class="card" style="animation-delay:${k*.08}s;text-decoration:none;color:inherit" href="${esc(p.link)}" target="_blank" rel="noopener">${p.thumb?`<img src="${esc(p.thumb)}">`:''}<p><em>${esc(p.shop)}</em><br>${esc(p.title).slice(0,46)}<br><b style="color:var(--c2)">${esc(p.price||'See price')}</b></p></a>`).join('')+'</div>'
-   :'<p class="sub">No shop found for this photo.</p>'}
- catch(e){$('#shopout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+  SH.list=(r.products||[]).map((p,i)=>({...p,n:shNum(p),cur:shCur(p),_i:i}));SH.shop='';SH.budget=null;SH.cmp=[];shCmpBar();
+  const cc={};SH.list.forEach(p=>{if(RATES[p.cur])cc[p.cur]=(cc[p.cur]||0)+1});
+  const top=Object.entries(cc).sort((a,b)=>b[1]-a[1])[0];SH.cur=top&&TARGETS.includes(top[0])?top[0]:SH.cur;     // devise dominante
+  shEls.title.textContent=SH.list.length?`${SH.list.length} offers found`:'Nothing found';shRender();
+  if(SH.list.length){const t=await shThumb(shEls.prev.src);SH.hist=[{t,list:SH.list.map(shMini),ts:Date.now()},...SH.hist].slice(0,6);LS('dm_hist',SH.hist);shHist()}}
+ catch(e){shEls.out.innerHTML=`<div class="err">${esc(e.message)}</div>`;shEls.title.textContent='Something went wrong'}
+ shEls.drop.classList.remove('scanning');$('#shopgo').disabled=false}
+
+/* --- rendu --- */
+function shRender(){
+ if(!SH.list.length){shEls.out.innerHTML='<div class="nores">No shop found for this photo. Try a cleaner picture: the garment alone, on a plain background.</div>';return}
+ const vs=SH.list.map(shVal).filter(v=>v!=null),max=vs.length?Math.ceil(Math.max(...vs)):0,shops=[...new Set(SH.list.map(p=>p.shop).filter(Boolean))];
+ const seg=`<div class="seg" id="shsort">${[['low','Cheapest'],['high','Priciest'],['rel','Best match']].map(([k,v])=>`<button type="button" data-s="${k}" class="${SH.sort===k?'on':''}">${v}</button>`).join('')}</div>`;
+ const cur=`<div class="seg" title="Display currency">${TARGETS.map(c=>`<button type="button" data-cur="${c}" class="${SH.cur===c?'on':''}">${c}</button>`).join('')}</div>`;
+ const chips=`<div class="sh-chips"><button class="cc ${SH.shop?'':'on'}" data-sh="">All shops</button>${shops.map(s=>`<button class="cc ${SH.shop===s?'on':''}" data-sh="${esc(s)}">${esc(s)}</button>`).join('')}</div>`;
+ const bud=max?`<label class="sh-budget">Max budget <b id="shbv">${shFmt(SH.budget??max)}</b><input type="range" id="shbr" min="0" max="${max}" value="${SH.budget??max}"></label>`:'';
+ shEls.out.innerHTML=`<div id="shstats"></div><div class="sh-bar">${seg}${cur}${chips}</div>${bud}<div class="grid" id="shgrid" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr))"></div>`;shDraw()}
+function shDraw(){
+ let L=SH.list.filter(p=>!SH.shop||p.shop===SH.shop);const vs=L.map(shVal).filter(v=>v!=null);
+ const min=Math.min(...vs),max=Math.max(...vs),avg=vs.reduce((a,b)=>a+b,0)/(vs.length||1);
+ $('#shstats').innerHTML=vs.length?`<div class="sh-stats"><div class="sh-stat best"><small>Lowest</small><b>${shFmt(min)}</b></div><div class="sh-stat"><small>Average</small><b>${shFmt(avg)}</b></div><div class="sh-stat top"><small>Highest</small><b>${shFmt(max)}</b></div><div class="sh-stat"><small>Offers</small><b>${L.length}</b></div></div>`:'';
+ if(SH.budget!=null)L=L.filter(p=>shVal(p)==null||shVal(p)<=SH.budget);
+ if(SH.sort==='low')L.sort((a,b)=>(shVal(a)??1e12)-(shVal(b)??1e12));else if(SH.sort==='high')L.sort((a,b)=>(shVal(b)??-1)-(shVal(a)??-1));
+ $('#shgrid').innerHTML=L.length?L.map((p,k)=>{const v=shVal(p),fav=SH.fav.some(x=>x.link===p.link),cm=SH.cmp.includes(p._i),bell=SH.alerts.some(x=>x.link===p.link),conv=v!=null&&p.cur&&p.cur!==SH.cur&&RATES[p.cur];
+  return `<div class="sh-card" style="animation-delay:${k*.05}s">
+  ${vs.length&&v===min?'<span class="sh-badge">BEST PRICE</span>':''}
+  <div class="sh-tools"><button class="sh-tool ${fav?'on':''}" data-fav="${p._i}" title="Save to my list" aria-label="Save to my list">♥</button>
+   <button class="sh-tool ${cm?'on':''}" data-cmp="${p._i}" title="Compare" aria-label="Compare">⇄</button>
+   <button class="sh-tool ${bell?'on':''}" data-bell="${p._i}" title="Alert me if the price drops" aria-label="Price alert">🔔</button></div>
+  <a class="ph" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">${p.thumb?`<img loading="lazy" src="${esc(p.thumb)}" alt="">`:''}</a>
+  <a class="sh-body" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer"><span class="sh-shop">${esc(p.shop)}</span><span class="sh-title">${esc(p.title).slice(0,70)}</span>
+  <span class="sh-price">${v!=null?(conv?'≈ ':'')+shFmt(v):esc(p.price||'See price')}</span>${conv?`<span class="sh-orig">Listed at ${esc(p.price)}</span>`:''}<span class="sh-go">Visit shop ↗</span></a></div>`}).join('')
+  :'<div class="nores">Nothing under this budget. Raise the slider a little.</div>'}
+
+/* --- clics de la zone résultats --- */
+shEls.out.onclick=e=>{const T=s=>e.target.closest(s);let b;
+ if(b=T('[data-s]')){SH.sort=b.dataset.s;return shRender()}
+ if(b=T('[data-cur]')){SH.cur=b.dataset.cur;SH.budget=null;return shRender()}
+ if(b=T('[data-sh]')){SH.shop=b.dataset.sh;return shRender()}
+ if(b=T('[data-fav]')){const p=SH.list[+b.dataset.fav],i=SH.fav.findIndex(x=>x.link===p.link);
+  if(i>=0)SH.fav.splice(i,1);else SH.fav.push(shMini(p));LS('dm_fav',SH.fav);shListCount();b.classList.toggle('on');return shToast(i>=0?'Removed from your list':'Saved to your list ♥')}
+ if(b=T('[data-cmp]')){const i=+b.dataset.cmp,k=SH.cmp.indexOf(i);
+  if(k>=0)SH.cmp.splice(k,1);else{if(SH.cmp.length>=3)return shToast('Compare up to 3 pieces');SH.cmp.push(i)}b.classList.toggle('on');return shCmpBar()}
+ if(b=T('[data-bell]')){const p=SH.list[+b.dataset.bell],i=SH.alerts.findIndex(x=>x.link===p.link);
+  if(i>=0)SH.alerts.splice(i,1);else{const a={...shMini(p),at:Date.now()};SH.alerts.push(a);api('alerts',a).catch(()=>{})}   // endpoint optionnel
+  LS('dm_alerts',SH.alerts);b.classList.toggle('on');return shToast(i>=0?'Alert removed':'We will warn you if the price drops 🔔')}};
+shEls.out.oninput=e=>{if(e.target.id!=='shbr')return;SH.budget=+e.target.value;$('#shbv').textContent=shFmt(SH.budget);shDraw()};
+
+/* --- comparateur (2 à 3 pièces) --- */
+function shCmpBar(){const bar=$('#shcmp'),n=SH.cmp.length;bar.hidden=n<1;
+ bar.innerHTML=`<span>${n} selected</span><button class="btn" id="cgo" type="button" ${n<2?'disabled':''}>Compare</button><button class="btn ghost" id="cx" type="button">Clear</button>`}
+$('#shcmp').onclick=e=>{if(e.target.id==='cx'){SH.cmp=[];shCmpBar();return shDraw()}
+ if(e.target.id!=='cgo')return;const P=SH.cmp.map(i=>SH.list[i]),vs=P.map(shVal),lo=Math.min(...vs.filter(v=>v!=null)),m=document.createElement('div');m.className='modal';
+ const row=(l,f)=>`<tr><th>${l}</th>${P.map(f).join('')}</tr>`;
+ m.innerHTML=`<div><div class="row" style="align-items:center;justify-content:space-between"><h2>Side by side</h2><button class="btn ghost" id="cl">Close</button></div>
+ <table class="sh-cmp">${row('',p=>`<td><img src="${esc(p.thumb||'')}" alt=""></td>`)}${row('Shop',p=>`<td>${esc(p.shop)}</td>`)}${row('Piece',p=>`<td>${esc(p.title).slice(0,60)}</td>`)}
+ ${row('Price',p=>{const v=shVal(p);return `<td class="${v===lo?'low':''}">${v!=null?shFmt(v):esc(p.price||'–')}</td>`})}${row('',p=>`<td><a class="btn" style="display:inline-block;text-decoration:none" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">Visit ↗</a></td>`)}</table></div>`;
+ document.body.appendChild(m);m.onclick=ev=>{if(ev.target===m||ev.target.id==='cl')m.remove()}};
+
+/* --- ma liste d'envies --- */
+const shListCount=()=>{$('#shlistn').textContent=SH.fav.length};shListCount();
+$('#shlist').onclick=()=>{const m=document.createElement('div');m.className='modal';
+ const draw=()=>{const tot=SH.fav.reduce((s,p)=>s+(shVal(p)||0),0);
+  m.innerHTML=`<div style="max-width:560px"><div class="row" style="align-items:center;justify-content:space-between"><h2>My shopping list</h2><button class="btn ghost" id="cl">Close</button></div>
+  ${SH.fav.length?SH.fav.map((p,i)=>`<div class="sh-lrow"><img src="${esc(p.thumb||'')}" alt=""><div><b>${esc(p.shop)}</b><br>${esc(p.title).slice(0,50)}<br>${esc(p.price||'')}</div>
+   <a class="btn ghost" style="padding:8px 14px;text-decoration:none" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">Visit</a><button class="sh-tool on" data-rm="${i}" aria-label="Remove">×</button></div>`).join('')
+   +`<p style="margin-top:14px"><b>Total: ${shFmt(tot)}</b></p><button class="btn ghost" id="lcopy">Copy list</button>`:'<p class="sub">Nothing saved yet. Tap ♥ on any offer.</p>'}</div>`};
+ draw();document.body.appendChild(m);
+ m.onclick=e=>{if(e.target===m||e.target.id==='cl')return m.remove();
+  const r=e.target.closest('[data-rm]');if(r){SH.fav.splice(+r.dataset.rm,1);LS('dm_fav',SH.fav);shListCount();draw()}
+  if(e.target.id==='lcopy'){navigator.clipboard?.writeText(SH.fav.map(p=>`${p.shop} - ${p.title} - ${p.price||''}\n${p.link}`).join('\n\n'));shToast('List copied')}}};
+
+/* --- ajouter la photo à ma garde-robe --- */
+shEls.wd.onclick=async()=>{
+ if(!SH.file)return;if(!WD.ready)return shToast('Open “Wardrobe Completion” once, then retry');
+ shEls.wd.disabled=true;
+ try{const fd=new FormData();fd.append('file',SH.file);fd.append('category','');fd.append('gender',WD.gender);fd.append('exclude',WD.items.map(x=>x.i).join(','));
+  const r=await wdUpload(fd);wdAddItem({...r.item,photo:r.photo||URL.createObjectURL(SH.file)});shToast(`Added to your wardrobe · ${FR[r.item.c]}`)}
+ catch(e){shToast(e.message)}
+ shEls.wd.disabled=false};
+
+/* --- historique --- */
+function shHist(){$('#shhist').innerHTML=SH.hist.length?`<div class="sh-hist"><span>Recent</span>${SH.hist.map((h,i)=>`<button class="sh-h" data-h="${i}" type="button" aria-label="Open search ${i+1}">${h.t?`<img src="${h.t}" alt="">`:''}</button>`).join('')}</div>`:''}
+$('#shhist').onclick=e=>{const b=e.target.closest('[data-h]');if(!b)return;const h=SH.hist[+b.dataset.h];
+ SH.list=h.list.map((p,i)=>({...p,_i:i}));SH.shop='';SH.budget=null;SH.cmp=[];shCmpBar();
+ if(h.t){shEls.prev.src=h.t;shEls.prev.hidden=false;shEls.ph.hidden=true;shEls.drop.classList.add('has');shEls.clr.hidden=false}
+ shEls.title.textContent=`${SH.list.length} offers (saved search)`;shRender()};
+shHist();
+$('#shopgo').onclick=()=>shRun();
 
 /* ---------- IDÉE 5 : Wardrobe Completion ---------- */
 const WD={items:[],fresh:new Set(),open:false,n:3,init:false,gender:'women',ready:false};
@@ -1108,9 +1306,7 @@ function countTo(el,a,b){let t=0;const id=setInterval(()=>{t+=.04;if(t>=1){t=1;c
 async function wdSample(force){
  if(force!==true&&WD.items.length&&!confirm('Replace your saved wardrobe with a sample wardrobe?'))return;
  try{
-   // On demande l'échantillon du genre choisi
    const r=await api('wardrobe/sample?gender='+WD.gender);
-   // On filtre par sécurité : pas de robes pour les hommes
    WD.items = r.items.filter(x => !(WD.gender === 'men' && x.c === 'dress'));
    WD.fresh.clear();$('#wout').innerHTML='';wdRender();wdSave();
    if(!WD.open){await sleep(500);wdOpen(true)}
@@ -1301,14 +1497,11 @@ $('#wrun').onclick=async()=>{const btn=$('#wrun');
  $('#wcab').classList.add('scan');
  
  try{
-  // On envoie le genre actuel (women ou men) au serveur
   const r=await api('wardrobe/complete',{items:WD.items.map(x=>x.i),n:WD.n,gender:WD.gender});
   $('#wcab').classList.remove('scan');
 
-  // Si le serveur n'a pas respecté le genre, on filtre par sécurité
   const validRecs = r.recs.filter(q => {
     if (WD.gender === 'men' && q.item.c === 'dress') return false;
-    // On suppose que l'item a une propriété 'g' (genre) ou on vérifie via le catalogue
     const catItem = C.find(x => x.i === q.item.i);
     if (catItem && catItem.g && catItem.g !== 'unisex' && catItem.g !== WD.gender) return false;
     return true;
