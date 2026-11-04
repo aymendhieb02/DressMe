@@ -531,6 +531,68 @@ label.btn input{display:none}
   #wardrobe .wd-door,#wardrobe .wd-cab,#wardrobe .wd-in{transition-duration:.01s}
   #wardrobe .wd-door,#wardrobe .wd-plaque,#wardrobe #wrun::after{animation:none}
 }
+/* ---------- Gap panel : suggestions flottantes à droite ---------- */
+.gapx{position:fixed;top:50%;right:18px;z-index:12;width:min(392px,92vw);max-height:88vh;display:flex;flex-direction:column;
+ border-radius:30px;background:#ffffffeb;backdrop-filter:blur(22px) saturate(1.3);border:1px solid #fff;overflow:hidden;
+ box-shadow:0 40px 90px #17283a55,0 0 0 1px #17283a0d;
+ transform:translate(125%,-50%) rotate(2deg);opacity:0;pointer-events:none;
+ transition:transform .85s cubic-bezier(.2,1.15,.3,1),opacity .4s}
+.gapx.show{transform:translate(0,-50%);opacity:1;pointer-events:auto}
+.gapx::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#ff6b4a,#ff9f43,#0e9f9a)}
+.gapx-head{padding:26px 24px 8px;position:relative}
+.gapx-head .eyebrow{color:var(--c1);opacity:1;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.gapx-head .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c1);box-shadow:0 0 0 0 #ff6b4a88;animation:gping 2s infinite}
+@keyframes gping{70%{box-shadow:0 0 0 9px #ff6b4a00}}
+.gapx-head h3{font:300 1.65rem/1.1 Fraunces,serif;letter-spacing:-.02em;margin:0 36px 8px 0}.gapx-head h3 em{font-style:italic;color:var(--c1)}
+.gapx-head p{margin:0;font-size:.82rem;line-height:1.5;opacity:.7}
+.gapx-x{position:absolute;top:20px;right:18px;width:32px;height:32px;border:0;border-radius:50%;background:#e8f4f2;color:var(--ink);cursor:pointer;font-size:1.1rem;transition:.2s}
+.gapx-x:hover{background:var(--ink);color:#fff;transform:rotate(90deg)}
+.gapx-tabs{display:flex;gap:6px;padding:10px 24px 0}
+.gapx-tabs button{border:0;cursor:pointer;padding:6px 14px;border-radius:999px;background:#e8f4f2;font:500 .78rem Inter;color:var(--ink);transition:.2s}
+.gapx-tabs button.on{background:var(--ink);color:#fff}
+.gapx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 20px 6px;overflow:auto}
+.gapx-card{position:relative;border:0;padding:0;text-align:left;cursor:pointer;background:#fff;border-radius:18px;overflow:hidden;font:inherit;color:inherit;
+ box-shadow:0 8px 20px #17283a1f,inset 0 0 0 2px transparent;transition:transform .3s cubic-bezier(.2,1.4,.3,1),box-shadow .25s,opacity .25s,filter .25s;
+ animation:gcin .6s calc(.55s + var(--k)*.12s) cubic-bezier(.2,1.2,.3,1) backwards}
+@keyframes gcin{from{opacity:0;transform:translateX(40px) scale(.9)}}
+.gapx-card img{width:100%;aspect-ratio:3/4.3;object-fit:cover;display:block;transition:transform .5s}
+.gapx-card:hover{transform:translateY(-5px)}.gapx-card:hover img{transform:scale(1.06)}
+.gapx-card p{margin:0;padding:8px 8px 10px;font-size:.66rem;line-height:1.3}
+.gapx-card em{display:block;font:700 .56rem Inter;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--c2);margin-bottom:2px}
+.gapx-card .ck{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#ff6b4a,#ff9f43);
+ transform:scale(0);transition:transform .35s cubic-bezier(.2,1.8,.3,1);box-shadow:0 4px 10px #ff6b4a77}
+.gapx-card .ck::after{content:"";position:absolute;left:8px;top:4px;width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.gapx-grid.has .gapx-card:not(.on){opacity:.5;filter:saturate(.6)}
+.gapx-card.on{transform:translateY(-6px) scale(1.04);box-shadow:0 18px 34px #ff6b4a44,inset 0 0 0 3px var(--c1)}
+.gapx-card.on .ck{transform:scale(1)}
+.gapx-foot{padding:14px 20px 20px;display:flex;flex-direction:column;gap:8px}
+.gapx-cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:999px}
+.gapx-cta svg{transition:transform .25s}.gapx-cta:not(:disabled):hover svg{transform:translateX(4px)}
+.gapx-cta:disabled{opacity:.4;box-shadow:none;cursor:not-allowed;background:#9fb3b0}
+.gapx-hint{text-align:center;font-size:.72rem;opacity:.55;margin:0}
+/* onglet latéral quand le panneau est réduit */
+.gapx-tab{position:fixed;top:50%;right:0;z-index:11;transform:translate(100%,-50%);border:0;cursor:pointer;padding:18px 12px;border-radius:18px 0 0 18px;
+ background:linear-gradient(160deg,#ff6b4a,#ff9f43);color:#fff;font:600 .78rem Inter;letter-spacing:.14em;text-transform:uppercase;writing-mode:vertical-rl;
+ box-shadow:-10px 10px 30px #ff6b4a55;transition:transform .5s cubic-bezier(.2,1.2,.3,1)}
+.gapx-tab.show{transform:translate(0,-50%)}.gapx-tab:hover{padding-right:18px}
+@media(max-width:700px){
+ .gapx{top:auto;bottom:0;right:0;left:0;width:100%;border-radius:28px 28px 0 0;transform:translateY(110%)}.gapx.show{transform:none}
+ .gapx-tab{top:auto;bottom:90px;transform:translateX(100%)}.gapx-tab.show{transform:none}
+}
+@media(prefers-reduced-motion:reduce){.gapx,.gapx-card{transition-duration:.01s;animation:none}}
+/* Gap panel : ancré en bas à droite, ne cache plus l'avatar */
+@media(min-width:701px){
+ .gapx{top:auto;bottom:16px;right:18px;
+  max-height:min(640px,calc(100vh - 300px));min-height:380px;
+  transform:translate(125%,0) rotate(2deg)}
+ .gapx.show{transform:none}
+ .gapx-head{padding:20px 24px 4px}
+ .gapx-head h3{font-size:1.4rem}
+ .gapx-grid{padding:12px 20px 4px}
+ .gapx-foot{padding:10px 20px 16px}
+ .gapx-tab{top:auto;bottom:40px;transform:translateX(100%)}
+ .gapx-tab.show{transform:none}
+}
 </style><link rel="stylesheet" href="/static/assistant.css?v=integrated-13">
 </head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
 <div id="intro" hidden><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
@@ -806,19 +868,29 @@ document.addEventListener('click',event=>{if(mobileMenu()&&mobileMenuOpen&&!even
 window.addEventListener('resize',()=>{closeGroups();mobileMenuOpen=false;syncMenuMode()},{passive:true});
 window.addEventListener('hashchange',()=>{if(mobileMenu()&&mobileMenuOpen)closeMobileMenu(false)});
 /* ---------- sélecteur d'articles (hide = catégories à masquer, ex. ['dress'] pour une garde-robe homme) ---------- */
-function picker(cb,hide=[],allow=null){let f='all',q='';const m=document.createElement('div');m.className='modal';
+function picker(cb,hide=[],mine=null){let f='all',q='';const m=document.createElement('div');m.className='modal';
+ const base=()=>mine||C;
  m.innerHTML=`<div><div class="row" style="align-items:center;justify-content:space-between"><h2>Pick an item</h2><button class="btn ghost" id="cl">Close</button></div>
  <input type="search" placeholder="Search (coat, silk, boots…)" id="q"><div class="chips" id="fc"></div><div class="grid" id="g"></div></div>`;document.body.appendChild(m);
  const cats=['all',...Object.keys(FR).filter(c=>!hide.includes(c))];$('#fc',m).innerHTML=cats.map(c=>`<button class="cc ${c=='all'?'on':''}" data-c="${c}">${c=='all'?'All':FR[c]}</button>`).join('');
- const draw=()=>{const L=C.filter(x=>!hide.includes(x.c)&&(!allow||allow.has(x.i))&&(f=='all'||x.c==f)&&x.d.toLowerCase().includes(q)).slice(0,120);
-  $('#g',m).innerHTML=L.map(x=>`<div class="card" data-i="${x.i}"><img loading="lazy" src="${img(x.k)}"><p><em>${FR[x.c]}</em><br>${x.d.slice(0,46)}</p></div>`).join('')||'<p>No results</p>'};
+ const draw=()=>{const L=base().filter(x=>!hide.includes(x.c)&&(f=='all'||x.c==f)&&String(x.d||'').toLowerCase().includes(q)).slice(0,120);
+  $('#g',m).innerHTML=L.map(x=>`<div class="card" data-i="${x.i}"><img loading="lazy" src="${x.photo||img(x.k)}"><p><em>${FR[x.c]||x.c}</em><br>${esc(String(x.d||'').slice(0,46))}</p></div>`).join('')||'<p>No results</p>'};
  m.onclick=e=>{if(e.target===m||e.target.id=='cl')return m.remove();const c=e.target.closest('[data-c]');if(c){f=c.dataset.c;$$('.cc',m).forEach(x=>x.classList.toggle('on',x===c));draw()}
   const k=e.target.closest('[data-i]');if(k){m.remove();cb(+k.dataset.i)}};$('#q',m).oninput=e=>{q=e.target.value.toLowerCase();draw()};draw()}
-function Builder(root,max,onChange){const st={it:Array(max).fill(null),bad:-1,good:-1};
+const PH={};
+async function mineFetch(){await wdFlush();const r=await api('wardrobe/me');r.items.forEach(x=>{if(x.photo)PH[x.i]=x.photo});return r.items}
+async function pickMine(cb){try{const items=await mineFetch();
+ if(!items.length){alert('Your wardrobe is empty. Fill it in Wardrobe Completion first.');return}
+ picker(cb,[],items)}catch(e){console.error(e);alert('Could not load your wardrobe: '+e.message)}}
+async function mineLook(n){const items=await mineFetch(),by={};items.forEach(x=>(by[x.c]=by[x.c]||[]).push(x.i));
+ const pick=c=>by[c]?.[Math.random()*by[c].length|0];
+ const cats=by.dress&&Math.random()<.3?['dress','shoes','outer','bag']:['top','bottom','shoes','outer','bag'];
+ const ids=cats.map(pick).filter(v=>v!=null);if(ids.length<2)throw new Error('Not enough pieces in your wardrobe yet.');return ids.slice(0,n)}
+  function Builder(root,max,onChange){const st={it:Array(max).fill(null),bad:-1,good:-1};
  const draw=()=>{root.innerHTML=st.it.map((id,j)=>id==null?`<div class="slot empty" data-j="${j}"><b>+</b><small>Add an item</small></div>`:
-  `<div class="slot ${j==st.bad?'bad':''} ${j==st.good?'good':''}" data-j="${j}"><img src="${img(cat(id).k)}"><small>${FR[cat(id).c]} · ${cat(id).d.slice(0,26)}</small><button class="x" data-x="${j}">×</button></div>`).join('')};
+  `<div class="slot ${j==st.bad?'bad':''} ${j==st.good?'good':''}" data-j="${j}"><img src="${PH[id]||img(cat(id).k)}"><small>${FR[cat(id).c]} · ${cat(id).d.slice(0,26)}</small><button class="x" data-x="${j}">×</button></div>`).join('')};
  root.onclick=e=>{const x=e.target.closest('[data-x]');if(x){e.stopPropagation();st.it[+x.dataset.x]=null;st.bad=st.good=-1;draw();onChange();return}
-  const s=e.target.closest('.slot');if(s)picker(id=>{st.it[+s.dataset.j]=id;st.bad=st.good=-1;draw();onChange()})};
+  const s=e.target.closest('.slot');if(s)pickMine(id=>{st.it[+s.dataset.j]=id;st.bad=st.good=-1;draw();onChange()})};
  st.idx=()=>st.it.map((v,j)=>v==null?-1:j).filter(j=>j>=0);st.get=()=>st.it.filter(v=>v!=null);
  st.set=a=>{st.it=Array.from({length:max},(_,j)=>a[j]??null);st.bad=st.good=-1;draw();onChange()};
  st.put=(id,j)=>{if(j==null)j=st.it.indexOf(null);if(j<0)return false;st.it[j]=id;st.bad=-1;st.good=j;draw();onChange();return true};draw();return st}
@@ -826,18 +898,18 @@ function Builder(root,max,onChange){const st={it:Array(max).fill(null),bad:-1,go
 const B1=Builder($('#b1'),5,()=>rate());let tm;
 function rate(){clearTimeout(tm);const it=B1.get();if(it.length<2){$('#sout').innerHTML='';vdHide();return}
  $('#sout').innerHTML='<div class="spin"></div>';
- tm=setTimeout(()=>api('score',{items:it}).then(r=>{const [v,c]=verdict(r.score),ix=B1.idx();B1.bad=r.odd>0&&r.score<8?ix[r.odd-1]:-1;B1.good=-1;
-  $$('.slot',$('#b1')).forEach((s,j)=>s.classList.toggle('bad',j==B1.bad));
+ tm=setTimeout(()=>api('score',{items:it}).then(r=>{const miss=r.missing||[],inc=miss.length>0,[v,c]=inc?['INCOMPLETE','var(--warn)']:verdict(r.score),ix=B1.idx();B1.bad=!inc&&r.odd>0&&r.score<8?ix[r.odd-1]:-1;
   $('#sout').innerHTML=`<div class="res"><div class="gauge"><svg width="140" height="140"><circle cx="70" cy="70" r="58" fill="none" stroke="#dcefec" stroke-width="14"/><circle id="ring" cx="70" cy="70" r="58" fill="none" stroke="${c}" stroke-width="14" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="364" style="transition:1s"/></svg><b><span id="num">0.0</span><small>/ 10</small></b></div>
-  <div><span class="pill" style="background:${c}">${v}</span><p style="max-width:420px">${r.score>=8?'Flawless. Not a single piece out of place.':r.odd>0?`The <b>${FR[cat(it[r.odd-1]).c]}</b> (red frame) is stealing the show for the wrong reasons.`:'Nothing clashes, yet this look still has room to shine.'}</p></div></div>
+  <div><span class="pill" style="background:${c}">${v}</span><p style="max-width:420px">${inc?`Not a complete outfit yet: it still needs <b>${miss.map(m=>FR[m]||m).join(' + ')}</b>.`:r.score>=8?'Flawless. Not a single piece out of place.':r.odd>0?`The <b>${FR[cat(it[r.odd-1]).c]}</b> (red frame) is stealing the show for the wrong reasons.`:'Nothing clashes, yet this look still has room to shine.'}</p></div></div>
   <div id="sg"></div>`;
   requestAnimationFrame(()=>{$('#ring').style.strokeDashoffset=364*(1-r.score/10)});let n=0;const t=setInterval(()=>{n+=r.score/25;if(n>=r.score){n=r.score;clearInterval(t)}$('#num').textContent=n.toFixed(1)},30);
   $('#sg').innerHTML=r.swaps.length?'<h3>Swaps that raise the score</h3>'+r.swaps.map((s,k)=>{const add=s.action==='add',slot=add?'':ix[s.pos];
    return `<div class="sug" style="animation-delay:${k*.12}s"><img src="${img(s.item.k)}"><div>${add?`<b>Add</b> ${FR[s.item.c]}`:`<b>${FR[s.item.c]}</b> instead of “${esc(cat(it[s.pos]).d.slice(0,32))}”`}<br>${esc(s.item.d.slice(0,50))}</div><span class="pill" style="background:${verdict(s.score)[1]}">${s.score.toFixed(1)} (+${(s.score-r.score).toFixed(1)})</span><button class="btn" data-p="${slot}" data-i="${s.item.i}">Apply</button></div>`}).join(''):'';
   $$('[data-p]',$('#sg')).forEach(b=>b.onclick=()=>B1.put(+b.dataset.i,b.dataset.p===''?null:+b.dataset.p));
   vdAsk(it)}).catch(e=>{$('#sout').innerHTML=`<div class="err">${esc(e.message)}</div>`;vdHide()}),350)}
-let EX;$('#ex1').onclick=async()=>{EX=EX||await api('examples');B1.set(EX[Math.random()*EX.length|0].items)};
-/* ---------- IDÉE 2 : complétion ---------- */
+$('#ex1').onclick=async()=>{try{B1.set(await mineLook(4))}catch(e){$('#sout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+
+  /* ---------- IDÉE 2 : complétion ---------- */
 let want='auto',nGuess=1,coLoaded=false;const F={sty:'',sea:'',col:[]};const B2=Builder($('#b2'),5,()=>{});
 const WANTS=['auto','top','bottom','dress','outer','shoes','bag','accessory'];
 const WL=c=>c==='auto'?'Auto':c==='accessory'?'Accessory':(FR[c]||c);
@@ -888,7 +960,7 @@ $('#go2').onclick=async()=>{const it=B2.get(),out=$('#cout');
   if(!r.items.length){out.innerHTML='<div class="nores">No suggestion matches these filters. Try removing one.</div>';return}
   const cats=(nGuess===1&&want==='auto'&&r.cats.length)?`<p class="sub">This look is calling for: ${r.cats.map(c=>`<b>${esc(WL(c[0]))}</b>`).join(' · ')}</p>`:'';
   const note=r.ignored?`<p class="sub">${r.ignored} piece(s) unknown to the model were ignored.</p>`:'';
-  const card=(x,k,lab)=>`<div class="card rv" style="animation-delay:${k*.12}s" data-i="${x.i}"><img src="${img(x.k)}" alt=""><p><em>${lab}${FR[x.c]}</em><br>${esc(x.d.slice(0,46))}<br><b style="color:var(--c2)">+ Add</b></p></div>`;
+  const card=(x,k,lab)=>`<div class="card rv" style="animation-delay:${k*.12}s" data-i="${x.i}"><img src="${x.photo||img(x.k)}" alt=""><p><em>${lab}${FR[x.c]}</em><br>${esc(x.d.slice(0,46))}<br><b style="color:var(--c2)">+ Add</b></p></div>`;
   const pair=nGuess===2&&r.items.length>1;
   const body=pair?`<div class="pair"><div class="pg">${r.items.map((x,k)=>card(x,k,`Piece ${k+1} · `)).join('<span class="plus">+</span>')}</div><button class="btn" id="addall" type="button">Add both pieces</button></div>`
    :'<div class="grid">'+r.items.map((x,k)=>card(x,k,'')).join('')+'</div>';
@@ -897,8 +969,8 @@ $('#go2').onclick=async()=>{const it=B2.get(),out=$('#cout');
   $$('.card',out).forEach(c=>c.onclick=()=>{if(!B2.put(+c.dataset.i))full()});
   const all=$('#addall',out);if(all)all.onclick=()=>{if(5-B2.get().length<r.items.length)return full();r.items.forEach(x=>B2.put(x.i))}
  }).catch(e=>out.innerHTML=`<div class="err">${esc(e.message)}</div>`)};
-$('#ex2').onclick=async()=>{EX=EX||await api('examples');B2.set(EX[Math.random()*EX.length|0].items.slice(0,2))};
-/* ---------- IDÉE 3 : tenue du jour ---------- */
+$('#ex2').onclick=async()=>{try{B2.set(await mineLook(2))}catch(e){$('#cout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+ /* ---------- IDÉE 3 : tenue du jour ---------- */
 let src='geo';
 function srcUI(){const u=$('#srcui');
  if(src=='geo')u.innerHTML='<button class="btn" id="loc">Use my location</button>';
@@ -914,13 +986,57 @@ $('#src').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;src=b.da
 function vibe(w){const f=w.feels,t=f<5?'Bitterly cold out there. Wrap up properly.':f<12?'Chilly all day. Real layers are your friend.':f<18?'Fresh and breezy. One good layer does the job.':f<25?'Easy, mild weather. Dress light and move freely.':'A hot one. Keep it light and breathable.';
  const x=w.kind==='rain'||w.kind==='storm'||w.rain>=60?' Keep something waterproof close.':w.kind==='snow'?' Boots and a proper coat, no debate.':w.wind>=30?' The wind is up too.':w.kind==='clear'?' Sunshine all day.':'';return t+x}
 let OCC='',lastBody=null;
-function ootd(body){lastBody=body;$('#ootdout').innerHTML='<div class="spin"></div>';
+const gapsHtml=g=>(g||[]).map(x=>`<div class="nores" style="margin-top:14px"><b>${esc(x.title)}</b><p class="sub" style="margin:4px 0 8px">${esc(x.message)}</p><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))">${x.suggestions.map(s=>`<div class="card"><img src="${img(s.k)}" alt=""><p><em>${FR[s.c]}</em><br>${esc(s.d.slice(0,40))}</p></div>`).join('')}</div><p class="sub" style="margin:10px 0 0">You could check the availability of this item in <a href="#sim" data-go="sim"><b>Shopping → Find Similar</b></a>.</p></div>`).join('');
+/* ---------- Gap panel : 3 suggestions à droite → Find Similar ---------- */
+const gapEl=document.createElement('aside');gapEl.className='gapx';gapEl.setAttribute('aria-label','Suggestions');
+const gapTab=document.createElement('button');gapTab.className='gapx-tab';gapTab.type='button';
+document.body.append(gapEl,gapTab);
+let gapData=[],gapI=0,gapSel=null,gapDismissed=false;
+const GAP_CAT={dress:'dress',outer:'outerwear',top:'top',bottom:'bottom',shoes:'shoes',bag:'bag',accessory:'accessory'};
+const gapOpen=v=>{gapEl.classList.toggle('show',v);gapTab.classList.toggle('show',!v&&gapData.length>0&&tab==='ootd')};
+function gapClear(){gapData=[];gapSel=null;gapEl.classList.remove('show');gapTab.classList.remove('show')}
+function gapDraw(){
+ const g=gapData[gapI];if(!g)return;
+ const word=g.slot==='dress'?'dress':g.slot==='outer'?'coat':'piece';
+ gapEl.innerHTML=`<div class="gapx-head"><p class="eyebrow">Missing piece</p>
+  <h3>Your wardrobe needs <em>a ${word}</em></h3><p>${esc(g.message)}</p>
+  <button class="gapx-x" type="button" aria-label="Minimise">&times;</button></div>
+  ${gapData.length>1?`<div class="gapx-tabs">${gapData.map((x,n)=>`<button type="button" data-n="${n}" class="${n===gapI?'on':''}">${esc(x.slot==='dress'?'Dress':x.slot==='outer'?'Coat':x.slot)}</button>`).join('')}</div>`:''}
+  <div class="gapx-grid ${gapSel!=null?'has':''}">${g.suggestions.slice(0,3).map((s,k)=>`<button type="button" class="gapx-card ${gapSel===k?'on':''}" data-k="${k}" style="--k:${k}">
+   <span class="ck"></span><img src="${img(s.k)}" alt=""><p><em>${esc(FR[s.c]||s.c)}</em>${esc(String(s.d||'').slice(0,42))}</p></button>`).join('')}</div>
+  <div class="gapx-foot"><button class="btn gapx-cta" type="button" ${gapSel==null?'disabled':''}>Find similar
+   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+   <p class="gapx-hint">${gapSel==null?'Tap a piece to select it':'We’ll load this photo into Find Similar'}</p></div>`;
+ gapTab.textContent=`${gapData.length} missing piece${gapData.length>1?'s':''}`;
+}
+function gapPanel(gaps){
+ gapData=(gaps||[]).filter(g=>g.suggestions&&g.suggestions.length);gapI=0;gapSel=null;
+ if(!gapData.length){gapClear();return}
+ gapDraw();setTimeout(()=>{if(tab==='ootd')gapOpen(true)},900)}
+gapEl.addEventListener('click',async e=>{
+ if(e.target.closest('.gapx-x'))return gapOpen(false);
+ const t=e.target.closest('.gapx-tabs [data-n]');if(t){gapI=+t.dataset.n;gapSel=null;gapDraw();return}
+ const c=e.target.closest('.gapx-card');if(c){const k=+c.dataset.k;gapSel=gapSel===k?null:k;gapDraw();return}
+ const go_=e.target.closest('.gapx-cta');if(go_&&gapSel!=null){
+  const g=gapData[gapI],s=g.suggestions[gapSel];go_.disabled=true;go_.firstChild.textContent='Loading… ';
+  try{
+   const blob=await (await fetch(img(s.k))).blob(),f=new File([blob],`${s.k}.jpg`,{type:blob.type||'image/jpeg'}),dt=new DataTransfer();
+   dt.items.add(f);const inp=$('#simfile');inp.files=dt.files;inp.dispatchEvent(new Event('change'));
+   simCat=GAP_CAT[g.slot]||'';$$('#simcat .cc').forEach(x=>x.classList.toggle('on',x.dataset.sc===simCat));
+   $('#simout').innerHTML='';$('#shopout').innerHTML='';
+   gapOpen(false);go('sim');scrollTo({top:0,behavior:'smooth'});
+  }catch(err){go_.disabled=false;alert('Could not load this photo: '+err.message)}}});
+gapTab.onclick=()=>gapOpen(true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&gapEl.classList.contains('show'))gapOpen(false)});
+document.addEventListener('dressme:section',e=>{if(e.detail!=='ootd'){gapEl.classList.remove('show');gapTab.classList.remove('show')}else if(gapData.length)gapTab.classList.add('show')});
+document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(a){e.preventDefault();go(a.dataset.go)}});
+function ootd(body){lastBody=body;gapClear();$('#ootdout').innerHTML='<div class="spin"></div>';
  api('ootd',{...body,occasion:OCC||null}).then(r=>{const w=r.weather;scene(w.kind);
   const map=w.lat!=null?`<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${w.lon-.06}%2C${w.lat-.035}%2C${w.lon+.06}%2C${w.lat+.035}&layer=mapnik&marker=${w.lat}%2C${w.lon}"></iframe>`:'';
   const who={women:"Women's outfit",men:"Men's outfit",unisex:'Unisex outfit'}[r.gender]||'';
   $('#ootdout').innerHTML=`<div class="wx"><div><b>${w.place}</b><div class="temp">${w.temp.toFixed(0)}°</div><div class="cond">${w.label}</div><div class="facts"><span>Feels like ${w.feels.toFixed(0)}°</span><span>Wind ${w.wind.toFixed(0)} km/h</span><span>Min ${w.tmin.toFixed(0)}° / Max ${w.tmax.toFixed(0)}°</span><span>Rain ${w.rain.toFixed(0)} %</span></div>${map}</div>
   <div><div class="grid">${r.pick.map((x,k)=>`<div class="card" style="animation-delay:${k*.12}s"><img src="${img(x.k)}"><p><em>${FR[x.c]}</em><br>${x.d.slice(0,46)}</p></div>`).join('')}</div>
-  <p class="vibe">${vibe(w)}</p></div></div>`})
+  <p class="vibe">${vibe(w)}</p></div></div>`;gapPanel(r.gaps)})
  .catch(e=>$('#ootdout').innerHTML=`<div class="err">${esc(e.message)}</div>`)}
 
 /* ---------- IDÉE 4 : similarité + boutiques ---------- */

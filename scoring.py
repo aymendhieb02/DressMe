@@ -118,34 +118,88 @@ def _apply(items, pos, c):                       # pos == len(items) -> AJOUT d'
     return items + [c] if pos == len(items) else items[:pos] + [c] + items[pos + 1:]
 
 
+
+
+class Items(BaseModel):
+    items: list[int]
+
+ESSENTIALS = {"separates": ("top", "bottom", "shoes"), "dress": ("dress", "shoes")}
+CAP_ONE, CAP_MORE = 5.5, 4.0      # note maximale s'il manque 1 pièce / plusieurs
+
+
+def missing_essentials(cats):
+    have = set(cats)
+    sep = [c for c in ESSENTIALS["separates"] if c not in have]
+    dr = [c for c in ESSENTIALS["dress"] if c not in have]
+    return dr if ("dress" in have and len(dr) < len(sep)) else sep
+
+
+def _cap(score, missing):
+    if not missing:
+        return score
+    return min(score, CAP_ONE if len(missing) == 1 else CAP_MORE)
+
+
+def _ok_fn(gender):                      # n'autorise que les pièces du bon genre
+    if not gender:
+        return lambda i: True
+    try:
+        import wardrobe as W
+        a = W.A()
+        return lambda i: W.ok_item(a, i, gender)
+    except Exception:
+        return lambda i: True
+
+
+def _wardrobe_gender(request):
+    try:
+        import wardrobe as W
+        uid = _user_key(request)
+        p = W.with_db(lambda c: c.execute("SELECT gender FROM wardrobe_profile WHERE user_id=?", (uid,)).fetchone())
+        return p["gender"] if p else None
+    except Exception:
+        return None
+
+
 @lru_cache(128)
-def analyze(items: tuple, top=3, min_gain=0.3):
-    """-> dict(score, odd, swaps=[(pos, article, nouvelle_note)]). odd : 0 = aucun intrus, sinon position + 1."""
+def analyze(items: tuple, gender=None, top=3, min_gain=0.3):
     core, model, E, CAT = _S["core"], _S["model"], _S["E"], _S["cat"]
     items = list(items)
+    cats = lambda row: [CAT[i] for i in row]
+    miss = missing_essentials(cats(items))
     with torch.no_grad():
         t = torch.tensor([items])
         s, ol = model(E[t], torch.ones_like(t, dtype=torch.bool))
-    old, odd = s.item(), int(ol.argmax(1))
+    raw, odd = s.item(), int(ol.argmax(1))
+    old = _cap(raw, miss)
     if old >= 8:
-        return dict(score=old, odd=odd, swaps=[])
+        return dict(score=old, raw=raw, odd=odd, missing=miss, swaps=[])
+    ok = _ok_fn(gender)
     rows, meta = [], []
-    for pos, it in enumerate(items):             # 1) remplacer un article par un article de même catégorie
-        if CAT[it] == "other":
-            continue
-        for c in _S["bycat"].get(CAT[it], []):
-            if c not in items:
-                rows.append(_apply(items, pos, c)); meta.append((pos, c))
-    if len(items) < _S["K"] and not any(CAT[i] in _S["acc_cats"] for i in items):    # 2) ajouter un accessoire
-        for ac in sorted(_S["acc_cats"]):
-            for c in _S["bycat"].get(ac, []):
-                rows.append(items + [c]); meta.append((len(items), c))
+    if miss and len(items) < _S["K"]:                    # tenue incomplète : on propose la pièce qui manque
+        for cat_ in miss:
+            for c in _S["bycat"].get(cat_, []):
+                if c not in items and ok(c):
+                    rows.append(items + [c]); meta.append((len(items), c))
+    else:                                                # tenue complète : remplacements ou accessoire
+        for pos, it in enumerate(items):
+            if CAT[it] == "other":
+                continue
+            for c in _S["bycat"].get(CAT[it], []):
+                if c not in items and ok(c):
+                    rows.append(_apply(items, pos, c)); meta.append((pos, c))
+        if len(items) < _S["K"] and not any(CAT[i] in _S["acc_cats"] for i in items):
+            for ac in sorted(_S["acc_cats"]):
+                for c in _S["bycat"].get(ac, []):
+                    if ok(c):
+                        rows.append(items + [c]); meta.append((len(items), c))
     swaps = []
     if rows:
         sc = core.score_rows(model, E, rows).tolist()
+        sc = [_cap(v, missing_essentials(cats(r))) for v, r in zip(sc, rows)]
         order = [i for i in sorted(range(len(sc)), key=lambda i: -sc[i]) if sc[i] - old >= min_gain][:top]
         swaps = [(meta[i][0], meta[i][1], sc[i]) for i in order]
-    return dict(score=old, odd=odd, swaps=swaps)
+    return dict(score=old, raw=raw, odd=odd, missing=miss, swaps=swaps)
 
 
 class Items(BaseModel):
@@ -153,12 +207,13 @@ class Items(BaseModel):
 
 
 @router.post("/score")
-def api_score(b: Items):
+def api_score(b: Items, request: Request):
     x = _check(b.items)
-    a = analyze(tuple(x))
-    return dict(score=a["score"], odd=a["odd"], max_items=_S["K"],
+    a = analyze(tuple(x), _wardrobe_gender(request))
+    return dict(score=a["score"], odd=a["odd"], missing=a["missing"], max_items=_S["K"],
                 swaps=[dict(pos=p, action="add" if p == len(x) else "replace", item=_S["item"](c), score=s)
                        for p, c, s in a["swaps"]])
+
 
 
 # ------------------------------------------------------------------ styliste LLM
@@ -169,6 +224,7 @@ SYSTEM = ("You are a concise fashion stylist. A neural model has ALREADY scored 
           "then say which suggestion helps most (a suggestion with action 'add' means adding an accessory). "
           "Mention a previous look ONLY by repeating the field trend_vs_previous_look and, if given, "
           "what changed in changed_since_previous_look; if trend_vs_previous_look is null say nothing about a previous look. "
+          "If missing_essentials is not empty, say the outfit is incomplete, name what is missing, and never call it excellent. "
           f"Write in {LANG}. No markdown.")
 
 _llm: dict = {}
@@ -231,7 +287,9 @@ def _ask_llm(facts):
 def _template(f):
     """Message de secours (LLM absent, en chargement, erreur, ou chiffre inventé) : uniquement des faits du modèle."""
     t = f"This look scores {f['score']}/10."
-    if f["score"] >= 8:
+    if f.get("missing_essentials"):
+        t += f" The outfit is incomplete: it still needs {' and '.join(f['missing_essentials'])}."
+    elif f["score"] >= 8:
         t += " It works well together, no change needed."
     else:
         if f["odd_item"]:
@@ -260,7 +318,7 @@ def _user_key(request: Request) -> str:
 @router.post("/score/explain")
 def api_explain(b: Items, request: Request):
     x = _check(b.items)
-    a = analyze(tuple(x))
+    a = analyze(tuple(x), _wardrobe_gender(request))          # au lieu de analyze(tuple(x))
     D, CAT = _S["desc"], _S["cat"]
     hist = MEMORY[_user_key(request)]
     last = hist[-1] if hist else None
@@ -280,6 +338,7 @@ def api_explain(b: Items, request: Request):
         return dict(action="add", item=D[c]) if p == len(x) else dict(action="replace", replace=D[x[p]], by=D[c])
 
     facts = dict(outfit=[D[i] for i in x], score=round(a["score"], 1),
+                  missing_essentials=a["missing"],
                  odd_item=D[x[a["odd"] - 1]] if a["odd"] > 0 else None,
                  suggestions=[dict(**act(p, c), new_score=round(s, 1)) for p, c, s in a["swaps"]],
                  trend_vs_previous_look=trend, changed_since_previous_look=changed)

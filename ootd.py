@@ -96,10 +96,12 @@ def _accessories():
     return [i for i, b in zip(idx, best) if names[b] == "accessory"]
 
 
-def _slot_idx(slot, gender):
+def _slot_idx(slot, gender, allowed=None):
+    if allowed is not None:                      # dressing de l'utilisateur : uniquement ses pièces
+        cats = ("other", "bag") if slot == "accessory" else (slot,)
+        return [i for i in allowed if _S["cat"][i] in cats]
     base = _accessories() if slot == "accessory" else _S["bycat"].get(slot, [])
     return [i for i in base if _gender_ok(i, gender)]
-
 
 # ------------------------------------------------------------------ météo
 UA = {"User-Agent": "dressme/1.0"}
@@ -127,7 +129,8 @@ class Ootd(BaseModel):
     temp: float | None = None
     kind: str = "clear"
     wind: float = 10
-    occasion: str | None = None                  # None | casual | meeting | fancy | date
+    occasion: str | None = None   
+    use_wardrobe: bool = True                
 
 
 def get_weather(b: Ootd) -> dict:
@@ -310,9 +313,9 @@ def occasion_term(s, occasion, gender, idx):
     return plain, plain - CONTRAST * (E @ np.mean(others, 0))
 
 
-def score_slot(s, w, occasion, gender, topk):
+def score_slot(s, w, occasion, gender, topk, allowed=None):
     groups = prompt_groups(s, w, occasion, gender, with_occ=False)
-    idx = _slot_idx(s, gender)
+    idx = _slot_idx(s, gender, allowed)
     has_occ = bool(occasion and occ_cfg(occasion, gender)["prompts"].get(s))
     if (not groups and not has_occ) or not idx:
         return None
@@ -347,7 +350,7 @@ def best_combo(cand, gamma):
     return {s: i for s, (i, _) in zip(names, combos[k])}, float(tot[k])
 
 
-def pick_outfit(w, occasion=None, gender="unisex", topk=5, gamma=0.5):
+def pick_outfit(w, occasion=None, gender="unisex", topk=5, gamma=0.5, allowed=None):
     cfg = occ_cfg(occasion, gender) if occasion else dict(dress=None, only_dress=False)
     dress_bonus, only_dress = cfg["dress"], cfg["only_dress"]
     results = []
@@ -356,23 +359,68 @@ def pick_outfit(w, occasion=None, gender="unisex", topk=5, gamma=0.5):
             break                                # robe trouvée : on ne regarde pas haut + bas
         cand = {}
         for s in slots_needed(w, occasion, use_dress, gender):
-            r = score_slot(s, w, occasion, gender, topk)
+            r = score_slot(s, w, occasion, gender, topk, allowed)
             if r:
                 cand[s] = r
             elif use_dress and s == "dress":
-                cand = {}; break                 # pas de robe dans le catalogue : formule robe impossible
+                cand = {}; break                 # pas de robe : formule robe impossible
+            elif allowed is not None and s in ("top", "bottom", "shoes"):
+                cand = {}; break                 # pièce indispensable absente du dressing
         if cand:
             pick, sc = best_combo(cand, gamma)
             results.append((sc + ((dress_bonus or 0.0) if use_dress else 0.0), pick))
     if not results:
-        raise RuntimeError("Not enough catalog pieces to build this outfit")
+        raise RuntimeError("Your wardrobe doesn't have enough pieces for this weather or occasion (top + bottom + shoes, or dress + shoes).")
     return max(results, key=lambda r: r[0])[1]
 
 
 # ------------------------------------------------------------------ route
+def user_wardrobe(request: Request):
+    """-> (genre, set d'ids) du dressing sauvegardé, ou (None, None) s'il n'existe pas."""
+    import scoring, wardrobe as W
+    uid = scoring._user_key(request)
+    p = W.with_db(lambda c: c.execute("SELECT gender FROM wardrobe_profile WHERE user_id=?", (uid,)).fetchone())
+    if not p:
+        return None, None
+    rows = W.with_db(lambda c: c.execute("SELECT item_id FROM wardrobe_items WHERE user_id=?", (uid,)).fetchall())
+    return p["gender"], {int(r["item_id"]) for r in rows}
+def outer_reason(w, occasion, gender):
+    if is_snow(w): return "it's snowing"
+    if is_rain(w): return "it's raining"
+    if is_windy(w): return "it's windy"
+    if w["feels"] < 18: return f"it feels like {w['feels']:.0f}°C"
+    if occasion and occ_cfg(occasion, gender)["need_outer"]:
+        return f"a {occ_cfg(occasion, gender)['label'].lower()} look needs a jacket or blazer"
+    return None
+
+
+def find_gaps(w, occasion, gender, pick, allowed):
+    """Pièces nécessaires que le dressing n'a pas, avec des suggestions du catalogue."""
+    def suggest(slot):
+        r = score_slot(slot, w, occasion, gender, 4, None)           # None = on cherche dans tout le catalogue
+        return [_S["item"](i) for i, _ in (r or []) if i not in allowed][:3]
+    gaps = []
+    if "outer" not in pick:
+        why = outer_reason(w, occasion, gender)
+        if why:
+            gaps.append(dict(slot="outer", title="You may need a coat",
+                             message=f"Today {why}, and nothing in your wardrobe fits as a coat or jacket.",
+                             suggestions=suggest("outer")))
+    if occasion in ("fancy", "date") and gender == "women" and "dress" not in pick:
+        lab = occ_cfg(occasion, gender)["label"].lower()
+        gaps.append(dict(slot="dress", title="You may need a dress",
+                         message=f"A {lab} look calls for a dress, and your wardrobe has none that works.",
+                         suggestions=suggest("dress")))
+    return [g for g in gaps if g["suggestions"]]
+
 @router.post("/ootd")
 def api_ootd(b: Ootd, request: Request):
-    gender = user_gender(request)
+    gender, allowed = user_gender(request), None
+    if b.use_wardrobe:
+        wg, ids = user_wardrobe(request)
+        if not ids:
+            raise HTTPException(409, "Your wardrobe is empty. Open Wardrobe Completion to fill it first.")
+        gender, allowed = normalize_gender(wg), ids
     if b.occasion and b.occasion not in OCCASIONS:
         raise HTTPException(400, f"Unknown occasion (choices: {list(OCCASIONS)})")
     try:
@@ -380,12 +428,13 @@ def api_ootd(b: Ootd, request: Request):
     except requests.RequestException as e:
         raise HTTPException(502, f"Weather unavailable : {e}")
     try:
-        pick = pick_outfit(w, b.occasion, gender)
+        pick = pick_outfit(w, b.occasion, gender, allowed=allowed)
     except RuntimeError as e:
         raise HTTPException(422, str(e))
     label = occ_cfg(b.occasion, gender)["label"] if b.occasion else None
     text = f"{band(w['feels'])} {w['label']} day, feels like {w['feels']:.0f} degrees celsius" + (", windy" if is_windy(w) else "")
     item = _S["item"]
-    return dict(weather=w, gender=gender, occasion=b.occasion, occasion_label=label, text=text,
+    gaps = find_gaps(w, b.occasion, gender, pick, allowed) if allowed is not None else []
+    return dict(weather=w, gender=gender, occasion=b.occasion, occasion_label=label, text=text,gaps=gaps,
                 pick=[dict(slot=s, **item(i), prompts=[p for _, g in prompt_groups(s, w, b.occasion, gender) for p in g])
                       for s, i in pick.items()])
