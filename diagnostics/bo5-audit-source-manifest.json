@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-03",
+  "files": {
+    "api.py": "fd19f5795f986d4f822d96ddaa05633c3f73151adf4c9cefb3acd99a0278a85a",
+    "dressme/engine.py": "7df6889c940c1ce2a011a9fbc6d1e332af76f912d8a19ffa95f5d25be71b98b8",
+    "dressme/parser.py": "9ec6c18fdb731067091026e362fd92c97f84e550877bb261be25b235cfaca86a",
+    "dressme/grounding.py": "55207fe5dd8cef2c0637abb3283b721eadcfda4cb0a787eaa511d1f3b8dbd54e",
+    "dressme/rag.py": "836b2ca9b03c759cb0755afa86364a9909a4a1e6509cc085fb2da40dc12aea45",
+    "dressme/bo1.py": "67d7d2d2725ff9efebe84e8cf6b7776fd7e104f6272f33871aa51c5ac1ba40ad",
+    "dressme/constraints.py": "8123c23d3f4e0718632400c9c8c7791b35e13d5e7309bd80aecd705330a3834f",
+    "dressme/catalog.py": "66ae34560f24221e4192b6a217bee3cce4a44651a5fc0b6885a9c52900b5e21b",
+    "dressme/routes.py": "6ac91e98546a4ff2aabeb920ecbdf52aab3e0a7525803817edc8895efb9e1cfb",
+    "dressme/schemas.py": "2185c12e4fa3d16a280435fb2217ccd77fcc38bf0a96041a2fd599b9814abb00",
+    "dressme/state.py": "bc90a18e293c7c6783e4e21fed0caeee77d79ca919fbca435f1480f20d1c5a39",
+    "dressme/config.py": "078e4c6221bedb006a820c81c1e9394039892bdc1caf3a78923da62d1d5afcf2"
+  },
+  "scope": "Source snapshot for BO5 technical report; no new model evaluation.",
+  "verified_artifacts": {
+    "bo5/parser_for_local/parser_adapter/adapter_model.safetensors": {
+      "sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003"
+    },
+    "bo1/score/scorer.pt": {
+      "sha256": "39efbe093325f1ea5d775ca276fa431540b4d4d535be63c3b0b40afd5c532643"
+    },
+    ".cache/bo5_product_passages_v2.npz": {
+      "vector_shape": [
+        653,
+        384
+      ],
+      "dtype": "float32"
+    }
+  },
+  "parser_data": {
+    "train": 2400,
+    "validation": 240,
+    "test": 240,
+    "origin": "synthetic_plan_first for all 2880 rows"
+  }
+}

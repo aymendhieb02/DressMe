@@ -28,7 +28,7 @@ function Install-Environment([string]$EnvironmentPath, [string]$RequirementsPath
     Write-Host "PASS $RequirementsPath installed in $EnvironmentPath (Python $versionText; no system packages)."
 }
 
-$environmentPath = if ($Developer) { 'requirements-dev.lock' } else { 'requirements.lock' }
+$environmentPath = 'requirements-integrated.lock.txt' # validated merged application, including test tools
 Install-Environment '.venv-app' $environmentPath
 
 if ($IncludeBo6) {

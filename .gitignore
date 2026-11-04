@@ -29,3 +29,29 @@ bo6_service/bundle/*.pt
 *.log
 landing/node_modules/
 /static/landing/
+
+# BO1/BO5 local runtime and model artifacts
+# secrets
+
+# Python
+
+# editeur / historique
+
+# OS
+
+# Local inference caches, private wardrobes and generated diagnostics
+.cache/
+.runtime/
+diagnostics/*_source.txt
+diagnostics/*.txt
+bo1/**/img/
+bo1/**/*.pt
+bo1/**/*.npy
+bo5/**/adapter_model.safetensors
+bo5/**/optimizer.pt
+bo5/**/scheduler.pt
+bo5/**/rng_state.pth
+bo5/**/training_args.bin
+
+/tmp/
+/bo5/resume_latest/

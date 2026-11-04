@@ -21,11 +21,14 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(254), nullable=False, unique=True)
     password_hash: Mapped[str] = mapped_column(String(512), nullable=False)
     role: Mapped[str] = mapped_column(String(16), nullable=False, default="USER", server_default="USER")
+    gender: Mapped[str | None] = mapped_column(String(8), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now()
     )
     sessions: Mapped[list["RefreshSession"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+
+    __table_args__ = (CheckConstraint("gender IS NULL OR gender IN ('men', 'women')", name="ck_users_gender"),)
 
 
 class PasswordRecoveryChallenge(Base):

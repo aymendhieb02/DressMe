@@ -29,8 +29,9 @@ from wardrobe import router as wardrobe_router
 import ootd, scoring, completion
 from app.main import app as studio_app
 from app.database import SessionLocal
-from app.auth.dependencies import session_context
+from app.auth.dependencies import session_context, require_csrf, InvalidCsrfToken
 from app.config import settings as studio_settings
+from dressme.routes import router as assistant_router, bo1_router
 
 ROOT_DIR = Path(__file__).resolve().parent
 DATA = Path(os.environ.get("DRESSME_DATA", ROOT_DIR / "data"))
@@ -83,6 +84,7 @@ from redundancy import router as redundancy_router   # BO3
 from donate import router as donate_router            # BO3
 
 app = FastAPI(title="Dress Me", lifespan=lifespan)
+app.state.assistant_auth_required = True
 
 @app.middleware("http")
 async def integrated_auth_boundary(request: Request, call_next):
@@ -92,6 +94,13 @@ async def integrated_auth_boundary(request: Request, call_next):
         return await call_next(request)
     with SessionLocal() as db:
         context = session_context(request, db)
+        if context is not None:
+            request.state.assistant_identity = dict(id=str(context.user.id), gender=context.user.gender)
+            if path.startswith('/api/assistant/') and request.method not in {'GET', 'HEAD', 'OPTIONS'}:
+                try:
+                    require_csrf(request, context)
+                except InvalidCsrfToken:
+                    return JSONResponse({'error': {'code': 'csrf_failed', 'message': 'The request origin or CSRF token is invalid.'}}, status_code=403)
     if context is None:
         return JSONResponse({"error": {"code": "authentication_required", "message": "Sign in to use DressMe."}}, status_code=401)
     return await call_next(request)
@@ -114,6 +123,8 @@ app.include_router(scoring.router)      # POST /api/score, /api/score/explain
 app.include_router(completion.router)   # GET /api/complete/options, POST /api/complete
 app.include_router(redundancy_router)   # BO3 : /api/redundancy/*
 app.include_router(donate_router)       # BO3 : /api/donate/*
+app.include_router(assistant_router)    # BO5 : authenticated conversation
+app.include_router(bo1_router)          # BO1 : stable-ID scoring contract
 app.mount("/studio-api", studio_app, name="studio-api")
 
 @app.get("/api/studio-config")
@@ -221,11 +232,13 @@ def examples(): return [dict(items=o["items"][:MAX_ITEMS], style=o["style"], sea
 # il faisait doublon avec les modules et appelait des variables qui n'existaient plus (score, SC, EMB_FT).
 
 app.mount("/static", StaticFiles(directory=ROOT_DIR / "static"), name="static")
-app.mount("/landing", StaticFiles(directory=ROOT_DIR / "static/landing"), name="landing")
+app.mount("/landing", StaticFiles(directory=ROOT_DIR / "static/landing", check_dir=False), name="landing")
 app.mount("/img", StaticFiles(directory=DATA / "img"), name="img")
 app.mount("/search_img", StaticFiles(directory=DATA / "search_img"), name="search_img")
 @app.get("/")
-def index(): return FileResponse(ROOT_DIR / "static/landing/index.html")
+def index():
+    landing = ROOT_DIR / 'static/landing/index.html'
+    return FileResponse(landing if landing.is_file() else ROOT_DIR / 'static/index.html')
 
 @app.get("/login")
 def login_page(): return FileResponse(ROOT_DIR / "static/index.html")
@@ -235,5 +248,3 @@ def bo3_page(): return FileResponse(ROOT_DIR / "static/bo3.html")
 
 @app.get("/app")
 def application(): return FileResponse(ROOT_DIR / "static/index.html")
-
-

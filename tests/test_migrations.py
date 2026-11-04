@@ -1,6 +1,8 @@
 from alembic import command
 from alembic.config import Config
 from sqlalchemy import create_engine, inspect, text
+import pytest
+from sqlalchemy.exc import IntegrityError
 
 
 def test_initial_migration_upgrades_an_empty_sqlite_database(tmp_path, monkeypatch):
@@ -18,6 +20,45 @@ def test_initial_migration_upgrades_an_empty_sqlite_database(tmp_path, monkeypat
         } <= tables
     finally:
         engine.dispose()
+
+
+def test_gender_migration_preserves_existing_account_and_session(tmp_path, monkeypatch):
+    database_url=f"sqlite:///{(tmp_path/'gender.db').as_posix()}"
+    monkeypatch.setenv('DATABASE_URL',database_url)
+    config=Config('alembic.ini')
+    command.upgrade(config,'0009_password_recovery')
+    engine=create_engine(database_url)
+    with engine.begin() as connection:
+        connection.execute(text("INSERT INTO users (id,email,password_hash,role,created_at,updated_at) VALUES ('u1','existing@example.com','hash','USER',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)"))
+        connection.execute(text("INSERT INTO auth_sessions (id,user_id,token_hash,csrf_hash,expires_at) VALUES ('s1','u1','token','csrf','2099-01-01')"))
+    command.upgrade(config,'head')
+    with engine.begin() as connection:
+        assert connection.execute(text('SELECT gender FROM users WHERE id=\'u1\'')).scalar() is None
+        assert connection.execute(text('SELECT user_id FROM auth_sessions WHERE id=\'s1\'')).scalar()=='u1'
+        connection.execute(text("UPDATE users SET gender='women' WHERE id='u1'"))
+    command.downgrade(config,'0009_password_recovery')
+    with engine.connect() as connection:
+        assert connection.execute(text("SELECT email FROM users WHERE id='u1'")).scalar()=='existing@example.com'
+        assert connection.execute(text("SELECT user_id FROM auth_sessions WHERE id='s1'")).scalar()=='u1'
+    engine.dispose()
+
+
+def test_binary_gender_migration_preserves_choices_and_clears_old_third_choice(tmp_path, monkeypatch):
+    database_url=f"sqlite:///{(tmp_path/'binary-gender.db').as_posix()}"
+    monkeypatch.setenv('DATABASE_URL',database_url)
+    config=Config('alembic.ini')
+    command.upgrade(config,'0010_user_gender')
+    engine=create_engine(database_url)
+    with engine.begin() as connection:
+        for index,gender in enumerate(('men','women','unisex')):
+            connection.execute(text("INSERT INTO users (id,email,password_hash,role,gender,created_at,updated_at) VALUES (:id,:email,'hash','USER',:gender,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)"),
+                               dict(id=f'u{index}',email=f'user{index}@example.com',gender=gender))
+    command.upgrade(config,'head')
+    with engine.connect() as connection:
+        assert dict(connection.execute(text('SELECT id,gender FROM users')).all())=={'u0':'men','u1':'women','u2':None}
+    with pytest.raises(IntegrityError),engine.begin() as connection:
+        connection.execute(text("UPDATE users SET gender='unisex' WHERE id='u0'"))
+    engine.dispose()
 
 
 def test_garment_data_survives_contract_migration(tmp_path, monkeypatch):

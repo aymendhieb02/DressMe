@@ -19,8 +19,8 @@ def find_user(db: Session, email: str) -> User | None:
     return db.scalar(select(User).where(User.email == email))
 
 
-def create_user(db: Session, email: str, password: str) -> User:
-    user = User(email=email, password_hash=hash_password(password))
+def create_user(db: Session, email: str, password: str, gender: str | None = None) -> User:
+    user = User(email=email, password_hash=hash_password(password), gender=gender)
     db.add(user)
     db.flush()
     return user

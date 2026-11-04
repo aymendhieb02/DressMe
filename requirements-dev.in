@@ -1,2 +1,2 @@
 -r requirements-app.in
-pytest==9.0.2
+pytest>=8,<9

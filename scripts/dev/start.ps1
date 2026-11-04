@@ -6,6 +6,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $appPython = Join-Path $repoRoot '.venv-app\Scripts\python.exe'
+if (-not (Test-Path $appPython)) { $appPython = Join-Path $repoRoot '.venv\Scripts\python.exe' }
 $bo6Python = Join-Path $repoRoot '.venv-bo6\Scripts\python.exe'
 $bundlePath = Join-Path $repoRoot 'bo6_service\bundle'
 if (-not (Test-Path $appPython)) { throw 'Run scripts/dev/setup.ps1 first.' }

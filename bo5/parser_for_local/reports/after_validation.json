@@ -1,0 +1,4974 @@
+{
+  "n": 40,
+  "summary": {
+    "contract_valid": 1.0,
+    "action_acc": 0.925,
+    "reuse_acc": 1.0,
+    "quotes_ok": 1.0,
+    "facet_f1_strict": 0.9583333333333334,
+    "facet_f1_structure": 0.9583333333333334,
+    "exact_structure": 0.925
+  },
+  "records": [
+    {
+      "input": {
+        "message": "Search for a garment : dress, grey, women",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "products",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "type",
+            "values": [
+              "dress"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dress",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "grey",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "women",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "products",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "type",
+            "values": [
+              "dress"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dress",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "grey",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "women",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"products\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"type\",\"values\":[\"dress\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"dress\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"grey\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"grey\",\"roles\":[]},{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"women\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 13.541482808999717,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Quelle différence entre femme : un look classique et un look minimaliste",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compare",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "minimaliste",
+            "roles": []
+          }
+        ],
+        "before_facets": [
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "classique",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "femme",
+            "roles": []
+          }
+        ],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "minimaliste",
+            "roles": []
+          }
+        ],
+        "before_facets": [
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "classique",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "femme",
+            "roles": []
+          }
+        ],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"style\",\"values\":[\"minimalist\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"minimaliste\",\"roles\":[]}],\"before_facets\":[{\"field\":\"style\",\"values\":[\"classic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"classique\",\"roles\":[]},{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"femme\",\"roles\":[]}],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 13.847023350999734,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 0.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, style chic, avec gris et noir, si possible confortable",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey",
+              "black"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "avec gris et noir",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "comfortable"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "si possible confortable",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey",
+              "black"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "avec gris et noir",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "comfortable"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "si possible confortable",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"style\",\"values\":[\"chic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style chic\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"grey\",\"black\"],\"mode\":\"all\",\"strength\":\"must\",\"quote\":\"avec gris et noir\",\"roles\":[]},{\"field\":\"goal\",\"values\":[\"comfortable\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"si possible confortable\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 14.822355957000582,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Swap only bottom in outfit 3 with bottom green",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "green"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bottom green",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 3,
+        "target_role": "bottom",
+        "target_quote": "bottom",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "green"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bottom green",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 3,
+        "target_role": "bottom",
+        "target_quote": "bottom",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"replace\",\"reuse_previous\":true,\"reference_quote\":\"Swap only\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"green\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"bottom green\",\"roles\":[\"bottom\"]}],\"before_facets\":[],\"selection_number\":3,\"target_role\":\"bottom\",\"target_quote\":\"bottom\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 8.909056331000102,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Why was that chosen?",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "explain",
+        "reuse_previous": true,
+        "reference_quote": "Why was that chosen?",
+        "query_en": "",
+        "facets": [],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "explain",
+        "reuse_previous": true,
+        "reference_quote": "Why was that chosen?",
+        "query_en": "",
+        "facets": [],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"explain\",\"reuse_previous\":true,\"reference_quote\":\"Why was that chosen?\",\"query_en\":\"\",\"facets\":[],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 5.621395209000184,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "How do you explain a ranking?",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "general",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "explain",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "goal",
+            "values": [
+              "rank"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "How do you explain a ranking?",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"explain\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"goal\",\"values\":[\"rank\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"How do you explain a ranking?\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 8.306310904999918,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 0.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Save : I prefer green, I prefer sporty chic style",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "green"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer green",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer sporty chic style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "green"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer green",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer sporty chic style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"preferences\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"green\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"I prefer green\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"sporty chic\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"I prefer sporty chic style\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.537517038999795,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, style sport chic, uniquement rose et vert",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style sport chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink",
+              "green"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "uniquement rose et vert",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink",
+              "green"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "uniquement rose et vert",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style sport chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink",
+              "green"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "uniquement rose et vert",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink",
+              "green"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "uniquement rose et vert",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"style\",\"values\":[\"sporty chic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style sport chic\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"pink\",\"green\"],\"mode\":\"all\",\"strength\":\"must\",\"quote\":\"uniquement rose et vert\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"pink\",\"green\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"uniquement rose et vert\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 15.301486872999703,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, pour femme, style bohème, pour fête, bas noir, pour été, protection contre la pluie",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style bohème",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour fête",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas noir",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "season",
+            "values": [
+              "summer"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour été",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "rain protection"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "protection contre la pluie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style bohème",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "party"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour fête",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas noir",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "season",
+            "values": [
+              "summer"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour été",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "rain protection"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "protection contre la pluie",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour femme\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"bohemian\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style bohème\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"party\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour fête\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"black\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"bas noir\",\"roles\":[\"bottom\"]},{\"field\":\"season\",\"values\":[\"summer\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour été\",\"roles\":[]},{\"field\":\"goal\",\"values\":[\"rain protection\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"protection contre la pluie\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 24.002518161999433,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, pour femme, pour sport, noir ou rouge",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "sport"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour sport",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "red"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "noir ou rouge",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "sport"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour sport",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "red"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "noir ou rouge",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour femme\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"sport\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour sport\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"black\",\"red\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"noir ou rouge\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 14.293783668000287,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Help me select a look, for men, style chic, for wedding, preferably black, for autumn",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for wedding",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "preferably black",
+            "roles": []
+          },
+          {
+            "field": "season",
+            "values": [
+              "autumn"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for autumn",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for wedding",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "preferably black",
+            "roles": []
+          },
+          {
+            "field": "season",
+            "values": [
+              "autumn"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for autumn",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for men\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"chic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style chic\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"wedding\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for wedding\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"black\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"preferably black\",\"roles\":[]},{\"field\":\"season\",\"values\":[\"autumn\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for autumn\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 20.130606462999822,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour homme, une touche de blanc, si possible qui tient chaud",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "une touche de blanc",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "warm"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "si possible qui tient chaud",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "une touche de blanc",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "warm"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "si possible qui tient chaud",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour homme\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"white\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"une touche de blanc\",\"roles\":[]},{\"field\":\"goal\",\"values\":[\"warm\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"si possible qui tient chaud\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 14.579975195999396,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour femme, style minimaliste, sans rose, maximum 150 USD",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style minimaliste",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sans rose",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "150",
+              "USD"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "maximum 150 USD",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style minimaliste",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sans rose",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "150",
+              "USD"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "maximum 150 USD",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour femme\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"minimalist\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style minimaliste\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"pink\"],\"mode\":\"exclude\",\"strength\":\"must\",\"quote\":\"sans rose\",\"roles\":[]},{\"field\":\"budget\",\"values\":[\"150\",\"USD\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"maximum 150 USD\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 17.914962093000213,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour femme, style chic, sans rose, avec robe",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sans rose",
+            "roles": []
+          },
+          {
+            "field": "type",
+            "values": [
+              "dress"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "avec robe",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour femme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sans rose",
+            "roles": []
+          },
+          {
+            "field": "type",
+            "values": [
+              "dress"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "avec robe",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour femme\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"chic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style chic\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"pink\"],\"mode\":\"exclude\",\"strength\":\"must\",\"quote\":\"sans rose\",\"roles\":[]},{\"field\":\"type\",\"values\":[\"dress\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"avec robe\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 16.887048918999426,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for women, style elegant, only black and blue, if possible comfortable, 3 suggestions",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "elegant"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style elegant",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "blue"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "only black and blue",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "blue"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "only black and blue",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "comfortable"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "if possible comfortable",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "3"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "3 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "elegant"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style elegant",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "blue"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "only black and blue",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black",
+              "blue"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "only black and blue",
+            "roles": []
+          },
+          {
+            "field": "goal",
+            "values": [
+              "comfortable"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "if possible comfortable",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "3"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "3 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for women\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"elegant\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style elegant\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"black\",\"blue\"],\"mode\":\"all\",\"strength\":\"must\",\"quote\":\"only black and blue\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"black\",\"blue\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"only black and blue\",\"roles\":[]},{\"field\":\"goal\",\"values\":[\"comfortable\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"if possible comfortable\",\"roles\":[]},{\"field\":\"count\",\"values\":[\"3\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"3 suggestions\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 24.009244937999938,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Help me select a look, for women, style casual, for dinner, from my wardrobe",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "dinner"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for dinner",
+            "roles": []
+          },
+          {
+            "field": "scope",
+            "values": [
+              "wardrobe"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "from my wardrobe",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "dinner"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for dinner",
+            "roles": []
+          },
+          {
+            "field": "scope",
+            "values": [
+              "wardrobe"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "from my wardrobe",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for women\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"casual\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style casual\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"dinner\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for dinner\",\"roles\":[]},{\"field\":\"scope\",\"values\":[\"wardrobe\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"from my wardrobe\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 17.249890928999775,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "What differs between men : a bohemian look and a casual look",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compare",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "casual",
+            "roles": []
+          }
+        ],
+        "before_facets": [
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bohemian",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "men",
+            "roles": []
+          }
+        ],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "general",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "men",
+            "roles": []
+          }
+        ],
+        "before_facets": [
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "casual",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bohemian",
+            "roles": []
+          }
+        ],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"general\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"men\",\"roles\":[]}],\"before_facets\":[{\"field\":\"style\",\"values\":[\"casual\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"casual\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"bohemian\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"bohemian\",\"roles\":[]}],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 14.009059966999303,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 0.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.3333333333333333,
+        "facet_f1_structure": 0.3333333333333333,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, pour homme, style élégant, pour mariage, bas blanc, maximum 80 USD",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "elegant"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style élégant",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas blanc",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "budget",
+            "values": [
+              "80",
+              "USD"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "maximum 80 USD",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "elegant"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style élégant",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas blanc",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "budget",
+            "values": [
+              "80",
+              "USD"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "maximum 80 USD",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour homme\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"elegant\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style élégant\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"wedding\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour mariage\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"white\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"bas blanc\",\"roles\":[\"bottom\"]},{\"field\":\"budget\",\"values\":[\"80\",\"USD\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"maximum 80 USD\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 20.91809836399989,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for women, bottom grey",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bottom grey",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bottom grey",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for women\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"grey\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"bottom grey\",\"roles\":[\"bottom\"]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 10.992079416000706,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, style chic, blanc ou rose, pour hiver, dans ma garde-robe, 2 propositions",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white",
+              "pink"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "blanc ou rose",
+            "roles": []
+          },
+          {
+            "field": "season",
+            "values": [
+              "winter"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour hiver",
+            "roles": []
+          },
+          {
+            "field": "scope",
+            "values": [
+              "wardrobe"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dans ma garde-robe",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "2 propositions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style chic",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white",
+              "pink"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "blanc ou rose",
+            "roles": []
+          },
+          {
+            "field": "season",
+            "values": [
+              "winter"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour hiver",
+            "roles": []
+          },
+          {
+            "field": "scope",
+            "values": [
+              "wardrobe"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dans ma garde-robe",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "2 propositions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"style\",\"values\":[\"chic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style chic\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"white\",\"pink\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"blanc ou rose\",\"roles\":[]},{\"field\":\"season\",\"values\":[\"winter\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour hiver\",\"roles\":[]},{\"field\":\"scope\",\"values\":[\"wardrobe\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"dans ma garde-robe\",\"roles\":[]},{\"field\":\"count\",\"values\":[\"2\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"2 propositions\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 21.01543339300042,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Help me select a look, for men, for sport, top blue",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "sport"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for sport",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "top blue",
+            "roles": [
+              "top"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "sport"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for sport",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "top blue",
+            "roles": [
+              "top"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for men\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"sport\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for sport\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"blue\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"top blue\",\"roles\":[\"top\"]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 13.836594833999698,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Swap only shoes in outfit 2 with shoes blue",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "shoes blue",
+            "roles": [
+              "shoes"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 2,
+        "target_role": "shoes",
+        "target_quote": "shoes",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "shoes blue",
+            "roles": [
+              "shoes"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 2,
+        "target_role": "shoes",
+        "target_quote": "shoes",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"replace\",\"reuse_previous\":true,\"reference_quote\":\"Swap only\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"blue\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"shoes blue\",\"roles\":[\"shoes\"]}],\"before_facets\":[],\"selection_number\":2,\"target_role\":\"shoes\",\"target_quote\":\"shoes\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 9.261174152999956,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Save : I dislike grey, I prefer sporty chic style",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "exclude",
+            "strength": "prefer",
+            "quote": "I dislike grey",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer sporty chic style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "exclude",
+            "strength": "prefer",
+            "quote": "I dislike grey",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer sporty chic style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"preferences\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"grey\"],\"mode\":\"exclude\",\"strength\":\"prefer\",\"quote\":\"I dislike grey\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"sporty chic\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"I prefer sporty chic style\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.536644814000283,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Swap only shoes in outfit 1 with shoes blue",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "shoes blue",
+            "roles": [
+              "shoes"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "shoes",
+        "target_quote": "shoes",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Swap only",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "shoes blue",
+            "roles": [
+              "shoes"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "shoes",
+        "target_quote": "shoes",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"replace\",\"reuse_previous\":true,\"reference_quote\":\"Swap only\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"blue\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"shoes blue\",\"roles\":[\"shoes\"]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"shoes\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 9.365162757999315,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour bureau, bas beige",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "office"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour bureau",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "beige"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas beige",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "office"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour bureau",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "beige"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas beige",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"occasion\",\"values\":[\"office\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour bureau\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"beige\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"bas beige\",\"roles\":[\"bottom\"]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.13681696399999,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Help me select a look, style classic, for wedding, grey or green, under 50 USD, 5 suggestions",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style classic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for wedding",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey",
+              "green"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "grey or green",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "50",
+              "USD"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "under 50 USD",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "5"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "5 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style classic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for wedding",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey",
+              "green"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "grey or green",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "50",
+              "USD"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "under 50 USD",
+            "roles": []
+          },
+          {
+            "field": "count",
+            "values": [
+              "5"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "5 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"style\",\"values\":[\"classic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style classic\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"wedding\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for wedding\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"grey\",\"green\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"grey or green\",\"roles\":[]},{\"field\":\"budget\",\"values\":[\"50\",\"USD\"],\"mode\":\"exclude\",\"strength\":\"must\",\"quote\":\"under 50 USD\",\"roles\":[]},{\"field\":\"count\",\"values\":[\"5\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"5 suggestions\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 21.255004716000258,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for women, style casual, blue or white",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "blue",
+              "white"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "blue or white",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "blue",
+              "white"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "blue or white",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for women\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"casual\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style casual\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"blue\",\"white\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"blue or white\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 14.450050991999888,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, pour mariage, bas rose",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas rose",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas rose",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"occasion\",\"values\":[\"wedding\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour mariage\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"pink\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"bas rose\",\"roles\":[\"bottom\"]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.056396858999506,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Save : I prefer pink, I prefer bohemian style",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer pink",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer bohemian style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "pink"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer pink",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "bohemian"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer bohemian style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"preferences\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"pink\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"I prefer pink\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"bohemian\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"I prefer bohemian style\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.57093171499946,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Keep the rest but without a color constraint for men",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "Keep the rest but",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [],
+            "mode": "clear",
+            "strength": "must",
+            "quote": "without a color constraint",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "Keep the rest",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [],
+            "mode": "clear",
+            "strength": "must",
+            "quote": "without a color constraint",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":true,\"reference_quote\":\"Keep the rest\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[],\"mode\":\"clear\",\"strength\":\"must\",\"quote\":\"without a color constraint\",\"roles\":[]},{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for men\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.374447610999596,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for women, style sporty chic, for hiking, top black",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style sporty chic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "hiking"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for hiking",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "top black",
+            "roles": [
+              "top"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "sporty chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style sporty chic",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "hiking"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for hiking",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "top black",
+            "roles": [
+              "top"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for women\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"sporty chic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style sporty chic\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"hiking\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for hiking\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"black\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"top black\",\"roles\":[\"top\"]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 17.509061037999345,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Enregistre : je préfère noir, je préfère le style casual",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "je préfère noir",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "je préfère le style casual",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "je préfère noir",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "je préfère le style casual",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"preferences\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"black\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"je préfère noir\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"casual\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"je préfère le style casual\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.880303372000526,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, style casual, only red and green",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "red",
+              "green"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "only red and green",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "red",
+              "green"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "only red and green",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "casual"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style casual",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "red",
+              "green"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "only red and green",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "red",
+              "green"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "only red and green",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"style\",\"values\":[\"casual\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style casual\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"red\",\"green\"],\"mode\":\"all\",\"strength\":\"must\",\"quote\":\"only red and green\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"red\",\"green\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"only red and green\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 14.830938381000124,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Keep the rest but entirely grey for women",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "Keep the rest but",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "entirely grey",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "Keep the rest",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "entirely grey",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for women",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":true,\"reference_quote\":\"Keep the rest\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"grey\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"entirely grey\",\"roles\":[]},{\"field\":\"gender\",\"values\":[\"women\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for women\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.577166065999336,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour homme, style classique, pour dîner, tout en gris, moins de 200 EUR",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style classique",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "dinner"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour dîner",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "tout en gris",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "200",
+              "EUR"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "moins de 200 EUR",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "classic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style classique",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "dinner"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour dîner",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "grey"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "tout en gris",
+            "roles": []
+          },
+          {
+            "field": "budget",
+            "values": [
+              "200",
+              "EUR"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "moins de 200 EUR",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour homme\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"classic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style classique\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"dinner\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour dîner\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"grey\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"tout en gris\",\"roles\":[]},{\"field\":\"budget\",\"values\":[\"200\",\"EUR\"],\"mode\":\"exclude\",\"strength\":\"must\",\"quote\":\"moins de 200 EUR\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 21.389856583000437,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Save : I prefer white, I prefer minimalist style",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer white",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer minimalist style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "preferences",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer white",
+            "roles": []
+          },
+          {
+            "field": "style",
+            "values": [
+              "minimalist"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "I prefer minimalist style",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"preferences\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"white\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"I prefer white\",\"roles\":[]},{\"field\":\"style\",\"values\":[\"minimalist\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"I prefer minimalist style\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.244508634999875,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose-moi un ensemble, pour homme, bas blanc, moins de 150 $",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas blanc",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "budget",
+            "values": [
+              "150"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "moins de 150 $",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "white"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "bas blanc",
+            "roles": [
+              "bottom"
+            ]
+          },
+          {
+            "field": "budget",
+            "values": [
+              "150"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "moins de 150 $",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour homme\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"white\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"bas blanc\",\"roles\":[\"bottom\"]},{\"field\":\"budget\",\"values\":[\"150\"],\"mode\":\"exclude\",\"strength\":\"must\",\"quote\":\"moins de 150 $\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 14.816177998000057,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Change bas dans la tenue 3 par bas noir",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 2,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          },
+          {
+            "number": 3,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Change",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bas noir",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 3,
+        "target_role": "bottom",
+        "target_quote": "bas",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Change",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bas noir",
+            "roles": [
+              "bottom"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 3,
+        "target_role": "bottom",
+        "target_quote": "bas",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"replace\",\"reuse_previous\":true,\"reference_quote\":\"Change\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"black\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"bas noir\",\"roles\":[\"bottom\"]}],\"before_facets\":[],\"selection_number\":3,\"target_role\":\"bottom\",\"target_quote\":\"bas\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 8.71237243899941,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Put together a look, for men, shoes beige, 2 suggestions",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "beige"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "shoes beige",
+            "roles": [
+              "shoes"
+            ]
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "2 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "for men",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "beige"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "shoes beige",
+            "roles": [
+              "shoes"
+            ]
+          },
+          {
+            "field": "count",
+            "values": [
+              "2"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "2 suggestions",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"for men\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"beige\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"shoes beige\",\"roles\":[\"shoes\"]},{\"field\":\"count\",\"values\":[\"2\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"2 suggestions\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 14.204468865999843,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Aide-moi à choisir un look, style streetwear, pour mariage",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "streetwear"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style streetwear",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "streetwear"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "style streetwear",
+            "roles": []
+          },
+          {
+            "field": "occasion",
+            "values": [
+              "wedding"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour mariage",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"style\",\"values\":[\"streetwear\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"style streetwear\",\"roles\":[]},{\"field\":\"occasion\",\"values\":[\"wedding\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour mariage\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.16334207700038,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    }
+  ],
+  "mean_seconds": 14.251518771324891,
+  "scope": "synthetic unless origin=human_labeled; generation without repair",
+  "evaluation_identity": "de01bf42035417853341b0e62cce3d36b035e4203df0432273c692065a5b60e6"
+}

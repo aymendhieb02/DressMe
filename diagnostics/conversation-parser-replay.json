@@ -1,0 +1,205 @@
+{
+  "scope": "Offline replay of 50 saved real LoRA outputs through the current reconciliation and guards; not new generations or an aesthetic benchmark.",
+  "cases": [
+    {
+      "id": "compose_fr",
+      "passed": true
+    },
+    {
+      "id": "compose_en",
+      "passed": true
+    },
+    {
+      "id": "two_outfits",
+      "passed": true
+    },
+    {
+      "id": "three_outfits",
+      "passed": true
+    },
+    {
+      "id": "negative_white",
+      "passed": true
+    },
+    {
+      "id": "negative_two_colors",
+      "passed": true
+    },
+    {
+      "id": "only_black",
+      "passed": true
+    },
+    {
+      "id": "optional_beige",
+      "passed": true
+    },
+    {
+      "id": "optional_blue_fr",
+      "passed": true
+    },
+    {
+      "id": "budget_eur",
+      "passed": true
+    },
+    {
+      "id": "budget_decimal",
+      "passed": true
+    },
+    {
+      "id": "budget_ambiguous",
+      "passed": true
+    },
+    {
+      "id": "gender_men",
+      "passed": true
+    },
+    {
+      "id": "gender_women",
+      "passed": true
+    },
+    {
+      "id": "product_shirt",
+      "passed": true
+    },
+    {
+      "id": "product_dress",
+      "passed": true
+    },
+    {
+      "id": "product_or_colors",
+      "passed": true
+    },
+    {
+      "id": "product_jacket_gender",
+      "passed": true
+    },
+    {
+      "id": "empty_wardrobe",
+      "passed": true
+    },
+    {
+      "id": "greeting",
+      "passed": true
+    },
+    {
+      "id": "replace_without_context",
+      "passed": true
+    },
+    {
+      "id": "explain_without_context",
+      "passed": true
+    },
+    {
+      "id": "sequence_start",
+      "passed": true
+    },
+    {
+      "id": "sequence_explain",
+      "passed": true
+    },
+    {
+      "id": "sequence_replace",
+      "passed": true
+    },
+    {
+      "id": "sequence_what_if",
+      "passed": true
+    },
+    {
+      "id": "sequence_independent",
+      "passed": true
+    },
+    {
+      "id": "save_preference",
+      "passed": true
+    },
+    {
+      "id": "use_saved_preference",
+      "passed": true
+    },
+    {
+      "id": "too_many_outfits",
+      "passed": true
+    },
+    {
+      "id": "simple_start",
+      "passed": true
+    },
+    {
+      "id": "simple_replace",
+      "passed": true
+    },
+    {
+      "id": "currency_question",
+      "passed": true
+    },
+    {
+      "id": "currency_answer",
+      "passed": true
+    },
+    {
+      "id": "article_fr_plural",
+      "passed": true
+    },
+    {
+      "id": "article_en_boots",
+      "passed": true
+    },
+    {
+      "id": "article_fr_skirt",
+      "passed": true
+    },
+    {
+      "id": "article_fr_blazer",
+      "passed": true
+    },
+    {
+      "id": "article_tshirt",
+      "passed": true
+    },
+    {
+      "id": "article_blue_dress",
+      "passed": true
+    },
+    {
+      "id": "article_exclusive",
+      "passed": true
+    },
+    {
+      "id": "article_without_white",
+      "passed": true
+    },
+    {
+      "id": "article_loafers",
+      "passed": true
+    },
+    {
+      "id": "english_swap_start",
+      "passed": true
+    },
+    {
+      "id": "english_swap",
+      "passed": true
+    },
+    {
+      "id": "english_swap_sandals",
+      "passed": true
+    },
+    {
+      "id": "second_swap_start",
+      "passed": true
+    },
+    {
+      "id": "second_swap",
+      "passed": true
+    },
+    {
+      "id": "absent_replacement_role",
+      "passed": true
+    },
+    {
+      "id": "optional_skirt",
+      "passed": true
+    }
+  ]
+}

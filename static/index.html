@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DressMe — Style Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="/static/studio.css?v=integrated-11" rel="stylesheet">
+<link href="/static/studio.css?v=integrated-13" rel="stylesheet">
 <style>
 :root{--ink:#17283a;--c1:#ff6b4a;--c2:#0e9f9a;--ok:#1fb889;--warn:#f5a524;--bad:#e5484d;--hero:#17283a;--sky:linear-gradient(160deg,#fdebd8,#c9ebe7)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--sky) fixed;min-height:100vh}
@@ -531,12 +531,13 @@ label.btn input{display:none}
   #wardrobe .wd-door,#wardrobe .wd-cab,#wardrobe .wd-in{transition-duration:.01s}
   #wardrobe .wd-door,#wardrobe .wd-plaque,#wardrobe #wrun::after{animation:none}
 }
-</style></head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
+</style><link rel="stylesheet" href="/static/assistant.css?v=integrated-13">
+</head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
 <div id="intro" hidden><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
 <div class="copy"><p class="eyebrow">Wardrobe intelligence</p><h1>Where weather, taste and wardrobe <em>finally agree.</em></h1></div>
 <div class="landing-actions"><a class="btn studio-enter" id="studioEnter" href="/login">Sign in</a><button class="btn enter" id="enter" type="button">Explore DressMe</button></div></div>
 <div class="wall-scene" aria-hidden="true"><div id="wall"></div><div id="veil"></div></div><canvas id="fx"></canvas>
-<div class="wrap"><header class="top"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div><details class="app-account" id="accountMenu"><summary>Account</summary><div class="app-account-panel"><span id="accountEmail"></span><a href="/">Landing page</a><button type="button" id="headerSignout">Sign out</button></div></details><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button><nav id="menu" aria-label="Main navigation"></nav></header><main>
+<div class="wrap"><header class="top"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div><details class="app-account" id="accountMenu"><summary>Account</summary><div class="app-account-panel"><span id="accountEmail"></span><form id="account-gender-form"><label>Genre des tenues<select name="gender" required><option value="women">Femme</option><option value="men">Homme</option></select></label><button type="submit">Enregistrer</button><small id="account-gender-status" role="status"></small></form><a href="/">Landing page</a><button type="button" id="headerSignout">Sign out</button></div></details><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button><nav id="menu" aria-label="Main navigation"></nav></header><main>
 <div class="hero"><h1>Wardrobe intelligence,<br><em>tailored to the day.</em></h1></div>
 
 <section id="ootd" class="glass"><div class="chead"><div><p class="eyebrow">No. 01</p><h2>Outfit of the Day</h2></div>
@@ -620,6 +621,25 @@ label.btn input{display:none}
 <section id="bo7-tryon" class="glass" hidden><div data-studio-page="bo7-tryon"></div></section>
 <section id="bo7-history" class="glass" hidden><div data-studio-page="bo7-history"></div></section>
 <section id="bo3" hidden><iframe id="bo3-frame" title="Wardrobe Check" style="width:100%;height:calc(100vh - 150px);min-height:640px;border:0;border-radius:20px;background:#fff"></iframe></section>
+<section id="assistant" class="glass" hidden>
+<p class="eyebrow">No. 06 · Conversation</p><h2>Your Style Assistant</h2>
+<p class="sub">Parle en français ou en anglais. Explore les vrais articles, compare les calculs et personnalise ton dressing.</p>
+<p id="assistant-gender" class="sub" role="status"></p>
+<div id="assistant-health" class="sub" role="status">Lecture des capacités locales…</div>
+<details class="assistant-settings"><summary>Mon dressing et mes préférences</summary>
+<p class="sub">Le catalogue de démonstration et tes pièces possédées restent distincts. Ajouter une pièce au dressing est une déclaration explicite de possession.</p>
+<div class="row"><button class="btn ghost" id="assistant-add">+ Article du catalogue</button><button class="btn ghost" id="assistant-import">Reprendre ma sélection Wardrobe</button>
+<label class="btn ghost">+ Ma photo<input id="assistant-photo" type="file" accept="image/jpeg,image/png,image/webp" hidden></label></div>
+<div id="assistant-wardrobe" class="assistant-products"></div>
+<form id="assistant-prefs" class="row"><label>Couleurs préférées (facultatives)<input id="assistant-colors" placeholder="beige, blue…" maxlength="150"></label>
+<button class="btn" type="submit">Enregistrer les préférences</button></form>
+<div id="assistant-profile-status" class="sub" role="status"></div></details>
+<div id="assistant-messages" class="assistant-messages" aria-live="polite"></div>
+<form id="assistant-form" class="assistant-compose"><label class="sub" for="assistant-message">Ta demande</label>
+<textarea id="assistant-message" rows="3" maxlength="2500" required placeholder="Compose une tenue. Puis : remplace seulement les chaussures."></textarea>
+<div class="row"><button class="btn" id="assistant-send" type="submit" disabled>Envoyer</button><button class="btn ghost" type="button" id="assistant-reset" disabled>Nouvelle conversation</button></div></form>
+<details class="assistant-settings"><summary>Diagnostic des modèles et du catalogue</summary><pre id="assistant-diagnostics"></pre></details>
+</section>
 </main></div>
 <aside id="occ" class="occ" hidden aria-live="polite">
   <button class="occ-av" id="occ-av" type="button" aria-label="Choose the occasion"><img src="/static/avatar.png" alt="Your style assistant"></button>
@@ -713,6 +733,7 @@ function wall(){const L=[...C].sort(()=>Math.random()-.5).slice(0,48);
 window.renderPublicStyleWall=items=>{$('#wall').innerHTML=Array.from({length:7},(_,c)=>{const a=items.slice(c*6,c*6+6).map(x=>`<img src="/public-wall/${encodeURIComponent(x.k)}.jpg" alt="">`).join('');return `<div class="col" style="animation-duration:${70+c*8}s;${c%2?'animation-direction:reverse;':''}">${a+a}</div>`}).join('')}
 /* ---------- top menu : colleagues add groups / items here, plus a <section id="..."> in the page ---------- */
 const MENU=[{label:'Style Me',items:[
+ {id:'assistant',title:'Style Assistant',desc:'Discute, compose et ajuste tes tenues'},
  {id:'ootd',title:'Outfit of the Day',desc:'Your outfit for today’s weather'},
  {id:'score',title:'Rate My Look',desc:'Rate any outfit and improve it'},
  {id:'comp',title:'Complete My Outfit',desc:'Complete a partial outfit'}]},
@@ -1275,5 +1296,5 @@ $('#vd-x').onclick=()=>vdEl.classList.add('mini');
 $('#vd-av').onclick=()=>vdEl.classList.toggle('mini');
 document.addEventListener('dressme:section',e=>{if(e.detail!=='score')vdHide();else if(vdLast&&B1.get().length>=2){vdThink();vdSay(vdLast)}});
 
-</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=integrated-11"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
-</body></html>
+</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=integrated-13"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
+<script type="module" src="/static/assistant.js?v=integrated-13"></script></body></html>

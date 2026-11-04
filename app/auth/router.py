@@ -26,7 +26,7 @@ from .dependencies import (
     refresh_context,
 )
 from .rate_limit import rate_limit_login
-from .schemas import AccountDelete, AuthResponse, LoginCredentials, RegisterCredentials, CsrfToken, UserPublic
+from .schemas import AccountDelete, AuthResponse, LoginCredentials, RegisterCredentials, CsrfToken, UserPublic, UserUpdate
 from .security import new_secret, secret_hash, verify_password
 from .service import authenticate, create_session, create_user, find_user, utc_now
 from .tokens import create_access
@@ -57,7 +57,7 @@ def _clear_cookies(response: Response) -> None:
 
 
 def _public(user) -> UserPublic:
-    return UserPublic(id=user.id, email=user.email, role=user.role, created_at=user.created_at)
+    return UserPublic(id=user.id, email=user.email, role=user.role, gender=user.gender, created_at=user.created_at)
 
 
 def _origin_ok(request: Request) -> bool:
@@ -79,7 +79,7 @@ def register(body: RegisterCredentials, request: Request, response: Response, db
     if find_user(db, email):
         return error_response(request, 409, "account_unavailable", "An account with that email cannot be created.")
     try:
-        user = create_user(db, email, body.password)
+        user = create_user(db, email, body.password, body.gender)
         session, cookie_token, csrf_token = create_session(db, user)
         db.commit()
     except IntegrityError:
@@ -127,6 +127,15 @@ def bootstrap_csrf(
     context.session.csrf_hash = secret_hash(csrf_token)
     db.commit()
     return CsrfToken(csrf_token=csrf_token)
+
+
+@router.patch("/me", response_model=UserPublic)
+def update_me(body: UserUpdate, request: Request,
+              context: AuthContext = Depends(get_auth_context), db: Session = Depends(get_db)):
+    require_csrf(request, context)
+    context.user.gender = body.gender
+    db.commit()
+    return _public(context.user)
 
 
 @router.post("/logout", status_code=204)

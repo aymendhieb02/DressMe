@@ -3,25 +3,25 @@ import {
   PAGES, state, $, esc, active, node, message, request, loadPublicConfig,
   loadSession, clearPrivateState, clearLoadedPrivateData, studioPage,
   refreshSession,
-} from './studio/core.js?v=integrated-11';
+} from './studio/core.js?v=integrated-13';
 window.refreshDressMe = refreshSession;
-import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=integrated-11';
+import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=integrated-13';
 import {
   wardrobeContent, addGarmentContent, renderWardrobe, review, detail,
   syncSuggestionState, chooseSuggestion, handleConfirmedChange, generateDescription,
   saveReview, saveEdit, regenerateDetailDescription,
-} from './studio/wardrobe.js?v=integrated-11';
+} from './studio/wardrobe.js?v=integrated-13';
 import {
   avatarContent, refreshAvatar, closeAvatarSdk, saveAvatarImport, handleAvatarAction,
-} from './studio/avatar.js?v=integrated-11';
+} from './studio/avatar.js?v=integrated-13';
 import {
   tryonContent, historyContent, refreshTryon, refreshHistory, savePersonPhoto,
   updateSubmitAvailability, handleTryonAction,
-} from './studio/tryon.js?v=integrated-11';
+} from './studio/tryon.js?v=integrated-13';
 import {
   abandonPending, clearUpload, handleUploadSelection, handleDrop, handleDragOver,
   clearDrag, validateUpload,
-} from './studio/upload.js?v=integrated-11';
+} from './studio/upload.js?v=integrated-13';
 
 function content(page) {
   if (page === 'bo6-wardrobe') return wardrobeContent();
@@ -280,6 +280,19 @@ $('#headerSignout')?.addEventListener('click', () => safe(async () => {
   location.replace('/');
 }));
 
+$('#account-gender-form')?.addEventListener('submit', event => {
+  event.preventDefault();
+  safe(async () => {
+    try {
+      const gender = event.target.elements.gender.value;
+      state.user = await request('/auth/me', {method:'PATCH', body:{gender}});
+      $('#account-gender-status').textContent = 'Genre enregistré. Le chat l’utilise pour tes prochaines demandes.';
+      const label = document.getElementById('assistant-gender');
+      if (label) label.textContent = {men:'Genre du compte : homme.',women:'Genre du compte : femme.'}[gender] || 'Aucun filtre de genre par défaut.';
+    } catch (error) { $('#account-gender-status').textContent = error.message; }
+  }, event.target);
+});
+
 window.addEventListener('hashchange', () => {
   if (document.getElementById(active()) && typeof window.go === 'function') window.go(active(), true);
 });
@@ -297,13 +310,17 @@ Promise.all([loadPublicConfig(), loadSession()]).then(() => {
     return;
   }
   $('#accountEmail').textContent = state.user?.email || '';
+  if ($('#account-gender-form')) $('#account-gender-form').elements.gender.value = state.user?.gender || '';
   render();
   if (location.pathname === '/login' && new URLSearchParams(location.search).get('reason')) {
     message(new URLSearchParams(location.search).get('reason') === 'elsewhere'
       ? 'Your account was signed in elsewhere. Sign in again to continue.'
       : 'Your session expired. Sign in again to continue.');
   }
-  if (state.user) window.startAppCatalog?.();
+  if (state.user) {
+    document.dispatchEvent(new CustomEvent('dressme:authenticated'));
+    window.startAppCatalog?.();
+  }
   else if (location.pathname === '/login') {
     fetch('/api/public-style-wall', {credentials: 'same-origin'})
       .then(response => response.ok ? response.json() : [])

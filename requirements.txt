@@ -1,6 +1,2 @@
-# Backwards-compatible installation entry point; the generated lock is canonical.
--r requirements.lock
-
-# BO3 (redundancy check)
-pandas==3.1.0
-scipy==1.18.1
+# Unified application, BO1/BO5 and Studio (GPU parser compatible).
+-r requirements-integrated.in

@@ -63,14 +63,14 @@ export function message(text, error = false) {
   target.classList.toggle('is-error', error);
 }
 
-export async function request(path, {method = 'GET', body, key, retry = true} = {}) {
+export async function request(path, {method = 'GET', body, key, retry = true, base = ROOT} = {}) {
   const headers = {};
   if (body && !(body instanceof FormData)) headers['Content-Type'] = 'application/json';
   if (key) headers['Idempotency-Key'] = key;
   if (!['GET', 'HEAD'].includes(method) && state.csrf) headers['X-CSRF-Token'] = state.csrf;
   let response;
   try {
-    response = await fetch(ROOT + path, {
+    response = await fetch(base + path, {
       method, headers,
       body: body instanceof FormData ? body : body === undefined ? undefined : JSON.stringify(body),
       credentials: 'same-origin',
@@ -82,7 +82,7 @@ export async function request(path, {method = 'GET', body, key, retry = true} = 
     const detail = await response.clone().json().catch(() => ({}));
     if (detail.error?.code === 'csrf_failed') {
       await csrf();
-      return request(path, {method, body, key, retry: false});
+      return request(path, {method, body, key, retry: false, base});
     }
   }
   if (response.status === 401 && state.user) {
@@ -90,7 +90,7 @@ export async function request(path, {method = 'GET', body, key, retry = true} = 
     if (detail.error?.code !== 'session_replaced' && retry && !path.startsWith('/auth/')) {
       try {
         await refreshSession();
-        return request(path, {method, body, key, retry: false});
+        return request(path, {method, body, key, retry: false, base});
       } catch { /* the revoked or expired session is handled below */ }
     }
     state.sessionReason = detail.error?.code === 'session_replaced' ? 'elsewhere' : 'expired';

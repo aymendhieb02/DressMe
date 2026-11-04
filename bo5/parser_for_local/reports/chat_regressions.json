@@ -1,0 +1,908 @@
+{
+  "n": 10,
+  "summary": {
+    "contract_valid": 1.0,
+    "action_acc": 1.0,
+    "reuse_acc": 0.9,
+    "quotes_ok": 1.0,
+    "facet_f1_strict": 0.27999999999999997,
+    "facet_f1_structure": 0.86,
+    "exact_structure": 0.6
+  },
+  "records": [
+    {
+      "input": {
+        "message": "je veux une tenu pour homme",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "homme",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour homme\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 7.838741728999594,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Tenue chic femme, beige de préférence.",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "chic",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "women"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "femme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "beige"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "beige de préférence",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "style",
+            "values": [
+              "chic"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "Tenue chic femme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "beige"
+            ],
+            "mode": "any",
+            "strength": "prefer",
+            "quote": "beige de préférence",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"style\",\"values\":[\"chic\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"Tenue chic femme\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"beige\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"beige de préférence\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.450251623999975,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.4,
+        "facet_f1_structure": 0.8,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "je veux une tenue de sport",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "sport"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "sport",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": true,
+        "reference_quote": "je veux une tenue de sport",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "sport"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "je veux une tenue de sport",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":true,\"reference_quote\":\"je veux une tenue de sport\",\"query_en\":\"\",\"facets\":[{\"field\":\"occasion\",\"values\":[\"sport\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"je veux une tenue de sport\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 9.66736097500052,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 0.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "une tenue entièrement noire pour homme",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "entièrement noire",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "homme",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "black"
+            ],
+            "mode": "only",
+            "strength": "must",
+            "quote": "une tenue entièrement noire",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour homme",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"black\"],\"mode\":\"only\",\"strength\":\"must\",\"quote\":\"une tenue entièrement noire\",\"roles\":[]},{\"field\":\"gender\",\"values\":[\"men\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour homme\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.53522348000024,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "une tenue bleue et beige pour homme sans rouge",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue",
+              "beige"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "bleue et beige",
+            "roles": []
+          },
+          {
+            "field": "gender",
+            "values": [
+              "men"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "homme",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "red"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sans rouge",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue",
+              "beige"
+            ],
+            "mode": "all",
+            "strength": "must",
+            "quote": "une tenue bleue et beige",
+            "roles": []
+          },
+          {
+            "field": "color",
+            "values": [
+              "red"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sans rouge",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"blue\",\"beige\"],\"mode\":\"all\",\"strength\":\"must\",\"quote\":\"une tenue bleue et beige\",\"roles\":[]},{\"field\":\"color\",\"values\":[\"red\"],\"mode\":\"exclude\",\"strength\":\"must\",\"quote\":\"sans rouge\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 11.915698910000174,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.4,
+        "facet_f1_structure": 0.8,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Je cherche une tenue pour un dîner",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "dinner"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dîner",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "occasion",
+            "values": [
+              "dinner"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "pour un dîner",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"occasion\",\"values\":[\"dinner\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"pour un dîner\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 8.427993979999883,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Propose une tenue dans ma garde-robe",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "scope",
+            "values": [
+              "wardrobe"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dans ma garde-robe",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "scope",
+            "values": [
+              "wardrobe"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "dans ma garde-robe",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"scope\",\"values\":[\"wardrobe\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"dans ma garde-robe\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 8.613109005999831,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Je veux une tenue sous 100$",
+        "previous_selection_roles": [],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "budget",
+            "values": [
+              "100"
+            ],
+            "mode": "exclude",
+            "strength": "must",
+            "quote": "sous 100$",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "compose",
+        "reuse_previous": false,
+        "reference_quote": "",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "budget",
+            "values": [
+              "100"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "sous 100$",
+            "roles": []
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"budget\",\"values\":[\"100\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"sous 100$\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 8.708840391000194,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 0.0,
+        "exact_structure": 0.0
+      }
+    },
+    {
+      "input": {
+        "message": "Remplace seulement les chaussures par du bleu",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Remplace",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "bleu",
+            "roles": [
+              "shoes"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "shoes",
+        "target_quote": "chaussures",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "replace",
+        "reuse_previous": true,
+        "reference_quote": "Remplace seulement",
+        "query_en": "",
+        "facets": [
+          {
+            "field": "color",
+            "values": [
+              "blue"
+            ],
+            "mode": "any",
+            "strength": "must",
+            "quote": "du bleu",
+            "roles": [
+              "shoes"
+            ]
+          }
+        ],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "shoes",
+        "target_quote": "chaussures",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"replace\",\"reuse_previous\":true,\"reference_quote\":\"Remplace seulement\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"blue\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"du bleu\",\"roles\":[\"shoes\"]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"chaussures\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 9.747147718999258,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 0.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    },
+    {
+      "input": {
+        "message": "Pourquoi cette tenue ?",
+        "previous_selection_roles": [
+          {
+            "number": 1,
+            "roles": [
+              "top",
+              "bottom",
+              "shoes"
+            ]
+          }
+        ],
+        "pending_clarification": "",
+        "pending_facets": [],
+        "observed_genders": [
+          "men",
+          "women"
+        ],
+        "observed_colors": [
+          "black",
+          "blue",
+          "beige",
+          "red",
+          "white",
+          "green",
+          "pink",
+          "grey"
+        ]
+      },
+      "gold": {
+        "action": "explain",
+        "reuse_previous": true,
+        "reference_quote": "cette tenue",
+        "query_en": "",
+        "facets": [],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "prediction": {
+        "action": "explain",
+        "reuse_previous": true,
+        "reference_quote": "Pourquoi cette tenue ?",
+        "query_en": "",
+        "facets": [],
+        "before_facets": [],
+        "selection_number": 1,
+        "target_role": "",
+        "target_quote": "",
+        "clarification": ""
+      },
+      "raw": "{\"action\":\"explain\",\"reuse_previous\":true,\"reference_quote\":\"Pourquoi cette tenue ?\",\"query_en\":\"\",\"facets\":[],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+      "decode_errors": [],
+      "seconds": 6.018043321000732,
+      "metrics": {
+        "contract_valid": 1.0,
+        "action_acc": 1.0,
+        "reuse_acc": 1.0,
+        "quotes_ok": 1.0,
+        "facet_f1_strict": 1.0,
+        "facet_f1_structure": 1.0,
+        "exact_structure": 1.0
+      }
+    }
+  ],
+  "mean_seconds": 9.39224111350004,
+  "scope": "synthetic unless origin=human_labeled; generation without repair",
+  "evaluation_identity": "7093d9f722bc0142bff255b4b24dea5ddabaa23a29168e702f640c8c1a6e3f14"
+}

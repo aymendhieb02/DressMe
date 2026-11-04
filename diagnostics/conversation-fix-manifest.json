@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-03",
+  "version": "conversation-v2",
+  "source_sha256": {
+    "dressme/engine.py": "2d83f27835e32942e2f29855af1f9a988c8675754e75a390f95ab4bb5b4e3549",
+    "dressme/grounding.py": "983e04f400e05f808aa78dc40547b82ee803f515b398ce83d1327deffae27968",
+    "dressme/parser.py": "80dac274038e632b9a300f11565a91e609d514e1d7fa37d7e00257f2ce3723f4",
+    "dressme/preferences.py": "ce53a4fe8aaec043a8fa3f797acf38600aa24788de0b1944d743b8f3cdc6a388",
+    "static/assistant.js": "a8a193cac51cb8b04dafb6d6364b5d6a766fb170112b6289793ac61aa9e3d086",
+    "tests/test_conversation.py": "ee0cf0081627eba087e7e221c587660f6574eb2dd71d7648b3503a4653707c20",
+    "scripts/verify_conversation.py": "7449bae4d9c55c9ce82db5cc1355d93604505a748d525c89a8c5c018ca21c253"
+  },
+  "unit_tests": {
+    "passed": 82,
+    "failed": 0
+  },
+  "real_api_cases": {
+    "passed": 15,
+    "failed": 0
+  },
+  "deployed_exact_replay": {
+    "passed": 5,
+    "failed": 0
+  },
+  "offline_parser_replay_cases": 50
+}

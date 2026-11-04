@@ -401,6 +401,7 @@ async function verifyReviewColumns(page, label, expectedColumns) {
     console.log('PASS invalid credential feedback and keyboard-driven registration focus');
     await page.setViewportSize({width: 1440, height: 900});
     await page.locator('#studio-auth input[name=password]').fill(accountPassword);
+    await page.locator('#studio-auth select[name=gender]').selectOption('women');
     await page.getByRole('button', {name: 'Create account'}).click();
     created = true;
     await page.locator('.studio-nav').waitFor({state: 'visible'});

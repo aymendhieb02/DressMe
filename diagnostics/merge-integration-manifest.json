@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-04",
+  "branch": "elyes",
+  "source_main": "c2fee960c48df2d0ccba4373c47edb34ba808cc7",
+  "source_elyes": "0c167dc8aba5d8b6b7a83bae8091d95c30e78f38",
+  "tests": {
+    "total": 261,
+    "failures": 0,
+    "errors": 0
+  },
+  "real_model_replay": {
+    "passed": 12,
+    "failed": 0
+  },
+  "react_tests": 1,
+  "source_sha256": {
+    "api.py": "b4efa874e5e5664e0acfaebdcf8ae7938bf56de5c5312eedce08bda9ef658267",
+    "app/models.py": "1538a0894ca3acd1a94b8fb32a42f80c3e84a595ae6d41e01011022a6de15f86",
+    "app/auth/schemas.py": "e74a032a2b13be9f5deee76fbddb2ebf004bfe3d2949e634209d7d6435683ae6",
+    "app/auth/service.py": "0173b54eff19635121d8b1843199e29e3c0d0a063d67a462df51ce3db57be046",
+    "app/auth/router.py": "ed099305fe63387712f4422bcf51cc7d0bb5884a7738eeb7f012089df33ad51d",
+    "app/config.py": "02b71140494b29b709dae474991574f6b127c62259fb569857701fbb090b6c64",
+    "dressme/identity.py": "a6383a917cbbbc687935f28513f7f737212a1e2fd61ef840f6bff0ff2676a36a",
+    "dressme/engine.py": "e5f4b2e254452d392944ff5bc10197d23c25cf05724b8c99aba176065b96799a",
+    "dressme/grounding.py": "d1b859f7909c931e97a762e80ebee4678576a5fc59aa875a65023efc087552bb",
+    "dressme/routes.py": "2a132d3ed5e8458e912333cae29290d62470b563ae6c1dc6e836b531c0e6cd13",
+    "dressme/state.py": "f8b4a8ab6a848791175ae7bdd7dffa1237a351bb695681bd4997d79ce0228f93",
+    "dressme/catalog.py": "8a3ade9c4f727cc282528e941fdc449016600a84357d47cdb3146dca1fc21ff3",
+    "static/index.html": "ced84a36c91de4eb7d0d547e20974fbb1c443e650d7070471dba3f84f5d2e37a",
+    "static/assistant.js": "7e8e39f1087370b7b7f96591f24b948e64606f293f4bcdd1060ead3cc358e056",
+    "static/studio.js": "6f2587ac9fcdac9d0b0cef5b17b4d1665e30f9c21195a80c16a37b98d4b5eec1",
+    "static/studio/core.js": "78b09c45ad6e0a282efad32bada15ee22a8c262d713ecb61d1fe006a3db50a3e",
+    "static/studio/auth.js": "5c29769b7072ecbbd72669cd7813bcb4270ac5ff03ef28f96030c29823babbc1",
+    "alembic/versions/0010_user_gender.py": "d5be249e2cf636504f2295889e38025be685918c1483681e6480ab5a08b99b83",
+    "requirements-integrated.lock.txt": "d9a3045ddb970d026511ba45aec10e5713eeebcd8b6271a26f46e0117752c771"
+  },
+  "model_sha256": {
+    "bo1\\score\\scorer.pt": "39efbe093325f1ea5d775ca276fa431540b4d4d535be63c3b0b40afd5c532643",
+    "bo5\\parser_for_local\\parser_adapter\\adapter_model.safetensors": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003"
+  },
+  "limitations": [
+    "Catalogue gender is the team CLIP-derived split, not human-verified labels.",
+    "BO6 real inference and Redis/RQ worker were not exercised in this integration."
+  ]
+}

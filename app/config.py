@@ -25,7 +25,7 @@ class Settings:
     )
     frontend_origins: tuple[str, ...] = tuple(
         origin.strip().rstrip("/")
-        for origin in os.getenv("FRONTEND_ORIGINS", "http://localhost:8001").split(",")
+        for origin in os.getenv("FRONTEND_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000,http://localhost:8001,http://127.0.0.1:8001").split(",")
         if origin.strip()
     )
     session_ttl_seconds: int = _integer("SESSION_TTL_SECONDS", 12 * 60 * 60, 300, 30 * 24 * 60 * 60)

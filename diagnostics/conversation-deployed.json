@@ -1,0 +1,3392 @@
+{
+  "real_models": true,
+  "training": false,
+  "source": "Exact recorded user messages and original dressing; separate test sessions.",
+  "code_sha256": {
+    "dressme/engine.py": "2d83f27835e32942e2f29855af1f9a988c8675754e75a390f95ab4bb5b4e3549",
+    "dressme/grounding.py": "983e04f400e05f808aa78dc40547b82ee803f515b398ce83d1327deffae27968",
+    "dressme/parser.py": "80dac274038e632b9a300f11565a91e609d514e1d7fa37d7e00257f2ce3723f4",
+    "dressme/preferences.py": "ce53a4fe8aaec043a8fa3f797acf38600aa24788de0b1944d743b8f3cdc6a388",
+    "static/assistant.js": "a8a193cac51cb8b04dafb6d6364b5d6a766fb170112b6289793ac61aa9e3d086"
+  },
+  "cases": [
+    {
+      "id": "exact_1",
+      "message": "compose deux tenues",
+      "seconds": 23.73,
+      "checks": {
+        "http": true,
+        "understood": true,
+        "nonempty_results": true,
+        "exact_scores": true,
+        "photos": true,
+        "constraints": true,
+        "distinct_proposals": true
+      },
+      "outcome": "passed",
+      "response": {
+        "status": "results_with_limits",
+        "message": "Tenues assemblées à partir des articles locaux et notées par BO1.",
+        "preference_coverage": [],
+        "results": [
+          {
+            "item_ids": [
+              "P01124908",
+              "P01133629"
+            ],
+            "candidate_id": "5dea3af0c28e0a34",
+            "relevance": 0.7678814828395844,
+            "constraint_report": [],
+            "bo1": {
+              "item_ids": [
+                "P01124908",
+                "P01133629"
+              ],
+              "value": 9.634781837463379,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9634781837463379,
+                "relevance": 0.7678814828395844,
+                "preference": 0.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6262608194351197,
+                "relevance": 0.1919703707098961,
+                "preference": 0.0
+              },
+              "total": 0.8182311901450158,
+              "without_preferences": 0.9091457668277952,
+              "preferences": [],
+              "rank_with_preferences": 1,
+              "rank_without_preferences": 1,
+              "rank_pool_size": 512
+            },
+            "items": [
+              {
+                "image_id": "P01124908",
+                "name": "multicoloured floral silk-blend cloqué midi dress",
+                "description": "multicoloured floral silk-blend cloqué midi dress",
+                "type": "multicoloured floral silk-blend cloqué midi dress",
+                "category": "dress",
+                "role": "onepiece",
+                "color": null,
+                "colors": [],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01124908",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "unknown",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01133629",
+                "name": "black studded leather Mary Jane pumps",
+                "description": "black studded leather Mary Jane pumps",
+                "type": "black studded leather Mary Jane pumps",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01133629",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.635/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 512 candidats."
+          },
+          {
+            "item_ids": [
+              "P01136660",
+              "P01131165"
+            ],
+            "candidate_id": "b68e9df8a575a769",
+            "relevance": 0.7674961686134338,
+            "constraint_report": [],
+            "bo1": {
+              "item_ids": [
+                "P01136660",
+                "P01131165"
+              ],
+              "value": 9.612428665161133,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9612428665161132,
+                "relevance": 0.7674961686134338,
+                "preference": 0.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6248078632354737,
+                "relevance": 0.19187404215335846,
+                "preference": 0.0
+              },
+              "total": 0.8166819053888321,
+              "without_preferences": 0.9074243393209246,
+              "preferences": [],
+              "rank_with_preferences": 2,
+              "rank_without_preferences": 2,
+              "rank_pool_size": 512
+            },
+            "items": [
+              {
+                "image_id": "P01136660",
+                "name": "black silk and cotton satin T-shirt dress",
+                "description": "black silk and cotton satin T-shirt dress",
+                "type": "black silk and cotton satin T-shirt dress",
+                "category": "dress",
+                "role": "onepiece",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01136660",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01131165",
+                "name": "white embellished suede-trimmed sneakers",
+                "description": "white embellished suede-trimmed sneakers",
+                "type": "white embellished suede-trimmed sneakers",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "white",
+                "colors": [
+                  "white"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01131165",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.612/10 sur les pièces affichées. Rang avec préférences : 2; sans préférences : 2 sur les mêmes 512 candidats."
+          }
+        ],
+        "comparison": null,
+        "limits": [
+          "Assemblage borné BO5 ; complétion MiniGPT BO1 indisponible.",
+          "Score appris de compatibilité, pas une note esthétique humaine.",
+          "Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.",
+          "Genre, prix et palette complète inconnus ne passent pas un filtre strict."
+        ],
+        "diagnostics": {
+          "plan": {
+            "action": "compose",
+            "reuse_previous": false,
+            "reference_quote": "",
+            "query_en": "",
+            "facets": [
+              {
+                "field": "count",
+                "values": [
+                  "2"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "deux tenues",
+                "roles": []
+              }
+            ],
+            "before_facets": [],
+            "selection_number": 1,
+            "target_role": "",
+            "target_quote": "",
+            "clarification": ""
+          },
+          "original_message": "compose deux tenues",
+          "parser": {
+            "loaded": true,
+            "configured": true,
+            "attempted": true,
+            "error": null,
+            "model": "Qwen/Qwen3-1.7B",
+            "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+            "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+            "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+            "selected_checkpoint": "checkpoint-400",
+            "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+            "precision": "nf4",
+            "reviewer": null,
+            "writer": "deterministic evidence templates",
+            "fallback": null,
+            "postprocessing": "grounded-request-v2 (typed replacements, explicit words, audited edits)",
+            "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+            "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle.",
+            "gpu_free_mib_at_load": 7106,
+            "device": "cuda:0",
+            "tokenizer_verified": true
+          },
+          "parsing": {
+            "previous_selection_roles": [],
+            "raw_output": "{\"action\":\"compose\",\"reuse_previous\":false,\"reference_quote\":\"\",\"query_en\":\"\",\"facets\":[{\"field\":\"count\",\"values\":[\"2\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"deux\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+            "model_plan": {
+              "action": "compose",
+              "reuse_previous": false,
+              "reference_quote": "",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "count",
+                  "values": [
+                    "2"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deux",
+                  "roles": []
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            },
+            "normalized_contract_plan": {
+              "action": "compose",
+              "reuse_previous": false,
+              "reference_quote": "",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "count",
+                  "values": [
+                    "2"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deux",
+                  "roles": []
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            },
+            "corrections": [
+              {
+                "rule": "explicit_quantity",
+                "evidence": "deux tenues",
+                "before": [
+                  {
+                    "field": "count",
+                    "values": [
+                      "2"
+                    ],
+                    "mode": "any",
+                    "strength": "must",
+                    "quote": "deux",
+                    "roles": []
+                  }
+                ],
+                "after": [
+                  {
+                    "field": "count",
+                    "values": [
+                      "2"
+                    ],
+                    "mode": "any",
+                    "strength": "must",
+                    "quote": "deux tenues",
+                    "roles": []
+                  }
+                ]
+              }
+            ],
+            "reconciled_plan": {
+              "action": "compose",
+              "reuse_previous": false,
+              "reference_quote": "",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "count",
+                  "values": [
+                    "2"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deux tenues",
+                  "roles": []
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            }
+          },
+          "semantic_audit": "Conservative deterministic guards; no independent semantic oracle.",
+          "assembly": {
+            "method": "BO5 bounded assembly; not BO1 MiniGPT",
+            "eligible_products": 621,
+            "source_products": 653,
+            "examined": 576,
+            "scored": 512,
+            "rejections": {},
+            "exhaustive": false,
+            "role_pool_sizes": {
+              "top": 8,
+              "bottom": 8,
+              "onepiece": 8,
+              "shoes": 8,
+              "outerwear": 8,
+              "layer": 0,
+              "bag": 8,
+              "accessory": 8,
+              "unknown": 0
+            },
+            "original_message_preserved": true
+          },
+          "active_spec": {
+            "query": "complete outfit. compose deux tenues",
+            "facets": [
+              {
+                "field": "count",
+                "values": [
+                  "2"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "deux tenues",
+                "roles": []
+              }
+            ],
+            "scope": "catalog",
+            "top_n": 2,
+            "budget": null,
+            "currency": null,
+            "inclusive": true
+          }
+        }
+      }
+    },
+    {
+      "id": "exact_2",
+      "message": "Explique la première tenue.",
+      "seconds": 6.92,
+      "checks": {
+        "http": true,
+        "understood": true,
+        "explanation_preserves_selection": true,
+        "exact_scores": true,
+        "photos": true,
+        "constraints": true,
+        "distinct_proposals": true
+      },
+      "outcome": "passed",
+      "response": {
+        "status": "explanation",
+        "message": "Les détails ci-dessous sont les calculs enregistrés de la sélection affichée.",
+        "results": [
+          {
+            "item_ids": [
+              "P01124908",
+              "P01133629"
+            ],
+            "candidate_id": "5dea3af0c28e0a34",
+            "relevance": 0.7678814828395844,
+            "constraint_report": [],
+            "bo1": {
+              "item_ids": [
+                "P01124908",
+                "P01133629"
+              ],
+              "value": 9.634781837463379,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9634781837463379,
+                "relevance": 0.7678814828395844,
+                "preference": 0.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6262608194351197,
+                "relevance": 0.1919703707098961,
+                "preference": 0.0
+              },
+              "total": 0.8182311901450158,
+              "without_preferences": 0.9091457668277952,
+              "preferences": [],
+              "rank_with_preferences": 1,
+              "rank_without_preferences": 1,
+              "rank_pool_size": 512
+            },
+            "items": [
+              {
+                "image_id": "P01124908",
+                "name": "multicoloured floral silk-blend cloqué midi dress",
+                "description": "multicoloured floral silk-blend cloqué midi dress",
+                "type": "multicoloured floral silk-blend cloqué midi dress",
+                "category": "dress",
+                "role": "onepiece",
+                "color": null,
+                "colors": [],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01124908",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "unknown",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01133629",
+                "name": "black studded leather Mary Jane pumps",
+                "description": "black studded leather Mary Jane pumps",
+                "type": "black studded leather Mary Jane pumps",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01133629",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.635/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 512 candidats."
+          },
+          {
+            "item_ids": [
+              "P01136660",
+              "P01131165"
+            ],
+            "candidate_id": "b68e9df8a575a769",
+            "relevance": 0.7674961686134338,
+            "constraint_report": [],
+            "bo1": {
+              "item_ids": [
+                "P01136660",
+                "P01131165"
+              ],
+              "value": 9.612428665161133,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9612428665161132,
+                "relevance": 0.7674961686134338,
+                "preference": 0.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6248078632354737,
+                "relevance": 0.19187404215335846,
+                "preference": 0.0
+              },
+              "total": 0.8166819053888321,
+              "without_preferences": 0.9074243393209246,
+              "preferences": [],
+              "rank_with_preferences": 2,
+              "rank_without_preferences": 2,
+              "rank_pool_size": 512
+            },
+            "items": [
+              {
+                "image_id": "P01136660",
+                "name": "black silk and cotton satin T-shirt dress",
+                "description": "black silk and cotton satin T-shirt dress",
+                "type": "black silk and cotton satin T-shirt dress",
+                "category": "dress",
+                "role": "onepiece",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01136660",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01131165",
+                "name": "white embellished suede-trimmed sneakers",
+                "description": "white embellished suede-trimmed sneakers",
+                "type": "white embellished suede-trimmed sneakers",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "white",
+                "colors": [
+                  "white"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01131165",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.612/10 sur les pièces affichées. Rang avec préférences : 2; sans préférences : 2 sur les mêmes 512 candidats."
+          }
+        ],
+        "comparison": {
+          "kind": "ranking",
+          "left_id": "5dea3af0c28e0a34",
+          "right_id": "b68e9df8a575a769",
+          "delta_bo1": 0.022353172302246094,
+          "delta_total": 0.0015492847561836554,
+          "delta_contributions": {
+            "bo1": 0.0014529561996460272,
+            "relevance": 9.632855653762817e-05,
+            "preference": 0.0
+          },
+          "meaning": "Arithmetic difference between candidates from the same ranking pool; no internal network attribution."
+        },
+        "diagnostics": {
+          "plan": {
+            "action": "explain",
+            "reuse_previous": true,
+            "reference_quote": "Explique la première tenue.",
+            "query_en": "",
+            "facets": [],
+            "before_facets": [],
+            "selection_number": 1,
+            "target_role": "",
+            "target_quote": "",
+            "clarification": ""
+          },
+          "original_message": "Explique la première tenue.",
+          "parser": {
+            "loaded": true,
+            "configured": true,
+            "attempted": true,
+            "error": null,
+            "model": "Qwen/Qwen3-1.7B",
+            "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+            "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+            "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+            "selected_checkpoint": "checkpoint-400",
+            "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+            "precision": "nf4",
+            "reviewer": null,
+            "writer": "deterministic evidence templates",
+            "fallback": null,
+            "postprocessing": "grounded-request-v2 (typed replacements, explicit words, audited edits)",
+            "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+            "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle.",
+            "gpu_free_mib_at_load": 7106,
+            "device": "cuda:0",
+            "tokenizer_verified": true
+          },
+          "parsing": {
+            "previous_selection_roles": [
+              {
+                "number": 1,
+                "roles": [
+                  "onepiece",
+                  "shoes"
+                ]
+              },
+              {
+                "number": 2,
+                "roles": [
+                  "onepiece",
+                  "shoes"
+                ]
+              }
+            ],
+            "raw_output": "{\"action\":\"explain\",\"reuse_previous\":true,\"reference_quote\":\"Explique la première tenue.\",\"query_en\":\"\",\"facets\":[],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+            "model_plan": {
+              "action": "explain",
+              "reuse_previous": true,
+              "reference_quote": "Explique la première tenue.",
+              "query_en": "",
+              "facets": [],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            },
+            "normalized_contract_plan": {
+              "action": "explain",
+              "reuse_previous": true,
+              "reference_quote": "Explique la première tenue.",
+              "query_en": "",
+              "facets": [],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            },
+            "corrections": [],
+            "reconciled_plan": {
+              "action": "explain",
+              "reuse_previous": true,
+              "reference_quote": "Explique la première tenue.",
+              "query_en": "",
+              "facets": [],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            }
+          },
+          "semantic_audit": "Conservative deterministic guards; no independent semantic oracle."
+        }
+      }
+    },
+    {
+      "id": "exact_3",
+      "message": "Remplace seulement les chaussures.",
+      "seconds": 13.42,
+      "checks": {
+        "http": true,
+        "understood": true,
+        "nonempty_results": true,
+        "exact_scores": true,
+        "photos": true,
+        "constraints": true,
+        "distinct_proposals": true,
+        "replacement_kind": true,
+        "proposal_count_preserved": true,
+        "other_proposals_unchanged": true,
+        "other_items_unchanged": true,
+        "target_changed": true,
+        "correct_before_and_after": true,
+        "correct_slot": true
+      },
+      "outcome": "passed",
+      "response": {
+        "status": "results_with_limits",
+        "message": "Proposition 1 : remplacement effectué. Les autres pièces et propositions sont conservées.",
+        "preference_coverage": [],
+        "results": [
+          {
+            "item_ids": [
+              "P01124908",
+              "P01125996"
+            ],
+            "candidate_id": "8be99f1e7ccdd988",
+            "relevance": 0.7604354321956635,
+            "constraint_report": [
+              {
+                "facet": {
+                  "field": "role",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "chaussures",
+                  "roles": []
+                },
+                "verified": true,
+                "passed": true,
+                "matching_ids": [
+                  "P01125996"
+                ],
+                "evaluated_ids": [
+                  "P01124908",
+                  "P01125996"
+                ],
+                "reason": "product_metadata"
+              }
+            ],
+            "bo1": {
+              "item_ids": [
+                "P01124908",
+                "P01125996"
+              ],
+              "value": 9.585451126098633,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9585451126098633,
+                "relevance": 0.7604354321956635,
+                "preference": 0.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6230543231964112,
+                "relevance": 0.19010885804891586,
+                "preference": 0.0
+              },
+              "total": 0.813163181245327,
+              "without_preferences": 0.9035146458281411,
+              "preferences": [],
+              "rank_with_preferences": 1,
+              "rank_without_preferences": 1,
+              "rank_pool_size": 7
+            },
+            "items": [
+              {
+                "image_id": "P01124908",
+                "name": "multicoloured floral silk-blend cloqué midi dress",
+                "description": "multicoloured floral silk-blend cloqué midi dress",
+                "type": "multicoloured floral silk-blend cloqué midi dress",
+                "category": "dress",
+                "role": "onepiece",
+                "color": null,
+                "colors": [],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01124908",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "unknown",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01125996",
+                "name": "gold intrecciato metallic leather mules",
+                "description": "gold intrecciato metallic leather mules",
+                "type": "gold intrecciato metallic leather mules",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "gold",
+                "colors": [
+                  "gold"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01125996",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.585/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 7 candidats."
+          },
+          {
+            "item_ids": [
+              "P01136660",
+              "P01131165"
+            ],
+            "candidate_id": "b68e9df8a575a769",
+            "relevance": 0.7674961686134338,
+            "constraint_report": [],
+            "bo1": {
+              "item_ids": [
+                "P01136660",
+                "P01131165"
+              ],
+              "value": 9.612428665161133,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9612428665161132,
+                "relevance": 0.7674961686134338,
+                "preference": 0.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6248078632354737,
+                "relevance": 0.19187404215335846,
+                "preference": 0.0
+              },
+              "total": 0.8166819053888321,
+              "without_preferences": 0.9074243393209246,
+              "preferences": [],
+              "rank_with_preferences": 2,
+              "rank_without_preferences": 2,
+              "rank_pool_size": 512
+            },
+            "items": [
+              {
+                "image_id": "P01136660",
+                "name": "black silk and cotton satin T-shirt dress",
+                "description": "black silk and cotton satin T-shirt dress",
+                "type": "black silk and cotton satin T-shirt dress",
+                "category": "dress",
+                "role": "onepiece",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01136660",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01131165",
+                "name": "white embellished suede-trimmed sneakers",
+                "description": "white embellished suede-trimmed sneakers",
+                "type": "white embellished suede-trimmed sneakers",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "white",
+                "colors": [
+                  "white"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01131165",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.612/10 sur les pièces affichées. Rang avec préférences : 2; sans préférences : 2 sur les mêmes 512 candidats."
+          }
+        ],
+        "comparison": {
+          "kind": "replacement",
+          "selection_number": 1,
+          "target_role": "shoes",
+          "kept_ids": [
+            "P01124908"
+          ],
+          "before_ids": [
+            "P01124908",
+            "P01133629"
+          ],
+          "after_ids": [
+            "P01124908",
+            "P01125996"
+          ],
+          "before_bo1": 9.634781837463379,
+          "after_bo1": 9.585451126098633,
+          "delta_bo1": -0.049330711364746094,
+          "preserved_selection_numbers": [
+            2
+          ]
+        },
+        "limits": [
+          "Assemblage borné BO5 ; complétion MiniGPT BO1 indisponible.",
+          "Score appris de compatibilité, pas une note esthétique humaine.",
+          "Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.",
+          "Genre, prix et palette complète inconnus ne passent pas un filtre strict."
+        ],
+        "diagnostics": {
+          "plan": {
+            "action": "replace",
+            "reuse_previous": true,
+            "reference_quote": "Remplace",
+            "query_en": "",
+            "facets": [],
+            "before_facets": [],
+            "selection_number": 1,
+            "target_role": "shoes",
+            "target_quote": "chaussures",
+            "clarification": ""
+          },
+          "original_message": "Remplace seulement les chaussures.",
+          "parser": {
+            "loaded": true,
+            "configured": true,
+            "attempted": true,
+            "error": null,
+            "model": "Qwen/Qwen3-1.7B",
+            "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+            "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+            "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+            "selected_checkpoint": "checkpoint-400",
+            "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+            "precision": "nf4",
+            "reviewer": null,
+            "writer": "deterministic evidence templates",
+            "fallback": null,
+            "postprocessing": "grounded-request-v2 (typed replacements, explicit words, audited edits)",
+            "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+            "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle.",
+            "gpu_free_mib_at_load": 7106,
+            "device": "cuda:0",
+            "tokenizer_verified": true
+          },
+          "parsing": {
+            "previous_selection_roles": [
+              {
+                "number": 1,
+                "roles": [
+                  "onepiece",
+                  "shoes"
+                ]
+              },
+              {
+                "number": 2,
+                "roles": [
+                  "onepiece",
+                  "shoes"
+                ]
+              }
+            ],
+            "raw_output": "{\"action\":\"replace\",\"reuse_previous\":true,\"reference_quote\":\"Remplace seulement\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"black\",\"blue\",\"beige\",\"red\",\"white\",\"green\",\"pink\",\"grey\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"chaussures\",\"roles\":[\"shoes\"]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"shoes\",\"target_quote\":\"chaussures\",\"clarification\":\"\"}",
+            "model_plan": {
+              "action": "replace",
+              "reuse_previous": true,
+              "reference_quote": "Remplace seulement",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "color",
+                  "values": [
+                    "black",
+                    "blue",
+                    "beige",
+                    "red",
+                    "white",
+                    "green",
+                    "pink",
+                    "grey"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "chaussures",
+                  "roles": [
+                    "shoes"
+                  ]
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "shoes",
+              "target_quote": "chaussures",
+              "clarification": ""
+            },
+            "normalized_contract_plan": {
+              "action": "replace",
+              "reuse_previous": true,
+              "reference_quote": "Remplace seulement",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "color",
+                  "values": [
+                    "black",
+                    "blue",
+                    "beige",
+                    "red",
+                    "white",
+                    "green",
+                    "pink",
+                    "grey"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "chaussures",
+                  "roles": [
+                    "shoes"
+                  ]
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "shoes",
+              "target_quote": "chaussures",
+              "clarification": ""
+            },
+            "corrections": [
+              {
+                "rule": "replacement_target",
+                "evidence": "Remplace",
+                "before": "Remplace seulement",
+                "after": "Remplace"
+              },
+              {
+                "rule": "unrequested_color",
+                "evidence": "chaussures",
+                "before": {
+                  "field": "color",
+                  "values": [
+                    "black",
+                    "blue",
+                    "beige",
+                    "red",
+                    "white",
+                    "green",
+                    "pink",
+                    "grey"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "chaussures",
+                  "roles": [
+                    "shoes"
+                  ]
+                },
+                "after": null
+              }
+            ],
+            "reconciled_plan": {
+              "action": "replace",
+              "reuse_previous": true,
+              "reference_quote": "Remplace",
+              "query_en": "",
+              "facets": [],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "shoes",
+              "target_quote": "chaussures",
+              "clarification": ""
+            }
+          },
+          "semantic_audit": "Conservative deterministic guards; no independent semantic oracle.",
+          "assembly": {
+            "method": "BO5 bounded assembly; not BO1 MiniGPT",
+            "eligible_products": 621,
+            "source_products": 653,
+            "examined": 8,
+            "scored": 8,
+            "rejections": {},
+            "exhaustive": false,
+            "role_pool_sizes": {
+              "top": 8,
+              "bottom": 8,
+              "onepiece": 8,
+              "shoes": 8,
+              "outerwear": 8,
+              "layer": 0,
+              "bag": 8,
+              "accessory": 8,
+              "unknown": 0
+            },
+            "original_message_preserved": true
+          },
+          "active_spec": {
+            "query": "complete outfit",
+            "facets": [
+              {
+                "field": "count",
+                "values": [
+                  "2"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "deux tenues",
+                "roles": []
+              },
+              {
+                "field": "role",
+                "values": [
+                  "shoes"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "chaussures",
+                "roles": []
+              }
+            ],
+            "scope": "catalog",
+            "top_n": 2,
+            "budget": null,
+            "currency": null,
+            "inclusive": true
+          }
+        }
+      }
+    },
+    {
+      "id": "exact_4",
+      "message": "Change les chaussures de la deuxième tenue.",
+      "seconds": 23.08,
+      "checks": {
+        "http": true,
+        "understood": true,
+        "nonempty_results": true,
+        "exact_scores": true,
+        "photos": true,
+        "constraints": true,
+        "distinct_proposals": true,
+        "replacement_kind": true,
+        "proposal_count_preserved": true,
+        "other_proposals_unchanged": true,
+        "other_items_unchanged": true,
+        "target_changed": true,
+        "correct_before_and_after": true,
+        "correct_slot": true
+      },
+      "outcome": "passed",
+      "response": {
+        "status": "results_with_limits",
+        "message": "Proposition 2 : remplacement effectué. Les autres pièces et propositions sont conservées.",
+        "preference_coverage": [],
+        "results": [
+          {
+            "item_ids": [
+              "P01124908",
+              "P01125996"
+            ],
+            "candidate_id": "8be99f1e7ccdd988",
+            "relevance": 0.7604354321956635,
+            "constraint_report": [
+              {
+                "facet": {
+                  "field": "role",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "chaussures",
+                  "roles": []
+                },
+                "verified": true,
+                "passed": true,
+                "matching_ids": [
+                  "P01125996"
+                ],
+                "evaluated_ids": [
+                  "P01124908",
+                  "P01125996"
+                ],
+                "reason": "product_metadata"
+              }
+            ],
+            "bo1": {
+              "item_ids": [
+                "P01124908",
+                "P01125996"
+              ],
+              "value": 9.585451126098633,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9585451126098633,
+                "relevance": 0.7604354321956635,
+                "preference": 0.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6230543231964112,
+                "relevance": 0.19010885804891586,
+                "preference": 0.0
+              },
+              "total": 0.813163181245327,
+              "without_preferences": 0.9035146458281411,
+              "preferences": [],
+              "rank_with_preferences": 1,
+              "rank_without_preferences": 1,
+              "rank_pool_size": 7
+            },
+            "items": [
+              {
+                "image_id": "P01124908",
+                "name": "multicoloured floral silk-blend cloqué midi dress",
+                "description": "multicoloured floral silk-blend cloqué midi dress",
+                "type": "multicoloured floral silk-blend cloqué midi dress",
+                "category": "dress",
+                "role": "onepiece",
+                "color": null,
+                "colors": [],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01124908",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "unknown",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01125996",
+                "name": "gold intrecciato metallic leather mules",
+                "description": "gold intrecciato metallic leather mules",
+                "type": "gold intrecciato metallic leather mules",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "gold",
+                "colors": [
+                  "gold"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01125996",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.585/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 7 candidats."
+          },
+          {
+            "item_ids": [
+              "P01136660",
+              "P01133629"
+            ],
+            "candidate_id": "5cb17da0d4255445",
+            "relevance": 0.7610472738742828,
+            "constraint_report": [
+              {
+                "facet": {
+                  "field": "role",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "chaussures",
+                  "roles": []
+                },
+                "verified": true,
+                "passed": true,
+                "matching_ids": [
+                  "P01133629"
+                ],
+                "evaluated_ids": [
+                  "P01136660",
+                  "P01133629"
+                ],
+                "reason": "product_metadata"
+              }
+            ],
+            "bo1": {
+              "item_ids": [
+                "P01136660",
+                "P01133629"
+              ],
+              "value": 9.618457794189453,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9618457794189453,
+                "relevance": 0.7610472738742828,
+                "preference": 0.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6251997566223145,
+                "relevance": 0.1902618184685707,
+                "preference": 0.0
+              },
+              "total": 0.8154615750908852,
+              "without_preferences": 0.9060684167676503,
+              "preferences": [],
+              "rank_with_preferences": 1,
+              "rank_without_preferences": 1,
+              "rank_pool_size": 8
+            },
+            "items": [
+              {
+                "image_id": "P01136660",
+                "name": "black silk and cotton satin T-shirt dress",
+                "description": "black silk and cotton satin T-shirt dress",
+                "type": "black silk and cotton satin T-shirt dress",
+                "category": "dress",
+                "role": "onepiece",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01136660",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01133629",
+                "name": "black studded leather Mary Jane pumps",
+                "description": "black studded leather Mary Jane pumps",
+                "type": "black studded leather Mary Jane pumps",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01133629",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.618/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 8 candidats."
+          }
+        ],
+        "comparison": {
+          "kind": "replacement",
+          "selection_number": 2,
+          "target_role": "shoes",
+          "kept_ids": [
+            "P01136660"
+          ],
+          "before_ids": [
+            "P01136660",
+            "P01131165"
+          ],
+          "after_ids": [
+            "P01136660",
+            "P01133629"
+          ],
+          "before_bo1": 9.612428665161133,
+          "after_bo1": 9.618457794189453,
+          "delta_bo1": 0.0060291290283203125,
+          "preserved_selection_numbers": [
+            1
+          ]
+        },
+        "limits": [
+          "Assemblage borné BO5 ; complétion MiniGPT BO1 indisponible.",
+          "Score appris de compatibilité, pas une note esthétique humaine.",
+          "Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.",
+          "Genre, prix et palette complète inconnus ne passent pas un filtre strict."
+        ],
+        "diagnostics": {
+          "plan": {
+            "action": "replace",
+            "reuse_previous": true,
+            "reference_quote": "Change",
+            "query_en": "",
+            "facets": [],
+            "before_facets": [],
+            "selection_number": 2,
+            "target_role": "shoes",
+            "target_quote": "chaussures",
+            "clarification": ""
+          },
+          "original_message": "Change les chaussures de la deuxième tenue.",
+          "parser": {
+            "loaded": true,
+            "configured": true,
+            "attempted": true,
+            "error": null,
+            "model": "Qwen/Qwen3-1.7B",
+            "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+            "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+            "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+            "selected_checkpoint": "checkpoint-400",
+            "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+            "precision": "nf4",
+            "reviewer": null,
+            "writer": "deterministic evidence templates",
+            "fallback": null,
+            "postprocessing": "grounded-request-v2 (typed replacements, explicit words, audited edits)",
+            "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+            "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle.",
+            "gpu_free_mib_at_load": 7106,
+            "device": "cuda:0",
+            "tokenizer_verified": true
+          },
+          "parsing": {
+            "previous_selection_roles": [
+              {
+                "number": 1,
+                "roles": [
+                  "onepiece",
+                  "shoes"
+                ]
+              },
+              {
+                "number": 2,
+                "roles": [
+                  "onepiece",
+                  "shoes"
+                ]
+              }
+            ],
+            "raw_output": "{\"action\":\"replace\",\"reuse_previous\":true,\"reference_quote\":\"Change les\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"black\",\"blue\",\"beige\",\"red\",\"white\",\"green\",\"pink\",\"grey\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"les\",\"roles\":[]},{\"field\":\"type\",\"values\":[\"shoes\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"deuxième\",\"roles\":[\"onepiece\",\"shoes\"]},{\"field\":\"count\",\"values\":[\"2\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"deuxième\",\"roles\":[]},{\"field\":\"role\",\"values\":[\"shoes\"],\"mode\":\"any\",\"strength\":\"must\",\"quote\":\"shoes\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":2,\"target_role\":\"shoes\",\"target_quote\":\"les\",\"clarification\":\"\"}",
+            "model_plan": {
+              "action": "replace",
+              "reuse_previous": true,
+              "reference_quote": "Change les",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "color",
+                  "values": [
+                    "black",
+                    "blue",
+                    "beige",
+                    "red",
+                    "white",
+                    "green",
+                    "pink",
+                    "grey"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "les",
+                  "roles": []
+                },
+                {
+                  "field": "type",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deuxième",
+                  "roles": [
+                    "onepiece",
+                    "shoes"
+                  ]
+                },
+                {
+                  "field": "count",
+                  "values": [
+                    "2"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deuxième",
+                  "roles": []
+                },
+                {
+                  "field": "role",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "shoes",
+                  "roles": []
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 2,
+              "target_role": "shoes",
+              "target_quote": "les",
+              "clarification": ""
+            },
+            "normalized_contract_plan": {
+              "action": "replace",
+              "reuse_previous": true,
+              "reference_quote": "Change les",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "color",
+                  "values": [
+                    "black",
+                    "blue",
+                    "beige",
+                    "red",
+                    "white",
+                    "green",
+                    "pink",
+                    "grey"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "les",
+                  "roles": []
+                },
+                {
+                  "field": "type",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deuxième",
+                  "roles": [
+                    "onepiece",
+                    "shoes"
+                  ]
+                },
+                {
+                  "field": "count",
+                  "values": [
+                    "2"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deuxième",
+                  "roles": []
+                },
+                {
+                  "field": "role",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "shoes",
+                  "roles": []
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 2,
+              "target_role": "shoes",
+              "target_quote": "les",
+              "clarification": ""
+            },
+            "corrections": [
+              {
+                "rule": "replacement_target",
+                "evidence": "Change",
+                "before": "Change les",
+                "after": "Change"
+              },
+              {
+                "rule": "replacement_target",
+                "evidence": "chaussures",
+                "before": "les",
+                "after": "chaussures"
+              },
+              {
+                "rule": "target_is_operation",
+                "evidence": "chaussures",
+                "before": {
+                  "field": "type",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deuxième",
+                  "roles": [
+                    "onepiece",
+                    "shoes"
+                  ]
+                },
+                "after": null
+              },
+              {
+                "rule": "selection_not_quantity",
+                "evidence": "deuxième",
+                "before": {
+                  "field": "count",
+                  "values": [
+                    "2"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "deuxième",
+                  "roles": []
+                },
+                "after": null
+              },
+              {
+                "rule": "target_is_operation",
+                "evidence": "chaussures",
+                "before": {
+                  "field": "role",
+                  "values": [
+                    "shoes"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "shoes",
+                  "roles": []
+                },
+                "after": null
+              },
+              {
+                "rule": "unrequested_color",
+                "evidence": "chaussures",
+                "before": {
+                  "field": "color",
+                  "values": [
+                    "black",
+                    "blue",
+                    "beige",
+                    "red",
+                    "white",
+                    "green",
+                    "pink",
+                    "grey"
+                  ],
+                  "mode": "any",
+                  "strength": "must",
+                  "quote": "les",
+                  "roles": []
+                },
+                "after": null
+              }
+            ],
+            "reconciled_plan": {
+              "action": "replace",
+              "reuse_previous": true,
+              "reference_quote": "Change",
+              "query_en": "",
+              "facets": [],
+              "before_facets": [],
+              "selection_number": 2,
+              "target_role": "shoes",
+              "target_quote": "chaussures",
+              "clarification": ""
+            }
+          },
+          "semantic_audit": "Conservative deterministic guards; no independent semantic oracle.",
+          "assembly": {
+            "method": "BO5 bounded assembly; not BO1 MiniGPT",
+            "eligible_products": 621,
+            "source_products": 653,
+            "examined": 8,
+            "scored": 8,
+            "rejections": {},
+            "exhaustive": false,
+            "role_pool_sizes": {
+              "top": 8,
+              "bottom": 8,
+              "onepiece": 8,
+              "shoes": 8,
+              "outerwear": 8,
+              "layer": 0,
+              "bag": 8,
+              "accessory": 8,
+              "unknown": 0
+            },
+            "original_message_preserved": true
+          },
+          "active_spec": {
+            "query": "complete outfit",
+            "facets": [
+              {
+                "field": "count",
+                "values": [
+                  "2"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "deux tenues",
+                "roles": []
+              },
+              {
+                "field": "role",
+                "values": [
+                  "shoes"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "chaussures",
+                "roles": []
+              }
+            ],
+            "scope": "catalog",
+            "top_n": 2,
+            "budget": null,
+            "currency": null,
+            "inclusive": true
+          }
+        }
+      }
+    },
+    {
+      "id": "exact_5",
+      "message": "Et si je préférais le bleu ?",
+      "seconds": 9.95,
+      "checks": {
+        "http": true,
+        "understood": true,
+        "nonempty_results": true,
+        "exact_scores": true,
+        "photos": true,
+        "constraints": true,
+        "distinct_proposals": true,
+        "soft_preference_preserved": true,
+        "comparison": true,
+        "actual_previous_selection": true,
+        "coverage_reported": true,
+        "preference_supported_in_candidates": true
+      },
+      "outcome": "passed",
+      "response": {
+        "status": "results_with_limits",
+        "message": "Les préférences ont été réévaluées sur des alternatives recherchées dans les articles autorisés. La préférence « je préférais le bleu » est prise en compte dans 2 proposition(s).",
+        "preference_coverage": [
+          {
+            "facet": {
+              "field": "color",
+              "values": [
+                "blue"
+              ],
+              "mode": "any",
+              "strength": "prefer",
+              "quote": "je préférais le bleu",
+              "roles": []
+            },
+            "available_products": 95,
+            "candidates_with_support": 254,
+            "displayed_with_support": 2,
+            "best_candidate_value": 1.0,
+            "method": "known_product_metadata"
+          }
+        ],
+        "results": [
+          {
+            "item_ids": [
+              "P01122045",
+              "P01133893",
+              "P01125996"
+            ],
+            "candidate_id": "15339a387ddadc80",
+            "relevance": 0.7614853779474894,
+            "constraint_report": [],
+            "bo1": {
+              "item_ids": [
+                "P01122045",
+                "P01133893",
+                "P01125996"
+              ],
+              "value": 9.549552917480469,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.9549552917480468,
+                "relevance": 0.7614853779474894,
+                "preference": 1.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6207209396362304,
+                "relevance": 0.19037134448687235,
+                "preference": 0.1
+              },
+              "total": 0.9110922841231027,
+              "without_preferences": 0.9012136490256697,
+              "preferences": [
+                {
+                  "facet": {
+                    "field": "color",
+                    "values": [
+                      "blue"
+                    ],
+                    "mode": "any",
+                    "strength": "prefer",
+                    "quote": "je préférais le bleu",
+                    "roles": []
+                  },
+                  "matching_ids": [
+                    "P01133893"
+                  ],
+                  "value": 1.0,
+                  "method": "known_product_metadata"
+                }
+              ],
+              "rank_with_preferences": 1,
+              "rank_without_preferences": 13,
+              "rank_pool_size": 512
+            },
+            "items": [
+              {
+                "image_id": "P01122045",
+                "name": "burgundy cotton-blend half-zip sweater",
+                "description": "burgundy cotton-blend half-zip sweater",
+                "type": "burgundy cotton-blend half-zip sweater",
+                "category": "top",
+                "role": "top",
+                "color": "burgundy",
+                "colors": [
+                  "burgundy"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01122045",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01133893",
+                "name": "white and blue floral silk-blend midi skirt",
+                "description": "white and blue floral silk-blend midi skirt",
+                "type": "white and blue floral silk-blend midi skirt",
+                "category": "bottom",
+                "role": "bottom",
+                "color": null,
+                "colors": [
+                  "white",
+                  "blue"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01133893",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01125996",
+                "name": "gold intrecciato metallic leather mules",
+                "description": "gold intrecciato metallic leather mules",
+                "type": "gold intrecciato metallic leather mules",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "gold",
+                "colors": [
+                  "gold"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01125996",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.550/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 13 sur les mêmes 512 candidats."
+          },
+          {
+            "item_ids": [
+              "P01130783",
+              "P01143616",
+              "P01133629"
+            ],
+            "candidate_id": "e51a6a072e710c5c",
+            "relevance": 0.760591983795166,
+            "constraint_report": [],
+            "bo1": {
+              "item_ids": [
+                "P01130783",
+                "P01143616",
+                "P01133629"
+              ],
+              "value": 9.53900146484375,
+              "scale": [
+                0,
+                10
+              ],
+              "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+              "odd_position": 0,
+              "embedding_source": "exported_emb_ft"
+            },
+            "score_details": {
+              "components": {
+                "bo1": 0.953900146484375,
+                "relevance": 0.760591983795166,
+                "preference": 1.0
+              },
+              "weights": {
+                "bo1": 0.65,
+                "relevance": 0.25,
+                "preference": 0.1
+              },
+              "contributions": {
+                "bo1": 0.6200350952148438,
+                "relevance": 0.1901479959487915,
+                "preference": 0.1
+              },
+              "total": 0.9101830911636353,
+              "without_preferences": 0.9002034346262614,
+              "preferences": [
+                {
+                  "facet": {
+                    "field": "color",
+                    "values": [
+                      "blue"
+                    ],
+                    "mode": "any",
+                    "strength": "prefer",
+                    "quote": "je préférais le bleu",
+                    "roles": []
+                  },
+                  "matching_ids": [
+                    "P01143616"
+                  ],
+                  "value": 1.0,
+                  "method": "known_product_metadata"
+                }
+              ],
+              "rank_with_preferences": 2,
+              "rank_without_preferences": 15,
+              "rank_pool_size": 512
+            },
+            "items": [
+              {
+                "image_id": "P01130783",
+                "name": "black polka-dot peplum silk jacquard top",
+                "description": "black polka-dot peplum silk jacquard top",
+                "type": "black polka-dot peplum silk jacquard top",
+                "category": "top",
+                "role": "top",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01130783",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01143616",
+                "name": "blue cropped wide-leg pants",
+                "description": "blue cropped wide-leg pants",
+                "type": "blue cropped wide-leg pants",
+                "category": "bottom",
+                "role": "bottom",
+                "color": "blue",
+                "colors": [
+                  "blue"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01143616",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              },
+              {
+                "image_id": "P01133629",
+                "name": "black studded leather Mary Jane pumps",
+                "description": "black studded leather Mary Jane pumps",
+                "type": "black studded leather Mary Jane pumps",
+                "category": "shoes",
+                "role": "shoes",
+                "color": "black",
+                "colors": [
+                  "black"
+                ],
+                "colors_complete": false,
+                "gender": null,
+                "price": null,
+                "currency": null,
+                "owner": null,
+                "source": "demo_catalog",
+                "image_url": "/api/assistant/images/P01133629",
+                "provenance": {
+                  "description": "BO1/catalog.json:desc",
+                  "category": "BO1/catalog.json:cat",
+                  "colors": "literal_product_description",
+                  "gender": "unknown",
+                  "price": "unknown"
+                },
+                "scoreable": true
+              }
+            ],
+            "all_constraints_verified": true,
+            "explanation": "Compatibilité BO1 : 9.539/10 sur les pièces affichées. Rang avec préférences : 2; sans préférences : 15 sur les mêmes 512 candidats."
+          }
+        ],
+        "comparison": {
+          "kind": "what_if",
+          "same_candidate_pool": true,
+          "candidate_pool_changed": true,
+          "previous_selection": [
+            {
+              "item_ids": [
+                "P01124908",
+                "P01125996"
+              ],
+              "candidate_id": "8be99f1e7ccdd988",
+              "relevance": 0.7604354321956635,
+              "constraint_report": [
+                {
+                  "facet": {
+                    "field": "role",
+                    "values": [
+                      "shoes"
+                    ],
+                    "mode": "any",
+                    "strength": "must",
+                    "quote": "chaussures",
+                    "roles": []
+                  },
+                  "verified": true,
+                  "passed": true,
+                  "matching_ids": [
+                    "P01125996"
+                  ],
+                  "evaluated_ids": [
+                    "P01124908",
+                    "P01125996"
+                  ],
+                  "reason": "product_metadata"
+                }
+              ],
+              "bo1": {
+                "item_ids": [
+                  "P01124908",
+                  "P01125996"
+                ],
+                "value": 9.585451126098633,
+                "scale": [
+                  0,
+                  10
+                ],
+                "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+                "odd_position": 0,
+                "embedding_source": "exported_emb_ft"
+              },
+              "score_details": {
+                "components": {
+                  "bo1": 0.9585451126098633,
+                  "relevance": 0.7604354321956635,
+                  "preference": 0.0
+                },
+                "weights": {
+                  "bo1": 0.65,
+                  "relevance": 0.25,
+                  "preference": 0.1
+                },
+                "contributions": {
+                  "bo1": 0.6230543231964112,
+                  "relevance": 0.19010885804891586,
+                  "preference": 0.0
+                },
+                "total": 0.813163181245327,
+                "without_preferences": 0.9035146458281411,
+                "preferences": [],
+                "rank_with_preferences": 1,
+                "rank_without_preferences": 1,
+                "rank_pool_size": 7
+              },
+              "items": [
+                {
+                  "image_id": "P01124908",
+                  "name": "multicoloured floral silk-blend cloqué midi dress",
+                  "description": "multicoloured floral silk-blend cloqué midi dress",
+                  "type": "multicoloured floral silk-blend cloqué midi dress",
+                  "category": "dress",
+                  "role": "onepiece",
+                  "color": null,
+                  "colors": [],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01124908",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "unknown",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01125996",
+                  "name": "gold intrecciato metallic leather mules",
+                  "description": "gold intrecciato metallic leather mules",
+                  "type": "gold intrecciato metallic leather mules",
+                  "category": "shoes",
+                  "role": "shoes",
+                  "color": "gold",
+                  "colors": [
+                    "gold"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01125996",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                }
+              ],
+              "all_constraints_verified": true,
+              "explanation": "Compatibilité BO1 : 9.585/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 7 candidats."
+            },
+            {
+              "item_ids": [
+                "P01136660",
+                "P01133629"
+              ],
+              "candidate_id": "5cb17da0d4255445",
+              "relevance": 0.7610472738742828,
+              "constraint_report": [
+                {
+                  "facet": {
+                    "field": "role",
+                    "values": [
+                      "shoes"
+                    ],
+                    "mode": "any",
+                    "strength": "must",
+                    "quote": "chaussures",
+                    "roles": []
+                  },
+                  "verified": true,
+                  "passed": true,
+                  "matching_ids": [
+                    "P01133629"
+                  ],
+                  "evaluated_ids": [
+                    "P01136660",
+                    "P01133629"
+                  ],
+                  "reason": "product_metadata"
+                }
+              ],
+              "bo1": {
+                "item_ids": [
+                  "P01136660",
+                  "P01133629"
+                ],
+                "value": 9.618457794189453,
+                "scale": [
+                  0,
+                  10
+                ],
+                "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+                "odd_position": 0,
+                "embedding_source": "exported_emb_ft"
+              },
+              "score_details": {
+                "components": {
+                  "bo1": 0.9618457794189453,
+                  "relevance": 0.7610472738742828,
+                  "preference": 0.0
+                },
+                "weights": {
+                  "bo1": 0.65,
+                  "relevance": 0.25,
+                  "preference": 0.1
+                },
+                "contributions": {
+                  "bo1": 0.6251997566223145,
+                  "relevance": 0.1902618184685707,
+                  "preference": 0.0
+                },
+                "total": 0.8154615750908852,
+                "without_preferences": 0.9060684167676503,
+                "preferences": [],
+                "rank_with_preferences": 1,
+                "rank_without_preferences": 1,
+                "rank_pool_size": 8
+              },
+              "items": [
+                {
+                  "image_id": "P01136660",
+                  "name": "black silk and cotton satin T-shirt dress",
+                  "description": "black silk and cotton satin T-shirt dress",
+                  "type": "black silk and cotton satin T-shirt dress",
+                  "category": "dress",
+                  "role": "onepiece",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01136660",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01133629",
+                  "name": "black studded leather Mary Jane pumps",
+                  "description": "black studded leather Mary Jane pumps",
+                  "type": "black studded leather Mary Jane pumps",
+                  "category": "shoes",
+                  "role": "shoes",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01133629",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                }
+              ],
+              "all_constraints_verified": true,
+              "explanation": "Compatibilité BO1 : 9.618/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 8 candidats."
+            }
+          ],
+          "before": [
+            {
+              "item_ids": [
+                "P01130699",
+                "P01118173",
+                "P01133417"
+              ],
+              "candidate_id": "b6b7f0d05d27813a",
+              "relevance": 0.7626596093177795,
+              "constraint_report": [],
+              "bo1": {
+                "item_ids": [
+                  "P01130699",
+                  "P01118173",
+                  "P01133417"
+                ],
+                "value": 9.65052604675293,
+                "scale": [
+                  0,
+                  10
+                ],
+                "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+                "odd_position": 0,
+                "embedding_source": "exported_emb_ft"
+              },
+              "score_details": {
+                "components": {
+                  "bo1": 0.965052604675293,
+                  "relevance": 0.7626596093177795,
+                  "preference": 0.0
+                },
+                "weights": {
+                  "bo1": 0.65,
+                  "relevance": 0.25,
+                  "preference": 0.1
+                },
+                "contributions": {
+                  "bo1": 0.6272841930389405,
+                  "relevance": 0.19066490232944489,
+                  "preference": 0.0
+                },
+                "total": 0.8179490953683853,
+                "without_preferences": 0.9088323281870948,
+                "preferences": [],
+                "rank_with_preferences": 1,
+                "rank_without_preferences": 1,
+                "rank_pool_size": 512
+              },
+              "items": [
+                {
+                  "image_id": "P01130699",
+                  "name": "black polka-dot tie-neck silk blouse",
+                  "description": "black polka-dot tie-neck silk blouse",
+                  "type": "black polka-dot tie-neck silk blouse",
+                  "category": "top",
+                  "role": "top",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01130699",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01118173",
+                  "name": "black pleated high-rise leather barrel-leg pants",
+                  "description": "black pleated high-rise leather barrel-leg pants",
+                  "type": "black pleated high-rise leather barrel-leg pants",
+                  "category": "bottom",
+                  "role": "bottom",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01118173",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01133417",
+                  "name": "black studded leather over-the-knee boots",
+                  "description": "black studded leather over-the-knee boots",
+                  "type": "black studded leather over-the-knee boots",
+                  "category": "shoes",
+                  "role": "shoes",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01133417",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                }
+              ],
+              "all_constraints_verified": true,
+              "explanation": "Compatibilité BO1 : 9.651/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 512 candidats."
+            },
+            {
+              "item_ids": [
+                "P01130783",
+                "P01118173",
+                "P01133417"
+              ],
+              "candidate_id": "5ba5da91b1f1db17",
+              "relevance": 0.7632365822792053,
+              "constraint_report": [],
+              "bo1": {
+                "item_ids": [
+                  "P01130783",
+                  "P01118173",
+                  "P01133417"
+                ],
+                "value": 9.645999908447266,
+                "scale": [
+                  0,
+                  10
+                ],
+                "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+                "odd_position": 0,
+                "embedding_source": "exported_emb_ft"
+              },
+              "score_details": {
+                "components": {
+                  "bo1": 0.9645999908447266,
+                  "relevance": 0.7632365822792053,
+                  "preference": 0.0
+                },
+                "weights": {
+                  "bo1": 0.65,
+                  "relevance": 0.25,
+                  "preference": 0.1
+                },
+                "contributions": {
+                  "bo1": 0.6269899940490723,
+                  "relevance": 0.19080914556980133,
+                  "preference": 0.0
+                },
+                "total": 0.8177991396188736,
+                "without_preferences": 0.9086657106876374,
+                "preferences": [],
+                "rank_with_preferences": 2,
+                "rank_without_preferences": 2,
+                "rank_pool_size": 512
+              },
+              "items": [
+                {
+                  "image_id": "P01130783",
+                  "name": "black polka-dot peplum silk jacquard top",
+                  "description": "black polka-dot peplum silk jacquard top",
+                  "type": "black polka-dot peplum silk jacquard top",
+                  "category": "top",
+                  "role": "top",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01130783",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01118173",
+                  "name": "black pleated high-rise leather barrel-leg pants",
+                  "description": "black pleated high-rise leather barrel-leg pants",
+                  "type": "black pleated high-rise leather barrel-leg pants",
+                  "category": "bottom",
+                  "role": "bottom",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01118173",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01133417",
+                  "name": "black studded leather over-the-knee boots",
+                  "description": "black studded leather over-the-knee boots",
+                  "type": "black studded leather over-the-knee boots",
+                  "category": "shoes",
+                  "role": "shoes",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01133417",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                }
+              ],
+              "all_constraints_verified": true,
+              "explanation": "Compatibilité BO1 : 9.646/10 sur les pièces affichées. Rang avec préférences : 2; sans préférences : 2 sur les mêmes 512 candidats."
+            }
+          ],
+          "after": [
+            {
+              "item_ids": [
+                "P01122045",
+                "P01133893",
+                "P01125996"
+              ],
+              "candidate_id": "15339a387ddadc80",
+              "relevance": 0.7614853779474894,
+              "constraint_report": [],
+              "bo1": {
+                "item_ids": [
+                  "P01122045",
+                  "P01133893",
+                  "P01125996"
+                ],
+                "value": 9.549552917480469,
+                "scale": [
+                  0,
+                  10
+                ],
+                "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+                "odd_position": 0,
+                "embedding_source": "exported_emb_ft"
+              },
+              "score_details": {
+                "components": {
+                  "bo1": 0.9549552917480468,
+                  "relevance": 0.7614853779474894,
+                  "preference": 1.0
+                },
+                "weights": {
+                  "bo1": 0.65,
+                  "relevance": 0.25,
+                  "preference": 0.1
+                },
+                "contributions": {
+                  "bo1": 0.6207209396362304,
+                  "relevance": 0.19037134448687235,
+                  "preference": 0.1
+                },
+                "total": 0.9110922841231027,
+                "without_preferences": 0.9012136490256697,
+                "preferences": [
+                  {
+                    "facet": {
+                      "field": "color",
+                      "values": [
+                        "blue"
+                      ],
+                      "mode": "any",
+                      "strength": "prefer",
+                      "quote": "je préférais le bleu",
+                      "roles": []
+                    },
+                    "matching_ids": [
+                      "P01133893"
+                    ],
+                    "value": 1.0,
+                    "method": "known_product_metadata"
+                  }
+                ],
+                "rank_with_preferences": 1,
+                "rank_without_preferences": 13,
+                "rank_pool_size": 512
+              },
+              "items": [
+                {
+                  "image_id": "P01122045",
+                  "name": "burgundy cotton-blend half-zip sweater",
+                  "description": "burgundy cotton-blend half-zip sweater",
+                  "type": "burgundy cotton-blend half-zip sweater",
+                  "category": "top",
+                  "role": "top",
+                  "color": "burgundy",
+                  "colors": [
+                    "burgundy"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01122045",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01133893",
+                  "name": "white and blue floral silk-blend midi skirt",
+                  "description": "white and blue floral silk-blend midi skirt",
+                  "type": "white and blue floral silk-blend midi skirt",
+                  "category": "bottom",
+                  "role": "bottom",
+                  "color": null,
+                  "colors": [
+                    "white",
+                    "blue"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01133893",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01125996",
+                  "name": "gold intrecciato metallic leather mules",
+                  "description": "gold intrecciato metallic leather mules",
+                  "type": "gold intrecciato metallic leather mules",
+                  "category": "shoes",
+                  "role": "shoes",
+                  "color": "gold",
+                  "colors": [
+                    "gold"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01125996",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                }
+              ],
+              "all_constraints_verified": true,
+              "explanation": "Compatibilité BO1 : 9.550/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 13 sur les mêmes 512 candidats."
+            },
+            {
+              "item_ids": [
+                "P01130783",
+                "P01143616",
+                "P01133629"
+              ],
+              "candidate_id": "e51a6a072e710c5c",
+              "relevance": 0.760591983795166,
+              "constraint_report": [],
+              "bo1": {
+                "item_ids": [
+                  "P01130783",
+                  "P01143616",
+                  "P01133629"
+                ],
+                "value": 9.53900146484375,
+                "scale": [
+                  0,
+                  10
+                ],
+                "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+                "odd_position": 0,
+                "embedding_source": "exported_emb_ft"
+              },
+              "score_details": {
+                "components": {
+                  "bo1": 0.953900146484375,
+                  "relevance": 0.760591983795166,
+                  "preference": 1.0
+                },
+                "weights": {
+                  "bo1": 0.65,
+                  "relevance": 0.25,
+                  "preference": 0.1
+                },
+                "contributions": {
+                  "bo1": 0.6200350952148438,
+                  "relevance": 0.1901479959487915,
+                  "preference": 0.1
+                },
+                "total": 0.9101830911636353,
+                "without_preferences": 0.9002034346262614,
+                "preferences": [
+                  {
+                    "facet": {
+                      "field": "color",
+                      "values": [
+                        "blue"
+                      ],
+                      "mode": "any",
+                      "strength": "prefer",
+                      "quote": "je préférais le bleu",
+                      "roles": []
+                    },
+                    "matching_ids": [
+                      "P01143616"
+                    ],
+                    "value": 1.0,
+                    "method": "known_product_metadata"
+                  }
+                ],
+                "rank_with_preferences": 2,
+                "rank_without_preferences": 15,
+                "rank_pool_size": 512
+              },
+              "items": [
+                {
+                  "image_id": "P01130783",
+                  "name": "black polka-dot peplum silk jacquard top",
+                  "description": "black polka-dot peplum silk jacquard top",
+                  "type": "black polka-dot peplum silk jacquard top",
+                  "category": "top",
+                  "role": "top",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01130783",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01143616",
+                  "name": "blue cropped wide-leg pants",
+                  "description": "blue cropped wide-leg pants",
+                  "type": "blue cropped wide-leg pants",
+                  "category": "bottom",
+                  "role": "bottom",
+                  "color": "blue",
+                  "colors": [
+                    "blue"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01143616",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                },
+                {
+                  "image_id": "P01133629",
+                  "name": "black studded leather Mary Jane pumps",
+                  "description": "black studded leather Mary Jane pumps",
+                  "type": "black studded leather Mary Jane pumps",
+                  "category": "shoes",
+                  "role": "shoes",
+                  "color": "black",
+                  "colors": [
+                    "black"
+                  ],
+                  "colors_complete": false,
+                  "gender": null,
+                  "price": null,
+                  "currency": null,
+                  "owner": null,
+                  "source": "demo_catalog",
+                  "image_url": "/api/assistant/images/P01133629",
+                  "provenance": {
+                    "description": "BO1/catalog.json:desc",
+                    "category": "BO1/catalog.json:cat",
+                    "colors": "literal_product_description",
+                    "gender": "unknown",
+                    "price": "unknown"
+                  },
+                  "scoreable": true
+                }
+              ],
+              "all_constraints_verified": true,
+              "explanation": "Compatibilité BO1 : 9.539/10 sur les pièces affichées. Rang avec préférences : 2; sans préférences : 15 sur les mêmes 512 candidats."
+            }
+          ],
+          "effect": "recalculated ranks; BO1 changes only when the selected combination changes"
+        },
+        "limits": [
+          "Assemblage borné BO5 ; complétion MiniGPT BO1 indisponible.",
+          "Score appris de compatibilité, pas une note esthétique humaine.",
+          "Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.",
+          "Genre, prix et palette complète inconnus ne passent pas un filtre strict."
+        ],
+        "diagnostics": {
+          "plan": {
+            "action": "compare",
+            "reuse_previous": true,
+            "reference_quote": "Et si",
+            "query_en": "",
+            "facets": [
+              {
+                "field": "color",
+                "values": [
+                  "blue"
+                ],
+                "mode": "any",
+                "strength": "prefer",
+                "quote": "je préférais le bleu",
+                "roles": []
+              }
+            ],
+            "before_facets": [],
+            "selection_number": 1,
+            "target_role": "",
+            "target_quote": "",
+            "clarification": ""
+          },
+          "original_message": "Et si je préférais le bleu ?",
+          "parser": {
+            "loaded": true,
+            "configured": true,
+            "attempted": true,
+            "error": null,
+            "model": "Qwen/Qwen3-1.7B",
+            "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+            "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+            "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+            "selected_checkpoint": "checkpoint-400",
+            "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+            "precision": "nf4",
+            "reviewer": null,
+            "writer": "deterministic evidence templates",
+            "fallback": null,
+            "postprocessing": "grounded-request-v2 (typed replacements, explicit words, audited edits)",
+            "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+            "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle.",
+            "gpu_free_mib_at_load": 7106,
+            "device": "cuda:0",
+            "tokenizer_verified": true
+          },
+          "parsing": {
+            "previous_selection_roles": [
+              {
+                "number": 1,
+                "roles": [
+                  "onepiece",
+                  "shoes"
+                ]
+              },
+              {
+                "number": 2,
+                "roles": [
+                  "onepiece",
+                  "shoes"
+                ]
+              }
+            ],
+            "raw_output": "{\"action\":\"compose\",\"reuse_previous\":true,\"reference_quote\":\"Et si\",\"query_en\":\"\",\"facets\":[{\"field\":\"color\",\"values\":[\"blue\"],\"mode\":\"any\",\"strength\":\"prefer\",\"quote\":\"je préférais le bleu\",\"roles\":[]}],\"before_facets\":[],\"selection_number\":1,\"target_role\":\"\",\"target_quote\":\"\",\"clarification\":\"\"}",
+            "model_plan": {
+              "action": "compose",
+              "reuse_previous": true,
+              "reference_quote": "Et si",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "color",
+                  "values": [
+                    "blue"
+                  ],
+                  "mode": "any",
+                  "strength": "prefer",
+                  "quote": "je préférais le bleu",
+                  "roles": []
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            },
+            "normalized_contract_plan": {
+              "action": "compose",
+              "reuse_previous": true,
+              "reference_quote": "Et si",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "color",
+                  "values": [
+                    "blue"
+                  ],
+                  "mode": "any",
+                  "strength": "prefer",
+                  "quote": "je préférais le bleu",
+                  "roles": []
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            },
+            "corrections": [
+              {
+                "rule": "hypothetical_scenario",
+                "evidence": "Et si",
+                "before": "compose",
+                "after": "compare"
+              }
+            ],
+            "reconciled_plan": {
+              "action": "compare",
+              "reuse_previous": true,
+              "reference_quote": "Et si",
+              "query_en": "",
+              "facets": [
+                {
+                  "field": "color",
+                  "values": [
+                    "blue"
+                  ],
+                  "mode": "any",
+                  "strength": "prefer",
+                  "quote": "je préférais le bleu",
+                  "roles": []
+                }
+              ],
+              "before_facets": [],
+              "selection_number": 1,
+              "target_role": "",
+              "target_quote": "",
+              "clarification": ""
+            }
+          },
+          "semantic_audit": "Conservative deterministic guards; no independent semantic oracle.",
+          "assembly": {
+            "method": "BO5 bounded assembly; not BO1 MiniGPT",
+            "eligible_products": 621,
+            "source_products": 653,
+            "examined": 990,
+            "scored": 512,
+            "rejections": {
+              "historical_combination": 1
+            },
+            "exhaustive": false,
+            "role_pool_sizes": {
+              "top": 9,
+              "bottom": 10,
+              "onepiece": 9,
+              "shoes": 10,
+              "outerwear": 10,
+              "layer": 0,
+              "bag": 10,
+              "accessory": 8,
+              "unknown": 0
+            },
+            "original_message_preserved": true,
+            "same_candidate_pool": true,
+            "expanded_for_preferences": true,
+            "comparison_candidates": 512
+          },
+          "active_spec": {
+            "query": "complete outfit",
+            "facets": [
+              {
+                "field": "count",
+                "values": [
+                  "2"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "deux tenues",
+                "roles": []
+              },
+              {
+                "field": "color",
+                "values": [
+                  "blue"
+                ],
+                "mode": "any",
+                "strength": "prefer",
+                "quote": "je préférais le bleu",
+                "roles": []
+              }
+            ],
+            "scope": "catalog",
+            "top_n": 2,
+            "budget": null,
+            "currency": null,
+            "inclusive": true
+          }
+        }
+      }
+    }
+  ],
+  "totals": {
+    "passed": 5,
+    "failed": 0
+  },
+  "health": {
+    "catalog": {
+      "products": 653,
+      "documents": 653,
+      "missing_images": 0,
+      "categories": {
+        "accessory": 25,
+        "bag": 56,
+        "outer": 104,
+        "bottom": 138,
+        "shoes": 106,
+        "top": 171,
+        "other": 32,
+        "dress": 21
+      },
+      "known_gender": 0,
+      "known_prices": 0,
+      "complete_color_palettes": 0,
+      "metadata_limit": "Unknown values stay unknown; demo products are not owned."
+    },
+    "parser": {
+      "loaded": true,
+      "configured": true,
+      "attempted": true,
+      "error": null,
+      "model": "Qwen/Qwen3-1.7B",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+      "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+      "selected_checkpoint": "checkpoint-400",
+      "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+      "precision": "nf4",
+      "reviewer": null,
+      "writer": "deterministic evidence templates",
+      "fallback": null,
+      "postprocessing": "grounded-request-v2 (typed replacements, explicit words, audited edits)",
+      "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+      "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle.",
+      "gpu_free_mib_at_load": 7106,
+      "device": "cuda:0",
+      "tokenizer_verified": true
+    },
+    "bo1": {
+      "ready": true,
+      "can_score": true,
+      "can_propose": false,
+      "can_complete": false,
+      "can_encode_photo": false,
+      "max_items": 5,
+      "scale": [
+        0,
+        10
+      ],
+      "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+      "visual_finetuned": false,
+      "embeddings_identical": true,
+      "reason": "MiniGPT/RQ-VAE inference export absent. BO5 bounded assembly is a separate method.",
+      "photo_status": "not_verified: notebook/export cosine discrepancy; personal photos cannot be scored",
+      "score_meaning": "Learned compatibility on source outfits/artificial corruptions; not a human aesthetic rating."
+    },
+    "rag": {
+      "mode": "hybrid",
+      "documents": 653,
+      "indexed": true,
+      "error": null,
+      "encoder": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3:512:passages-v2"
+    },
+    "assembly": {
+      "available": true,
+      "method": "BO5 bounded catalog assembly + exported BO1 score",
+      "trained_generator": false,
+      "exhaustive": false,
+      "pool_per_role": 8,
+      "max_examined": 20000,
+      "max_scored": 512,
+      "weights": {
+        "bo1": 0.65,
+        "relevance": 0.25,
+        "preference": 0.1
+      }
+    },
+    "session": "Local browser cookie; no account authentication in the original application."
+  }
+}
