@@ -32,6 +32,9 @@ from app.database import SessionLocal
 from app.auth.dependencies import session_context, require_csrf, InvalidCsrfToken
 from app.config import settings as studio_settings
 from dressme.routes import router as assistant_router, bo1_router
+from reco import router as reco_router
+from style import router as style_router
+from bubble import router as bubble_router
 
 ROOT_DIR = Path(__file__).resolve().parent
 DATA = Path(os.environ.get("DRESSME_DATA", ROOT_DIR / "data"))
@@ -89,14 +92,14 @@ app.state.assistant_auth_required = True
 @app.middleware("http")
 async def integrated_auth_boundary(request: Request, call_next):
     path = request.url.path
-    protected = path.startswith(("/api/", "/img/", "/search_img/"))
+    protected = path.startswith(("/api/", "/img/", "/search_img/", "/reco_img/"))
     if not protected or path in {"/api/studio-config", "/api/public-style-wall", "/api/dev-recovery-message"}:
         return await call_next(request)
     with SessionLocal() as db:
         context = session_context(request, db)
         if context is not None:
             request.state.assistant_identity = dict(id=str(context.user.id), gender=context.user.gender)
-            if path.startswith('/api/assistant/') and request.method not in {'GET', 'HEAD', 'OPTIONS'}:
+            if path.startswith(('/api/assistant/', '/api/reco/', '/api/style/', '/api/bubble/')) and request.method not in {'GET', 'HEAD', 'OPTIONS'}:
                 try:
                     require_csrf(request, context)
                 except InvalidCsrfToken:
@@ -125,6 +128,9 @@ app.include_router(redundancy_router)   # BO3 : /api/redundancy/*
 app.include_router(donate_router)       # BO3 : /api/donate/*
 app.include_router(assistant_router)    # BO5 : authenticated conversation
 app.include_router(bo1_router)          # BO1 : stable-ID scoring contract
+app.include_router(reco_router)
+app.include_router(style_router)
+app.include_router(bubble_router)
 app.mount("/studio-api", studio_app, name="studio-api")
 
 @app.get("/api/studio-config")
@@ -218,7 +224,8 @@ def _public_upload_limits():
         "avatar_bytes": studio_settings.max_avatar_bytes,
         "image_content_types": ["image/jpeg", "image/png", "image/webp"],
         "avatar_extensions": [".glb"],
-    }, "recovery_delivery_mode": studio_settings.email_delivery_mode}
+    }, "recovery_delivery_mode": studio_settings.email_delivery_mode,
+       **({"bo6_enabled": True} if studio_settings.bo6_enabled else {})}
 
 
 @app.get("/api/catalog")
@@ -235,6 +242,7 @@ app.mount("/static", StaticFiles(directory=ROOT_DIR / "static"), name="static")
 app.mount("/landing", StaticFiles(directory=ROOT_DIR / "static/landing", check_dir=False), name="landing")
 app.mount("/img", StaticFiles(directory=DATA / "img"), name="img")
 app.mount("/search_img", StaticFiles(directory=DATA / "search_img"), name="search_img")
+app.mount("/reco_img", StaticFiles(directory=DATA / "reco" / "thumbs"), name="reco_img")
 @app.get("/")
 def index():
     landing = ROOT_DIR / 'static/landing/index.html'

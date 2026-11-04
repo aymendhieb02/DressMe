@@ -37,6 +37,7 @@ class Settings:
     jwt_secret: str = os.getenv("JWT_SECRET", "") or secrets.token_urlsafe(48)
     csrf_header_name: str = "X-CSRF-Token"
     bo6_service_url: str = os.getenv("BO6_SERVICE_URL", "http://localhost:18022").rstrip("/")
+    bo6_enabled: bool = os.getenv("BO6_ENABLED", "0").strip() == "1"
     bo6_connect_timeout_seconds: float = 2.0
     bo6_read_timeout_seconds: float = 30.0
     bo6_write_timeout_seconds: float = 10.0

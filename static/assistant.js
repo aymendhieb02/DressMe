@@ -1,4 +1,4 @@
-import {request as authenticatedRequest, state as authState} from './studio/core.js?v=integrated-13';
+import {request as authenticatedRequest, state as authState} from './studio/core.js?v=bo6g2l1';
 (() => {
   'use strict';
   const q = s => document.querySelector(s);

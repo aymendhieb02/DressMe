@@ -103,3 +103,26 @@ def test_garment_data_survives_contract_migration(tmp_path, monkeypatch):
             assert row.vton_eligibility == "{}"
     finally:
         engine.dispose()
+
+
+def test_garment_wardrobe_profiles_migration_is_additive_and_reversible(tmp_path, monkeypatch):
+    database_url = f"sqlite:///{(tmp_path/'profiles.db').as_posix()}"
+    monkeypatch.setenv("DATABASE_URL", database_url)
+    config = Config("alembic.ini")
+    command.upgrade(config, "0012_taste_reactions")
+    engine = create_engine(database_url)
+    with engine.begin() as connection:
+        connection.execute(text("INSERT INTO users (id,email,password_hash,role,created_at,updated_at) VALUES ('u1','keep@example.com','hash','USER',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)"))
+    before = set(inspect(engine).get_table_names())
+    command.upgrade(config, "0013_garment_wardrobe_profiles")
+    inspector = inspect(engine)
+    assert set(inspector.get_table_names()) == before | {"garment_wardrobe_profiles"}
+    assert {index["name"] for index in inspector.get_indexes("garment_wardrobe_profiles")} >= {"ix_gwp_user_cat"}
+    with engine.connect() as connection:
+        ddl = connection.execute(text("SELECT sql FROM sqlite_master WHERE name='garment_wardrobe_profiles'")).scalar()
+    assert "AUTOINCREMENT" in ddl
+    command.downgrade(config, "0012_taste_reactions")
+    assert set(inspect(engine).get_table_names()) == before
+    with engine.connect() as connection:
+        assert connection.execute(text("SELECT email FROM users WHERE id='u1'")).scalar() == "keep@example.com"
+    engine.dispose()

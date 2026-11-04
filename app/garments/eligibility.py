@@ -11,6 +11,7 @@ _CANDIDATES = {
     "shorts": "bottoms",
     "skirt": "bottoms",
     "trousers": "bottoms",
+    "pants": "bottoms",  # the G2L model's name for trousers
     "shirt": "tops",
     "sweater": "tops",
     "sweatshirt": "tops",

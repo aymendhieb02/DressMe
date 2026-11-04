@@ -1,26 +1,36 @@
 param(
     [ValidateRange(1024, 65535)][int]$AppPort = 8001,
-    [ValidateRange(1024, 65535)][int]$Bo6Port = 18022
+    [ValidateRange(1024, 65535)][int]$Bo6Port = 18022,
+    [switch]$G2L
 )
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $appPython = Join-Path $repoRoot '.venv-app\Scripts\python.exe'
 if (-not (Test-Path $appPython)) { $appPython = Join-Path $repoRoot '.venv\Scripts\python.exe' }
-$bo6Python = Join-Path $repoRoot '.venv-bo6\Scripts\python.exe'
-$bundlePath = Join-Path $repoRoot 'bo6_service\bundle'
+$bo6Python = Join-Path $repoRoot $(if ($G2L) { '.venv-bo6-g2l\Scripts\python.exe' } else { '.venv-bo6\Scripts\python.exe' })
+$bundlePath = Join-Path $repoRoot $(if ($G2L) { 'bo6_service\bundle_g2l' } else { 'bo6_service\bundle' })
 if (-not (Test-Path $appPython)) { throw 'Run scripts/dev/setup.ps1 first.' }
-if (-not (Test-Path $bo6Python)) { throw 'Run scripts/dev/setup.ps1 -IncludeBo6 first.' }
-if (-not (Test-Path (Join-Path $bundlePath 'model_weights.pt')) -or -not (Test-Path (Join-Path $bundlePath 'attribute_heads.pt'))) {
-    throw 'BO6 weights are absent. Restore only checksum-verified weights with scripts/dev/restore-model-bundle.ps1.'
-}
-Push-Location (Join-Path $repoRoot 'bo6_service')
+# BO6 problems are warnings: the app starts without it, and manual add still works.
+$bo6Available = $true
 try {
-    & $bo6Python -c "from pathlib import Path; from app.checksum import verify_bundle; verify_bundle(Path('bundle')); print('PASS BO6 bundle checksums')"
-    if ($LASTEXITCODE -ne 0) { throw 'BO6 bundle checksum validation failed; service startup was skipped.' }
-} finally { Pop-Location }
+    if (-not (Test-Path $bo6Python)) { throw 'Run scripts/dev/setup.ps1 -IncludeBo6 first.' }
+    if ($G2L) {
+        if (-not (Test-Path (Join-Path $bundlePath 'clip_vision\model.safetensors'))) { throw 'The G2L bundle is absent from bo6_service\bundle_g2l.' }
+    } elseif (-not (Test-Path (Join-Path $bundlePath 'model_weights.pt')) -or -not (Test-Path (Join-Path $bundlePath 'attribute_heads.pt'))) {
+        throw 'BO6 weights are absent. Restore only checksum-verified weights with scripts/dev/restore-model-bundle.ps1.'
+    }
+    Push-Location (Join-Path $repoRoot 'bo6_service')
+    try {
+        & $bo6Python -c "from pathlib import Path; from app.checksum import verify_bundle; verify_bundle(Path(r'$bundlePath')); print('PASS BO6 bundle checksums')"
+        if ($LASTEXITCODE -ne 0) { throw 'BO6 bundle checksum validation failed; service startup was skipped.' }
+    } finally { Pop-Location }
+} catch {
+    $bo6Available = $false
+    Write-Warning "BO6 will not start: $($_.Exception.Message)"
+}
 
-$runtimeRoot = if ($env:DRESSME_RUNTIME_DIR) { $env:DRESSME_RUNTIME_DIR } else { Join-Path $env:LOCALAPPDATA 'DressMe\Project_DressMe\runtime' }
+$runtimeRoot = if ($env:DRESSME_RUNTIME_DIR) { $env:DRESSME_RUNTIME_DIR } else { Join-Path $repoRoot '.runtime' }
 $logRoot = Join-Path $runtimeRoot 'logs'
 New-Item -ItemType Directory -Path $logRoot -Force | Out-Null
 $statePath = Join-Path $runtimeRoot 'services.json'
@@ -104,12 +114,21 @@ function Start-Service([string]$Name, [int]$Port, [string]$HealthUrl, [string]$P
 if ($AppPort -eq $Bo6Port) { throw 'Application and BO6 ports must be different.' }
 $frontendOrigin = "http://localhost:$AppPort"
 $bo6Url = "http://127.0.0.1:$Bo6Port"
-Start-Service 'bo6' $Bo6Port "$bo6Url/health" $bo6Python (Join-Path $repoRoot 'bo6_service') `
-    @('-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', [string]$Bo6Port, '--workers', '1') `
-    @{ MODEL_BUNDLE_DIR = $bundlePath } 180
-Start-Service 'app' $AppPort "$frontendOrigin/studio-api/health/ready" $appPython $repoRoot `
+if ($bo6Available) {
+    try {
+        Start-Service 'bo6' $Bo6Port "$bo6Url/health" $bo6Python (Join-Path $repoRoot 'bo6_service') `
+            @('-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', [string]$Bo6Port, '--workers', '1') `
+            @{ MODEL_BUNDLE_DIR = $bundlePath } 180
+    } catch {
+        Write-Warning "BO6 is not running: $($_.Exception.Message)"
+    }
+}
+Start-Service 'app' $AppPort "$frontendOrigin/studio-api/health/live" $appPython $repoRoot `
     @('-m', 'uvicorn', 'api:app', '--host', 'localhost', '--port', [string]$AppPort, '--workers', '1') `
     @{ BO6_SERVICE_URL = $bo6Url; FRONTEND_ORIGINS = $frontendOrigin } 90
+if (-not (Test-Health "$frontendOrigin/studio-api/health/ready")) {
+    Write-Warning 'The app is up, but /studio-api/health/ready reports a problem. Garment analysis may be unavailable; manual add still works.'
+}
 
 Write-Host "DressMe: $frontendOrigin/"
 Write-Host "BO6 health:  $bo6Url/health"

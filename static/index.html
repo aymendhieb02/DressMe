@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DressMe — Style Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="/static/studio.css?v=integrated-13" rel="stylesheet">
+<link href="/static/studio.css?v=bo6g2l1" rel="stylesheet">
 <style>
 :root{--ink:#17283a;--c1:#ff6b4a;--c2:#0e9f9a;--ok:#1fb889;--warn:#f5a524;--bad:#e5484d;--hero:#17283a;--sky:linear-gradient(160deg,#fdebd8,#c9ebe7)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--sky) fixed;min-height:100vh}
@@ -201,6 +201,13 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 .wd-shelf .gi{width:88px;height:88px}
 .wd-zone .gi::before{content:"";position:absolute;top:-15px;left:50%;width:24px;height:15px;border:2px solid #98a2ac;border-bottom:0;border-radius:12px 12px 0 0;transform:translateX(-50%)}
 .gi:hover{z-index:6;transform:translateY(-6px) scale(1.1)}
+.gi.owned{outline:3px solid var(--ok);outline-offset:1px}
+.gi-badge{position:absolute;left:3px;right:3px;bottom:3px;padding:1px 3px;border-radius:6px;background:#17283acc;color:#fff;font:600 .52rem/1.2 Inter,sans-serif;text-align:center;pointer-events:none}
+.gi.owned .gi-badge{background:var(--ok)}
+.wd-own-row{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 4px}
+.wd-own-row figure{margin:0;width:104px}
+.wd-own-row img{width:104px;height:128px;object-fit:cover;border-radius:10px;outline:3px solid var(--ok);outline-offset:1px;display:block}
+.wd-own-row figcaption{font-size:.72rem;line-height:1.25;margin-top:6px;opacity:.8}
 .gx{display:none;position:absolute;top:3px;right:3px;width:20px;height:20px;border:0;border-radius:50%;background:#000a;color:#fff;cursor:pointer;line-height:1}.gi:hover .gx{display:block}
 .wd-cab:not(.open) .gi{opacity:0}
 .gi.new{animation:gen .9s var(--d,0ms) backwards,glow 1.8s calc(var(--d,0ms) + .9s) ease-in-out 3;z-index:3}
@@ -660,7 +667,7 @@ label.btn input{display:none}
  .gapx-tab{top:auto;bottom:40px;transform:translateX(100%)}
  .gapx-tab.show{transform:none}
 }
-</style><link rel="stylesheet" href="/static/assistant.css?v=integrated-13">
+</style><link rel="stylesheet" href="/static/assistant.css?v=bo6g2l1"><link rel="stylesheet" href="/static/taste.css?v=1">
 </head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
 <div id="intro" hidden><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
 <div class="copy"><p class="eyebrow">Wardrobe intelligence</p><h1>Where weather, taste and wardrobe <em>finally agree.</em></h1></div>
@@ -753,6 +760,27 @@ label.btn input{display:none}
 <div id="wan" class="chips" style="margin:2px 0 6px"></div>
 <div class="wd-stage"><div class="wd-cab" id="wcab"><div class="wd-in" id="win"></div><div class="wd-door l"></div><div class="wd-door r"></div></div></div>
 <div id="wout"></div></section>
+<section id="reco" class="glass taste-page" hidden>
+ <p class="eyebrow">Taste</p><h2>Taste Studio</h2>
+ <p class="sub">Browse pieces from every style. Like, dislike or save to shape your recommendations.</p>
+ <div class="taste-toolbar"><span><b id="taste-count">0</b> reactions</span><div class="chips" id="taste-gender"></div><button class="btn ghost" id="taste-reset" type="button">Start over</button></div>
+ <div class="chips" id="taste-tabs"></div><div class="chips" id="taste-slots"></div>
+ <div id="taste-output" aria-live="polite"></div>
+</section>
+<section id="style" class="glass taste-page" hidden>
+ <p class="eyebrow">Taste</p><h2>Style Profile</h2>
+ <p class="sub">Analyze photos or your Taste Studio likes. The model estimates four broad styles and suggests catalog pieces.</p>
+ <div class="chips" id="taste-style-mode"><button class="cc on" data-mode="photos" type="button">Upload photos</button><button class="cc" data-mode="likes" type="button">Use my likes</button></div>
+ <div id="taste-style-photos"><div class="taste-upload"><label class="btn ghost" for="taste-photos">Choose garment photos</label><input id="taste-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden><span id="taste-photo-name">Up to 12 JPG, PNG or WEBP images, 8 MB each</span></div><div id="taste-previews" class="taste-previews"></div><button class="btn" id="taste-analyze" type="button">Analyse my style</button> <button class="btn ghost" id="taste-sample" type="button">Try a catalog sample</button></div>
+ <div id="taste-style-likes" hidden><p class="sub" id="taste-likes-count"></p><button class="btn" id="taste-analyze-likes" type="button">Analyse my likes</button></div>
+ <div id="taste-style-output" aria-live="polite"></div>
+</section>
+<section id="bubble" class="glass taste-page" hidden>
+ <p class="eyebrow">Taste</p><h2>Bubble Breaker</h2>
+ <p class="sub">Explore less familiar styles while keeping your likes in the mix.</p>
+ <div class="taste-bubble-control"><label for="taste-surprise">Surprise level <b id="taste-surprise-value">25%</b></label><input id="taste-surprise" type="range" min="0" max="100" value="25"><button class="btn" id="taste-bubble-go" type="button">Break my bubble</button></div>
+ <p class="sub" id="taste-surprise-help">A balanced mix of familiar and less explored styles.</p><div id="taste-bubble-output" aria-live="polite"></div>
+</section>
 <section id="bo6-wardrobe" class="glass" hidden><div data-studio-page="bo6-wardrobe"></div></section>
 <section id="bo6-add" class="glass" hidden><div data-studio-page="bo6-add"></div></section>
 <section id="bo7-avatar" class="glass" hidden><div data-studio-page="bo7-avatar"></div></section>
@@ -879,6 +907,10 @@ const MENU=[{label:'Style Me',items:[
  {id:'sim',title:'Where to Buy',desc:'Upload a piece, compare prices across shops'},
  {id:'wardrobe',title:'Wardrobe Completion',desc:'The missing piece that unlocks the most new outfits'},
  ]},
+ {label:'Taste',items:[
+ {id:'reco',title:'Taste Studio',desc:'Discover, like and save catalog pieces'},
+ {id:'style',title:'Style Profile',desc:'Find your style from photos or likes'},
+ {id:'bubble',title:'Bubble Breaker',desc:'Discover styles beyond your usual picks'}]},
  {label:'Wardrobe Check',items:[
  {id:'bo3',title:'Redundancy Check',desc:'Spot duplicates and clutter, donate what you do not wear'}]},
   {label:'My Studio',items:[
@@ -1263,23 +1295,24 @@ shHist();
 $('#shopgo').onclick=()=>shRun();
 
 /* ---------- IDÉE 5 : Wardrobe Completion ---------- */
-const WD={items:[],fresh:new Set(),open:false,n:3,init:false,gender:'women',ready:false};
+const WD={items:[],owned:[],fresh:new Set(),open:false,n:3,init:false,gender:'women',ready:false};
 const wdHide=()=>WD.gender==='men'?['dress']:[];
 const zoneBox=(z,l)=>`<div class="wd-zone" data-z="${z}"><span class="wd-lab">${l}</span><div class="wd-items"></div></div>`;
 $('#win').innerHTML=`<div class="wd-shelf" data-z="bag"><span class="wd-lab">Bags &amp; accessories</span><div class="wd-items"></div></div>
  <div class="wd-rails">${zoneBox('outer','Outerwear')}${zoneBox('top','Tops')}${zoneBox('dress','Dresses')}${zoneBox('bottom','Bottoms')}</div>
  <div class="wd-shelf" data-z="shoes"><span class="wd-lab">Shoes</span><div class="wd-items"></div></div>`;
 function wdPut(x,fresh,delay){const z=$(`#win [data-z="${(x.c==='other'||x.c==='accessory')?'bag':x.c}"] .wd-items`);if(!z)return;
- const d=document.createElement('div');d.className='gi'+(fresh?' new':'');d.style.setProperty('--d',(delay||0)+'ms');d.title=x.d;
- d.innerHTML=`<img src="${x.photo||img(x.k)}" alt=""><button class="gx" data-x="${x.i}">×</button>`;z.appendChild(d);if(fresh)z.scrollLeft=z.scrollWidth}
+ const d=document.createElement('div');d.className='gi'+(fresh?' new':'')+(x.owned?' owned':'');d.style.setProperty('--d',(delay||0)+'ms');d.title=x.d;
+ const starter=!x.owned&&!x.photo&&!fresh&&WD.owned.length?'<span class="gi-badge">Starter</span>':'';
+ d.innerHTML=`<img src="${x.photo||img(x.k)}" alt="">${x.owned?'<span class="gi-badge">From your wardrobe</span>':`<button class="gx" data-x="${x.i}">×</button>${starter}`}`;z.appendChild(d);if(fresh)z.scrollLeft=z.scrollWidth}
 
 let wdTimer;
 function wdStats(reset){
-  $('#wn').textContent=WD.items.length;
+  $('#wn').textContent=WD.items.length+WD.owned.length;
   if(reset){$('#wo').textContent='–';clearTimeout(wdTimer);wdTimer=setTimeout(wdAnalyze,400)}
 }
 async function wdAnalyze(){
-  if(!WD.items.length){$('#wan').innerHTML='';return}
+  if(!WD.items.length&&!WD.owned.length){$('#wan').innerHTML='';return}
   try{
     const r=await api('wardrobe/analyze',{items:WD.items.map(x=>x.i),gender:WD.gender});
     $('#wo').textContent=r.outfits;
@@ -1296,10 +1329,15 @@ function wdLooks(looks){
   const own=new Map(WD.items.filter(x=>x.photo).map(x=>[x.i,x.photo]));
   return `<h3 style="margin-top:26px">Your complete outfits</h3><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(270px,1fr))">`+
     looks.map((l,k)=>`<div class="card" style="animation-delay:${k*.1}s;padding:10px;cursor:default">
-      <div style="display:flex;gap:8px;margin-bottom:6px">${l.items.map(x=>`<img src="${own.get(x.i)||img(x.k)}" title="${esc(x.d)}" style="width:56px;height:72px;object-fit:cover;border-radius:8px;${l.new.includes(x.i)?'outline:3px solid #ff6b4a;outline-offset:1px':''}">`).join('')}</div>
-      <p style="padding:0"><b>${l.score.toFixed(1)}/10</b>${l.new.length?` · <span style="color:var(--c1)">${l.new.length} new piece${l.new.length>1?'s':''}</span>`:''}</p></div>`).join('')+'</div>';
+      <div style="display:flex;gap:8px;margin-bottom:6px">${l.items.map(x=>`<img src="${x.photo||own.get(x.i)||img(x.k)}" title="${esc(x.d)}" style="width:56px;height:72px;object-fit:cover;border-radius:8px;${x.owned?'outline:3px solid var(--ok);outline-offset:1px':l.new.includes(x.i)?'outline:3px solid #ff6b4a;outline-offset:1px':''}">`).join('')}</div>
+      <p style="padding:0"><b>${l.score.toFixed(1)}/10</b>${l.new.length?` · <span style="color:var(--c1)">${l.new.length} new piece${l.new.length>1?'s':''}</span>`:''}${l.owned&&l.owned.length?` · <span style="color:var(--ok)">From your wardrobe</span>`:''}</p></div>`).join('')+'</div>';
 }
-function wdRender(){$$('#win .wd-items').forEach(e=>e.innerHTML='');WD.items.forEach((x,k)=>wdPut(x,WD.fresh.has(x.i),k*60));wdStats(true)}
+function wdOwnRow(list){
+  if(!list||!list.length)return '';
+  return `<h3 style="margin-top:26px">You own</h3><p class="sub">Pieces from your wardrobe used in these looks.</p><div class="wd-own-row">`+
+    list.map(x=>`<figure><img src="${esc(x.photo)}" alt="" title="${esc(x.d)}"><figcaption>${esc(x.d.slice(0,40))} · ${x.looks} look${x.looks>1?'s':''}</figcaption></figure>`).join('')+'</div>';
+}
+function wdRender(){$$('#win .wd-items').forEach(e=>e.innerHTML='');WD.items.forEach((x,k)=>wdPut(x,WD.fresh.has(x.i),k*60));WD.owned.forEach((x,k)=>wdPut(x,false,(WD.items.length+k)*60));wdStats(true)}
 function wdOpen(v){WD.open=v;$('#wcab').classList.toggle('open',v);$('#wopen').textContent=v?'Close the wardrobe':'Open the wardrobe'}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function countTo(el,a,b){let t=0;const id=setInterval(()=>{t+=.04;if(t>=1){t=1;clearInterval(id)}el.textContent=Math.round(a+(b-a)*t)},30)}
@@ -1350,11 +1388,11 @@ function wdChooseGender(){
 /* CORRECTION 2.b : chargement avec jeton d'annulation, plus de promesse partagée bloquée */
 let wdTok=0;
 function wdShow(r){
- wdApplyGender(r.gender);WD.items=r.items||[];WD.fresh.clear();WD.ready=true;$('#wout').innerHTML='';wdRender();
+ wdApplyGender(r.gender);WD.items=r.items||[];WD.owned=r.owned||[];WD.fresh.clear();WD.ready=true;$('#wout').innerHTML='';wdRender();
  wdStatus(WD.items.length?'Saved to your account ✓':'Your wardrobe is empty: use “Sample wardrobe”');
  setTimeout(()=>{if(!$('#wcab').classList.contains('open'))wdOpen(true)},400)}
 function wdReset(){                                   // à appeler quand la session change (déconnexion)
- wdTok++;WD.ready=false;WD.items=[];WD.fresh.clear();clearTimeout(wdSaveT);wdSaveT=null;
+ wdTok++;WD.ready=false;WD.items=[];WD.owned=[];WD.fresh.clear();clearTimeout(wdSaveT);wdSaveT=null;
  $$('#win .wd-items').forEach(e=>e.innerHTML='');$('#wn').textContent=0;$('#wo').textContent='–';
  $('#wan').innerHTML='';$('#wout').innerHTML='';wdStatus('')}
 async function wdLoad(){
@@ -1391,7 +1429,9 @@ function wdAddMenu(){const m=document.createElement('div');m.className='modal';
  <p class="sub">Photograph a real garment or pick one from the catalog.</p>
  <div class="row"><button class="btn" id="am-cam">Take a photo</button><button class="btn ghost" id="am-cat">Browse the catalog</button></div></div>`;
  document.body.appendChild(m);
+ fetch('/api/studio-config',{credentials:'same-origin'}).then(r=>r.json()).then(c=>{if(c.bo6_enabled&&m.isConnected)$('#am-cam',m).insertAdjacentHTML('beforebegin','<button class="btn" id="am-scan">Scan my real garment</button>')}).catch(()=>{});
  m.onclick=e=>{if(e.target===m||e.target.id==='cl')m.remove();
+  else if(e.target.id==='am-scan'){m.remove();window.dressmeReturnPage='wardrobe';location.hash='bo6-add'}
   else if(e.target.id==='am-cam'){m.remove();wdCamera()}
   else if(e.target.id==='am-cat'){m.remove();wdFromCatalog()}}}
 function wdCamera(){let stream=null,blob=null,cat='';const m=document.createElement('div');m.className='modal';
@@ -1492,7 +1532,7 @@ $('#wgd').onclick=async e=>{
 $('#wnn').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;WD.n=+b.dataset.n;$$('.cc',$('#wnn')).forEach(x=>x.classList.toggle('on',x===b))};
 $('#win').onclick=e=>{const x=e.target.closest('.gx');if(!x)return;const i=+x.dataset.x;WD.items=WD.items.filter(v=>v.i!==i);WD.fresh.delete(i);x.closest('.gi').remove();wdStats(true);wdSave()};
 $('#wrun').onclick=async()=>{const btn=$('#wrun');
- if(WD.items.length<3){$('#wout').innerHTML='<div class="err">Add at least 3 pieces (or load the sample wardrobe).</div>';return}
+ if(WD.items.length+WD.owned.length<3){$('#wout').innerHTML='<div class="err">Add at least 3 pieces (or load the sample wardrobe).</div>';return}
  btn.disabled=true;$('#wout').innerHTML='';if(!WD.open){wdOpen(true);await sleep(1000)}
  $('#wcab').classList.add('scan');
  
@@ -1513,12 +1553,12 @@ $('#wrun').onclick=async()=>{const btn=$('#wrun');
     return;
   }
 
-  validRecs.forEach((q,k)=>setTimeout(()=>{if(WD.items.some(x=>x.i===q.item.i))return;WD.items.push(q.item);WD.fresh.add(q.item.i);wdPut(q.item,true,0);$('#wn').textContent=WD.items.length},k*1000));
+  validRecs.forEach((q,k)=>setTimeout(()=>{if(WD.items.some(x=>x.i===q.item.i))return;WD.items.push(q.item);WD.fresh.add(q.item.i);wdPut(q.item,true,0);$('#wn').textContent=WD.items.length+WD.owned.length},k*1000));
   await sleep(validRecs.length*1000);wdSave();
   
   const wo=$('#wo');wo.textContent=r.before;countTo(wo,r.before,r.after);
   
-  $('#wout').innerHTML=`<h3>Pieces your wardrobe was missing · <span style="color:var(--ok)">+${r.after-r.before} outfits</span></h3>`+validRecs.map((q,k)=>`<div class="sug" style="animation-delay:${k*.15}s"><img src="${img(q.item.k)}"><div><b>${FR[q.item.c]}</b> · ${esc(q.item.d.slice(0,50))}<br><small>${q.gain?`Unlocks <b>${q.gain}</b> new outfit${q.gain>1?'s':''}`:'Foundation piece your closet was lacking'}${q.best_score!=null?` · best look ${q.best_score.toFixed(1)}/10`:''}</small>${q.look.length?`<div class="wd-ex">${q.look.map(x=>`<img src="${img(x.k)}">`).join('')}</div>`:''}</div><span class="pill" style="background:var(--ok)">+${q.gain}</span></div>`).join('')+wdLooks(r.looks);
+  $('#wout').innerHTML=`<h3>Pieces your wardrobe was missing · <span style="color:var(--ok)">+${r.after-r.before} outfits</span></h3>`+validRecs.map((q,k)=>`<div class="sug" style="animation-delay:${k*.15}s"><img src="${img(q.item.k)}"><div><b>${FR[q.item.c]}</b> · ${esc(q.item.d.slice(0,50))}<br><small>${q.gain?`Unlocks <b>${q.gain}</b> new outfit${q.gain>1?'s':''}`:'Foundation piece your closet was lacking'}${q.best_score!=null?` · best look ${q.best_score.toFixed(1)}/10`:''}</small>${q.look.length?`<div class="wd-ex">${q.look.map(x=>`<img src="${img(x.k)}">`).join('')}</div>`:''}</div><span class="pill" style="background:var(--ok)">+${q.gain}</span></div>`).join('')+wdOwnRow(r.owned_in_looks)+wdLooks(r.looks);
   setTimeout(wdAnalyze,1500);
  }catch(e){
   $('#wcab').classList.remove('scan');
@@ -1605,5 +1645,5 @@ $('#vd-x').onclick=()=>vdEl.classList.add('mini');
 $('#vd-av').onclick=()=>vdEl.classList.toggle('mini');
 document.addEventListener('dressme:section',e=>{if(e.detail!=='score')vdHide();else if(vdLast&&B1.get().length>=2){vdThink();vdSay(vdLast)}});
 
-</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=integrated-13"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3?v='+Date.now()+'#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
-<script type="module" src="/static/assistant.js?v=integrated-13"></script></body></html>
+</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=bo6g2l1"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3?v='+Date.now()+'#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
+<script type="module" src="/static/assistant.js?v=bo6g2l1"></script><script type="module" src="/static/taste.js?v=1"></script></body></html>

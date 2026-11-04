@@ -1,5 +1,5 @@
-import {state, $, esc, active, image, node, request, message} from './core.js?v=integrated-13';
-import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=integrated-13';
+import {state, $, esc, active, image, node, request, message} from './core.js?v=bo6g2l1';
+import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo6g2l1';
 
 export function tryonContent() {
   return `<p class="studio-badge">MOCK · no virtual try-on model runs in this application</p><p class="studio-muted">Save a person photo with consent, choose one of your eligible garments and submit only when the worker is ready.</p><section class="studio-panel"><h3>Save a person photo</h3><form id="studio-person" class="studio-form">${uploadPicker({key: 'person-photo', name: 'image', title: 'Choose one person photo', accept: 'image/jpeg,image/png,image/webp', note: 'JPEG, PNG or WebP · private storage'})}<label class="studio-consent"><input name="consent" type="checkbox" required> I consent to private processing of this photo for mock try-on.</label><button class="btn ghost" type="submit">Save consented photo</button></form></section><div id="studio-tryon-controls" class="studio-panel"></div>`;

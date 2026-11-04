@@ -66,6 +66,12 @@ To stop services started by the project scripts:
 .\scripts\dev\stop.ps1
 ```
 
+## Taste
+
+The **Taste** menu contains Taste Studio, Style Profile and Bubble Breaker. The bundled catalog, embeddings and 8,189 thumbnails are in `data/reco/`; the CPU ONNX style model is in `data/style/`. Run the normal setup and `alembic upgrade head` after pulling this feature. Taste reactions are saved per signed-in account in SQLite, using stable catalog product IDs. Style Profile can analyze up to 12 uploaded photos, use Taste likes, or run a bundled catalog sample without an upload. Bubble Breaker uses the same catalog and account reactions to vary how familiar its suggestions are. It does not use the separate POG demo users or item IDs from the source prototype.
+
+On this machine, start the existing checkout with `-AppPort 8002 -Bo6Port 18023` because the standard ports are already occupied. Service logs and process state for this checkout are kept in `.runtime/` under the project folder.
+
 ## Local configuration
 
 Password recovery saves messages to a local `.eml` mailbox by default; it does not send email externally. SMTP delivery needs private SMTP settings in `.env`. Redis and Avaturn are optional; virtual try-on runs in mock mode unless separately configured. Some inherited Style Engine and Shopping features may download model weights the first time they are used.

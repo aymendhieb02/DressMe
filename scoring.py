@@ -54,8 +54,11 @@ def configure(*, data_dir, cat, desc, item):
 
 
 @torch.no_grad()
-def score_outfits(outfits):
-    """Calcule la note de chaque tenue avec le modèle OutfitScorer."""
+def score_outfits(outfits, E=None):
+    """Calcule la note de chaque tenue avec le modèle OutfitScorer.
+
+    E : matrice d'embeddings à utiliser à la place de celle du catalogue (wardrobe_owned.py).
+    """
     if not _S:
         raise RuntimeError(
             "Scoring model not initialized. "
@@ -67,7 +70,7 @@ def score_outfits(outfits):
         return np.zeros(0, dtype=float)
 
     model = _S["model"]
-    E = _S["E"]
+    E = _S["E"] if E is None else E
     K = _S["K"]
 
     results = np.zeros(len(outfits), dtype=float)

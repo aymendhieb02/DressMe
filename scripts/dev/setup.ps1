@@ -1,6 +1,7 @@
 param(
     [switch]$Developer,
-    [switch]$IncludeBo6
+    [switch]$IncludeBo6,
+    [switch]$G2L
 )
 
 $ErrorActionPreference = 'Stop'
@@ -34,6 +35,14 @@ Install-Environment '.venv-app' $environmentPath
 if ($IncludeBo6) {
     $bo6Requirements = if ($Developer) { 'bo6_service\requirements-dev.lock' } else { 'bo6_service\requirements.lock' }
     Install-Environment '.venv-bo6' $bo6Requirements
+}
+
+if ($G2L) {
+    # CPU torch and transformers for the Garments2Look bundle; the bundle itself is copied by hand.
+    Install-Environment '.venv-bo6-g2l' 'bo6_service\requirements-g2l.in'
+    if (-not (Test-Path (Join-Path $repoRoot 'bo6_service\bundle_g2l\clip_vision\model.safetensors'))) {
+        Write-Warning 'Put the unzipped G2L bundle in bo6_service\bundle_g2l before running start.ps1 -G2L.'
+    }
 }
 
 $envPath = Join-Path $repoRoot '.env'

@@ -3,25 +3,25 @@ import {
   PAGES, state, $, esc, active, node, message, request, loadPublicConfig,
   loadSession, clearPrivateState, clearLoadedPrivateData, studioPage,
   refreshSession,
-} from './studio/core.js?v=integrated-13';
+} from './studio/core.js?v=bo6g2l1';
 window.refreshDressMe = refreshSession;
-import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=integrated-13';
+import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=bo6g2l1';
 import {
-  wardrobeContent, addGarmentContent, renderWardrobe, review, detail,
+  wardrobeContent, addGarmentContent, renderWardrobe, review, detail, NO_SLEEVES,
   syncSuggestionState, chooseSuggestion, handleConfirmedChange, generateDescription,
   saveReview, saveEdit, regenerateDetailDescription,
-} from './studio/wardrobe.js?v=integrated-13';
+} from './studio/wardrobe.js?v=bo6g2l1';
 import {
   avatarContent, refreshAvatar, closeAvatarSdk, saveAvatarImport, handleAvatarAction,
-} from './studio/avatar.js?v=integrated-13';
+} from './studio/avatar.js?v=bo6g2l1';
 import {
   tryonContent, historyContent, refreshTryon, refreshHistory, savePersonPhoto,
   updateSubmitAvailability, handleTryonAction,
-} from './studio/tryon.js?v=integrated-13';
+} from './studio/tryon.js?v=bo6g2l1';
 import {
   abandonPending, clearUpload, handleUploadSelection, handleDrop, handleDragOver,
   clearDrag, validateUpload,
-} from './studio/upload.js?v=integrated-13';
+} from './studio/upload.js?v=bo6g2l1';
 
 function content(page) {
   if (page === 'bo6-wardrobe') return wardrobeContent();
@@ -119,14 +119,22 @@ document.addEventListener('submit', event => {
       state.uploadKey ||= crypto.randomUUID();
       const data = new FormData();
       data.append('image', file);
-      const result = await request('/garments/analyze', {method: 'POST', body: data, key: state.uploadKey});
+      let result;
+      try {
+        result = await request('/garments/analyze', {method: 'POST', body: data, key: state.uploadKey});
+      } catch (error) {
+        if (error.code !== 'ml_unavailable') throw error;
+        result = await request('/garments/uploads/manual', {method: 'POST', body: data});
+      }
       if (generation !== state.uploadGeneration || active() !== 'bo6-add') {
         try { await request('/garments/uploads/' + result.id, {method: 'DELETE'}); } catch { /* expiry cleanup remains available */ }
         return;
       }
       state.pending = result;
       review();
-      message('Analysis complete. Review the suggestions and confirm every required value.');
+      message(result.prediction?.status === 'unavailable'
+        ? 'Automatic analysis is unavailable. Enter the details and a short description yourself.'
+        : 'Analysis complete. Review the suggestions and confirm every required value.');
       return;
     }
     if (formId === 'studio-confirm') return saveReview(form);
@@ -146,7 +154,7 @@ document.addEventListener('change', event => {
   if (input.matches('#studio-edit select[name="category"]')) {
     const form = input.form;
     const sleeve = form.elements.sleeve_length;
-    if (['jeans', 'shorts', 'skirt', 'trousers'].includes(input.value)) { sleeve.value = ''; sleeve.disabled = true; }
+    if (NO_SLEEVES.has(input.value)) { sleeve.value = ''; sleeve.disabled = true; }
     else sleeve.disabled = false;
   }
   if (input.matches('#studio-garment,#studio-photo')) updateSubmitAvailability();
@@ -254,7 +262,7 @@ document.addEventListener('input', event => {
   const regen = $('[data-action="regenerate-detail"]', form);
   if (!regen || !original) return;
   const data = Object.fromEntries(new FormData(form));
-  const dirty = ['name', 'category', 'garment_photo_type', 'color', 'pattern', 'sleeve_length', 'description', 'notes']
+  const dirty = ['name', 'category', 'garment_photo_type', 'color', 'pattern', 'sleeve_length', 'material', 'description', 'notes']
     .some(key => (data[key] || null) !== (original[key] || null));
   regen.disabled = dirty;
   regen.setAttribute('aria-label', dirty ? 'Save changes before regenerating the description' : 'Regenerate description from confirmed values');

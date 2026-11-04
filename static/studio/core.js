@@ -101,7 +101,9 @@ export async function request(path, {method = 'GET', body, key, retry = true, ba
   if (!response.ok) {
     const detail = await response.json().catch(() => ({}));
     const reason = detail.error?.message || detail.detail?.message || detail.detail;
-    throw new Error(typeof reason === 'string' ? reason : `Request failed (${response.status}).`);
+    const failure = new Error(typeof reason === 'string' ? reason : `Request failed (${response.status}).`);
+    failure.code = detail.error?.code || detail.detail?.code;
+    throw failure;
   }
   return response.status === 204 ? null : response.json();
 }

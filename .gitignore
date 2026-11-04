@@ -55,3 +55,10 @@ bo5/**/training_args.bin
 
 /tmp/
 /bo5/resume_latest/
+
+# BO6 G2L bundle and weights (never push; see docs/BO6_CHANGES.md)
+*.safetensors
+*.npz
+bo6_g2l/
+bo6_service/bundle_g2l/
+.venv-bo6-g2l/

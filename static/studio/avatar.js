@@ -1,5 +1,5 @@
-import {state, $, esc, image, node, active, request, message} from './core.js?v=integrated-13';
-import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=integrated-13';
+import {state, $, esc, image, node, active, request, message} from './core.js?v=bo6g2l1';
+import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo6g2l1';
 
 export function avatarContent() {
   const bytes = state.publicConfig?.upload_limits?.avatar_bytes;

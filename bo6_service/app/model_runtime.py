@@ -30,11 +30,16 @@ class ModelRuntime:
         with self.predict_lock:
             return self.describer.predict(image_path)
 
+    def accepts(self, confirmed: dict) -> bool:
+        """The widened request schema also serves G2L; this bundle keeps its own vocabulary."""
+        allowed = self.description_module.ALLOWED
+        return all(value in allowed[key] for key, value in confirmed.items() if key in allowed)
+
     def describe(self, confirmed: dict):
         # Delegate rendering, normalization, and semantics to the bundle template.
         category = confirmed.get("category", "unknown")
         return self.description_module.describe(
             category,
             "user_confirmed" if "category" in confirmed else "not_estimated",
-            confirmed={k: v for k, v in confirmed.items() if k != "category"},
+            confirmed={k: v for k, v in confirmed.items() if k in self.description_module.ALLOWED and k != "category"},
         )

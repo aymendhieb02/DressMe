@@ -1,0 +1,4 @@
+# G2L bundle runtime (.venv-bo6-g2l). Same CPU pins as requirements.in, plus the CLIP vision loader.
+-r requirements.in
+transformers==4.57.3
+pytest==9.0.2

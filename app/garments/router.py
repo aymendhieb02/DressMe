@@ -18,14 +18,16 @@ from ..database import get_db
 from .eligibility import POLICY_VERSION, evaluate_vton_eligibility
 from ..tryon.deletion import delete_jobs
 from ..ml.client import BO6Client, BO6Rejected, BO6Unavailable
-from ..models import Garment, PendingUpload, StorageDeletion, TryOnJob, User, utcnow
+from ..models import Garment, GarmentWardrobeProfile, PendingUpload, StorageDeletion, TryOnJob, User, utcnow
 from ..storage.cleanup import acknowledge_storage_deletion, record_storage_deletion_failure
 from ..storage.local_disk import LocalPrivateStorage
 from ..uploads import normalize_image
 from .schemas import DescribeInput, GarmentList, GarmentPatch, GarmentView, PendingUploadView, SaveGarmentInput
-from .review import BOTTOM_CATEGORIES, normalize_review
+from .review import NO_SLEEVE_CATEGORIES, normalize_review
+from .taxonomy import new_item_code, wardrobe_fields
 
 router = APIRouter(prefix="/garments", tags=["wardrobe"])
+REVIEW_FIELDS = ("category", "color", "pattern", "sleeve_length", "material", "season")
 
 
 def _not_found() -> HTTPException:
@@ -53,6 +55,10 @@ def _serialize(row: Garment) -> GarmentView:
         model_version=row.model_version, taxonomy_version=row.taxonomy_version,
         description_version=row.description_version, created_at=row.created_at.isoformat(), updated_at=row.updated_at.isoformat(),
         description_provenance=row.description_provenance,
+        material=row.profile.material if row.profile else None, season=row.profile.season if row.profile else None,
+        super_category=row.profile.super_category if row.profile else None,
+        outfit_cat=row.profile.outfit_cat if row.profile else None,
+        item_code=row.profile.item_code if row.profile else None,
     )
 
 
@@ -62,7 +68,29 @@ def _description_fields(row: Garment) -> dict:
         value = getattr(row, name)
         if value is not None:
             fields[name] = value
+    if row.profile is not None and row.profile.material is not None:
+        fields["material"] = row.profile.material
     return normalize_review(fields)
+
+
+def _ensure_profile(row: Garment) -> GarmentWardrobeProfile:
+    """Garments saved before the wardrobe integration get their profile on first edit."""
+    if row.profile is None:
+        row.profile = GarmentWardrobeProfile(user_id=row.user_id, item_code=new_item_code(), **wardrobe_fields(row.category))
+    return row.profile
+
+
+def _predicted_value(snapshot: dict, name: str) -> str | None:
+    """What BO6 proposed for a field. A withheld category still has its top suggestion."""
+    value = snapshot.get("description_fields", {}).get(name)
+    if name == "category" and value in (None, "unknown"):
+        suggestions = snapshot.get("suggestions") or []
+        return suggestions[0].get("category") if suggestions else value
+    return value
+
+
+def _known_season(*candidates: str | None) -> str | None:
+    return next((value for value in candidates if value and value != "unknown"), None)
 
 
 def _serialize_pending(row: PendingUpload) -> PendingUploadView:
@@ -75,8 +103,9 @@ def _replay_saved(db: Session, body: SaveGarmentInput, user_id: UUID) -> Garment
     row = db.scalar(select(Garment).where(Garment.pending_upload_id == body.pending_upload_id, Garment.user_id == user_id))
     if row is None:
         return None
-    fields = normalize_review(body.model_dump(include={"category", "color", "pattern", "sleeve_length"}, exclude_none=True))
+    fields = normalize_review(body.model_dump(include=set(REVIEW_FIELDS), exclude_none=True))
     matches = all(getattr(row, key) == fields.get(key) for key in ("category", "color", "pattern", "sleeve_length"))
+    matches = matches and (row.profile.material if row.profile else None) == fields.get("material")
     matches = matches and row.garment_photo_type == body.garment_photo_type and row.name == body.name and row.notes == body.notes
     matches = matches and row.description_is_manual == (body.description is not None)
     if body.description is not None:
@@ -198,13 +227,44 @@ def delete_pending_upload(pending_id: UUID, user: User = Depends(current_user_cs
     return Response(status_code=204)
 
 
+@router.post("/uploads/manual", response_model=PendingUploadView, status_code=201)
+async def manual_upload(
+    image: UploadFile = File(...),
+    user: User = Depends(current_user_csrf),
+    db: Session = Depends(get_db),
+):
+    """Keeps a photo for review without calling BO6, so a garment can be added while it is down."""
+    if image.content_type not in {"image/jpeg", "image/png", "image/webp"}:
+        raise HTTPException(status_code=415, detail={"code": "unsupported_media_type", "message": "Upload a JPEG, PNG, or WEBP image."})
+    data, width, height, digest = normalize_image(await image.read(get_settings().max_upload_bytes + 1))
+    storage = LocalPrivateStorage()
+    image_key = await asyncio.to_thread(storage.put, data)
+    try:
+        pending = PendingUpload(
+            user_id=user.id, image_key=image_key, content_type="image/png", image_sha256=digest,
+            width=width, height=height, quality_snapshot={}, prediction_snapshot={"status": "unavailable", "suggestions": []},
+            model_version="manual", taxonomy_version="manual", description_version="manual", quality_version="none",
+            expires_at=utcnow() + timedelta(seconds=get_settings().pending_upload_ttl_seconds),
+        )
+        db.add(pending)
+        db.commit()
+        db.refresh(pending)
+        return _serialize_pending(pending)
+    except Exception:
+        db.rollback()
+        await asyncio.to_thread(storage.delete, image_key)
+        raise
+
+
 @router.post("", response_model=GarmentView, status_code=201)
 async def save_garment(body: SaveGarmentInput, user: User = Depends(current_user_csrf), db: Session = Depends(get_db)):
     replay = _replay_saved(db, body, user.id)
     if replay is not None:
         return replay
     pending = _pending(db, body.pending_upload_id, user.id)
-    fields = normalize_review(body.model_dump(include={"category", "color", "pattern", "sleeve_length"}, exclude_none=True))
+    fields = normalize_review(body.model_dump(include=set(REVIEW_FIELDS), exclude_none=True))
+    predicted_fields = pending.prediction_snapshot.get("description_fields", {})
+    season = _known_season(fields.get("season"), predicted_fields.get("season"))
     manual = body.description is not None
     description_provenance = {"source": "user_manual"}
     if manual:
@@ -221,10 +281,11 @@ async def save_garment(body: SaveGarmentInput, user: User = Depends(current_user
             raise HTTPException(status_code=503, detail={"code": "ml_unavailable", "message": "Description generation is temporarily unavailable; the garment was not saved."}) from None
         description, description_version = described.text, described.schema_version
         description_provenance = described.provenance
-    sources = {name: ("user_confirmed" if name in fields else "not_estimated") for name in ("category", "color", "pattern", "sleeve_length")}
+        season = _known_season(fields.get("season"), described.fields.get("season"), season)
+    sources = {name: ("user_confirmed" if name in fields else "not_estimated") for name in REVIEW_FIELDS}
     sources["garment_photo_type"] = "user_confirmed"
-    corrected = {name: (fields.get(name) != pending.prediction_snapshot.get("description_fields", {}).get(name))
-                 for name in ("category", "color", "pattern", "sleeve_length") if name in fields}
+    corrected = {name: fields.get(name) != _predicted_value(pending.prediction_snapshot, name)
+                 for name in REVIEW_FIELDS if name in fields}
     garment = Garment(
         user_id=user.id, pending_upload_id=pending.id, image_key=pending.image_key, category=body.category,
         garment_photo_type=body.garment_photo_type,
@@ -236,6 +297,10 @@ async def save_garment(body: SaveGarmentInput, user: User = Depends(current_user
         field_sources=sources, was_corrected=corrected, model_version=pending.model_version,
         taxonomy_version=pending.taxonomy_version, description_version=description_version,
         description_provenance=description_provenance,
+    )
+    garment.profile = GarmentWardrobeProfile(
+        user_id=user.id, item_code=new_item_code(), material=fields.get("material"), season=season,
+        **wardrobe_fields(body.category),
     )
     pending.consumed_at = utcnow()
     db.add(garment)
@@ -328,14 +393,21 @@ async def update_garment(garment_id: UUID, body: GarmentPatch, user: User = Depe
         raise _not_found()
     changes = body.model_dump(exclude_unset=True)
     description_fields_changed = any(
-        name in changes for name in ("category", "color", "pattern", "sleeve_length")
+        name in changes for name in ("category", "color", "pattern", "sleeve_length", "material")
     )
     if "category" in changes and changes["category"] is None:
         raise HTTPException(status_code=422, detail={"code": "invalid_category", "message": "Category cannot be cleared."})
     manual_description = changes.pop("description", None) if "description" in changes else None
+    profile_changes = {name: changes.pop(name) for name in ("material", "season") if name in changes}
     for key, value in changes.items():
         setattr(row, key, value)
-    if row.category in BOTTOM_CATEGORIES and row.sleeve_length is not None:
+    profile = _ensure_profile(row)
+    for key, value in profile_changes.items():
+        setattr(profile, key, value)
+    if "category" in changes:
+        for key, value in wardrobe_fields(row.category).items():
+            setattr(profile, key, value)
+    if row.category in NO_SLEEVE_CATEGORIES and row.sleeve_length is not None:
         row.sleeve_length = None
         changes["sleeve_length"] = None
         description_fields_changed = True
@@ -364,10 +436,12 @@ async def update_garment(garment_id: UUID, body: GarmentPatch, user: User = Depe
         row.description, row.description_version = described.text, described.schema_version
         row.description_provenance = described.provenance
         flag_modified(row, "description_provenance")
-    for key, value in changes.items():
-        if key in {"category", "color", "pattern", "sleeve_length"}:
+        if "season" not in profile_changes and row.field_sources.get("season") != "user_confirmed":
+            profile.season = _known_season(described.fields.get("season"), profile.season)
+    for key, value in {**changes, **profile_changes}.items():
+        if key in REVIEW_FIELDS:
             row.field_sources[key] = "user_confirmed" if value is not None else "not_estimated"
-            row.was_corrected[key] = value != row.prediction_snapshot.get("description_fields", {}).get(key)
+            row.was_corrected[key] = value != _predicted_value(row.prediction_snapshot, key)
             flag_modified(row, "field_sources")
             flag_modified(row, "was_corrected")
     db.commit()
@@ -410,6 +484,7 @@ async def delete_garment(garment_id: UUID, user: User = Depends(current_user_csr
     delete_jobs(db, jobs)
     db.flush()
     db.delete(row)
+    db.flush()  # garments reference pending_uploads with no ORM relationship, so order it explicitly
     if pending is not None:
         db.delete(pending)
     db.commit()
