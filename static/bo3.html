@@ -145,7 +145,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 .wd-cab.open .wd-door.l{transform:rotateY(-100deg)}.wd-cab.open .wd-door.r{transform:rotateY(100deg)}
 .wd-ex{display:flex;gap:6px;margin-top:6px}.wd-ex img{width:36px;height:46px;border-radius:8px}
 .ed-rail{position:relative;overflow:hidden;display:flex;flex-wrap:wrap;gap:30px 12px;margin-top:16px;padding:44px 22px 10px;min-height:190px;border-radius:20px;background:linear-gradient(#d9dfe5,#8a949e 5px,#0000 5px) 14px 26px/calc(100% - 28px) 150px repeat-y,linear-gradient(#fffdf8,#f1e6d3) 0 0/100% 100% no-repeat;box-shadow:inset 0 0 0 2px #ead9bd,0 18px 40px #17283a1f}
-.ed-rail:empty::after{content:"Your rail is empty. Add pieces, or load an example.";font:italic 1rem Fraunces,serif;color:#a58d68;align-self:center}
+.ed-rail:empty::after{content:"Your rail is empty. Click Use my wardrobe to import your pieces.";font:italic 1rem Fraunces,serif;color:#a58d68;align-self:center}
 .ed-rail.scan::after{content:"";position:absolute;top:0;bottom:0;left:-140px;width:140px;background:linear-gradient(90deg,transparent,#ff9f4366,transparent);animation:edscan 1.1s linear infinite}
 @keyframes edscan{to{left:100%}}
 .ed-rail .gi,.ed-pair .gi{width:84px;height:120px}
@@ -160,6 +160,19 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 .ed-bin{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow:auto;padding:14px;border-radius:18px;border:2px dashed #c8ac84;background:#fffaf0;transition:.2s}
 .btn.off{opacity:.45}
 .ed-bin.over{background:#ffeede;border-color:#ff6b4a;transform:scale(1.02)}
+.bx{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 0}
+.bx-stage{position:relative;width:150px;height:132px}
+.bx-it{position:absolute;left:50%;top:0;width:44px;height:56px;margin-left:-22px;object-fit:cover;border-radius:8px;background:#fff;z-index:1;opacity:0;--x:calc((var(--n) - 2)*10px);animation:bx-drop .5s ease-in forwards;animation-delay:calc(var(--n)*.18s)}
+@keyframes bx-drop{0%{opacity:0;transform:translate(var(--x),-8px) rotate(-10deg)}20%{opacity:1}100%{opacity:1;transform:translate(var(--x),64px) rotate(4deg) scale(.7)}}
+.bx-box{position:absolute;left:50%;bottom:0;width:112px;height:72px;margin-left:-56px;z-index:2;animation:bx-wig 1.2s ease-in-out 2s infinite}
+@keyframes bx-wig{0%,100%{transform:rotate(0)}25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}
+.bx-body{position:absolute;inset:0;background:linear-gradient(#d9b57e,#bf9660);border-radius:3px 3px 10px 10px;box-shadow:0 8px 14px #0002;z-index:2}
+.bx-body::after{content:"";position:absolute;left:50%;top:0;width:18px;height:100%;margin-left:-9px;background:#efe0bdbb;opacity:0;animation:bx-tape .3s ease 1.7s forwards}
+@keyframes bx-tape{to{opacity:1}}
+.bx-lid{position:absolute;left:0;top:-6px;width:100%;height:14px;background:#cfa56c;border-radius:3px;transform-origin:0 100%;transform:rotate(-68deg);animation:bx-lid .4s ease 1.4s forwards;z-index:3}
+@keyframes bx-lid{to{transform:rotate(0)}}
+.bx-msg{margin:0;font:italic .95rem Fraunces,serif;color:#a58d68;text-align:center}
+@media (prefers-reduced-motion:reduce){.bx-it{display:none}.bx-lid{animation:none;transform:none}.bx-body::after{animation:none;opacity:1}.bx-box{animation:none}}
 .ed-bt{font:400 1.2rem Fraunces,serif;margin-bottom:8px}
 .ed-bi{display:flex;flex-wrap:wrap;gap:8px;min-height:60px}.ed-bi .gi{width:54px;height:74px;cursor:pointer}.ed-bi .gi::before{display:none}
 .ed-sum{font-size:.85rem;margin-top:10px;line-height:1.5}
@@ -262,8 +275,8 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 <div class="wd-bar">
  <div class="wd-stats"><span><b id="rn">0</b> pieces</span></div>
  <button class="btn ghost" id="rmine">Use my wardrobe</button>
- <button class="btn ghost" id="rex">Load a cluttered example</button>
- <button class="btn ghost" id="radd">+ Add a piece</button>
+ 
+ 
  <button class="btn" id="rrun">Check my wardrobe</button>
  <button class="btn ghost" id="rcand">Should I buy this?</button>
 </div>
@@ -479,26 +492,30 @@ const rdItem=i=>(RD.items||[]).find(x=>x.i===i)||C[i]||{};
 function edSet(i,v){if(v===undefined)v=!RD.go.has(i);v?RD.go.add(i):RD.go.delete(i);
  $$('#rout .ed-card [data-ep]').forEach(e=>e.classList.toggle('gone',RD.go.has(+e.dataset.ep)));$$('#rwin .gi').forEach(e=>e.classList.toggle('gone',RD.go.has(+e.dataset.i)));
  const bi=$('#edbi');if(bi)bi.innerHTML=[...RD.go].map(k=>`<div class="gi" draggable="true" data-ep="${k}"><img src="${img(rdItem(k).k)}" alt=""></div>`).join('');donUI();const nb=$('#ednewbtn');if(nb)nb.classList.toggle('off',!RD.go.size);if(RD.newOpen)newWard();edLive()}
-RD.don={cause:'recycling',addr:'',city:'',res:''};
+RD.don={cause:'recycling',addr:'',city:'',country:'',res:''};
 const DON_CITIES=[['Toulouse',43.6047,1.4442],['Paris',48.8566,2.3522],['Lyon',45.7640,4.8357],['Marseille',43.2965,5.3698],['Bordeaux',44.8378,-0.5792],['Nantes',47.2184,-1.5536],['Lille',50.6292,3.0573],['Strasbourg',48.5734,7.7521],['Montpellier',43.6108,3.8767],['Nice',43.7102,7.2620],['Rennes',48.1173,-1.6778],['Brussels',50.8503,4.3517],['Geneva',46.2044,6.1432],['Lausanne',46.5197,6.6323],['Zurich',47.3769,8.5417],['Tunis',36.8065,10.1815],['Ariana',36.8665,10.1647],['Sfax',34.7406,10.7603],['Sousse',35.8256,10.6369]];
+const DON_COUNTRIES=[['France',['Toulouse','Paris','Lyon','Marseille','Bordeaux','Nantes','Lille','Strasbourg','Montpellier','Nice','Rennes']],['Belgium',['Brussels']],['Switzerland',['Geneva','Lausanne','Zurich']],['Tunisia',['Tunis','Ariana','Sfax','Sousse']]];
+const donCountryOf=n=>{const g=DON_COUNTRIES.find(x=>x[1].includes(n));return g?g[0]:''};
 const DON_CAUSES=[['recycling','Textile recycling'],['charity_shop','Charity shops'],['shelter','Shelters']];
 function donUI(){const el=$('#eddon');if(!el)return;
  if(!RD.go.size){el.innerHTML='<div class="don-hd">Donate these</div><p class="sub" style="margin:4px 0 8px">Let go a piece first, then you can find places to donate it.</p>';return}
  const cnt={};[...RD.go].forEach(i=>{const k=FR[rdItem(i).c]||rdItem(i).c;cnt[k]=(cnt[k]||0)+1});
  el.innerHTML=`<div class="don-hd">Donate these</div><p class="sub" style="margin:4px 0 8px">${Object.entries(cnt).map(([k,n])=>`${n} ${esc(k.toLowerCase())}`).join(' · ')}</p>
   <div class="chips">${DON_CAUSES.map(([id,l])=>`<button class="cc${RD.don.cause===id?' on':''}" data-cause="${id}">${l}</button>`).join('')}</div>
-  <select id="don-city" class="don-in" aria-label="Your city"><option value="">Choose your city…</option>${DON_CITIES.map(c=>`<option value="${c[0]}"${RD.don.city===c[0]?' selected':''}>${c[0]}</option>`).join('')}<option value="other"${RD.don.city==='other'?' selected':''}>Another place (type it)…</option></select>
+  <select id="don-country" class="don-in" aria-label="Your country"><option value="">Choose your country&hellip;</option>${DON_COUNTRIES.map(g=>`<option value="${g[0]}"${RD.don.country===g[0]?' selected':''}>${g[0]}</option>`).join('')}<option value="other"${RD.don.country==='other'?' selected':''}>Another place (type it)&hellip;</option></select><select id="don-city" class="don-in" aria-label="Your city"${RD.don.country&&RD.don.country!=='other'?'':' style="display:none"'}><option value="">Choose your city…</option>${DON_CITIES.filter(c=>donCountryOf(c[0])===RD.don.country).map(c=>`<option value="${c[0]}"${RD.don.city===c[0]?' selected':''}>${c[0]}</option>`).join('')}<option value="other"${RD.don.city==='other'?' selected':''}>Another place (type it)…</option></select>
   <input id="don-addr" class="don-in" placeholder="Your address or city" value="${esc(RD.don.addr)}" autocomplete="off" aria-label="Your address or city" style="${RD.don.city==='other'?'':'display:none'}">
   <div class="don-row"><button class="btn ghost" id="don-loc">Use my location</button><button class="btn" id="don-go">Find places</button></div>
   <div id="don-out">${RD.don.res}</div>`}
 function donRender(r){const km=r.radius_km>5?`<div class="don-n">Nothing within 5 km, so this searches up to ${r.radius_km} km.</div>`:'';
  const list=r.places.length?r.places.map(p=>`<div class="don-p"><b>${esc(p.name)}</b><br><small>${p.address?esc(p.address)+' · ':''}${p.distance_m<1000?p.distance_m+' m':(p.distance_m/1000).toFixed(1)+' km'}${p.opening_hours?' · '+esc(p.opening_hours):''}${p.accepts_shoes===true?' · takes shoes':''}</small><br><a href="${esc(p.map_url)}" target="_blank" rel="noopener">Open in map</a>${p.website?` · <a href="${esc(p.website)}" target="_blank" rel="noopener">Website</a>`:''}</div>`).join(''):`<div class="don-n">No place found within ${r.radius_km} km.</div>`;
  return `<div class="don-n"><b>${esc(r.label)}.</b> ${esc(r.hint)}</div>${km}${list}<div class="don-n">${esc(r.note)}<br>${esc(r.attribution)}</div>`}
-async function donFind(where,label){const out=$('#don-out');if(out)out.innerHTML='<div class="spin"></div>';
+function donBox(){const ids=[...RD.go].slice(0,6),n=RD.go.size;const it=ids.map((k,j)=>{const x=rdItem(k);return `<img class="bx-it" style="--n:${j}" src="${x.photo||img(x.k)}" alt="">`}).join('');return `<div class="bx"><div class="bx-stage">${it}<div class="bx-box"><div class="bx-body"></div><div class="bx-lid"></div></div></div><p class="bx-msg">Packing ${n} piece${n>1?'s':''} &middot; looking for places near you&hellip;</p></div>`}
+async function donFind(where,label){const out=$('#don-out');if(out)out.innerHTML=donBox();
  try{const r=await api('donate/places',{cause:RD.don.cause,...where});RD.don.res=donRender(r)}catch(e){const term={recycling:'textile recycling',charity_shop:'charity shop',shelter:'homeless shelter'}[RD.don.cause]||'clothes donation',near=label||where.address||`${where.lat},${where.lon}`;RD.don.res=`<div class="err">${esc(e.message)}</div><div class="don-n">You can also <a href="https://www.openstreetmap.org/search?query=${encodeURIComponent(term+' near '+near)}" target="_blank" rel="noopener">search the map yourself</a>.</div>`}
  const o=$('#don-out');if(o)o.innerHTML=RD.don.res}
 document.addEventListener('input',e=>{if(e.target.id==='don-addr')RD.don.addr=e.target.value});
 document.addEventListener('change',e=>{if(e.target.id==='don-city'){RD.don.city=e.target.value;const t=$('#don-addr');if(t)t.style.display=RD.don.city==='other'?'':'none';if(RD.don.city==='other'&&t)t.focus()}});
+document.addEventListener('change',e=>{if(e.target.id==='don-country'){RD.don.country=e.target.value;RD.don.city=RD.don.country==='other'?'other':'';donUI();const t=$('#don-addr');if(RD.don.city==='other'&&t)t.focus()}});
 document.addEventListener('dragstart',e=>{const g=e.target.closest&&e.target.closest('[data-ep]');if(g)e.dataTransfer.setData('text/plain',g.dataset.ep)});
 document.addEventListener('dragover',e=>{const t=e.target.closest&&e.target.closest('#edbin,.ed-card');if(t){e.preventDefault();const b=$('#edbin');if(b)b.classList.toggle('over',!!e.target.closest('#edbin'))}});
 document.addEventListener('drop',e=>{const t=e.target.closest&&e.target.closest('#edbin,.ed-card');if(!t)return;e.preventDefault();const i=+e.dataTransfer.getData('text/plain'),b=$('#edbin');if(b)b.classList.remove('over');if(!Number.isNaN(i))edSet(i,!!e.target.closest('#edbin'))});
@@ -543,11 +560,11 @@ $('#rout').onclick=e=>{const ep=e.target.closest('[data-ep]');if(ep){edSet(+ep.d
  const c=e.target.closest('[data-rc]');if(c){const box=$('#rcq');if(box)box.innerHTML=c.dataset.rc==='1'?'<p><b>Noted: you already own this.</b> Think twice before buying it.</p>':'<p><b>Noted: a different piece.</b> It can be a new addition.</p>'}};
 $('#rwin').onclick=e=>{const x=e.target.closest('[data-rx]');if(!x)return;RD.items=RD.items.filter(v=>v.i!==+x.dataset.rx);rdDraw(null);$('#rout').innerHTML=''};
 
-$('#radd').onclick=()=>picker(i=>{if(!RD.items.some(x=>x.i===i))RD.items.push(C[i]);rdShow()});
-$('#rmine').onclick=()=>{if(!WD.items.length){$('#rout').innerHTML='<div class="err">Wardrobe Completion is empty. Add pieces there, or use the example here.</div>';return}RD.items=[...WD.items];rdShow();$('#rout').innerHTML=''};
-$('#rex').onclick=async()=>{RD.answers=[];try{RD.items=(await api('redundancy/example')).items;rdShow();$('#rout').innerHTML=''}catch(e){$('#rout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+
+$('#rmine').onclick=async()=>{try{const r=await api('wardrobe/me');const it=(r&&r.items)||[];if(!it.length){$('#rout').innerHTML='<div class="err">Your wardrobe is empty. Add pieces in Wardrobe Completion first.</div>';return}RD.answers=[];RD.go.clear();RD.items=it;rdShow();$('#rout').innerHTML=''}catch(e){$('#rout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+
 $('#rrun').onclick=()=>rdRun(null);
-$('#rcand').onclick=()=>{if(!RD.items.length){$('#rout').innerHTML='<div class="err">Add your pieces first, then pick the piece you are thinking of buying.</div>';return}
+$('#rcand').onclick=()=>{if(!RD.items.length){$('#rout').innerHTML='<div class="err">Import your wardrobe first, then pick the piece you are thinking of buying.</div>';return}
  picker(i=>{if(RD.items.some(x=>x.i===i)){$('#rout').innerHTML='<div class="err">You already own this piece.</div>';return}rdRun(i)})};
 rdDraw(null);
 
