@@ -1,5 +1,5 @@
-import {state, $, esc, active, image, node, request, message} from './core.js?v=bo7queue1';
-import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7queue1';
+import {state, $, esc, active, image, node, request, message} from './core.js?v=bo7pose2';
+import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7pose2';
 
 const isReal = () => state.publicConfig?.vton_mode === 'real';
 const isRemote = () => isReal() && state.publicConfig?.vton_remote === true;

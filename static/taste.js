@@ -1,4 +1,4 @@
-import {request, state, esc} from './studio/core.js?v=bo7queue1';
+import {request, state, esc} from './studio/core.js?v=bo7pose2';
 
 const $ = selector => document.querySelector(selector);
 const api = (path, body, method = 'POST') => request(path, {base: '/api', method, body});

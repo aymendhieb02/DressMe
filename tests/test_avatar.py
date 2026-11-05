@@ -68,7 +68,7 @@ def _camera_settings(bounds=None):
     return {
         "bounds_m": bounds,
         "azimuth_degrees": 0,
-        "polar_degrees": 75,
+        "polar_degrees": 90,
         "fov_degrees": 30,
         "radius_m": expected_camera_radius(bounds),
     }
@@ -327,9 +327,9 @@ def test_private_avatar_render_is_validated_owner_scoped_and_deletable_without_t
     assert render["source_avatar_sha256"] == original_hash
     assert render["profile_id"] == "fashn-full-body-frontal"
     assert render["width"] == 576 and render["height"] == 768
-    assert render["renderer_version"] == "google-model-viewer@4.3.1"
+    assert render["renderer_version"] == "three@0.183.2"
     assert render["render_settings"]["output"]["width"] == 576
-    assert render["render_settings"]["camera"]["framing"] == "bounding-sphere-margin-v1"
+    assert render["render_settings"]["camera"]["framing"] == "body-fill-v1"
     assert "email" not in json.dumps(render).lower()
 
     image = client.get(render["image_url"])

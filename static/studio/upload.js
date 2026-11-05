@@ -1,4 +1,4 @@
-import {state, $, esc, request, message} from './core.js?v=bo7queue1';
+import {state, $, esc, request, message} from './core.js?v=bo7pose2';
 
 const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 

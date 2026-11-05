@@ -156,6 +156,11 @@ def test_pants_have_exactly_the_try_on_eligibility_of_trousers(client, origin, b
     assert pants == trousers and pants["candidate_category"] == "bottoms"
 
 
+def test_jackets_can_be_tried_on_as_tops(client, origin, bo6):
+    headers = _headers(client, origin, "jacket@example.invalid")
+    assert _save(client, headers, category="jacket")["vton_eligibility"]["candidate_category"] == "tops"
+
+
 def test_other_new_categories_stay_outside_try_on_for_now(client, origin, bo6):
     headers = _headers(client, origin, "vton@example.invalid")
     for category in ("blouse", "cardigan", "jumpsuit", "coat", "shoes"):

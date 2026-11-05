@@ -250,10 +250,10 @@ def index():
     return FileResponse(landing if landing.is_file() else ROOT_DIR / 'static/index.html')
 
 @app.get("/login")
-def login_page(): return FileResponse(ROOT_DIR / "static/index.html")
+def login_page(): return FileResponse(ROOT_DIR / "static/index.html", headers={"Cache-Control": "no-cache"})
 
 @app.get("/bo3")
 def bo3_page(): return FileResponse(ROOT_DIR / "static/bo3.html", headers={"Cache-Control": "no-cache"})
 
 @app.get("/app")
-def application(): return FileResponse(ROOT_DIR / "static/index.html")
+def application(): return FileResponse(ROOT_DIR / "static/index.html", headers={"Cache-Control": "no-cache"})

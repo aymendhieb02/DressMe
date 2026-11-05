@@ -1,4 +1,4 @@
-import {state, esc, request, message} from './core.js?v=bo7queue1';
+import {state, esc, request, message} from './core.js?v=bo7pose2';
 
 function passwordField(name, label, autocomplete, minimum = '') {
   return `<label>${label}<span class="studio-password"><input name="${name}" type="password" autocomplete="${autocomplete}" ${minimum} required><button type="button" class="btn ghost" data-auth-toggle="${name}" aria-label="Show ${label.toLowerCase()}">Show</button></span></label>`;

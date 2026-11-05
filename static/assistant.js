@@ -1,4 +1,4 @@
-import {request as authenticatedRequest, state as authState} from './studio/core.js?v=bo7queue1';
+import {request as authenticatedRequest, state as authState} from './studio/core.js?v=bo7pose2';
 (() => {
   'use strict';
   const q = s => document.querySelector(s);

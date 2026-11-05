@@ -3,25 +3,25 @@ import {
   PAGES, state, $, esc, active, node, message, request, loadPublicConfig,
   loadSession, clearPrivateState, clearLoadedPrivateData, studioPage,
   refreshSession,
-} from './studio/core.js?v=bo7queue1';
+} from './studio/core.js?v=bo7pose2';
 window.refreshDressMe = refreshSession;
-import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=bo7queue1';
+import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=bo7pose2';
 import {
   wardrobeContent, addGarmentContent, renderWardrobe, review, detail, NO_SLEEVES,
   syncSuggestionState, chooseSuggestion, handleConfirmedChange, generateDescription,
   saveReview, saveEdit, regenerateDetailDescription,
-} from './studio/wardrobe.js?v=bo7queue1';
+} from './studio/wardrobe.js?v=bo7pose2';
 import {
   avatarContent, refreshAvatar, closeAvatarSdk, saveAvatarImport, handleAvatarAction,
-} from './studio/avatar.js?v=bo7queue1';
+} from './studio/avatar.js?v=bo7pose2';
 import {
   tryonContent, historyContent, refreshTryon, refreshHistory, savePersonPhoto,
   updateSubmitAvailability, handleTryonAction, rememberPersonSource,
-} from './studio/tryon.js?v=bo7queue1';
+} from './studio/tryon.js?v=bo7pose2';
 import {
   abandonPending, clearUpload, handleUploadSelection, handleDrop, handleDragOver,
   clearDrag, validateUpload,
-} from './studio/upload.js?v=bo7queue1';
+} from './studio/upload.js?v=bo7pose2';
 
 function content(page) {
   if (page === 'bo6-wardrobe') return wardrobeContent();

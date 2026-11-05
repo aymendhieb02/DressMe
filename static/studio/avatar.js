@@ -1,6 +1,9 @@
-import {state, $, esc, image, node, active, request, message} from './core.js?v=bo7queue1';
-import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7queue1';
-import {captureAvatarRender} from './avatar-render.js?v=bo7queue1';
+import {state, $, esc, image, node, active, request, message} from './core.js?v=bo7pose2';
+import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7pose2';
+import {captureAvatarRender} from './avatar-render.js?v=bo7pose2';
+
+// Images made with an older profile are replaced when the page opens. Matches PROFILE_VERSION on the server.
+const AVATAR_IMAGE_VERSION = 2;
 
 export function avatarContent() {
   const bytes = state.publicConfig?.upload_limits?.avatar_bytes;
@@ -96,7 +99,8 @@ export async function refreshAvatar(version = state.renderVersion) {
   }
   const recreate = state.recreateAvatarImage;
   state.recreateAvatarImage = false;
-  if (model && (!savedRender || recreate)) await createAvatarImage(avatar, model, version);
+  const outdated = savedRender && savedRender.profile_version < AVATAR_IMAGE_VERSION;
+  if (model && (!savedRender || outdated || recreate)) await createAvatarImage(avatar, model, version);
 }
 
 function showAvatarImage(render) {

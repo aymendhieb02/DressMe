@@ -4,4 +4,6 @@
 
 `model-viewer.min.js` is the standalone ESM distribution of `@google/model-viewer` version 4.3.1, copied unchanged from the same read-only frontend installation. Its Apache-2.0 license text is included as `MODEL_VIEWER_LICENSE.txt`. It loads only for a user's owned saved avatar; its `src` is a local object URL from an authenticated private download.
 
+`three/` holds the `three` version 0.183.2 files needed to pose and render an avatar, copied unchanged from the same frontend installation. Its MIT license is in `three/LICENSE`.
+
 MIT permission notice: Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files to deal in the Software without restriction, including use, copy, modification and distribution, subject to including the copyright and permission notice. The Software is provided "AS IS", without warranty of any kind. The package author is Avaturn. Consult the upstream package for the authoritative license text and terms.

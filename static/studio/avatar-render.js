@@ -1,36 +1,21 @@
-// Fixed full-body capture of a saved avatar. The values match app/avatars/render_profile.py,
+// Fixed full-body image of a saved avatar for try-on. The values match app/avatars/render_profile.py,
 // which refuses any other size, camera or background.
 const WIDTH = 576;
 const HEIGHT = 768;
 const BACKGROUND = '#F4F3EE';
 const BACKGROUND_RGB = [244, 243, 238];
 const FOV_DEGREES = 30;
-const POLAR_DEGREES = 75;
-const MARGIN = 1.12;
-const LOAD_TIMEOUT_MS = 30000;
+const POLAR_DEGREES = 90;
+const FRAME_FILL = 0.9;
+const SUPERSAMPLE = 2;
+// Angles from straight down. A small gap keeps the arms from merging with the torso.
+const UPPER_ARM_DEGREES = 14;
+const FOREARM_DEGREES = 8;
 
-function cameraRadius({x, y, z}) {
-  return (Math.hypot(x, y, z) / 2) / Math.sin((FOV_DEGREES * Math.PI) / 360) * MARGIN;
+function cameraRadius({x, y}) {
+  const needed = Math.max(y, x / (WIDTH / HEIGHT));
+  return needed / FRAME_FILL / (2 * Math.tan((FOV_DEGREES * Math.PI) / 360));
 }
-
-function waitForViewer(viewer) {
-  if (viewer.loaded) return Promise.resolve();
-  return new Promise((resolve, reject) => {
-    const finish = cause => {
-      clearTimeout(timer);
-      viewer.removeEventListener('load', onLoad);
-      viewer.removeEventListener('error', onError);
-      cause ? reject(cause) : resolve();
-    };
-    const onLoad = () => finish();
-    const onError = () => finish(new Error('The saved avatar could not be rendered.'));
-    const timer = setTimeout(() => finish(new Error('The avatar model did not finish loading.')), LOAD_TIMEOUT_MS);
-    viewer.addEventListener('load', onLoad);
-    viewer.addEventListener('error', onError);
-  });
-}
-
-const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve()));
 
 function isBlank(context) {
   const pixels = context.getImageData(0, 0, WIDTH, HEIGHT).data;
@@ -57,11 +42,8 @@ async function opaquePng(source) {
     const context = canvas.getContext('2d', {alpha: false, willReadFrequently: true});
     context.fillStyle = BACKGROUND;
     context.fillRect(0, 0, WIDTH, HEIGHT);
-    const scale = Math.min(WIDTH / bitmap.width, HEIGHT / bitmap.height);
-    const width = bitmap.width * scale;
-    const height = bitmap.height * scale;
     context.imageSmoothingQuality = 'high';
-    context.drawImage(bitmap, (WIDTH - width) / 2, (HEIGHT - height) / 2, width, height);
+    context.drawImage(bitmap, 0, 0, WIDTH, HEIGHT);
     if (isBlank(context)) throw new Error('The avatar image came out blank. Check that this browser has WebGL enabled, then try again.');
     return await new Promise((resolve, reject) => {
       canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('The browser could not encode the avatar image.')), 'image/png');
@@ -71,43 +53,92 @@ async function opaquePng(source) {
   }
 }
 
-/** Renders the GLB in its own hidden viewer, so the visible viewer's orbit and zoom never affect it. */
+function findBone(root, name) {
+  let found = null;
+  const wanted = name.toLowerCase();
+  root.traverse(node => { if (!found && node.isBone && node.name.toLowerCase().endsWith(wanted)) found = node; });
+  return found;
+}
+
+// Aims in world space, so it works whichever way a skeleton defines its bone axes.
+function aimBone(THREE, root, bone, child, target) {
+  root.updateMatrixWorld(true);
+  const start = bone.getWorldPosition(new THREE.Vector3());
+  const direction = child.getWorldPosition(new THREE.Vector3()).sub(start).normalize();
+  const turn = new THREE.Quaternion().setFromUnitVectors(direction, target);
+  const parent = bone.parent.getWorldQuaternion(new THREE.Quaternion()).invert();
+  bone.quaternion.copy(parent.multiply(turn).multiply(bone.getWorldQuaternion(new THREE.Quaternion())));
+}
+
+function lowerArms(THREE, root) {
+  const radians = degrees => (degrees * Math.PI) / 180;
+  const downAndOut = (side, degrees) => new THREE.Vector3(side * Math.sin(radians(degrees)), -Math.cos(radians(degrees)), 0).normalize();
+  for (const prefix of ['Left', 'Right']) {
+    const arm = findBone(root, `${prefix}Arm`);
+    const forearm = findBone(root, `${prefix}ForeArm`);
+    const hand = findBone(root, `${prefix}Hand`);
+    if (!arm || !forearm || !hand) continue;  // another skeleton: keep its own pose, the framing still fits it
+    root.updateMatrixWorld(true);
+    const side = Math.sign(arm.getWorldPosition(new THREE.Vector3()).x - root.getWorldPosition(new THREE.Vector3()).x) || 1;
+    aimBone(THREE, root, arm, forearm, downAndOut(side, UPPER_ARM_DEGREES));
+    aimBone(THREE, root, forearm, hand, downAndOut(side, FOREARM_DEGREES));
+  }
+}
+
+function posedBounds(THREE, root) {
+  root.updateMatrixWorld(true);
+  root.traverse(node => {
+    if (!node.isSkinnedMesh) return;
+    node.skeleton.update();
+    node.boundingBox = null;
+  });
+  return new THREE.Box3().setFromObject(root);
+}
+
+/** Lowers the arms in memory only, so the saved GLB is never changed. */
 export async function captureAvatarRender(model) {
-  await import('/static/vendor/model-viewer.min.js');
-  const url = URL.createObjectURL(model);
-  const host = document.createElement('div');
-  host.setAttribute('aria-hidden', 'true');
-  Object.assign(host.style, {position: 'fixed', left: '0', top: '0', width: `${WIDTH}px`, height: `${HEIGHT}px`, overflow: 'hidden', pointerEvents: 'none', zIndex: '-1', opacity: '0'});
-  const viewer = document.createElement('model-viewer');
-  viewer.setAttribute('loading', 'eager');
-  viewer.setAttribute('reveal', 'auto');
-  viewer.setAttribute('camera-orbit', `0deg ${POLAR_DEGREES}deg auto`);
-  viewer.setAttribute('camera-target', 'auto auto auto');
-  viewer.setAttribute('field-of-view', `${FOV_DEGREES}deg`);
-  viewer.setAttribute('exposure', '1');
-  viewer.setAttribute('shadow-intensity', '0.8');
-  Object.assign(viewer.style, {display: 'block', width: `${WIDTH}px`, height: `${HEIGHT}px`, backgroundColor: BACKGROUND});
-  viewer.src = url;
-  host.append(viewer);
-  document.body.append(host);
+  const THREE = await import('three');
+  const {GLTFLoader} = await import('/static/vendor/three/examples/jsm/loaders/GLTFLoader.js');
+  const gltf = await new GLTFLoader().parseAsync(await model.arrayBuffer(), '');
+  const root = gltf.scene;
+  lowerArms(THREE, root);
+  const box = posedBounds(THREE, root);
+  const size = box.getSize(new THREE.Vector3());
+  const bounds = {x: size.x, y: size.y, z: size.z};
+  if (![size.x, size.y, size.z].every(value => Number.isFinite(value) && value > 0)) throw new Error('The avatar has no usable full-body size for framing.');
+  const radius = cameraRadius(bounds);
+  const center = box.getCenter(new THREE.Vector3());
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(BACKGROUND);
+  scene.add(root);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d4cc, 2.2));
+  const key = new THREE.DirectionalLight(0xffffff, 1.5);
+  key.position.set(center.x + 1, center.y + 2, center.z + 3);
+  scene.add(key);
+  const camera = new THREE.PerspectiveCamera(FOV_DEGREES, WIDTH / HEIGHT, 0.05, 100);
+  camera.position.set(center.x, center.y, center.z + radius);
+  camera.lookAt(center);
+
+  const canvas = document.createElement('canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias: true, preserveDrawingBuffer: true});
   try {
-    await waitForViewer(viewer);
-    const {x, y, z} = viewer.getDimensions();
-    const bounds = {x, y, z};
-    if (![x, y, z].every(value => Number.isFinite(value) && value > 0)) throw new Error('The avatar has no usable full-body size for framing.');
-    const radius = cameraRadius(bounds);
-    viewer.cameraOrbit = `0deg ${POLAR_DEGREES}deg ${radius.toFixed(6)}m`;
-    viewer.jumpCameraToGoal();
-    await viewer.updateComplete;
-    await nextFrame();
-    await nextFrame();
-    const screenshot = await viewer.toBlob({mimeType: 'image/png'});
+    renderer.setPixelRatio(SUPERSAMPLE);
+    renderer.setSize(WIDTH, HEIGHT, false);
+    renderer.render(scene, camera);
+    const screenshot = await new Promise((resolve, reject) => {
+      canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('The browser could not capture the avatar.')), 'image/png');
+    });
     return {
       image: await opaquePng(screenshot),
       cameraSettings: {bounds_m: bounds, azimuth_degrees: 0, polar_degrees: POLAR_DEGREES, fov_degrees: FOV_DEGREES, radius_m: radius},
     };
   } finally {
-    host.remove();
-    URL.revokeObjectURL(url);
+    renderer.dispose();
+    renderer.forceContextLoss();
+    root.traverse(node => {
+      node.geometry?.dispose();
+      for (const material of [node.material].flat()) material?.dispose?.();
+    });
   }
 }
