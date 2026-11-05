@@ -32,7 +32,7 @@ try {
 try {
     $queue = Invoke-RestMethod -Uri "$appUrl/studio-api/health/try-on" -TimeoutSec 5
     $results.RedisRQ = if ($queue.available) { 'PASS' } else { 'BLOCKED' }
-    if ($queue.available) { Write-Host 'PASS Redis/RQ worker ready (this checkout only produces MOCK jobs).' }
+    if ($queue.available) { Write-Host 'PASS Redis/RQ worker ready.' }
     else { Write-Host "BLOCKED Redis/RQ unavailable: $($queue.reason)" }
 } catch { $results.RedisRQ = 'BLOCKED'; Write-Host 'BLOCKED Redis/RQ readiness endpoint unavailable.' }
 
