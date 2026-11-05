@@ -1,9 +1,9 @@
-import {request as authenticatedRequest, state as authState} from './studio/core.js?v=bo6g2l1';
+import {request as authenticatedRequest, state as authState} from './studio/core.js?v=bo7queue1';
 (() => {
   'use strict';
   const q = s => document.querySelector(s);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  let profile = {wardrobe_ids: [], wardrobe: [], preferences: []}, catalog = [], busy = true;
+  let profile = {wardrobe_ids: [], wardrobe: [], preferences: []}, catalog = [], busy = true, chatEnabled = true;
   const labels = {top:'Haut',bottom:'Bas',onepiece:'Robe / combinaison',shoes:'Chaussures',outerwear:'Veste / manteau',layer:'Couche',bag:'Sac',accessory:'Accessoire',unknown:'À renseigner'};
   async function request(path, method = 'GET', body) {
     return authenticatedRequest('/' + path, {method, body, base:'/api/assistant'});
@@ -64,8 +64,11 @@ import {request as authenticatedRequest, state as authState} from './studio/core
   async function health() {
     const data = await request('health');
     q('#assistant-diagnostics').textContent = JSON.stringify(data, null, 2);
+    chatEnabled = Boolean(data.catalog) && data.parser?.enabled !== false;
+    q('#assistant-message').disabled = !chatEnabled;
+    q('#assistant-send').disabled = busy || !chatEnabled;
     if (!data.catalog) { q('#assistant-health').textContent = 'Service indisponible : ' + (data.error || data.status); return; }
-    q('#assistant-health').textContent = `${data.catalog.products} articles · BO1 : score disponible · parseur : ${data.parser.loaded ? 'Qwen3 + ton adaptateur chargé' : data.parser.error ? 'indisponible (voir diagnostic)' : 'Qwen3 + ton adaptateur, chargement au premier message'} · recherche : ${data.rag.error ? 'indisponible' : data.rag.mode}.`;
+    q('#assistant-health').textContent = `${data.catalog.products} articles · BO1 : score disponible · parseur : ${!chatEnabled ? 'chat en pause sur ce PC' : data.parser.loaded ? 'Qwen3 + ton adaptateur chargé' : data.parser.error ? 'indisponible (voir diagnostic)' : 'Qwen3 + ton adaptateur, chargement au premier message'} · recherche : ${data.rag.error ? 'indisponible' : data.rag.mode}.`;
   }
   async function loadProfile() {
     profile = await request('profile');
@@ -105,14 +108,14 @@ import {request as authenticatedRequest, state as authState} from './studio/core
     };
   }
   q('#assistant-form').onsubmit = async e => {
-    e.preventDefault(); if (busy) return;
+    e.preventDefault(); if (busy || !chatEnabled) return;
     const text = q('#assistant-message').value.trim(); if (!text) return;
     busy = true; q('#assistant-send').disabled = q('#assistant-reset').disabled = true;
     message(text, true); q('#assistant-message').value = '';
     const waiting = message('Compréhension et calculs en cours. Le premier chargement peut prendre plusieurs minutes.'); waiting.setAttribute('role','status');
     try { const result = await request('chat','POST',{message:text}); waiting.remove(); renderResult(result); await loadProfile(); }
     catch(error) { waiting.textContent = 'Erreur technique : ' + error.message; }
-    finally { busy=false; q('#assistant-send').disabled=q('#assistant-reset').disabled=false; health().catch(errorText); }
+    finally { busy=false; q('#assistant-reset').disabled=false; q('#assistant-send').disabled=!chatEnabled; health().catch(errorText); }
   };
   q('#assistant-reset').onclick = async () => { try { await request('reset','POST',{}); q('#assistant-messages').replaceChildren(); message('Nouvelle conversation. Tes préférences et ton dressing sont conservés.'); } catch(error) { errorText(error); } };
   q('#assistant-add').onclick = () => addCatalog().catch(errorText);
@@ -151,10 +154,10 @@ import {request as authenticatedRequest, state as authState} from './studio/core
     initialized = true;
     Promise.all([health(), loadProfile()]).then(()=> {
     if (profile.history.length) profile.history.forEach(h=>message(h.text,h.role==='user'));
-    else message('Décris la tenue que tu cherches. Tu peux ensuite demander une explication, comparer un scénario ou remplacer une seule pièce.');
+    else message(chatEnabled ? 'Décris la tenue que tu cherches. Tu peux ensuite demander une explication, comparer un scénario ou remplacer une seule pièce.' : 'Le chat est en pause sur ce PC. Ton dressing et tes préférences restent disponibles.');
     if (profile.current_results?.length) renderResult({message:'Sélection conservée dans cette conversation.',results:profile.current_results});
   }).catch(error=>{q('#assistant-health').textContent='Service local indisponible : '+error.message;})
-    .finally(()=>{busy=false;q('#assistant-send').disabled=q('#assistant-reset').disabled=false;});
+    .finally(()=>{busy=false;q('#assistant-send').disabled=!chatEnabled;q('#assistant-reset').disabled=false;});
   }
   document.addEventListener('dressme:authenticated', initialize);
   document.addEventListener('dressme:session-expired', () => q('#assistant-messages').replaceChildren());

@@ -225,7 +225,8 @@ def _public_upload_limits():
         "image_content_types": ["image/jpeg", "image/png", "image/webp"],
         "avatar_extensions": [".glb"],
     }, "recovery_delivery_mode": studio_settings.email_delivery_mode,
-       **({"bo6_enabled": True} if studio_settings.bo6_enabled else {})}
+       **({"bo6_enabled": True} if studio_settings.bo6_enabled else {}),
+       **({"vton_mode": "real", "vton_remote": bool(studio_settings.vton_remote_url)} if studio_settings.vton_mode == "real" else {})}
 
 
 @app.get("/api/catalog")

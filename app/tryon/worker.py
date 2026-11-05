@@ -8,32 +8,42 @@ from rq import Queue, SimpleWorker, Worker
 from rq.serializers import JSONSerializer
 
 from ..config import get_settings
+from .adapters import fashn_runtime_problem
 from .dispatcher import QUEUE_NAME
+from .worker_tasks import set_heartbeat
 
 SIMPLE_MOCK_WORKER_TTL_SECONDS = 60
 
 
 def run_worker(*, simple_mock: bool = False, burst: bool = False, max_jobs: int | None = None) -> None:
     settings = get_settings()
-    if settings.vton_mode != "mock":
+    real = settings.vton_mode == "real"
+    if settings.vton_mode != "mock" and (not real or simple_mock):
         raise RuntimeError("The real VTON adapter is unavailable; no mock result was substituted.")
+    if real and (problem := fashn_runtime_problem(settings)):
+        raise RuntimeError(f"The real VTON adapter is unavailable ({problem}); no mock result was substituted.")
     if max_jobs is not None and max_jobs < 1:
         raise ValueError("max_jobs must be positive")
     if simple_mock and settings.environment not in {"development", "test"}:
         raise RuntimeError("--simple-mock is restricted to development/test demonstrations.")
-    if os.name == "nt" and not simple_mock:
+    if os.name == "nt" and not simple_mock and not real:
         raise RuntimeError("The isolated RQ worker requires Linux/Compose. For a local mock demonstration, explicitly use --simple-mock.")
-    worker_class = SimpleWorker if simple_mock else Worker
+    # Windows cannot fork. A real job is still isolated: its GPU work runs in a child process (see adapters.py).
+    in_process = simple_mock or (real and os.name == "nt")
+    worker_class = SimpleWorker if in_process else Worker
     if simple_mock:
         print("MOCK ONLY: SimpleWorker executes each job in this worker process without per-job process isolation.", file=sys.stderr)
+    elif real:
+        print("REAL: each job's GPU work runs in its own child process.", file=sys.stderr)
     redis = Redis.from_url(settings.redis_url, socket_connect_timeout=2, socket_timeout=2, health_check_interval=30)
     try:
         redis.ping()
         queue = Queue(settings.tryon_queue_name, connection=redis, serializer=JSONSerializer)
-        worker_options = {"worker_ttl": SIMPLE_MOCK_WORKER_TTL_SECONDS} if simple_mock else {}
-        worker_class([queue], connection=redis, serializer=JSONSerializer, **worker_options).work(
-            burst=burst, max_jobs=max_jobs
-        )
+        worker_options = {"worker_ttl": SIMPLE_MOCK_WORKER_TTL_SECONDS} if in_process else {}
+        instance = worker_class([queue], connection=redis, serializer=JSONSerializer, **worker_options)
+        if real and in_process:
+            set_heartbeat(instance.heartbeat)
+        instance.work(burst=burst, max_jobs=max_jobs)
     finally:
         redis.close()
 

@@ -130,6 +130,42 @@ if (-not (Test-Health "$frontendOrigin/studio-api/health/ready")) {
     Write-Warning 'The app is up, but /studio-api/health/ready reports a problem. Garment analysis may be unavailable; manual add still works.'
 }
 
+# Try-on jobs wait in Redis until these two run. Without Redis the app still works, try-on is just unavailable.
+function Test-Redis {
+    $client = [System.Net.Sockets.TcpClient]::new()
+    try { return $client.ConnectAsync('127.0.0.1', 6379).Wait(1500) } catch { return $false } finally { $client.Dispose() }
+}
+
+function Start-QueueProcess([string]$Name, [string[]]$Arguments) {
+    $owned = $state.$Name
+    if ($owned -and $owned.pid -and (Get-Process -Id ([int]$owned.pid) -ErrorAction SilentlyContinue)) {
+        Write-Host "PASS $Name already running (managed by this checkout)."
+        return
+    }
+    $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+    $stdoutPath = Join-Path $logRoot "$Name-$stamp.out.log"
+    $stderrPath = Join-Path $logRoot "$Name-$stamp.err.log"
+    $process = Start-Process -FilePath $appPython -ArgumentList $Arguments -WorkingDirectory $repoRoot `
+        -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -WindowStyle Hidden -PassThru
+    $processInfo = Get-CimInstance Win32_Process -Filter "ProcessId = $($process.Id)"
+    $record = [pscustomobject]@{ pid = $process.Id; executable = $appPython; command = $processInfo.CommandLine; startedUtc = $process.StartTime.ToUniversalTime().ToString('o'); stdout = $stdoutPath; stderr = $stderrPath }
+    $state | Add-Member -NotePropertyName $Name -NotePropertyValue $record -Force
+    Save-State
+    Write-Host "PASS $Name started."
+}
+
+if (-not (Test-Redis)) {
+    try { docker start dressme-bo7-local-redis-1 2>$null | Out-Null; Start-Sleep -Seconds 3 } catch { }
+}
+if (Test-Redis) {
+    Push-Location $repoRoot
+    try { $vtonMode = (& $appPython -c "from app.config import get_settings; print(get_settings().vton_mode)" | Select-Object -Last 1) } finally { Pop-Location }
+    Start-QueueProcess 'dispatcher' @('-m', 'app.tryon.dispatcher')
+    Start-QueueProcess 'worker' $(if ($vtonMode -eq 'real') { @('-m', 'app.tryon.worker') } else { @('-m', 'app.tryon.worker', '--simple-mock') })
+} else {
+    Write-Warning 'Redis is not reachable on 127.0.0.1:6379, so try-on stays unavailable. Start Docker Desktop and run this script again.'
+}
+
 Write-Host "DressMe: $frontendOrigin/"
 Write-Host "BO6 health:  $bo6Url/health"
 Write-Host 'Database migrations are explicit; this script does not run them.'

@@ -14,6 +14,8 @@ from ..auth.dependencies import current_user, current_user_csrf
 from ..config import get_settings
 from ..database import get_db
 from ..models import (
+    Avatar,
+    AvatarRender,
     Garment,
     PendingUpload,
     PersonPhoto,
@@ -26,8 +28,9 @@ from ..models import (
 from ..storage.cleanup import acknowledge_storage_deletion, record_storage_deletion_failure
 from ..storage.local_disk import LocalPrivateStorage
 from ..uploads import normalize_image
+from .adapters import FASHN_ADAPTER, MOCK_ADAPTER, fashn_runtime_problem
 from .deletion import delete_jobs
-from .schemas import PersonPhotoView, TryOnCreate, TryOnJobList, TryOnJobView
+from .schemas import AvatarPhotoCreate, PersonPhotoView, TryOnCreate, TryOnJobList, TryOnJobView
 
 router = APIRouter(tags=["try-on"])
 CONSENT_VERSION = "person-photo-use-v1"
@@ -49,13 +52,17 @@ def _photo_view(row: PersonPhoto) -> PersonPhotoView:
     )
 
 
-def _job_view(row: TryOnJob, replayed: bool = False) -> TryOnJobView:
+def _job_view(row: TryOnJob, replayed: bool = False, queue_position: int | None = None) -> TryOnJobView:
     return TryOnJobView(
         id=row.id,
         state=row.state,
         mode=row.mode,
         status_url=f"/try-on/jobs/{row.id}",
         result_url=f"/try-on/jobs/{row.id}/result" if row.state == "succeeded" and row.result_key else None,
+        person_image_url=f"/person-photos/{row.person_photo_id}/image",
+        garment_image_url=f"/garments/{row.garment_id}/image",
+        garment_category=row.input_snapshot.get("garment_category"),
+        queue_position=queue_position,
         error_code=row.error_code,
         cancellation_requested=row.cancellation_requested_at is not None,
         settings_snapshot=row.settings_snapshot,
@@ -86,22 +93,7 @@ def _deletion_response(cleanup_pending: bool) -> Response:
     return Response(status_code=204)
 
 
-@router.post("/person-photos", response_model=PersonPhotoView, status_code=201)
-async def upload_person_photo(
-    image: UploadFile = File(...),
-    consent: bool = Form(...),
-    user: User = Depends(current_user_csrf),
-    db: Session = Depends(get_db),
-):
-    if consent is not True:
-        raise _http_error(422, "photo_consent_required", "Confirm the photo-use consent before uploading.")
-    owner = db.scalar(select(User).where(User.id == user.id).with_for_update())
-    count = db.scalar(select(func.count()).select_from(PersonPhoto).where(PersonPhoto.user_id == user.id)) or 0
-    if count >= get_settings().max_person_photos:
-        raise _http_error(429, "person_photo_limit", "Delete a saved person photo before adding another.")
-    if image.content_type not in {"image/jpeg", "image/png", "image/webp"}:
-        raise _http_error(415, "unsupported_media_type", "Upload a JPEG, PNG, or WEBP image.")
-    data, width, height, digest = normalize_image(await image.read(get_settings().max_upload_bytes + 1))
+async def _save_person_photo(db: Session, owner: User, data: bytes, width: int, height: int, digest: str) -> PersonPhotoView:
     storage = LocalPrivateStorage()
     image_key = await asyncio.to_thread(storage.put, data)
     try:
@@ -125,6 +117,73 @@ async def upload_person_photo(
         except Exception:
             pass
         raise
+
+
+def _current_avatar_image(db: Session, user: User) -> tuple[bytes, int, int, str] | None:
+    """The current avatar's 2D render, normalized exactly like an uploaded person photo."""
+    avatar = db.scalar(select(Avatar).where(Avatar.user_id == user.id))
+    if avatar is None:
+        return None
+    render = db.scalar(select(AvatarRender).where(
+        AvatarRender.user_id == user.id,
+        AvatarRender.avatar_id == avatar.id,
+        AvatarRender.source_avatar_version == avatar.version,
+        AvatarRender.source_avatar_sha256 == avatar.asset_sha256,
+    ))
+    return normalize_image(LocalPrivateStorage().read(render.image_key)) if render is not None else None
+
+
+def _saved_photo(db: Session, user: User, digest: str) -> PersonPhoto | None:
+    return db.scalar(select(PersonPhoto).where(PersonPhoto.user_id == user.id, PersonPhoto.image_sha256 == digest))
+
+
+@router.get("/person-photos/from-avatar", response_model=PersonPhotoView | None)
+def get_avatar_person_photo(user: User = Depends(current_user), db: Session = Depends(get_db)):
+    """The person photo already made from the current avatar image, if there is one."""
+    current = _current_avatar_image(db, user)
+    row = _saved_photo(db, user, current[3]) if current is not None else None
+    return _photo_view(row) if row is not None else None
+
+
+@router.post("/person-photos/from-avatar", response_model=PersonPhotoView, status_code=201)
+async def create_avatar_person_photo(
+    body: AvatarPhotoCreate,
+    user: User = Depends(current_user_csrf),
+    db: Session = Depends(get_db),
+):
+    if body.consent is not True:
+        raise _http_error(422, "photo_consent_required", "Confirm the photo-use consent before using your avatar.")
+    owner = db.scalar(select(User).where(User.id == user.id).with_for_update())
+    current = _current_avatar_image(db, owner)
+    if current is None:
+        raise _http_error(404, "avatar_render_not_found", "Create your avatar image before using it for try-on.")
+    data, width, height, digest = current
+    existing = _saved_photo(db, owner, digest)
+    if existing is not None:
+        return _photo_view(existing)
+    count = db.scalar(select(func.count()).select_from(PersonPhoto).where(PersonPhoto.user_id == owner.id)) or 0
+    if count >= get_settings().max_person_photos:
+        raise _http_error(429, "person_photo_limit", "Delete a saved person photo before adding another.")
+    return await _save_person_photo(db, owner, data, width, height, digest)
+
+
+@router.post("/person-photos", response_model=PersonPhotoView, status_code=201)
+async def upload_person_photo(
+    image: UploadFile = File(...),
+    consent: bool = Form(...),
+    user: User = Depends(current_user_csrf),
+    db: Session = Depends(get_db),
+):
+    if consent is not True:
+        raise _http_error(422, "photo_consent_required", "Confirm the photo-use consent before uploading.")
+    owner = db.scalar(select(User).where(User.id == user.id).with_for_update())
+    count = db.scalar(select(func.count()).select_from(PersonPhoto).where(PersonPhoto.user_id == user.id)) or 0
+    if count >= get_settings().max_person_photos:
+        raise _http_error(429, "person_photo_limit", "Delete a saved person photo before adding another.")
+    if image.content_type not in {"image/jpeg", "image/png", "image/webp"}:
+        raise _http_error(415, "unsupported_media_type", "Upload a JPEG, PNG, or WEBP image.")
+    data, width, height, digest = normalize_image(await image.read(get_settings().max_upload_bytes + 1))
+    return await _save_person_photo(db, owner, data, width, height, digest)
 
 
 @router.get("/person-photos", response_model=list[PersonPhotoView])
@@ -171,13 +230,15 @@ def create_tryon_job(
     idempotency_key: str = Header(alias="Idempotency-Key", min_length=8, max_length=128),
 ):
     settings = get_settings()
-    if settings.vton_mode == "real":
+    if settings.vton_mode == "real" and fashn_runtime_problem(settings):
         raise _http_error(503, "real_vton_unavailable", "Real try-on is not enabled on this runtime; no mock result was substituted.")
-    if settings.vton_mode != "mock":
+    if settings.vton_mode not in {"mock", "real"}:
         raise _http_error(503, "vton_mode_unavailable", "Try-on mode is not available.")
+    mode = settings.vton_mode
+    adapter = FASHN_ADAPTER if mode == "real" else MOCK_ADAPTER
 
     key_hash = hashlib.sha256(idempotency_key.encode("utf-8")).hexdigest()
-    fingerprint_body = {"garment_id": str(body.garment_id), "person_photo_id": str(body.person_photo_id), "mode": "mock"}
+    fingerprint_body = {"garment_id": str(body.garment_id), "person_photo_id": str(body.person_photo_id), "mode": mode}
     fingerprint = hashlib.sha256(json.dumps(fingerprint_body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     existing = db.scalar(select(TryOnJob).where(TryOnJob.user_id == user.id, TryOnJob.idempotency_key_hash == key_hash))
     if existing is not None:
@@ -216,9 +277,9 @@ def create_tryon_job(
         person_photo_id=photo.id,
         idempotency_key_hash=key_hash,
         request_fingerprint=fingerprint,
-        mode="mock",
+        mode=mode,
         state="queued",
-        settings_snapshot={"mode": "mock", "adapter": "mock-preview-v1"},
+        settings_snapshot={"mode": mode, "adapter": adapter},
         input_snapshot={
             "garment_revision": garment.updated_at.isoformat(),
             "garment_category": garment.category,
@@ -258,7 +319,12 @@ def list_tryon_jobs(
     rows = db.scalars(
         select(TryOnJob).where(TryOnJob.user_id == user.id).order_by(TryOnJob.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
     ).all()
-    return TryOnJobList(items=[_job_view(row) for row in rows])
+    # Only the count of jobs ahead is shown, so another user's job is never identified.
+    waiting = db.scalars(
+        select(TryOnJob.id).where(TryOnJob.state.in_(["queued", "running"])).order_by(TryOnJob.created_at)
+    ).all()
+    ahead = {job_id: index for index, job_id in enumerate(waiting)}
+    return TryOnJobList(items=[_job_view(row, queue_position=ahead.get(row.id) if row.state == "queued" else None) for row in rows])
 
 
 @router.get("/try-on/jobs/{job_id}", response_model=TryOnJobView)

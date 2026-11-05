@@ -1,4 +1,7 @@
 import io
+import tempfile
+import time
+from pathlib import Path
 from uuid import UUID, uuid4
 
 from PIL import Image, ImageDraw, ImageOps
@@ -6,10 +9,42 @@ from fastapi import HTTPException
 from sqlalchemy import select, update
 from sqlalchemy.orm import sessionmaker
 
+from ..config import get_settings
 from ..database import SessionLocal
 from ..models import Garment, PersonPhoto, StorageDeletion, TryOnAttempt, TryOnJob, utcnow
 from ..storage.local_disk import LocalPrivateStorage
-from .adapters import MOCK_ADAPTER, UNSUPPORTED_ADAPTER, supports_mock_profile
+from .adapters import FASHN_ADAPTER, MOCK_ADAPTER, UNSUPPORTED_ADAPTER, run_fashn, supports_mock_profile, supports_real_profile
+
+HEARTBEAT_SECONDS = 30
+_heartbeat = None
+_last_heartbeat = 0.0
+
+
+class TryOnFailure(Exception):
+    def __init__(self, code: str):
+        super().__init__(code)
+        self.code = code
+
+
+class TryOnCancelled(Exception):
+    pass
+
+
+def set_heartbeat(heartbeat) -> None:
+    """An in-process worker cannot beat during a job, so long real jobs do it from their polling loop."""
+    global _heartbeat
+    _heartbeat = heartbeat
+
+
+def _beat() -> None:
+    global _last_heartbeat
+    if _heartbeat is None or time.monotonic() - _last_heartbeat < HEARTBEAT_SECONDS:
+        return
+    _last_heartbeat = time.monotonic()
+    try:
+        _heartbeat()
+    except Exception:  # a missed heartbeat must not fail the job
+        pass
 
 
 def _claim(job_id: UUID, session_factory: sessionmaker) -> tuple[UUID, dict] | None:
@@ -75,7 +110,22 @@ def _fail(job_id: UUID, token: UUID, code: str, session_factory: sessionmaker) -
         db.commit()
 
 
-def _publish(job_id: UUID, token: UUID, result_key: str, session_factory: sessionmaker) -> bool:
+def _cancel(job_id: UUID, token: UUID, session_factory: sessionmaker) -> None:
+    now = utcnow()
+    with session_factory() as db:
+        db.execute(
+            update(TryOnJob)
+            .where(TryOnJob.id == job_id, TryOnJob.state == "running", TryOnJob.active_attempt_token == token)
+            .values(state="cancelled", active_attempt_token=None, updated_at=now)
+            .execution_options(synchronize_session=False)
+        )
+        attempt = db.scalar(select(TryOnAttempt).where(TryOnAttempt.attempt_token == token))
+        if attempt is not None:
+            attempt.state, attempt.finished_at = "cancelled", now
+        db.commit()
+
+
+def _publish(job_id: UUID, token: UUID, result_key: str, session_factory: sessionmaker, metadata: dict | None = None) -> bool:
     now = utcnow()
     with session_factory() as db:
         result = db.execute(
@@ -89,7 +139,7 @@ def _publish(job_id: UUID, token: UUID, result_key: str, session_factory: sessio
             .values(
                 state="succeeded",
                 result_key=result_key,
-                result_metadata={
+                result_metadata=metadata or {
                     "mode": "mock",
                     "adapter": MOCK_ADAPTER,
                     "notice": "Workflow preview only. No virtual try-on model ran.",
@@ -114,8 +164,8 @@ def _publish(job_id: UUID, token: UUID, result_key: str, session_factory: sessio
         return False
 
 
-def process_mock_job(job_id: str, session_factory: sessionmaker = SessionLocal, storage: LocalPrivateStorage | None = None) -> None:
-    """Run one mock delivery; the database claim token makes duplicate deliveries harmless."""
+def _process_job(job_id: str, session_factory: sessionmaker, storage: LocalPrivateStorage | None, supports, generate) -> None:
+    """Run one delivery; the database claim token makes duplicate deliveries harmless."""
     try:
         parsed_id = UUID(job_id)
     except ValueError:
@@ -124,7 +174,7 @@ def process_mock_job(job_id: str, session_factory: sessionmaker = SessionLocal, 
     if claim is None:
         return
     token, snapshot = claim
-    if not supports_mock_profile(snapshot["mode"], snapshot["settings"]):
+    if not supports(snapshot["mode"], snapshot["settings"]):
         _fail(parsed_id, token, UNSUPPORTED_ADAPTER, session_factory)
         return
     private_storage = storage or LocalPrivateStorage()
@@ -164,10 +214,14 @@ def process_mock_job(job_id: str, session_factory: sessionmaker = SessionLocal, 
 
         person_bytes = private_storage.read(person_key)
         garment_bytes = private_storage.read(garment_key)
-        output_bytes = _mock_preview(person_bytes, garment_bytes)
+        output_bytes, metadata = generate(parsed_id, person_bytes, garment_bytes, snapshot)
         result_key = private_storage.put(output_bytes)
-        if not _publish(parsed_id, token, result_key, session_factory):
+        if not _publish(parsed_id, token, result_key, session_factory, metadata):
             private_storage.delete(result_key)
+    except TryOnCancelled:
+        _cancel(parsed_id, token, session_factory)
+    except TryOnFailure as failure:
+        _fail(parsed_id, token, failure.code, session_factory)
     except HTTPException:
         _fail(parsed_id, token, "input_unavailable", session_factory)
     except Exception:
@@ -185,5 +239,52 @@ def process_mock_job(job_id: str, session_factory: sessionmaker = SessionLocal, 
                             db.commit()
 
 
+def process_mock_job(job_id: str, session_factory: sessionmaker = SessionLocal, storage: LocalPrivateStorage | None = None) -> None:
+    def generate(_job_id, person_bytes, garment_bytes, _snapshot):
+        return _mock_preview(person_bytes, garment_bytes), None
+
+    _process_job(job_id, session_factory, storage, supports_mock_profile, generate)
+
+
+def _cancel_requested(job_id: UUID, session_factory: sessionmaker) -> bool:
+    with session_factory() as db:
+        return db.scalar(select(TryOnJob.cancellation_requested_at).where(TryOnJob.id == job_id)) is not None
+
+
+def process_real_job(
+    job_id: str,
+    session_factory: sessionmaker = SessionLocal,
+    storage: LocalPrivateStorage | None = None,
+    runner=run_fashn,
+) -> None:
+    def generate(parsed_id, person_bytes, garment_bytes, snapshot):
+        settings = get_settings()
+        if settings.vton_mode != "real":
+            raise TryOnFailure("real_vton_unavailable")
+        private_root = Path(settings.storage_path).resolve()
+        private_root.mkdir(parents=True, exist_ok=True)
+        # Inputs stay beside the private images, and the folder is removed when the job ends.
+        with tempfile.TemporaryDirectory(prefix=".vton-", dir=private_root, ignore_cleanup_errors=True) as folder:
+            person_path, garment_path = Path(folder) / "person.png", Path(folder) / "garment.png"
+            person_path.write_bytes(person_bytes)
+            garment_path.write_bytes(garment_bytes)
+            outcome = runner(
+                person_path, garment_path, snapshot["input"]["candidate_vton_category"],
+                snapshot["input"]["garment_photo_type"], output_dir=Path(folder) / "output", settings=settings,
+                should_cancel=lambda: _cancel_requested(parsed_id, session_factory), tick=_beat,
+            )
+            if outcome.failure == "cancelled":
+                raise TryOnCancelled()
+            if outcome.failure:
+                raise TryOnFailure(outcome.failure)
+            return outcome.output_path.read_bytes(), {"mode": "real", "adapter": FASHN_ADAPTER, **outcome.details}
+
+    _process_job(job_id, session_factory, storage, supports_real_profile, generate)
+
+
 def run_mock_job(job_id: str) -> None:
     process_mock_job(job_id)
+
+
+def run_real_job(job_id: str) -> None:
+    process_real_job(job_id)

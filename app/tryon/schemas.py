@@ -14,6 +14,11 @@ class PersonPhotoView(BaseModel):
     created_at: datetime
 
 
+class AvatarPhotoCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    consent: bool
+
+
 class TryOnCreate(BaseModel):
     model_config = ConfigDict(extra="forbid")
     garment_id: UUID
@@ -26,6 +31,10 @@ class TryOnJobView(BaseModel):
     mode: str
     status_url: str
     result_url: str | None = None
+    person_image_url: str
+    garment_image_url: str
+    garment_category: str | None = None
+    queue_position: int | None = None
     error_code: str | None = None
     cancellation_requested: bool = False
     settings_snapshot: dict

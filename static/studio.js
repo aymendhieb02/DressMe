@@ -3,25 +3,25 @@ import {
   PAGES, state, $, esc, active, node, message, request, loadPublicConfig,
   loadSession, clearPrivateState, clearLoadedPrivateData, studioPage,
   refreshSession,
-} from './studio/core.js?v=bo6g2l1';
+} from './studio/core.js?v=bo7queue1';
 window.refreshDressMe = refreshSession;
-import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=bo6g2l1';
+import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=bo7queue1';
 import {
   wardrobeContent, addGarmentContent, renderWardrobe, review, detail, NO_SLEEVES,
   syncSuggestionState, chooseSuggestion, handleConfirmedChange, generateDescription,
   saveReview, saveEdit, regenerateDetailDescription,
-} from './studio/wardrobe.js?v=bo6g2l1';
+} from './studio/wardrobe.js?v=bo7queue1';
 import {
   avatarContent, refreshAvatar, closeAvatarSdk, saveAvatarImport, handleAvatarAction,
-} from './studio/avatar.js?v=bo6g2l1';
+} from './studio/avatar.js?v=bo7queue1';
 import {
   tryonContent, historyContent, refreshTryon, refreshHistory, savePersonPhoto,
-  updateSubmitAvailability, handleTryonAction,
-} from './studio/tryon.js?v=bo6g2l1';
+  updateSubmitAvailability, handleTryonAction, rememberPersonSource,
+} from './studio/tryon.js?v=bo7queue1';
 import {
   abandonPending, clearUpload, handleUploadSelection, handleDrop, handleDragOver,
   clearDrag, validateUpload,
-} from './studio/upload.js?v=bo6g2l1';
+} from './studio/upload.js?v=bo7queue1';
 
 function content(page) {
   if (page === 'bo6-wardrobe') return wardrobeContent();
@@ -157,7 +157,7 @@ document.addEventListener('change', event => {
     if (NO_SLEEVES.has(input.value)) { sleeve.value = ''; sleeve.disabled = true; }
     else sleeve.disabled = false;
   }
-  if (input.matches('#studio-garment,#studio-photo')) updateSubmitAvailability();
+  if (input.matches('.studio-garment-input,#studio-photo,#studio-avatar-consent')) updateSubmitAvailability();
 });
 
 document.addEventListener('dragover', handleDragOver);
@@ -272,7 +272,8 @@ document.addEventListener('input', event => {
 });
 
 document.addEventListener('change', event => {
-  if (event.target.matches('#studio-garment,#studio-photo')) state.tryOnIdempotencyKey = null;
+  if (event.target.matches('.studio-garment-input,#studio-photo')) state.tryOnIdempotencyKey = null;
+  if (event.target.matches('#studio-photo')) rememberPersonSource(event.target.value);
 });
 
 document.addEventListener('dressme:session-expired', () => {

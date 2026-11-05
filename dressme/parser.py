@@ -51,6 +51,10 @@ class LocalParser:
         self.error = None
         self.metadata = {}
         self.attempted = False
+        self.enabled = os.getenv('DRESSME_PARSER_ENABLED', 'on').lower() != 'off'
+        if not self.enabled:
+            self.error = 'Style Assistant chat is disabled by DRESSME_PARSER_ENABLED=off'
+            return
         try:
             receipt = json.loads((ADAPTER / 'training_receipt.json').read_text(encoding='utf-8'))
             config = json.loads((ADAPTER / 'adapter_config.json').read_text(encoding='utf-8'))
@@ -72,7 +76,7 @@ class LocalParser:
             self.error = safe_error(exc)
 
     def health(self):
-        return dict(loaded=self.model is not None, configured=bool(self.metadata),
+        return dict(enabled=self.enabled, loaded=self.model is not None, configured=bool(self.metadata),
                     attempted=self.attempted, error=self.error, **self.metadata)
 
     def load(self):
