@@ -28,7 +28,8 @@ runtime/
 bo6_service/bundle/*.pt
 *.log
 landing/node_modules/
-/static/landing/
+/static/landing/*
+!/static/landing/index.html
 
 # BO1/BO5 local runtime and model artifacts
 # secrets

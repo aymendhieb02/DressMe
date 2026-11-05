@@ -64,8 +64,21 @@ Push-Location (Join-Path $repoRoot 'landing')
 try {
     npm ci --no-audit --no-fund
     if ($LASTEXITCODE -ne 0) { throw 'Landing dependency installation failed.' }
-    npm run build
-    if ($LASTEXITCODE -ne 0) { throw 'Landing build failed.' }
+    # Vite empties static/landing before it writes, so a hand-written page there would be lost.
+    # Its output is recognised by comparison: it repeats landing/index.html or links /landing/assets/.
+    $livePage = Join-Path $repoRoot 'static\landing\index.html'
+    $handWritten = $false
+    if (Test-Path -LiteralPath $livePage) {
+        $live = (Get-Content -LiteralPath $livePage -Raw -Encoding UTF8) -replace "`r`n", "`n"
+        $source = (Get-Content -LiteralPath 'index.html' -Raw -Encoding UTF8) -replace "`r`n", "`n"
+        $handWritten = ($live -ne $source) -and -not $live.Contains('/landing/assets/')
+    }
+    if ($handWritten) {
+        Write-Warning 'Skipped the landing build: static/landing/index.html is hand-written and the build would replace it. To rebuild from landing/, delete that file and run setup again.'
+    } else {
+        npm run build
+        if ($LASTEXITCODE -ne 0) { throw 'Landing build failed.' }
+    }
 } finally { Pop-Location }
 
 Write-Host 'No database was created, no migration was run and no model artifact was downloaded or replaced.'

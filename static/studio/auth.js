@@ -32,7 +32,7 @@ export function safeDestination() {
   const raw = new URLSearchParams(location.search).get('next') || '/app#ootd';
   try {
     const url = new URL(raw, location.origin);
-    const valid = ['ootd','score','comp','sim','wardrobe','assistant','bo3','bo6-wardrobe','bo6-add','bo7-avatar','bo7-tryon','bo7-history'];
+    const valid = ['ootd','score','comp','sim','wardrobe','assistant','reco','style','bubble','bo3','bo6-wardrobe','bo6-add','bo7-avatar','bo7-tryon','bo7-history'];
     return url.origin === location.origin && url.pathname === '/app' && (!url.hash || valid.includes(url.hash.slice(1))) ? url.pathname + url.hash : '/app#ootd';
   } catch { return '/app#ootd'; }
 }
