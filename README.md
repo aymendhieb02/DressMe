@@ -10,7 +10,7 @@ DressMe is a fashion and wardrobe application. It suggests outfits for the weath
 | --- | --- | --- | --- |
 | Public | Landing page | Introduces DressMe, with scroll animation and a mobile menu. | Nothing |
 | Account | Sign-in, registration, recovery | Private accounts with CSRF-protected writes. | SMTP settings to send real email; otherwise recovery emails are saved locally |
-| Style Me | Outfit of the Day | Builds a look from the weather, occasion and a saved catalog wardrobe. | Weather access; the text encoder may download on first use |
+| Style Me | Outfit of the Day | Builds a look from the weather and occasion, then can apply its catalog clothing pieces to your avatar. | Weather access; the text encoder may download on first use; Real try-on for the avatar preview |
 | Style Me | Rate My Look | Scores a 2–5-piece outfit and proposes swaps. A 3B model writes the stylist comment. | Scoring exports; GPU for the comment |
 | Style Me | Complete My Outfit | Completes a partial look. | `data/completion/` |
 | Style Me | Style Assistant | Outfit chat using the BO5 parser, BO1 scoring and retrieval. | A GPU with enough memory; turn it off with `DRESSME_PARSER_ENABLED=off` |
@@ -22,8 +22,8 @@ DressMe is a fashion and wardrobe application. It suggests outfits for the weath
 | Wardrobe Check | Redundancy Check | Finds similar or duplicate pieces and suggests what to let go. | A saved wardrobe; a map service for donation places |
 | My Studio | My Wardrobe, Add Garment | Upload a photo, review the suggestions, then search, edit and export your clothes. | BO6 service; manual add works without it |
 | My Studio | My Avatar | Creates an avatar with Avaturn and makes a 2D image of it with the arms lowered. | `AVATURN_URL`, WebGL in the browser |
-| My Studio | Virtual Try-On | Dresses your avatar or a saved photo in pieces from your wardrobe. | Redis, plus FASHN for real results |
-| My Studio | Try-On History | Shows the person, garment and result, with a full-screen zoom. | Redis |
+| My Studio | Virtual Try-On | Creates separate try-ons or applies up to four wardrobe garments in order, feeding each generated image into the next step. | Redis, plus FASHN for real results |
+| My Studio | Try-On History | Shows the starting person, ordered garments and final result, including catalog outfits started from Outfit of the Day. | Redis |
 
 Scores, predictions and try-on images are model estimates. They are not measurements, size advice or human ratings.
 
@@ -82,11 +82,14 @@ Key files: `static/studio/avatar.js`, `static/studio/avatar-render.js`, `app/ava
 ### Virtual Try-On and the queue (BO7)
 
 ```text
-Choose person and clothes → one job per piece → dispatcher → Redis → worker
-  → FASHN on Kaggle or locally → result saved → shown in Try-On History
+Choose a person and clothes → separate jobs or one sequential outfit job
+  → dispatcher → Redis → worker → FASHN on Kaggle or locally
+  → final result saved with the starting image and garment order → Try-On History
 ```
 
-The worker makes one image at a time, and each user can have 6 jobs waiting. A real image takes about 5 minutes on Kaggle. If a worker stops mid-job, the dispatcher retries the job once.
+The sequential option applies garments in the order selected. Each generated image becomes the person input for the next call, and history keeps the starting image, ordered garment photos and final output together. Earlier garments may shift during later steps. The worker makes one image at a time, and each user can have 6 jobs waiting. A real image takes about 5 minutes on Kaggle. If a worker stops mid-job, the dispatcher retries the job once.
+
+Outfit of the Day has a **Try it on me** action for compatible clothing pieces in its displayed look. It skips shoes and accessories, runs the same sequence workflow, and shows the result beside the OOTD card on wide screens. The final image is saved in Try-On History with its catalog garments. A conservative edge-background remover makes the preview transparent when the output has a uniform background; it keeps the original image when it cannot separate the background safely.
 
 For each job, the app uses the local runtime when `VTON_RUNTIME_DIR` is set and there is enough free memory, and the remote server otherwise. `VTON_BACKEND_FORCE` overrides that choice.
 
@@ -133,7 +136,7 @@ Settings live in `.env`, created from `.env.example` and ignored by Git.
 - Each user can reach only their own garments, avatar, photos and try-on jobs.
 - Real try-on on a remote server sends the person and garment images there, and the consent text says so.
 - Using an avatar or photo for try-on needs explicit consent.
-- Deleting an avatar does not delete a try-on copy of its image.
+- Deleting an avatar also removes try-on history made from its saved avatar image.
 
 ## Tests
 
@@ -148,7 +151,8 @@ Those two settings make the run independent of your `.env`. Version 1.0.0 gives 
 ## Known limits
 
 - Coats, cardigans, blouses and jumpsuits are not available for try-on yet.
-- Only your own garments can be tried on, not catalog items.
+- OOTD try-on supports catalog tops, bottoms, outerwear and dresses; shoes and accessories are omitted from that sequence.
+- Background removal only applies when the output has a uniform, edge-connected background.
 - A Kaggle session can stop, and jobs then fail until it restarts.
 - The Kaggle server takes one image at a time and refuses other requests while busy.
 - Try-on quality depends on the garment photo and the pose.

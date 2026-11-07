@@ -1,9 +1,11 @@
-import {state, $, esc, active, image, node, request, message} from './core.js?v=bo7photos1';
-import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7photos1';
+import {state, $, $$, esc, active, image, node, request, message} from './core.js?v=bo7ootd9';
+import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7ootd9';
 
 const isReal = () => state.publicConfig?.vton_mode === 'real';
 const isRemote = () => isReal() && state.publicConfig?.vton_remote === true;
 const AVATAR_SOURCE = 'avatar';
+const SEQUENTIAL_WORKFLOW = 'sequential-v1';
+const MAX_SEQUENCE_GARMENTS = 4;
 // Measured: one image took 282 seconds on the Kaggle server. Lower this once requests get faster.
 const MINUTES_PER_IMAGE = 5;
 const HISTORY_POLL_MS = 10000;
@@ -42,7 +44,7 @@ function consentNote() {
 }
 
 export function tryonContent() {
-  return `<p class="studio-badge">${badge()}</p><p class="studio-muted">Choose who to dress, tick one or more pieces from your wardrobe and send them to the queue.</p><div id="studio-tryon-notice" aria-live="polite"></div><div id="studio-tryon-controls" class="studio-panel"></div><details class="studio-more" id="studio-saved-photos" hidden><summary>Saved photos</summary><div class="studio-saved-photos" id="studio-saved-photo-list"></div></details><details class="studio-more" id="studio-person-panel"><summary>Add a new person photo</summary><form id="studio-person" class="studio-form">${uploadPicker({key: 'person-photo', name: 'image', title: 'Choose one person photo', accept: 'image/jpeg,image/png,image/webp', note: 'JPEG, PNG or WebP · private storage'})}<label class="studio-consent"><input name="consent" type="checkbox" required> I consent to private processing of this photo for ${consentNote()}.</label><button class="btn ghost" type="submit">Save consented photo</button></form></details>`;
+  return `<p class="studio-badge">${badge()}</p><p class="studio-muted">Choose who to dress and select clothes from your wardrobe. You can make separate results or build one outfit by applying garments in sequence.</p><div id="studio-tryon-notice" aria-live="polite"></div><div id="studio-tryon-controls" class="studio-panel"></div><details class="studio-more" id="studio-saved-photos" hidden><summary>Saved photos</summary><div class="studio-saved-photos" id="studio-saved-photo-list"></div></details><details class="studio-more" id="studio-person-panel"><summary>Add a new person photo</summary><form id="studio-person" class="studio-form">${uploadPicker({key: 'person-photo', name: 'image', title: 'Choose one person photo', accept: 'image/jpeg,image/png,image/webp', note: 'JPEG, PNG or WebP · private storage'})}<label class="studio-consent"><input name="consent" type="checkbox" required> I consent to private processing of this photo for ${consentNote()}.</label><button class="btn ghost" type="submit">Save consented photo</button></form></details>`;
 }
 
 export function historyContent() {
@@ -55,7 +57,7 @@ function garmentCard(garment, preselected) {
   if (!garment.vton_eligibility?.candidate_category) {
     return `<div class="studio-garment-pick is-blocked">${img}<span>${name}</span><small>Not supported yet</small></div>`;
   }
-  return `<label class="studio-garment-pick"><input class="studio-garment-input" type="checkbox" value="${garment.id}" ${garment.id === preselected ? 'checked' : ''} aria-label="Try on ${name}">${img}<span>${name}</span></label>`;
+  return `<label class="studio-garment-pick"><input class="studio-garment-input" type="checkbox" value="${garment.id}" ${garment.id === preselected ? 'checked' : ''} aria-label="Try on ${name}">${img}<span>${name}</span><small class="studio-sequence-order" hidden></small></label>`;
 }
 
 function savedPhotoCard(photo) {
@@ -79,6 +81,7 @@ export async function refreshTryon(version = state.renderVersion) {
   state.photos = photos;
   state.avatarSource = {render: avatarRender, photo: avatarPhoto};
   const eligible = state.garments.filter(garment => garment.vton_eligibility?.candidate_category);
+  state.tryOnSequenceOrder = [];
   const saved = photos.filter(photo => photo.id !== avatarPhoto?.id);
   const sources = [
     ...(avatarRender ? [{value: AVATAR_SOURCE, label: 'My avatar'}] : []),
@@ -94,12 +97,16 @@ export async function refreshTryon(version = state.renderVersion) {
   state.tryonNotice = null;
 
   const status = runtime.available
-    ? (isReal() ? 'A worker is ready. Images are made one at a time, in order.' : 'A worker is available. Submissions create MOCK jobs only.')
+    ? (isReal() ? 'A worker is ready. Try-ons run in order in the background.' : 'A worker is available. Submissions create MOCK jobs only.')
     : `Submission is disabled because the worker is unavailable (${esc(runtime.reason || 'unknown')}). Start Redis and the RQ worker, then reload this page.`;
-  const form = `<div class="studio-tryon-grid"><div><label>Who to dress<select id="studio-photo">${sources.map(source => `<option value="${source.value}" ${source.value === chosen ? 'selected' : ''}>${esc(source.label)}</option>`).join('')}</select></label><img class="studio-person-thumb" id="studio-person-preview" alt="The selected image for try-on"><label class="studio-consent" id="studio-avatar-consent-label" hidden><input type="checkbox" id="studio-avatar-consent"> I consent to using my avatar image for ${consentNote()}.</label></div><div><strong>Clothes from your wardrobe</strong><div class="studio-garment-grid">${state.garments.map(garment => garmentCard(garment, preselected)).join('')}</div></div></div><div class="studio-actions"><button class="btn" data-action="submit-mock" disabled>Generate</button></div><p class="studio-muted">Your choice of who to dress is remembered as the default on this browser.</p>`;
+  const outfitHint = isReal()
+    ? `<p class="studio-muted">For one combined result, select 2–${MAX_SEQUENCE_GARMENTS} garments in the order to apply them, then choose Generate outfit. Later layers can change earlier items.</p>`
+    : '<p class="studio-muted">Generate outfit is available in Real mode.</p>';
+  const form = `<div class="studio-tryon-grid"><div><label>Who to dress<select id="studio-photo">${sources.map(source => `<option value="${source.value}" ${source.value === chosen ? 'selected' : ''}>${esc(source.label)}</option>`).join('')}</select></label><img class="studio-person-thumb" id="studio-person-preview" alt="The selected image for try-on"><label class="studio-consent" id="studio-avatar-consent-label" hidden><input type="checkbox" id="studio-avatar-consent"> I consent to using my avatar image for ${consentNote()}.</label></div><div><strong>Clothes from your wardrobe</strong>${outfitHint}<div class="studio-garment-grid">${state.garments.map(garment => garmentCard(garment, preselected)).join('')}</div></div></div><div class="studio-actions"><button class="btn" id="studio-tryon-submit" data-action="submit-tryon" disabled>Generate try-on</button><button class="btn ghost" id="studio-outfit-submit" data-action="submit-outfit" disabled>Generate outfit</button></div><p class="studio-muted">Your choice of who to dress is remembered as the default on this browser.</p>`;
   const empty = `<section class="studio-empty"><h3>${eligible.length ? 'Create your avatar first' : 'Save an eligible garment first'}</h3><p>This workflow needs an owned candidate garment, and your avatar or a saved photo.</p><a class="btn ghost" href="${eligible.length ? '#bo7-avatar' : '#bo6-add'}">${eligible.length ? 'Create my avatar' : 'Add garment'}</a></section>`;
   const target = $('#studio-tryon-controls', node());
   target.innerHTML = `<div class="studio-result-head"><div><p class="studio-eyebrow">Worker status</p><h3>${isReal() ? 'Try-on queue' : 'Mock preview queue'}</h3></div><span class="studio-badge ${runtime.available ? 'is-ready' : 'is-unavailable'}">${runtime.available ? 'Ready' : 'Unavailable'}</span></div><p class="studio-muted">${status}</p>${eligible.length && sources.length ? form : empty}`;
+  state.tryOnSequenceOrder = pickedGarments();
   if (!sources.length) $('#studio-person-panel', node())?.setAttribute('open', '');
   $('#studio-saved-photos', node())?.toggleAttribute('hidden', !photos.length);
   $('#studio-saved-photo-list', node()).innerHTML = photos.map(savedPhotoCard).join('');
@@ -119,10 +126,36 @@ export async function savePersonPhoto(form) {
 }
 
 const pickedGarments = () => [...node().querySelectorAll('.studio-garment-input:checked')].map(input => input.value);
+function orderedPickedGarments() {
+  const picked = pickedGarments();
+  const order = state.tryOnSequenceOrder || [];
+  return [...order.filter(id => picked.includes(id)), ...picked.filter(id => !order.includes(id))];
+}
+
+function updateSequenceMarkers() {
+  const order = state.tryOnSequenceOrder || [];
+  const sequenceReady = pickedGarments().length >= 2;
+  $$('.studio-garment-input', node()).forEach(input => {
+    const badge = input.closest('.studio-garment-pick')?.querySelector('.studio-sequence-order');
+    if (!badge) return;
+    const index = order.indexOf(input.value);
+    badge.textContent = String(index + 1);
+    badge.hidden = !sequenceReady || !input.checked || index < 0;
+  });
+}
+
+export function trackTryonGarmentSelection(input) {
+  const order = state.tryOnSequenceOrder || (state.tryOnSequenceOrder = []);
+  if (input.checked && !order.includes(input.value)) order.push(input.value);
+  if (!input.checked) state.tryOnSequenceOrder = order.filter(id => id !== input.value);
+  updateSequenceMarkers();
+}
 
 export async function updateSubmitAvailability() {
-  const button = $('[data-action="submit-mock"]', node());
-  if (!button) return;
+  const button = $('#studio-tryon-submit', node());
+  const outfitButton = $('#studio-outfit-submit', node());
+  if (!button || !outfitButton) return;
+  const count = pickedGarments().length;
   const garments = pickedGarments();
   const photo = $('#studio-photo', node())?.value;
   const usingAvatar = photo === AVATAR_SOURCE;
@@ -132,18 +165,35 @@ export async function updateSubmitAvailability() {
   const needsConsent = usingAvatar && !state.avatarSource?.photo;
   $('#studio-avatar-consent-label', node())?.toggleAttribute('hidden', !needsConsent);
   const consented = !needsConsent || $('#studio-avatar-consent', node())?.checked;
-  button.textContent = garments.length > 1 ? `Generate ${garments.length} try-ons` : 'Generate try-on';
+  button.textContent = count > 1 ? `Generate ${count} try-ons` : 'Generate try-on';
+  outfitButton.textContent = !isReal()
+    ? 'Generate outfit · Real mode only'
+    : count < 2 ? `Generate outfit · select 2–${MAX_SEQUENCE_GARMENTS}`
+      : count > MAX_SEQUENCE_GARMENTS ? `Generate outfit · up to ${MAX_SEQUENCE_GARMENTS}`
+        : `Generate outfit · ${count} garments`;
   const runtime = await request('/health/try-on').catch(() => ({available: false}));
   button.disabled = !runtime.available || !garments.length || !photo || !consented;
   button.setAttribute('aria-disabled', String(button.disabled));
+  outfitButton.disabled = !runtime.available || !photo || !consented || !isReal() || count < 2 || count > MAX_SEQUENCE_GARMENTS;
+  outfitButton.setAttribute('aria-disabled', String(outfitButton.disabled));
+  updateSequenceMarkers();
 }
 
 function jobState(job) {
+  const sequential = job.workflow === SEQUENTIAL_WORKFLOW;
+  const total = sequential ? (job.garments?.length || job.result_metadata?.total_steps || 2) : 1;
   if (job.state === 'queued') {
     const ahead = job.queue_position ?? 0;
-    return {title: 'In the queue', detail: `${ahead ? `${plural(ahead, 'image')} ahead of this one. ` : 'Next in line. '}Ready in ${waitText(ahead + 1)}.`};
+    return {title: 'In the queue', detail: `${ahead ? `${plural(ahead, 'job')} ahead of this one. ` : 'Next in line. '}Ready in ${waitText((ahead + 1) * total)}.`};
   }
-  if (job.state === 'running') return {title: 'Generating now', detail: `Ready in ${waitText(1)} at most.`};
+  if (job.state === 'running') {
+    if (sequential) {
+      const step = job.result_metadata?.current_step || 1;
+      const steps = job.result_metadata?.total_steps || total;
+      return {title: 'Building your outfit', detail: `Applying garment ${step} of ${steps}. About ${waitText(Math.max(1, steps - step + 1))} remaining.`};
+    }
+    return {title: 'Generating now', detail: `Ready in ${waitText(1)} at most.`};
+  }
   if (job.state === 'succeeded') return {title: 'Ready', detail: ''};
   if (job.state === 'cancelled') return {title: 'Cancelled', detail: ''};
   if (job.state === 'timed_out') return {title: 'Took too long', detail: FAILURES[job.error_code] || 'You can try this one again.'};
@@ -157,13 +207,19 @@ function zoomable(url, title) {
 function jobCard(job) {
   const {title, detail} = jobState(job);
   const waiting = ['queued', 'running'].includes(job.state);
-  const garment = esc(job.garment_category || 'Garment');
   const label = job.mode === 'real' ? 'Try-on result' : 'Mock preview';
   const result = job.result_url ? zoomable(job.result_url, label) : `<div class="studio-job-waiting">${esc(title)}</div>`;
+  const garments = job.garments?.length ? job.garments : [{image_url: job.garment_image_url, category: job.garment_category}];
+  const sequential = job.workflow === SEQUENTIAL_WORKFLOW;
+  const garmentFigures = garments.map((garment, index) => {
+    const garmentTitle = `${sequential ? `${index + 1}. ` : ''}${garment.name || garment.category || 'Garment'}`;
+    return `<figure><figcaption>${esc(garmentTitle)}</figcaption>${zoomable(garment.image_url, garmentTitle)}</figure>`;
+  }).join('');
+  const modeLabel = sequential ? `SEQUENTIAL · ${garments.length} GARMENTS` : job.mode.toUpperCase();
   const actions = waiting
     ? (job.cancellation_requested ? '<span class="studio-muted">Cancelling…</span>' : `<button class="btn ghost" data-action="cancel-job" data-id="${job.id}">Cancel</button>`)
     : `<button class="btn danger" data-action="delete-job" data-id="${job.id}">Delete</button>`;
-  return `<article class="studio-card"><div class="studio-result-head"><h3>${esc(title)}</h3><span class="studio-badge">${esc(job.mode.toUpperCase())}</span></div><p class="studio-muted">${localDate(job.created_at).toLocaleString()}${detail ? ` · ${detail}` : ''}</p><div class="studio-job-images"><figure><figcaption>Person</figcaption>${zoomable(job.person_image_url, 'Person')}</figure><figure><figcaption>${garment}</figcaption>${zoomable(job.garment_image_url, garment)}</figure><figure><figcaption>${label}</figcaption>${result}</figure></div><div class="studio-actions">${actions}</div></article>`;
+  return `<article class="studio-card"><div class="studio-result-head"><h3>${esc(title)}</h3><span class="studio-badge">${esc(modeLabel)}</span></div><p class="studio-muted">${localDate(job.created_at).toLocaleString()}${detail ? ` · ${detail}` : ''}</p><div class="studio-job-images${sequential ? ' is-sequence' : ''}"><figure><figcaption>${esc(job.person_image_label || 'Person')}</figcaption>${zoomable(job.person_image_url, job.person_image_label || 'Person')}</figure>${garmentFigures}<figure><figcaption>${label}</figcaption>${result}</figure></div><div class="studio-actions">${actions}</div></article>`;
 }
 
 export async function refreshHistory(version = state.renderVersion) {
@@ -171,7 +227,7 @@ export async function refreshHistory(version = state.renderVersion) {
   if (version !== state.renderVersion || active() !== 'bo7-history') return;
   state.jobs = result.items;
   // Only redraw on a change, so the images do not reload every few seconds.
-  const signature = JSON.stringify(state.jobs.map(job => [job.id, job.state, job.queue_position, job.cancellation_requested]));
+  const signature = JSON.stringify(state.jobs.map(job => [job.id, job.state, job.queue_position, job.cancellation_requested, job.result_metadata?.current_step]));
   const target = $('#studio-jobs', node());
   if (signature !== state.jobsSignature || !target.childElementCount) {
     state.jobsSignature = signature;
@@ -211,10 +267,13 @@ function showLarge(button) {
   dialog.showModal();
 }
 
-async function submitJobs(refresh) {
-  const garments = pickedGarments();
+async function submitJobs(refresh, sequential = false) {
+  const garments = sequential ? orderedPickedGarments() : pickedGarments();
   const source = $('#studio-photo', node())?.value;
   if (!garments.length || !source) throw new Error('Select at least one garment and who to dress.');
+  if (sequential && (!isReal() || garments.length < 2 || garments.length > MAX_SEQUENCE_GARMENTS)) {
+    throw new Error(`Choose 2 to ${MAX_SEQUENCE_GARMENTS} garments for a sequential Real try-on.`);
+  }
   let person_photo_id = source;
   if (source === AVATAR_SOURCE) {
     if (!state.avatarSource?.photo && !$('#studio-avatar-consent', node())?.checked) throw new Error('Confirm the consent to use your avatar image.');
@@ -222,6 +281,16 @@ async function submitJobs(refresh) {
   }
   rememberPersonSource(source);
   state.tryOnIdempotencyKey ||= crypto.randomUUID();
+  if (sequential) {
+    await request('/try-on/sequences', {
+      method: 'POST',
+      body: {garment_ids: garments, person_photo_id},
+      key: state.tryOnIdempotencyKey,
+    });
+    state.tryOnIdempotencyKey = null;
+    state.tryonNotice = '<div class="studio-tryon-notice" role="status"><span>Your result will be saved in Virtual Try-On History.</span></div>';
+    return refresh('bo7-tryon');
+  }
   let queued = 0;
   let problem = '';
   for (const garment_id of garments) {
@@ -241,7 +310,8 @@ async function submitJobs(refresh) {
 }
 
 export async function handleTryonAction(action, button, refresh) {
-  if (action === 'submit-mock') return submitJobs(refresh);
+  if (action === 'submit-tryon') return submitJobs(refresh, false);
+  if (action === 'submit-outfit') return submitJobs(refresh, true);
   if (action === 'zoom-image') return showLarge(button);
   if (action === 'try-garment') {
     state.tryonGarment = button.dataset.id;

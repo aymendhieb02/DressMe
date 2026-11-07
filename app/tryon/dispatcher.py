@@ -16,6 +16,7 @@ from ..database import SessionLocal
 from ..models import TryOnAttempt, TryOnJob, TryOnJobOutbox, utcnow
 from ..storage.cleanup import drain_storage_deletions, expire_pending_uploads
 from .adapters import UNSUPPORTED_ADAPTER, delivery_task
+from .workflow import MAX_SEQUENCE_GARMENTS, SEQUENCE_STEP_TIMEOUT_SECONDS, SEQUENTIAL_WORKFLOW, SINGLE_JOB_TIMEOUT_SECONDS
 
 QUEUE_NAME = get_settings().tryon_queue_name
 MAX_ATTEMPTS = 2
@@ -77,13 +78,20 @@ def dispatch_pending(queue: Queue, session_factory: sessionmaker = SessionLocal,
                 row.last_error_code = UNSUPPORTED_ADAPTER
                 continue
             queue_id = f"tryon-{row.job_id.hex}-{row.delivery_number}"
+            workflow = (job.input_snapshot or {}).get("workflow")
+            step_count = len((job.input_snapshot or {}).get("garments", [])) if workflow == SEQUENTIAL_WORKFLOW else 1
+            step_count = max(1, min(step_count, MAX_SEQUENCE_GARMENTS))
+            job_timeout = (
+                SEQUENCE_STEP_TIMEOUT_SECONDS * step_count
+                if workflow == SEQUENTIAL_WORKFLOW else SINGLE_JOB_TIMEOUT_SECONDS
+            )
             try:
                 queue.enqueue(
                     task,
                     str(row.job_id),
                     job_id=queue_id,
                     unique=True,
-                    job_timeout=450,
+                    job_timeout=job_timeout,
                     ttl=3600,  # a job can wait behind several others that each take minutes
                     result_ttl=86400,
                     failure_ttl=86400,

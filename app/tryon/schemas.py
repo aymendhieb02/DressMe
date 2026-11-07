@@ -3,6 +3,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from .workflow import MAX_SEQUENCE_GARMENTS
+
 
 class PersonPhotoView(BaseModel):
     id: UUID
@@ -26,6 +28,25 @@ class TryOnCreate(BaseModel):
     person_photo_id: UUID
 
 
+class TryOnSequenceCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    garment_ids: list[UUID] = Field(min_length=2, max_length=MAX_SEQUENCE_GARMENTS)
+    person_photo_id: UUID
+
+
+class TryOnOotdSequenceCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    catalog_ids: list[int] = Field(min_length=2, max_length=MAX_SEQUENCE_GARMENTS)
+    person_photo_id: UUID
+
+
+class TryOnGarmentView(BaseModel):
+    id: str
+    image_url: str
+    category: str | None = None
+    name: str | None = None
+
+
 class TryOnJobView(BaseModel):
     id: UUID
     state: str
@@ -33,7 +54,10 @@ class TryOnJobView(BaseModel):
     status_url: str
     result_url: str | None = None
     person_image_url: str
-    garment_image_url: str
+    person_image_label: str = "Person"
+    garment_image_url: str | None = None
+    garments: list[TryOnGarmentView] = Field(default_factory=list)
+    workflow: str = "single"
     garment_category: str | None = None
     queue_position: int | None = None
     error_code: str | None = None

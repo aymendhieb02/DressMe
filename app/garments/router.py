@@ -474,7 +474,14 @@ async def delete_garment(garment_id: UUID, user: User = Depends(current_user_csr
     if row is None:
         raise _not_found()
     pending = db.scalar(select(PendingUpload).where(PendingUpload.id == row.pending_upload_id, PendingUpload.user_id == user.id))
-    jobs = db.scalars(select(TryOnJob).where(TryOnJob.garment_id == row.id, TryOnJob.user_id == user.id)).all()
+    owner_jobs = db.scalars(select(TryOnJob).where(TryOnJob.user_id == user.id)).all()
+    jobs = [
+        job for job in owner_jobs
+        if job.garment_id == row.id or any(
+            item.get("garment_id") == str(row.id)
+            for item in (job.input_snapshot or {}).get("garments", [])
+        )
+    ]
     keys = [row.image_key]
     db.add(StorageDeletion(image_key=row.image_key))
     for job in jobs:

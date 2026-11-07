@@ -120,11 +120,18 @@
 .studio-avatar-render{display:block;max-width:min(100%,480px);height:auto;border-radius:15px;background:#eef6f3}
 .studio-person-thumb{display:block;width:100%;aspect-ratio:3/4;object-fit:contain;background:#eef6f3;border-radius:16px;margin:10px 0}
 .studio-tryon-grid{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:26px;align-items:start;margin-top:14px}
+.studio-tryon-workflows{display:grid;gap:8px;margin:12px 0;padding:12px 14px;border:1px solid #cfe6e3;border-radius:14px;background:#f7fbfa}
+.studio-tryon-workflows legend{padding:0 5px;font-weight:700}
+.studio-tryon-workflows label{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600}
+.studio-tryon-workflows input{accent-color:#0e9f9a}
+.studio-tryon-workflows .studio-muted{margin:2px 0 0}
 .studio-garment-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:8px}
 .studio-garment-pick{position:relative;display:block;padding:8px;border:2px solid #d8e8e5;border-radius:16px;background:#fff;cursor:pointer}
 .studio-garment-pick img{display:block;width:100%;aspect-ratio:1;object-fit:contain;border-radius:10px;background:#f5f8f7}
 .studio-garment-pick span{display:block;margin-top:6px;font-size:.86rem;font-weight:600}
 .studio-garment-pick small{display:block;color:#5d7079}
+.studio-garment-pick .studio-sequence-order{position:absolute;top:11px;right:11px;display:grid;place-items:center;width:28px;height:28px;margin:0;border:2px solid #fff;border-radius:50%;background:#0e9f9a;color:#fff;font-weight:700;box-shadow:0 1px 5px #17283a55}
+.studio-garment-pick .studio-sequence-order[hidden]{display:none}
 .studio-garment-pick input{position:absolute;top:14px;left:14px;width:22px;height:22px;margin:0}
 .studio-garment-pick:has(input:checked){border-color:#0e9f9a;background:#e8f4f2}
 .studio-garment-pick:has(input:focus-visible){outline:2px solid #0e9f9a;outline-offset:2px}
@@ -132,6 +139,7 @@
 .studio-tryon-notice{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:12px 0;padding:16px 18px;border-radius:16px;background:#e8f4f2;font-weight:600}
 .studio-job-list{display:grid;gap:16px}
 .studio-job-images{display:grid;grid-template-columns:1fr 1fr 1.6fr;gap:12px;align-items:start;margin:10px 0}
+.studio-job-images.is-sequence{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
 .studio-job-images figure{margin:0;min-width:0}
 .studio-job-images figcaption{margin-bottom:5px;font-size:.8rem;font-weight:600;color:#5d7079}
 .studio-zoom{display:block;width:100%;padding:0;border:0;border-radius:12px;background:#eef6f3;cursor:zoom-in;overflow:hidden}

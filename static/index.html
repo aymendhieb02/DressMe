@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DressMe — Style Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="/static/studio.css?v=bo7photos1" rel="stylesheet">
+<link href="/static/studio.css?v=bo7ootd9" rel="stylesheet">
 <style>
 :root{--ink:#17283a;--c1:#ff6b4a;--c2:#0e9f9a;--ok:#1fb889;--warn:#f5a524;--bad:#e5484d;--hero:#17283a;--sky:linear-gradient(160deg,#fdebd8,#c9ebe7)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--sky) fixed;min-height:100vh}
@@ -667,7 +667,27 @@ label.btn input{display:none}
  .gapx-tab{top:auto;bottom:40px;transform:translateX(100%)}
  .gapx-tab.show{transform:none}
 }
-</style><link rel="stylesheet" href="/static/assistant.css?v=bo7photos1"><link rel="stylesheet" href="/static/taste.css?v=1">
+.ootd-tryon-panel{display:none;background:#ffffffed;backdrop-filter:blur(18px);border:1px solid #fff;border-radius:24px;padding:18px;box-shadow:0 18px 50px #17283a22;color:var(--ink)}
+.ootd-tryon-panel:not([hidden]){display:block;position:fixed;z-index:20;top:226px;left:auto;right:14px;width:min(340px,calc(100vw - 28px));max-height:calc(100vh - 250px);overflow:auto}
+.ootd-tryon-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.ootd-tryon-close{flex:0 0 32px;width:32px;height:32px;border:0;border-radius:50%;background:#e8f4f2;color:var(--ink);font:500 1.2rem/1 Inter,sans-serif;cursor:pointer;transition:background .2s,transform .2s}
+.ootd-tryon-close:hover{background:#d5e9e6;transform:rotate(90deg)}
+.ootd-tryon-panel .eyebrow{color:var(--c1);margin:0 0 6px}
+.ootd-tryon-panel h3{font:400 1.35rem Fraunces,serif;margin:0 0 6px}
+.ootd-tryon-panel p{font-size:.82rem;line-height:1.5;margin:6px 0 12px;opacity:.78}
+.ootd-tryon-panel img{display:block;width:100%;max-height:min(56vh,520px);object-fit:contain;border-radius:16px}
+.ootd-tryon-panel .ootd-tryon-spinner{width:28px;height:28px;border:3px solid #d8e9e6;border-top-color:var(--c1);border-radius:50%;animation:ootdSpin .8s linear infinite;margin:18px auto}
+@keyframes ootdSpin{to{transform:rotate(360deg)}}
+.ootd-progress{margin:10px 0 14px}
+.ootd-progress-track{height:8px;border-radius:999px;background:#e6efed;overflow:hidden}
+.ootd-progress-fill{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#ff6b4a,#ff9f43);transition:width .6s ease}
+.ootd-progress-label{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:.68rem;opacity:.7}
+.ootd-tryon-action{margin-top:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ootd-tryon-action small{font-size:.72rem;opacity:.65}
+@media(min-width:1760px){.ootd-tryon-panel:not([hidden]){width:min(370px,calc(100vw - 28px))}}
+@media(max-width:760px){.ootd-tryon-panel:not([hidden]){top:auto;bottom:12px;right:12px;width:min(300px,calc(100vw - 24px));max-height:70vh}.ootd-tryon-panel img{max-height:38vh}}
+@media(prefers-reduced-motion:reduce){.ootd-tryon-spinner,.ootd-progress-fill{animation:none;transition:none}}
+</style><link rel="stylesheet" href="/static/assistant.css?v=bo7ootd9"><link rel="stylesheet" href="/static/taste.css?v=1">
 <script type="importmap">{"imports":{"three":"/static/vendor/three/build/three.module.min.js"}}</script>
 </head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
 <div id="intro" hidden><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
@@ -680,6 +700,7 @@ label.btn input{display:none}
 <section id="ootd" class="glass"><div class="chead"><div><p class="eyebrow">No. 01</p><h2>Outfit of the Day</h2></div>
 <button class="mini-av" id="occ-av2" type="button" aria-label="Change the occasion" title="Change the occasion"><img src="/static/avatar.png" alt=""></button></div><div class="chips" id="src"><button class="cc on" data-s="geo">My location</button><button class="cc" data-s="city">City</button><button class="cc" data-s="man">Simulate weather</button></div>
 <div id="srcui"></div><div id="ootdout"></div></section>
+<aside id="ootd-tryon-panel" class="ootd-tryon-panel" aria-live="polite" aria-label="Virtual try-on result" hidden></aside>
 
 <section id="score" class="glass" hidden><p class="eyebrow">No. 02</p><h2>Rate My Look</h2>
 <div class="row" id="b1"></div><div style="margin-top:14px"><button class="btn ghost" id="ex1">Load a real outfit</button></div><div id="sout"></div></section>
@@ -1140,9 +1161,12 @@ function ootd(body){lastBody=body;gapClear();$('#ootdout').innerHTML='<div class
  api('ootd',{...body,occasion:OCC||null}).then(r=>{const w=r.weather;scene(w.kind);
   const map=w.lat!=null?`<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${w.lon-.06}%2C${w.lat-.035}%2C${w.lon+.06}%2C${w.lat+.035}&layer=mapnik&marker=${w.lat}%2C${w.lon}"></iframe>`:'';
   const who={women:"Women's outfit",men:"Men's outfit",unisex:'Unisex outfit'}[r.gender]||'';
+  const tryOnPieces=r.pick.filter(x=>['top','bottom','outer','dress'].includes(x.c)&&Number.isInteger(Number(x.i)));
+  const catalogIds=tryOnPieces.map(x=>Number(x.i));
+  const tryOnAction=`<div class="ootd-tryon-action"><button class="btn" type="button" data-ootd-tryon data-catalog-ids="${catalogIds.join(',')}" ${catalogIds.length<2?'disabled':''}>Try it on me</button><small>${catalogIds.length<2?'This outfit needs at least two compatible clothing pieces.':'Applies clothing pieces in order; shoes and accessories are skipped.'}</small></div>`;
   $('#ootdout').innerHTML=`<div class="wx"><div><b>${w.place}</b><div class="temp">${w.temp.toFixed(0)}°</div><div class="cond">${w.label}</div><div class="facts"><span>Feels like ${w.feels.toFixed(0)}°</span><span>Wind ${w.wind.toFixed(0)} km/h</span><span>Min ${w.tmin.toFixed(0)}° / Max ${w.tmax.toFixed(0)}°</span><span>Rain ${w.rain.toFixed(0)} %</span></div>${map}</div>
   <div><div class="grid">${r.pick.map((x,k)=>`<div class="card" style="animation-delay:${k*.12}s"><img src="${img(x.k)}"><p><em>${FR[x.c]}</em><br>${x.d.slice(0,46)}</p></div>`).join('')}</div>
-  <p class="vibe">${vibe(w)}</p></div></div>`;gapPanel(r.gaps)})
+  <p class="vibe">${vibe(w)}</p>${tryOnAction}</div></div>`;gapPanel(r.gaps)})
  .catch(e=>$('#ootdout').innerHTML=`<div class="err">${esc(e.message)}</div>`)}
 
 /* ---------- IDÉE 4 : Where to Buy : photo -> SerpApi -> boutiques + prix ---------- */
@@ -1646,5 +1670,5 @@ $('#vd-x').onclick=()=>vdEl.classList.add('mini');
 $('#vd-av').onclick=()=>vdEl.classList.toggle('mini');
 document.addEventListener('dressme:section',e=>{if(e.detail!=='score')vdHide();else if(vdLast&&B1.get().length>=2){vdThink();vdSay(vdLast)}});
 
-</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=bo7photos1"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3?v='+Date.now()+'#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
-<script type="module" src="/static/assistant.js?v=bo7photos1"></script><script type="module" src="/static/taste.js?v=bo7photos1"></script></body></html>
+</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=bo7ootd9"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3?v='+Date.now()+'#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
+<script type="module" src="/static/assistant.js?v=bo7ootd9"></script><script type="module" src="/static/taste.js?v=bo7ootd9"></script></body></html>

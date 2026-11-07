@@ -1,4 +1,4 @@
-import {state, $, esc, request, message} from './core.js?v=bo7photos1';
+import {state, $, esc, request, message} from './core.js?v=bo7ootd9';
 
 const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
