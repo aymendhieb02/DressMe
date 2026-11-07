@@ -1,0 +1,27 @@
+{
+  "automatic_tests": 290,
+  "real_scenarios": 22,
+  "failed_scenarios": 0,
+  "source_sha256": {
+    "dressme/context.py": "6d35a2bc9710c8aaf3b759220521824fac9a9cfc523ccddef088b4135e09e71f",
+    "dressme/selection.py": "e9c32dd85cc43ba683b43968a41e3e973aed389c0543c3c94f9c533aa483e765",
+    "dressme/engine.py": "4d18d8ceeefbc9194a620138fce8360128a2f856039efbbe6fa29268097d5042",
+    "dressme/grounding.py": "0a879d98e53623dc49e338b6f284388c8bef352779f825f2a4831bc14eadfb76",
+    "dressme/constraints.py": "14a666a9da5e298b301c4de3e7bd75c723b8b2a96ed9f8ba0ba38fc6d6c8ab19",
+    "dressme/identity.py": "41d6b6d3ad2ec8b1c4b978fb5cda5e79c835affce3049b575e895ac3f072ecaa",
+    "dressme/parser.py": "db736ea797a81a2f2c9bc7158ec38f76e4796ef0fb46b1a6693ad977d3e90775",
+    "dressme/state.py": "4d35422d21a218e9da6a8519c22df22fd06ffd0b12114ada8147768f9d5047c2",
+    "static/assistant.js": "87d5690edcc98308caa1669ff5b10dc11ea4b83a81ea15683326eadb121fc2bc",
+    "scripts/verify_relevance.py": "c6fb92810a507e71ee4dec628cef61e2dbeca0ea09a59df48c8ce836d60fa9f6",
+    "tests/test_relevance.py": "bad7897ea07f7be572f65fdd868117bb267d50e183cd616c9d12897071030683"
+  },
+  "model_sha256": {
+    "bo1\\score\\scorer.pt": "39efbe093325f1ea5d775ca276fa431540b4d4d535be63c3b0b40afd5c532643",
+    "bo5\\parser_for_local\\parser_adapter\\adapter_model.safetensors": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003"
+  },
+  "limits": [
+    "Use-case policies are explicit description heuristics, not trained occasion labels or technical certification.",
+    "Male catalogue contains no explicitly described running/training shoes; functional sport request returns a limitation.",
+    "Twenty-two scenarios are not a guarantee for arbitrary prompts."
+  ]
+}

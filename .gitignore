@@ -55,3 +55,6 @@ bo5/**/training_args.bin
 
 /tmp/
 /bo5/resume_latest/
+
+# Transfer archives of model weights
+/output/models/

@@ -8,6 +8,7 @@ import re
 import copy
 
 from .schemas import Facet, norm
+from .context import ground_contexts,mentions as context_mentions
 
 
 # Canonical product words and structural roles; longest aliases win overlaps.
@@ -41,7 +42,7 @@ GARMENTS = (
 REPLACE = re.compile(r'\b(remplace\w*|change\w*|modifie\w*|[ée]change\w*|replace\w*|swap\w*|switch\w*)\b', re.I)
 SEARCH = re.compile(r'\b(trouve\w*|cherche\w*|recherche\w*|montre\w*|voudrais|veux|find|search|show|looking for|want|need)\b', re.I)
 OUTFIT = re.compile(r'\b(tenues?|outfits?|looks?|propositions? vestimentaires?)\b', re.I)
-COMPOSE = re.compile(r'\b(compose\w*|ompose\w*|assemble\w*|compos\w*|create|build|put together)\b', re.I)
+COMPOSE = re.compile(r'\b(compose\w*|ompose\w*|assemble\w*|compos\w*|propose\w*|sugg[èe]re\w*|suggest|create|build|put together)\b', re.I)
 DEPENDENT = re.compile(r'\b(m[êe]mes?|cette|ces|celle\w*|ceux|pr[ée]c[ée]dent\w*|same|this|these|those|previous|keep|garde\w*|conserve\w*)\b', re.I)
 OPTIONAL = re.compile(r'\b(si possible|de pr[ée]f[ée]rence|preferably|ideally|if possible)\b[^,.;!?]*', re.I)
 ORDINAL = re.compile(r'\b(premi[èe]re?|deuxi[èe]me|seconde?|troisi[èe]me|quatri[èe]me|cinqui[èe]me|first|second|third|fourth|fifth|[1-5](?:er|re|e|ème|eme|st|nd|rd|th))\b', re.I)
@@ -258,6 +259,12 @@ def reconcile_turn(original, message, color_evidence, pending_question=''):
 
     if turn.action not in {'compose','products','replace','compare','preferences'}:
         return turn, changes
+
+    alternative=re.search(r'\b(?:autres?|diff[ée]rentes?|alternatives?|another|other|different)\b',message,re.I)
+    if turn.action=='compose' and alternative and OUTFIT.search(message) and not context_mentions(message):
+        set_field('reuse_previous',True,'alternative_outfits',alternative.group())
+        set_field('reference_quote',alternative.group(),'alternative_outfits',alternative.group())
+    changes.extend(ground_contexts(turn,message,garment_mentions=garment_mentions))
 
     if turn.action=='compose':
         quantities=list(re.finditer(r'\b(\d+|'+'|'.join(COUNT_WORDS)+r')\s+(?:tenues?|outfits?|looks?|propositions?)\b',message,re.I))

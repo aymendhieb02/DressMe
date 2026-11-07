@@ -40,6 +40,7 @@ COLOR_EVIDENCE = {
 FOLLOWUP_EVIDENCE = re.compile(
     r'\b(et|aussi|encore|plutot|davantage|meme|memes|precedent\w*|cette|ces|cela|celle\w*|'
     r'ceux|maintenant|ajoute\w*|retire\w*|enleve\w*|garde\w*|conserve\w*|'
+    r'autres?|differentes?|alternatives?|another|other|different|'
     r'and|also|again|instead|same|previous|this|these|those|that|now|add|remove|keep|what if)\b')
 
 
@@ -65,7 +66,7 @@ class LocalParser:
                                  selected_checkpoint='checkpoint-400', adapter_path=str(ADAPTER),
                                  precision=os.getenv('DRESSME_PARSER_PRECISION', 'nf4'),
                                  reviewer=None, writer='deterministic evidence templates', fallback=None,
-                                 postprocessing='grounded-request-v3 (count aliases, scenario slots, typed replacements, audited edits)',
+                                 postprocessing='grounded-request-v4 (use cases, alternatives, counts, typed replacements, audited edits)',
                                  prompt_sha256=hashlib.sha256(receipt['training_config']['prompt'].encode()).hexdigest(),
                                  semantic_validation='Exact citations and conservative guards; no independent LLM oracle.')
         except Exception as exc:

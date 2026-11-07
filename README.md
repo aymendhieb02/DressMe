@@ -2,6 +2,8 @@
 
 La branche intégrée ajoute le chat BO1/BO5 à l'application de l'équipe. Le genre choisi à l'inscription ou dans **Account** est lu automatiquement depuis le compte authentifié ; une demande explicite garde la priorité.
 
+La correction des tenues répétitives et du choix des vêtements selon l’usage est documentée dans [diagnostics/RELEVANCE_FIX.md](diagnostics/RELEVANCE_FIX.md).
+
 Le guide actuel, le lancement et les validations sont dans [docs/SESSION_GENDER_INTEGRATION.md](docs/SESSION_GENDER_INTEGRATION.md). **Le verrou commun actuel est `requirements-integrated.lock.txt`** ; les anciens verrous et bilans décrivent les environnements antérieurs.
 
 Le guide de l'équipe ci-dessous et la procédure BO6 restent disponibles. L'ancien guide local BO1/BO5 est conservé dans [docs/BO1_BO5_LOCAL.md](docs/BO1_BO5_LOCAL.md).

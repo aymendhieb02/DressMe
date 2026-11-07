@@ -21,5 +21,4 @@ def with_account_gender(spec, turn, state):
         return spec
     spec.facets.append(Facet(field='gender', values=[gender, 'unisex'],
                              quote=ACCOUNT_GENDER_QUOTE, mode='any', strength='must'))
-    spec.query += f'. account clothing gender: {gender}'
     return spec

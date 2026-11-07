@@ -1,0 +1,1114 @@
+[
+  {
+    "message": "Compose deux tenues pour une sortie",
+    "response": {
+      "status": "results_with_limits",
+      "message": "Tenues assemblées à partir des articles locaux et notées par BO1.",
+      "preference_coverage": [],
+      "results": [
+        {
+          "item_ids": [
+            "P01120535",
+            "P01120540",
+            "P01130569"
+          ],
+          "candidate_id": "b5ecde606276c270",
+          "relevance": 0.917592360930006,
+          "constraint_report": [
+            {
+              "facet": {
+                "field": "occasion",
+                "values": [
+                  "party"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "Compose deux tenues pour une sortie",
+                "roles": []
+              },
+              "verified": false,
+              "passed": null,
+              "reason": "Search relevance only; no verified product attribute for this criterion."
+            },
+            {
+              "facet": {
+                "field": "gender",
+                "values": [
+                  "men",
+                  "unisex"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "authenticated account.gender",
+                "roles": []
+              },
+              "verified": true,
+              "passed": true,
+              "matching_ids": [
+                "P01120535",
+                "P01120540",
+                "P01130569"
+              ],
+              "evaluated_ids": [
+                "P01120535",
+                "P01120540",
+                "P01130569"
+              ],
+              "reason": "product_metadata"
+            }
+          ],
+          "bo1": {
+            "item_ids": [
+              "P01120535",
+              "P01120540",
+              "P01130569"
+            ],
+            "value": 9.28738784790039,
+            "scale": [
+              0,
+              10
+            ],
+            "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+            "odd_position": 0,
+            "embedding_source": "exported_emb_ft"
+          },
+          "score_details": {
+            "components": {
+              "bo1": 0.928738784790039,
+              "relevance": 0.917592360930006,
+              "preference": 0.0
+            },
+            "weights": {
+              "bo1": 0.65,
+              "relevance": 0.25,
+              "preference": 0.1
+            },
+            "contributions": {
+              "bo1": 0.6036802101135254,
+              "relevance": 0.2293980902325015,
+              "preference": 0.0
+            },
+            "total": 0.8330783003460268,
+            "without_preferences": 0.9256425559400298,
+            "preferences": [],
+            "rank_with_preferences": 1,
+            "rank_without_preferences": 1,
+            "rank_pool_size": 512
+          },
+          "items": [
+            {
+              "image_id": "P01120535",
+              "name": "blue denim shirt",
+              "description": "blue denim shirt",
+              "type": "blue denim shirt",
+              "category": "top",
+              "role": "top",
+              "color": "blue",
+              "colors": [
+                "blue"
+              ],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01120535",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "literal_product_description",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            },
+            {
+              "image_id": "P01120540",
+              "name": "blue straight jeans",
+              "description": "blue straight jeans",
+              "type": "blue straight jeans",
+              "category": "bottom",
+              "role": "bottom",
+              "color": "blue",
+              "colors": [
+                "blue"
+              ],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01120540",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "literal_product_description",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            },
+            {
+              "image_id": "P01130569",
+              "name": "shoes",
+              "description": "shoes",
+              "type": "shoes",
+              "category": "shoes",
+              "role": "shoes",
+              "color": null,
+              "colors": [],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01130569",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "unknown",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            }
+          ],
+          "all_constraints_verified": false,
+          "explanation": "Compatibilité BO1 : 9.287/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 512 candidats."
+        },
+        {
+          "item_ids": [
+            "P01120535",
+            "P01120541",
+            "P01130569"
+          ],
+          "candidate_id": "b3b6a2367771bd2a",
+          "relevance": 0.9180444224241975,
+          "constraint_report": [
+            {
+              "facet": {
+                "field": "occasion",
+                "values": [
+                  "party"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "Compose deux tenues pour une sortie",
+                "roles": []
+              },
+              "verified": false,
+              "passed": null,
+              "reason": "Search relevance only; no verified product attribute for this criterion."
+            },
+            {
+              "facet": {
+                "field": "gender",
+                "values": [
+                  "men",
+                  "unisex"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "authenticated account.gender",
+                "roles": []
+              },
+              "verified": true,
+              "passed": true,
+              "matching_ids": [
+                "P01120535",
+                "P01120541",
+                "P01130569"
+              ],
+              "evaluated_ids": [
+                "P01120535",
+                "P01120541",
+                "P01130569"
+              ],
+              "reason": "product_metadata"
+            }
+          ],
+          "bo1": {
+            "item_ids": [
+              "P01120535",
+              "P01120541",
+              "P01130569"
+            ],
+            "value": 9.25499153137207,
+            "scale": [
+              0,
+              10
+            ],
+            "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+            "odd_position": 0,
+            "embedding_source": "exported_emb_ft"
+          },
+          "score_details": {
+            "components": {
+              "bo1": 0.925499153137207,
+              "relevance": 0.9180444224241975,
+              "preference": 0.0
+            },
+            "weights": {
+              "bo1": 0.65,
+              "relevance": 0.25,
+              "preference": 0.1
+            },
+            "contributions": {
+              "bo1": 0.6015744495391846,
+              "relevance": 0.22951110560604937,
+              "preference": 0.0
+            },
+            "total": 0.831085555145234,
+            "without_preferences": 0.9234283946058155,
+            "preferences": [],
+            "rank_with_preferences": 2,
+            "rank_without_preferences": 2,
+            "rank_pool_size": 512
+          },
+          "items": [
+            {
+              "image_id": "P01120535",
+              "name": "blue denim shirt",
+              "description": "blue denim shirt",
+              "type": "blue denim shirt",
+              "category": "top",
+              "role": "top",
+              "color": "blue",
+              "colors": [
+                "blue"
+              ],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01120535",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "literal_product_description",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            },
+            {
+              "image_id": "P01120541",
+              "name": "black straight jeans",
+              "description": "black straight jeans",
+              "type": "black straight jeans",
+              "category": "bottom",
+              "role": "bottom",
+              "color": "black",
+              "colors": [
+                "black"
+              ],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01120541",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "literal_product_description",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            },
+            {
+              "image_id": "P01130569",
+              "name": "shoes",
+              "description": "shoes",
+              "type": "shoes",
+              "category": "shoes",
+              "role": "shoes",
+              "color": null,
+              "colors": [],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01130569",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "unknown",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            }
+          ],
+          "all_constraints_verified": false,
+          "explanation": "Compatibilité BO1 : 9.255/10 sur les pièces affichées. Rang avec préférences : 2; sans préférences : 2 sur les mêmes 512 candidats."
+        }
+      ],
+      "comparison": null,
+      "limits": [
+        "Assemblage borné BO5 et score BO1 ; la complétion entraînée reste un outil séparé.",
+        "Score appris de compatibilité, pas une note esthétique humaine.",
+        "Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.",
+        "Genre, prix et palette complète inconnus ne passent pas un filtre strict."
+      ],
+      "diagnostics": {
+        "plan": {
+          "action": "compose",
+          "reuse_previous": false,
+          "reference_quote": "",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "occasion",
+              "values": [
+                "party"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "Compose deux tenues pour une sortie",
+              "roles": []
+            },
+            {
+              "field": "count",
+              "values": [
+                "2"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "Compose deux tenues pour une sortie",
+              "roles": []
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "",
+          "target_quote": "",
+          "clarification": ""
+        },
+        "original_message": "Compose deux tenues pour une sortie",
+        "parser": {
+          "loaded": false,
+          "configured": true,
+          "attempted": false,
+          "error": null,
+          "model": "Qwen/Qwen3-1.7B",
+          "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+          "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+          "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+          "selected_checkpoint": "checkpoint-400",
+          "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+          "precision": "nf4",
+          "reviewer": null,
+          "writer": "deterministic evidence templates",
+          "fallback": null,
+          "postprocessing": "grounded-request-v3 (count aliases, scenario slots, typed replacements, audited edits)",
+          "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+          "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle."
+        },
+        "parsing": {},
+        "semantic_audit": "Conservative deterministic guards; no independent semantic oracle.",
+        "account_context": {
+          "gender": "men",
+          "source": "authenticated_session"
+        },
+        "assembly": {
+          "method": "BO5 bounded assembly; not BO1 MiniGPT",
+          "eligible_products": 238,
+          "source_products": 653,
+          "examined": 512,
+          "scored": 512,
+          "rejections": {},
+          "exhaustive": false,
+          "role_pool_sizes": {
+            "top": 8,
+            "bottom": 8,
+            "onepiece": 0,
+            "shoes": 8,
+            "outerwear": 8,
+            "layer": 0,
+            "bag": 8,
+            "accessory": 7,
+            "unknown": 0
+          },
+          "original_message_preserved": true
+        },
+        "active_spec": {
+          "query": "complete outfit. Compose deux tenues pour une sortie. occasion: party. account clothing gender: men",
+          "facets": [
+            {
+              "field": "occasion",
+              "values": [
+                "party"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "Compose deux tenues pour une sortie",
+              "roles": []
+            },
+            {
+              "field": "count",
+              "values": [
+                "2"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "Compose deux tenues pour une sortie",
+              "roles": []
+            },
+            {
+              "field": "gender",
+              "values": [
+                "men",
+                "unisex"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "authenticated account.gender",
+              "roles": []
+            }
+          ],
+          "scope": "catalog",
+          "top_n": 2,
+          "budget": null,
+          "currency": null,
+          "inclusive": true
+        }
+      }
+    }
+  },
+  {
+    "message": "je veux une tenue pour diner",
+    "response": {
+      "status": "results_with_limits",
+      "message": "Tenues assemblées à partir des articles locaux et notées par BO1.",
+      "preference_coverage": [],
+      "results": [
+        {
+          "item_ids": [
+            "P01120535",
+            "P01120540",
+            "P01130569"
+          ],
+          "candidate_id": "b5ecde606276c270",
+          "relevance": 0.921907796816389,
+          "constraint_report": [
+            {
+              "facet": {
+                "field": "occasion",
+                "values": [
+                  "dinner"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "je veux une tenue pour diner",
+                "roles": []
+              },
+              "verified": false,
+              "passed": null,
+              "reason": "Search relevance only; no verified product attribute for this criterion."
+            },
+            {
+              "facet": {
+                "field": "gender",
+                "values": [
+                  "men",
+                  "unisex"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "authenticated account.gender",
+                "roles": []
+              },
+              "verified": true,
+              "passed": true,
+              "matching_ids": [
+                "P01120535",
+                "P01120540",
+                "P01130569"
+              ],
+              "evaluated_ids": [
+                "P01120535",
+                "P01120540",
+                "P01130569"
+              ],
+              "reason": "product_metadata"
+            }
+          ],
+          "bo1": {
+            "item_ids": [
+              "P01120535",
+              "P01120540",
+              "P01130569"
+            ],
+            "value": 9.28738784790039,
+            "scale": [
+              0,
+              10
+            ],
+            "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+            "odd_position": 0,
+            "embedding_source": "exported_emb_ft"
+          },
+          "score_details": {
+            "components": {
+              "bo1": 0.928738784790039,
+              "relevance": 0.921907796816389,
+              "preference": 0.0
+            },
+            "weights": {
+              "bo1": 0.65,
+              "relevance": 0.25,
+              "preference": 0.1
+            },
+            "contributions": {
+              "bo1": 0.6036802101135254,
+              "relevance": 0.23047694920409725,
+              "preference": 0.0
+            },
+            "total": 0.8341571593176226,
+            "without_preferences": 0.9268412881306918,
+            "preferences": [],
+            "rank_with_preferences": 1,
+            "rank_without_preferences": 1,
+            "rank_pool_size": 512
+          },
+          "items": [
+            {
+              "image_id": "P01120535",
+              "name": "blue denim shirt",
+              "description": "blue denim shirt",
+              "type": "blue denim shirt",
+              "category": "top",
+              "role": "top",
+              "color": "blue",
+              "colors": [
+                "blue"
+              ],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01120535",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "literal_product_description",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            },
+            {
+              "image_id": "P01120540",
+              "name": "blue straight jeans",
+              "description": "blue straight jeans",
+              "type": "blue straight jeans",
+              "category": "bottom",
+              "role": "bottom",
+              "color": "blue",
+              "colors": [
+                "blue"
+              ],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01120540",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "literal_product_description",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            },
+            {
+              "image_id": "P01130569",
+              "name": "shoes",
+              "description": "shoes",
+              "type": "shoes",
+              "category": "shoes",
+              "role": "shoes",
+              "color": null,
+              "colors": [],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01130569",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "unknown",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            }
+          ],
+          "all_constraints_verified": false,
+          "explanation": "Compatibilité BO1 : 9.287/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 512 candidats."
+        }
+      ],
+      "comparison": null,
+      "limits": [
+        "Assemblage borné BO5 et score BO1 ; la complétion entraînée reste un outil séparé.",
+        "Score appris de compatibilité, pas une note esthétique humaine.",
+        "Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.",
+        "Genre, prix et palette complète inconnus ne passent pas un filtre strict."
+      ],
+      "diagnostics": {
+        "plan": {
+          "action": "compose",
+          "reuse_previous": false,
+          "reference_quote": "",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "occasion",
+              "values": [
+                "dinner"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "je veux une tenue pour diner",
+              "roles": []
+            },
+            {
+              "field": "count",
+              "values": [
+                "1"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "je veux une tenue pour diner",
+              "roles": []
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "",
+          "target_quote": "",
+          "clarification": ""
+        },
+        "original_message": "je veux une tenue pour diner",
+        "parser": {
+          "loaded": false,
+          "configured": true,
+          "attempted": false,
+          "error": null,
+          "model": "Qwen/Qwen3-1.7B",
+          "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+          "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+          "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+          "selected_checkpoint": "checkpoint-400",
+          "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+          "precision": "nf4",
+          "reviewer": null,
+          "writer": "deterministic evidence templates",
+          "fallback": null,
+          "postprocessing": "grounded-request-v3 (count aliases, scenario slots, typed replacements, audited edits)",
+          "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+          "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle."
+        },
+        "parsing": {},
+        "semantic_audit": "Conservative deterministic guards; no independent semantic oracle.",
+        "account_context": {
+          "gender": "men",
+          "source": "authenticated_session"
+        },
+        "assembly": {
+          "method": "BO5 bounded assembly; not BO1 MiniGPT",
+          "eligible_products": 238,
+          "source_products": 653,
+          "examined": 512,
+          "scored": 512,
+          "rejections": {},
+          "exhaustive": false,
+          "role_pool_sizes": {
+            "top": 8,
+            "bottom": 8,
+            "onepiece": 0,
+            "shoes": 8,
+            "outerwear": 8,
+            "layer": 0,
+            "bag": 8,
+            "accessory": 7,
+            "unknown": 0
+          },
+          "original_message_preserved": true
+        },
+        "active_spec": {
+          "query": "complete outfit. je veux une tenue pour diner. occasion: dinner. account clothing gender: men",
+          "facets": [
+            {
+              "field": "occasion",
+              "values": [
+                "dinner"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "je veux une tenue pour diner",
+              "roles": []
+            },
+            {
+              "field": "count",
+              "values": [
+                "1"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "je veux une tenue pour diner",
+              "roles": []
+            },
+            {
+              "field": "gender",
+              "values": [
+                "men",
+                "unisex"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "authenticated account.gender",
+              "roles": []
+            }
+          ],
+          "scope": "catalog",
+          "top_n": 1,
+          "budget": null,
+          "currency": null,
+          "inclusive": true
+        }
+      }
+    }
+  },
+  {
+    "message": "Compose une tenue de sport",
+    "response": {
+      "status": "results_with_limits",
+      "message": "Tenues assemblées à partir des articles locaux et notées par BO1.",
+      "preference_coverage": [],
+      "results": [
+        {
+          "item_ids": [
+            "P01120535",
+            "P01120541",
+            "P01130569"
+          ],
+          "candidate_id": "b3b6a2367771bd2a",
+          "relevance": 0.9216415826046073,
+          "constraint_report": [
+            {
+              "facet": {
+                "field": "occasion",
+                "values": [
+                  "sport"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "Compose une tenue de sport",
+                "roles": []
+              },
+              "verified": false,
+              "passed": null,
+              "reason": "Search relevance only; no verified product attribute for this criterion."
+            },
+            {
+              "facet": {
+                "field": "gender",
+                "values": [
+                  "men",
+                  "unisex"
+                ],
+                "mode": "any",
+                "strength": "must",
+                "quote": "authenticated account.gender",
+                "roles": []
+              },
+              "verified": true,
+              "passed": true,
+              "matching_ids": [
+                "P01120535",
+                "P01120541",
+                "P01130569"
+              ],
+              "evaluated_ids": [
+                "P01120535",
+                "P01120541",
+                "P01130569"
+              ],
+              "reason": "product_metadata"
+            }
+          ],
+          "bo1": {
+            "item_ids": [
+              "P01120535",
+              "P01120541",
+              "P01130569"
+            ],
+            "value": 9.25499153137207,
+            "scale": [
+              0,
+              10
+            ],
+            "model_id": "BO1/OutfitScorer:39efbe093325f1ea",
+            "odd_position": 0,
+            "embedding_source": "exported_emb_ft"
+          },
+          "score_details": {
+            "components": {
+              "bo1": 0.925499153137207,
+              "relevance": 0.9216415826046073,
+              "preference": 0.0
+            },
+            "weights": {
+              "bo1": 0.65,
+              "relevance": 0.25,
+              "preference": 0.1
+            },
+            "contributions": {
+              "bo1": 0.6015744495391846,
+              "relevance": 0.23041039565115182,
+              "preference": 0.0
+            },
+            "total": 0.8319848451903364,
+            "without_preferences": 0.9244276057670404,
+            "preferences": [],
+            "rank_with_preferences": 1,
+            "rank_without_preferences": 1,
+            "rank_pool_size": 512
+          },
+          "items": [
+            {
+              "image_id": "P01120535",
+              "name": "blue denim shirt",
+              "description": "blue denim shirt",
+              "type": "blue denim shirt",
+              "category": "top",
+              "role": "top",
+              "color": "blue",
+              "colors": [
+                "blue"
+              ],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01120535",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "literal_product_description",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            },
+            {
+              "image_id": "P01120541",
+              "name": "black straight jeans",
+              "description": "black straight jeans",
+              "type": "black straight jeans",
+              "category": "bottom",
+              "role": "bottom",
+              "color": "black",
+              "colors": [
+                "black"
+              ],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01120541",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "literal_product_description",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            },
+            {
+              "image_id": "P01130569",
+              "name": "shoes",
+              "description": "shoes",
+              "type": "shoes",
+              "category": "shoes",
+              "role": "shoes",
+              "color": null,
+              "colors": [],
+              "colors_complete": false,
+              "gender": "men",
+              "price": null,
+              "currency": null,
+              "owner": null,
+              "source": "demo_catalog",
+              "image_url": "/api/assistant/images/P01130569",
+              "provenance": {
+                "description": "BO1/catalog.json:desc",
+                "category": "BO1/catalog.json:cat",
+                "colors": "unknown",
+                "gender": "data/catalog_gender.json: team CLIP-derived classification (not user-verified)",
+                "price": "unknown"
+              },
+              "scoreable": true
+            }
+          ],
+          "all_constraints_verified": false,
+          "explanation": "Compatibilité BO1 : 9.255/10 sur les pièces affichées. Rang avec préférences : 1; sans préférences : 1 sur les mêmes 512 candidats."
+        }
+      ],
+      "comparison": null,
+      "limits": [
+        "Assemblage borné BO5 et score BO1 ; la complétion entraînée reste un outil séparé.",
+        "Score appris de compatibilité, pas une note esthétique humaine.",
+        "Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.",
+        "Genre, prix et palette complète inconnus ne passent pas un filtre strict."
+      ],
+      "diagnostics": {
+        "plan": {
+          "action": "compose",
+          "reuse_previous": false,
+          "reference_quote": "",
+          "query_en": "",
+          "facets": [
+            {
+              "field": "occasion",
+              "values": [
+                "sport"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "Compose une tenue de sport",
+              "roles": []
+            },
+            {
+              "field": "count",
+              "values": [
+                "1"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "Compose une tenue de sport",
+              "roles": []
+            }
+          ],
+          "before_facets": [],
+          "selection_number": 1,
+          "target_role": "",
+          "target_quote": "",
+          "clarification": ""
+        },
+        "original_message": "Compose une tenue de sport",
+        "parser": {
+          "loaded": false,
+          "configured": true,
+          "attempted": false,
+          "error": null,
+          "model": "Qwen/Qwen3-1.7B",
+          "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+          "adapter_sha256": "312555f49aa114b85bb4994d79ea941f31e81a8a23448313b7602ea9e784c003",
+          "run_identity": "2ee442336b8e5a841e7f1e7634c20a28a56fd8fd49a75ccb369c52e5f7d79be3",
+          "selected_checkpoint": "checkpoint-400",
+          "adapter_path": "C:\\Users\\GIGABYTE\\Desktop\\DressMe\\bo5\\parser_for_local\\parser_adapter",
+          "precision": "nf4",
+          "reviewer": null,
+          "writer": "deterministic evidence templates",
+          "fallback": null,
+          "postprocessing": "grounded-request-v3 (count aliases, scenario slots, typed replacements, audited edits)",
+          "prompt_sha256": "f82f49e58bfbe7958bb9392823ec0b7050b94bc9ec365e1238d73ce0937385d6",
+          "semantic_validation": "Exact citations and conservative guards; no independent LLM oracle."
+        },
+        "parsing": {},
+        "semantic_audit": "Conservative deterministic guards; no independent semantic oracle.",
+        "account_context": {
+          "gender": "men",
+          "source": "authenticated_session"
+        },
+        "assembly": {
+          "method": "BO5 bounded assembly; not BO1 MiniGPT",
+          "eligible_products": 238,
+          "source_products": 653,
+          "examined": 512,
+          "scored": 512,
+          "rejections": {},
+          "exhaustive": false,
+          "role_pool_sizes": {
+            "top": 8,
+            "bottom": 8,
+            "onepiece": 0,
+            "shoes": 8,
+            "outerwear": 8,
+            "layer": 0,
+            "bag": 8,
+            "accessory": 7,
+            "unknown": 0
+          },
+          "original_message_preserved": true
+        },
+        "active_spec": {
+          "query": "complete outfit. Compose une tenue de sport. occasion: sport. account clothing gender: men",
+          "facets": [
+            {
+              "field": "occasion",
+              "values": [
+                "sport"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "Compose une tenue de sport",
+              "roles": []
+            },
+            {
+              "field": "count",
+              "values": [
+                "1"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "Compose une tenue de sport",
+              "roles": []
+            },
+            {
+              "field": "gender",
+              "values": [
+                "men",
+                "unisex"
+              ],
+              "mode": "any",
+              "strength": "must",
+              "quote": "authenticated account.gender",
+              "roles": []
+            }
+          ],
+          "scope": "catalog",
+          "top_n": 1,
+          "budget": null,
+          "currency": null,
+          "inclusive": true
+        }
+      }
+    }
+  }
+]
