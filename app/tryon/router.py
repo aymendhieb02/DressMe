@@ -29,7 +29,7 @@ from ..storage.cleanup import acknowledge_storage_deletion, record_storage_delet
 from ..storage.local_disk import LocalPrivateStorage
 from ..uploads import normalize_image
 from .adapters import FASHN_ADAPTER, MOCK_ADAPTER, fashn_runtime_problem
-from .deletion import delete_jobs
+from .deletion import delete_jobs, delete_photos
 from .schemas import AvatarPhotoCreate, PersonPhotoView, TryOnCreate, TryOnJobList, TryOnJobView
 
 router = APIRouter(tags=["try-on"])
@@ -48,6 +48,7 @@ def _photo_view(row: PersonPhoto) -> PersonPhotoView:
         height=row.height,
         consent_version=row.consent_version,
         consented_at=row.consented_at,
+        from_avatar=row.from_avatar,
         created_at=row.created_at,
     )
 
@@ -93,7 +94,9 @@ def _deletion_response(cleanup_pending: bool) -> Response:
     return Response(status_code=204)
 
 
-async def _save_person_photo(db: Session, owner: User, data: bytes, width: int, height: int, digest: str) -> PersonPhotoView:
+async def _save_person_photo(
+    db: Session, owner: User, data: bytes, width: int, height: int, digest: str, *, from_avatar: bool = False,
+) -> PersonPhotoView:
     storage = LocalPrivateStorage()
     image_key = await asyncio.to_thread(storage.put, data)
     try:
@@ -105,6 +108,7 @@ async def _save_person_photo(db: Session, owner: User, data: bytes, width: int, 
             height=height,
             consent_version=CONSENT_VERSION,
             consented_at=utcnow(),
+            from_avatar=from_avatar,
         )
         db.add(row)
         db.commit()
@@ -164,7 +168,7 @@ async def create_avatar_person_photo(
     count = db.scalar(select(func.count()).select_from(PersonPhoto).where(PersonPhoto.user_id == owner.id)) or 0
     if count >= get_settings().max_person_photos:
         raise _http_error(429, "person_photo_limit", "Delete a saved person photo before adding another.")
-    return await _save_person_photo(db, owner, data, width, height, digest)
+    return await _save_person_photo(db, owner, data, width, height, digest, from_avatar=True)
 
 
 @router.post("/person-photos", response_model=PersonPhotoView, status_code=201)
@@ -208,15 +212,7 @@ async def delete_person_photo(photo_id: UUID, user: User = Depends(current_user_
     row = db.scalar(select(PersonPhoto).where(PersonPhoto.id == photo_id, PersonPhoto.user_id == user.id))
     if row is None:
         raise _http_error(404, "person_photo_not_found", "Person photo not found.")
-    jobs = db.scalars(select(TryOnJob).where(TryOnJob.person_photo_id == row.id, TryOnJob.user_id == user.id)).all()
-    keys = [row.image_key]
-    for job in jobs:
-        if job.result_key:
-            keys.append(job.result_key)
-            db.add(StorageDeletion(image_key=job.result_key))
-    delete_jobs(db, jobs)
-    db.add(StorageDeletion(image_key=row.image_key))
-    db.delete(row)
+    keys = delete_photos(db, [row])
     db.commit()
     cleanup_pending = await _delete_private_keys(db, keys)
     return _deletion_response(cleanup_pending)

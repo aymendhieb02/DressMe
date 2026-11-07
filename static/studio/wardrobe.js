@@ -1,5 +1,5 @@
-import {state, $, esc, image, node, active, request, message} from './core.js?v=bo7pose2';
-import {uploadPicker, clearUpload} from './upload.js?v=bo7pose2';
+import {state, $, esc, image, node, active, request, message} from './core.js?v=bo7photos1';
+import {uploadPicker, clearUpload} from './upload.js?v=bo7photos1';
 
 const CATEGORY = ['dress', 'jacket', 'jeans', 'shirt', 'shorts', 'skirt', 'sweater', 'sweatshirt', 't-shirt', 'top', 'trousers',
   'blouse', 'cardigan', 'vest', 'pants', 'jumpsuit', 'coat', 'shoes', 'bag', 'accessory'];

@@ -150,6 +150,8 @@
 @media(max-width:760px){.studio-tryon-grid{grid-template-columns:1fr}.studio-job-images{grid-template-columns:1fr 1fr}.studio-job-images figure:last-child{grid-column:1/-1}}
 #studio-render{margin-top:16px}
 .studio-primary-action{min-height:52px;padding-inline:34px;font-size:1.02rem}
+.studio-saved-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;padding:6px 0 14px}
+.studio-saved-photo .studio-muted{margin:0 0 8px}
 .studio-more{margin-top:14px;padding:4px 18px;border:1px solid #cfe6e3;border-radius:16px;background:#fff}
 .studio-more summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
 .studio-more form{padding:6px 0 14px}

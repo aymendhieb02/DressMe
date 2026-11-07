@@ -1,4 +1,4 @@
-import {request as authenticatedRequest, state as authState} from './studio/core.js?v=bo7pose2';
+import {request as authenticatedRequest, state as authState} from './studio/core.js?v=bo7photos1';
 (() => {
   'use strict';
   const q = s => document.querySelector(s);

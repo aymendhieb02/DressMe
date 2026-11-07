@@ -11,6 +11,7 @@ class PersonPhotoView(BaseModel):
     height: int
     consent_version: str
     consented_at: datetime
+    from_avatar: bool
     created_at: datetime
 
 

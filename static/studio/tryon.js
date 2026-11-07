@@ -1,5 +1,5 @@
-import {state, $, esc, active, image, node, request, message} from './core.js?v=bo7pose2';
-import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7pose2';
+import {state, $, esc, active, image, node, request, message} from './core.js?v=bo7photos1';
+import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7photos1';
 
 const isReal = () => state.publicConfig?.vton_mode === 'real';
 const isRemote = () => isReal() && state.publicConfig?.vton_remote === true;
@@ -42,7 +42,7 @@ function consentNote() {
 }
 
 export function tryonContent() {
-  return `<p class="studio-badge">${badge()}</p><p class="studio-muted">Choose who to dress, tick one or more pieces from your wardrobe and send them to the queue.</p><div id="studio-tryon-notice" aria-live="polite"></div><div id="studio-tryon-controls" class="studio-panel"></div><details class="studio-more" id="studio-person-panel"><summary>Add a new person photo</summary><form id="studio-person" class="studio-form">${uploadPicker({key: 'person-photo', name: 'image', title: 'Choose one person photo', accept: 'image/jpeg,image/png,image/webp', note: 'JPEG, PNG or WebP · private storage'})}<label class="studio-consent"><input name="consent" type="checkbox" required> I consent to private processing of this photo for ${consentNote()}.</label><button class="btn ghost" type="submit">Save consented photo</button></form></details>`;
+  return `<p class="studio-badge">${badge()}</p><p class="studio-muted">Choose who to dress, tick one or more pieces from your wardrobe and send them to the queue.</p><div id="studio-tryon-notice" aria-live="polite"></div><div id="studio-tryon-controls" class="studio-panel"></div><details class="studio-more" id="studio-saved-photos" hidden><summary>Saved photos</summary><div class="studio-saved-photos" id="studio-saved-photo-list"></div></details><details class="studio-more" id="studio-person-panel"><summary>Add a new person photo</summary><form id="studio-person" class="studio-form">${uploadPicker({key: 'person-photo', name: 'image', title: 'Choose one person photo', accept: 'image/jpeg,image/png,image/webp', note: 'JPEG, PNG or WebP · private storage'})}<label class="studio-consent"><input name="consent" type="checkbox" required> I consent to private processing of this photo for ${consentNote()}.</label><button class="btn ghost" type="submit">Save consented photo</button></form></details>`;
 }
 
 export function historyContent() {
@@ -56,6 +56,11 @@ function garmentCard(garment, preselected) {
     return `<div class="studio-garment-pick is-blocked">${img}<span>${name}</span><small>Not supported yet</small></div>`;
   }
   return `<label class="studio-garment-pick"><input class="studio-garment-input" type="checkbox" value="${garment.id}" ${garment.id === preselected ? 'checked' : ''} aria-label="Try on ${name}">${img}<span>${name}</span></label>`;
+}
+
+function savedPhotoCard(photo) {
+  const label = `${photo.from_avatar ? 'Avatar image' : 'Saved photo'} · ${localDate(photo.created_at).toLocaleDateString()}`;
+  return `<div class="studio-saved-photo"><img class="studio-person-thumb" src="${image(photo.image_url)}" alt="${esc(label)}"><p class="studio-muted">${esc(label)}</p><button class="btn danger" data-action="delete-photo" data-id="${photo.id}">Delete</button></div>`;
 }
 
 export async function refreshTryon(version = state.renderVersion) {
@@ -96,6 +101,8 @@ export async function refreshTryon(version = state.renderVersion) {
   const target = $('#studio-tryon-controls', node());
   target.innerHTML = `<div class="studio-result-head"><div><p class="studio-eyebrow">Worker status</p><h3>${isReal() ? 'Try-on queue' : 'Mock preview queue'}</h3></div><span class="studio-badge ${runtime.available ? 'is-ready' : 'is-unavailable'}">${runtime.available ? 'Ready' : 'Unavailable'}</span></div><p class="studio-muted">${status}</p>${eligible.length && sources.length ? form : empty}`;
   if (!sources.length) $('#studio-person-panel', node())?.setAttribute('open', '');
+  $('#studio-saved-photos', node())?.toggleAttribute('hidden', !photos.length);
+  $('#studio-saved-photo-list', node()).innerHTML = photos.map(savedPhotoCard).join('');
   await updateSubmitAvailability();
 }
 
@@ -244,6 +251,13 @@ export async function handleTryonAction(action, button, refresh) {
   if (action === 'cancel-job') {
     await request('/try-on/jobs/' + button.dataset.id + '/cancel', {method: 'POST'});
     return refresh('bo7-history');
+  }
+  if (action === 'delete-photo') {
+    if (!confirm('Delete this photo and every try-on made with it? Any queued or running job for it stops too.')) return;
+    await request('/person-photos/' + button.dataset.id, {method: 'DELETE'});
+    await refresh('bo7-tryon');
+    message('Photo and its try-ons deleted.');
+    return;
   }
   if (action === 'delete-job') {
     if (!confirm('Delete this job and its private result?')) return;

@@ -1,10 +1,13 @@
 """The saved avatar image used as the try-on person photo."""
 import io
+from uuid import UUID
 
 from PIL import Image
+from sqlalchemy import select, update
 
 import app.tryon.router as tryon
 from app.avatars import router as avatars
+from app.models import PersonPhoto, StorageDeletion
 from app.storage.local_disk import LocalPrivateStorage
 from tests.test_avatar import _consent, _save, _save_render, _variant
 from tests.test_tryon import _jpeg, _login, _setup_inputs, _upload_person
@@ -165,3 +168,75 @@ def test_queue_position_counts_other_people_without_showing_them(client, origin,
 
     items = client.get("/try-on/jobs").json()["items"]
     assert len(items) == 1 and items[0]["queue_position"] == 1
+
+
+def _files(tmp_path):
+    return {item.name for item in tmp_path.iterdir() if item.is_file()}
+
+
+def _queued_job(client, headers, garment, photo, key):
+    job = _job(client, headers, garment, photo, key)
+    assert job.status_code == 202, job.text
+    return job.json()
+
+
+def test_deleting_the_avatar_deletes_its_photos_and_their_jobs_only(client, origin, monkeypatch, tmp_path):
+    headers, garment, _cookie = _setup_inputs(client, origin, monkeypatch, tmp_path)
+    consent, _avatar, _render = _avatar_with_render(client, headers, monkeypatch, tmp_path)
+    first = _use_avatar(client, headers).json()
+    assert first["from_avatar"] is True
+    first_job = _queued_job(client, headers, garment, first, "avatar-del-0001")
+
+    replaced = _save(client, headers, consent, asset=_variant(), provider_avatar_id="avaturn-avatar-2").json()
+    different = io.BytesIO()
+    Image.new("RGB", (576, 768), (90, 40, 120)).save(different, format="PNG")
+    assert _save_render(client, headers, replaced, png=different.getvalue()).status_code == 200
+    second = _use_avatar(client, headers).json()
+
+    uploaded = _upload_person(client, headers).json()
+    assert uploaded["from_avatar"] is False
+    uploaded_job = _queued_job(client, headers, garment, uploaded, "avatar-del-0002")
+
+    assert client.delete("/avatars/current", headers=headers).status_code == 204
+
+    assert [photo["id"] for photo in client.get("/person-photos").json()] == [uploaded["id"]]
+    assert client.get(first["image_url"]).status_code == 404
+    assert client.get(second["image_url"]).status_code == 404
+    assert client.get(first_job["status_url"]).status_code == 404
+    assert client.get(uploaded_job["status_url"]).status_code == 200
+    assert client.get(uploaded["image_url"]).status_code == 200
+
+
+def test_avatar_delete_finds_a_photo_saved_before_the_marker_existed(client, origin, monkeypatch, tmp_path):
+    headers, _garment, _cookie = _setup_inputs(client, origin, monkeypatch, tmp_path)
+    _avatar_with_render(client, headers, monkeypatch, tmp_path)
+    photo = _use_avatar(client, headers).json()
+    with client.app.state.testing_session_factory() as db:
+        db.execute(update(PersonPhoto).values(from_avatar=False))
+        db.commit()
+    before = _files(tmp_path)
+
+    assert client.delete("/avatars/current", headers=headers).status_code == 204
+
+    assert client.get("/person-photos").json() == []
+    assert client.get(photo["image_url"]).status_code == 404
+    assert len(_files(tmp_path)) < len(before)
+
+
+def test_avatar_delete_queues_photo_cleanup_when_storage_fails(client, origin, monkeypatch, tmp_path):
+    headers, _garment, _cookie = _setup_inputs(client, origin, monkeypatch, tmp_path)
+    _avatar_with_render(client, headers, monkeypatch, tmp_path)
+    photo = _use_avatar(client, headers).json()
+    with client.app.state.testing_session_factory() as db:
+        image_key = db.scalar(select(PersonPhoto.image_key).where(PersonPhoto.id == UUID(photo["id"])))
+
+    def fail_delete(_self, _key):
+        raise OSError("temporary storage failure")
+
+    with monkeypatch.context() as failed_storage:
+        failed_storage.setattr(LocalPrivateStorage, "delete", fail_delete)
+        removed = client.delete("/avatars/current", headers=headers)
+    assert removed.status_code == 202
+    assert client.get("/person-photos").json() == []
+    with client.app.state.testing_session_factory() as db:
+        assert image_key in set(db.scalars(select(StorageDeletion.image_key)).all())

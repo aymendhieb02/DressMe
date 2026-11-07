@@ -1,6 +1,6 @@
-import {state, $, esc, image, node, active, request, message} from './core.js?v=bo7pose2';
-import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7pose2';
-import {captureAvatarRender} from './avatar-render.js?v=bo7pose2';
+import {state, $, esc, image, node, active, request, message} from './core.js?v=bo7photos1';
+import {uploadPicker, validateUpload, clearUpload} from './upload.js?v=bo7photos1';
+import {captureAvatarRender} from './avatar-render.js?v=bo7photos1';
 
 // Images made with an older profile are replaced when the page opens. Matches PROFILE_VERSION on the server.
 const AVATAR_IMAGE_VERSION = 2;
@@ -187,7 +187,7 @@ export async function saveAvatarImport(form, refresh) {
 
 export async function handleAvatarAction(action, button, context) {
   if (action === 'delete-avatar') {
-    if (!confirm('Delete the saved avatar and its private file?')) return;
+    if (!confirm('Delete your avatar, its private files, its try-on images and every try-on made with them?')) return;
     await request('/avatars/current', {method: 'DELETE'});
     await context.refresh('bo7-avatar');
     return;

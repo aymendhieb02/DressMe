@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 import uuid
 
-from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, JSON, LargeBinary, String, UniqueConstraint, Uuid, func
+from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, JSON, LargeBinary, String, UniqueConstraint, Uuid, false, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -193,6 +193,7 @@ class PersonPhoto(Base):
     height: Mapped[int] = mapped_column(Integer, nullable=False)
     consent_version: Mapped[str] = mapped_column(String(64), nullable=False)
     consented_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    from_avatar: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default=false())
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
 
