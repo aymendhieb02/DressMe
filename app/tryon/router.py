@@ -1,7 +1,10 @@
 import asyncio
 import hashlib
 import json
+import os
+import re
 from datetime import datetime, timezone
+from pathlib import Path
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, Response, UploadFile
@@ -14,6 +17,8 @@ from ..auth.dependencies import current_user, current_user_csrf
 from ..config import get_settings
 from ..database import get_db
 from ..models import (
+    Avatar,
+    AvatarRender,
     Garment,
     PendingUpload,
     PersonPhoto,
@@ -26,11 +31,18 @@ from ..models import (
 from ..storage.cleanup import acknowledge_storage_deletion, record_storage_deletion_failure
 from ..storage.local_disk import LocalPrivateStorage
 from ..uploads import normalize_image
-from .deletion import delete_jobs
-from .schemas import PersonPhotoView, TryOnCreate, TryOnJobList, TryOnJobView
+from .adapters import FASHN_ADAPTER, MOCK_ADAPTER, fashn_runtime_problem
+from .deletion import delete_jobs, delete_photos
+from .schemas import (
+    AvatarPhotoCreate, PersonPhotoView, TryOnCreate, TryOnJobList, TryOnJobView,
+    TryOnOotdSequenceCreate, TryOnSequenceCreate,
+)
+from .workflow import MAX_SEQUENCE_GARMENTS, SEQUENTIAL_WORKFLOW
 
 router = APIRouter(tags=["try-on"])
 CONSENT_VERSION = "person-photo-use-v1"
+DATA_DIR = Path(os.environ.get("DRESSME_DATA", Path(__file__).resolve().parents[2] / "data")).resolve()
+OOTD_VTON_CATEGORIES = {"top": "tops", "bottom": "bottoms", "outer": "tops", "dress": "one-pieces"}
 
 
 def _http_error(status: int, code: str, message: str) -> HTTPException:
@@ -45,17 +57,47 @@ def _photo_view(row: PersonPhoto) -> PersonPhotoView:
         height=row.height,
         consent_version=row.consent_version,
         consented_at=row.consented_at,
+        from_avatar=row.from_avatar,
         created_at=row.created_at,
     )
 
 
-def _job_view(row: TryOnJob, replayed: bool = False) -> TryOnJobView:
+def _job_view(row: TryOnJob, replayed: bool = False, queue_position: int | None = None) -> TryOnJobView:
+    snapshot = row.input_snapshot
+    source_garments = snapshot.get("garments") or ([{
+        "garment_id": str(row.garment_id),
+        "garment_category": snapshot.get("garment_category"),
+        "name": None,
+    }] if row.garment_id else [])
+    garments = []
+    for item in source_garments:
+        identity = item.get("garment_id")
+        if identity is None:
+            identity = item.get("catalog_id")
+        if identity is None:
+            identity = item.get("id")
+        image_url = item.get("image_url")
+        if image_url is None and identity is not None:
+            image_url = f"/garments/{identity}/image"
+        garments.append({
+            "id": str(identity),
+            "image_url": image_url,
+            "category": item.get("garment_category") or item.get("category"),
+            "name": item.get("name"),
+        })
     return TryOnJobView(
         id=row.id,
         state=row.state,
         mode=row.mode,
         status_url=f"/try-on/jobs/{row.id}",
         result_url=f"/try-on/jobs/{row.id}/result" if row.state == "succeeded" and row.result_key else None,
+        person_image_url=f"/person-photos/{row.person_photo_id}/image",
+        person_image_label=snapshot.get("person_image_label", "Person"),
+        garment_image_url=garments[0]["image_url"] if garments else None,
+        garments=garments,
+        workflow=snapshot.get("workflow", "single"),
+        garment_category=snapshot.get("garment_category"),
+        queue_position=queue_position,
         error_code=row.error_code,
         cancellation_requested=row.cancellation_requested_at is not None,
         settings_snapshot=row.settings_snapshot,
@@ -86,6 +128,83 @@ def _deletion_response(cleanup_pending: bool) -> Response:
     return Response(status_code=204)
 
 
+async def _save_person_photo(
+    db: Session, owner: User, data: bytes, width: int, height: int, digest: str, *, from_avatar: bool = False,
+) -> PersonPhotoView:
+    storage = LocalPrivateStorage()
+    image_key = await asyncio.to_thread(storage.put, data)
+    try:
+        row = PersonPhoto(
+            user_id=owner.id,
+            image_key=image_key,
+            image_sha256=digest,
+            width=width,
+            height=height,
+            consent_version=CONSENT_VERSION,
+            consented_at=utcnow(),
+            from_avatar=from_avatar,
+        )
+        db.add(row)
+        db.commit()
+        db.refresh(row)
+        return _photo_view(row)
+    except Exception:
+        db.rollback()
+        try:
+            await asyncio.to_thread(storage.delete, image_key)
+        except Exception:
+            pass
+        raise
+
+
+def _current_avatar_image(db: Session, user: User) -> tuple[bytes, int, int, str] | None:
+    """The current avatar's 2D render, normalized exactly like an uploaded person photo."""
+    avatar = db.scalar(select(Avatar).where(Avatar.user_id == user.id))
+    if avatar is None:
+        return None
+    render = db.scalar(select(AvatarRender).where(
+        AvatarRender.user_id == user.id,
+        AvatarRender.avatar_id == avatar.id,
+        AvatarRender.source_avatar_version == avatar.version,
+        AvatarRender.source_avatar_sha256 == avatar.asset_sha256,
+    ))
+    return normalize_image(LocalPrivateStorage().read(render.image_key)) if render is not None else None
+
+
+def _saved_photo(db: Session, user: User, digest: str) -> PersonPhoto | None:
+    return db.scalar(select(PersonPhoto).where(PersonPhoto.user_id == user.id, PersonPhoto.image_sha256 == digest))
+
+
+@router.get("/person-photos/from-avatar", response_model=PersonPhotoView | None)
+def get_avatar_person_photo(user: User = Depends(current_user), db: Session = Depends(get_db)):
+    """The person photo already made from the current avatar image, if there is one."""
+    current = _current_avatar_image(db, user)
+    row = _saved_photo(db, user, current[3]) if current is not None else None
+    return _photo_view(row) if row is not None else None
+
+
+@router.post("/person-photos/from-avatar", response_model=PersonPhotoView, status_code=201)
+async def create_avatar_person_photo(
+    body: AvatarPhotoCreate,
+    user: User = Depends(current_user_csrf),
+    db: Session = Depends(get_db),
+):
+    if body.consent is not True:
+        raise _http_error(422, "photo_consent_required", "Confirm the photo-use consent before using your avatar.")
+    owner = db.scalar(select(User).where(User.id == user.id).with_for_update())
+    current = _current_avatar_image(db, owner)
+    if current is None:
+        raise _http_error(404, "avatar_render_not_found", "Create your avatar image before using it for try-on.")
+    data, width, height, digest = current
+    existing = _saved_photo(db, owner, digest)
+    if existing is not None:
+        return _photo_view(existing)
+    count = db.scalar(select(func.count()).select_from(PersonPhoto).where(PersonPhoto.user_id == owner.id)) or 0
+    if count >= get_settings().max_person_photos:
+        raise _http_error(429, "person_photo_limit", "Delete a saved person photo before adding another.")
+    return await _save_person_photo(db, owner, data, width, height, digest, from_avatar=True)
+
+
 @router.post("/person-photos", response_model=PersonPhotoView, status_code=201)
 async def upload_person_photo(
     image: UploadFile = File(...),
@@ -102,29 +221,7 @@ async def upload_person_photo(
     if image.content_type not in {"image/jpeg", "image/png", "image/webp"}:
         raise _http_error(415, "unsupported_media_type", "Upload a JPEG, PNG, or WEBP image.")
     data, width, height, digest = normalize_image(await image.read(get_settings().max_upload_bytes + 1))
-    storage = LocalPrivateStorage()
-    image_key = await asyncio.to_thread(storage.put, data)
-    try:
-        row = PersonPhoto(
-            user_id=owner.id,
-            image_key=image_key,
-            image_sha256=digest,
-            width=width,
-            height=height,
-            consent_version=CONSENT_VERSION,
-            consented_at=utcnow(),
-        )
-        db.add(row)
-        db.commit()
-        db.refresh(row)
-        return _photo_view(row)
-    except Exception:
-        db.rollback()
-        try:
-            await asyncio.to_thread(storage.delete, image_key)
-        except Exception:
-            pass
-        raise
+    return await _save_person_photo(db, owner, data, width, height, digest)
 
 
 @router.get("/person-photos", response_model=list[PersonPhotoView])
@@ -149,15 +246,7 @@ async def delete_person_photo(photo_id: UUID, user: User = Depends(current_user_
     row = db.scalar(select(PersonPhoto).where(PersonPhoto.id == photo_id, PersonPhoto.user_id == user.id))
     if row is None:
         raise _http_error(404, "person_photo_not_found", "Person photo not found.")
-    jobs = db.scalars(select(TryOnJob).where(TryOnJob.person_photo_id == row.id, TryOnJob.user_id == user.id)).all()
-    keys = [row.image_key]
-    for job in jobs:
-        if job.result_key:
-            keys.append(job.result_key)
-            db.add(StorageDeletion(image_key=job.result_key))
-    delete_jobs(db, jobs)
-    db.add(StorageDeletion(image_key=row.image_key))
-    db.delete(row)
+    keys = delete_photos(db, [row])
     db.commit()
     cleanup_pending = await _delete_private_keys(db, keys)
     return _deletion_response(cleanup_pending)
@@ -171,13 +260,15 @@ def create_tryon_job(
     idempotency_key: str = Header(alias="Idempotency-Key", min_length=8, max_length=128),
 ):
     settings = get_settings()
-    if settings.vton_mode == "real":
+    if settings.vton_mode == "real" and fashn_runtime_problem(settings):
         raise _http_error(503, "real_vton_unavailable", "Real try-on is not enabled on this runtime; no mock result was substituted.")
-    if settings.vton_mode != "mock":
+    if settings.vton_mode not in {"mock", "real"}:
         raise _http_error(503, "vton_mode_unavailable", "Try-on mode is not available.")
+    mode = settings.vton_mode
+    adapter = FASHN_ADAPTER if mode == "real" else MOCK_ADAPTER
 
     key_hash = hashlib.sha256(idempotency_key.encode("utf-8")).hexdigest()
-    fingerprint_body = {"garment_id": str(body.garment_id), "person_photo_id": str(body.person_photo_id), "mode": "mock"}
+    fingerprint_body = {"garment_id": str(body.garment_id), "person_photo_id": str(body.person_photo_id), "mode": mode}
     fingerprint = hashlib.sha256(json.dumps(fingerprint_body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     existing = db.scalar(select(TryOnJob).where(TryOnJob.user_id == user.id, TryOnJob.idempotency_key_hash == key_hash))
     if existing is not None:
@@ -216,9 +307,9 @@ def create_tryon_job(
         person_photo_id=photo.id,
         idempotency_key_hash=key_hash,
         request_fingerprint=fingerprint,
-        mode="mock",
+        mode=mode,
         state="queued",
-        settings_snapshot={"mode": "mock", "adapter": "mock-preview-v1"},
+        settings_snapshot={"mode": mode, "adapter": adapter},
         input_snapshot={
             "garment_revision": garment.updated_at.isoformat(),
             "garment_category": garment.category,
@@ -226,6 +317,247 @@ def create_tryon_job(
             "candidate_vton_category": garment.vton_eligibility["candidate_category"],
             "garment_image_key": garment.image_key,
             "garment_image_sha256": db.scalar(select(PendingUpload.image_sha256).where(PendingUpload.id == garment.pending_upload_id)),
+            "person_photo_image_key": photo.image_key,
+            "person_photo_sha256": photo.image_sha256,
+            "consent_version": photo.consent_version,
+        },
+    )
+    db.add(job)
+    try:
+        db.flush()
+        db.add(TryOnJobOutbox(job_id=job.id))
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        existing = db.scalar(select(TryOnJob).where(TryOnJob.user_id == user.id, TryOnJob.idempotency_key_hash == key_hash))
+        if existing is not None and existing.request_fingerprint == fingerprint:
+            return _job_view(existing, replayed=True)
+        if existing is not None:
+            raise _http_error(409, "idempotency_conflict", "This idempotency key was already used for a different request.") from None
+        raise _http_error(409, "job_conflict", "The job could not be created safely; retry with a new idempotency key.") from None
+    db.refresh(job)
+    return _job_view(job)
+
+
+@router.post("/try-on/sequences", response_model=TryOnJobView, status_code=202)
+def create_tryon_sequence(
+    body: TryOnSequenceCreate,
+    user: User = Depends(current_user_csrf),
+    db: Session = Depends(get_db),
+    idempotency_key: str = Header(alias="Idempotency-Key", min_length=8, max_length=128),
+):
+    settings = get_settings()
+    if settings.vton_mode != "real":
+        raise _http_error(503, "sequence_requires_real", "Sequential multi-garment try-on requires Real mode.")
+    if fashn_runtime_problem(settings):
+        raise _http_error(503, "real_vton_unavailable", "Real try-on is not enabled on this runtime; no mock result was substituted.")
+    if len(body.garment_ids) > MAX_SEQUENCE_GARMENTS or len(set(body.garment_ids)) != len(body.garment_ids):
+        raise _http_error(422, "invalid_garment_sequence", f"Choose 2 to {MAX_SEQUENCE_GARMENTS} different garments in order.")
+
+    key_hash = hashlib.sha256(idempotency_key.encode("utf-8")).hexdigest()
+    fingerprint_body = {
+        "workflow": SEQUENTIAL_WORKFLOW,
+        "garment_ids": [str(garment_id) for garment_id in body.garment_ids],
+        "person_photo_id": str(body.person_photo_id),
+        "mode": "real",
+    }
+    fingerprint = hashlib.sha256(json.dumps(fingerprint_body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    existing = db.scalar(select(TryOnJob).where(TryOnJob.user_id == user.id, TryOnJob.idempotency_key_hash == key_hash))
+    if existing is not None:
+        if existing.request_fingerprint != fingerprint:
+            raise _http_error(409, "idempotency_conflict", "This idempotency key was already used for a different request.")
+        return _job_view(existing, replayed=True)
+
+    owner = db.scalar(select(User).where(User.id == user.id).with_for_update())
+    rows = db.scalars(
+        select(Garment).where(Garment.id.in_(body.garment_ids), Garment.user_id == owner.id).with_for_update()
+    ).all()
+    by_id = {row.id: row for row in rows}
+    if len(by_id) != len(body.garment_ids):
+        raise _http_error(404, "garment_not_found", "One or more selected garments were not found.")
+    ordered = [by_id[garment_id] for garment_id in body.garment_ids]
+    photo = db.scalar(select(PersonPhoto).where(PersonPhoto.id == body.person_photo_id, PersonPhoto.user_id == owner.id))
+    if photo is None:
+        raise _http_error(404, "person_photo_not_found", "Person photo not found.")
+    if photo.consent_version != CONSENT_VERSION:
+        raise _http_error(422, "photo_consent_invalid", "A current photo-use consent is required.")
+    for garment in ordered:
+        if not garment.vton_eligibility.get("candidate_category"):
+            raise _http_error(422, "unsupported_garment", "Every garment needs a supported try-on category mapping.")
+
+    outstanding = db.scalar(
+        select(func.count()).select_from(TryOnJob).where(
+            TryOnJob.user_id == owner.id, TryOnJob.state.in_(["queued", "running"])
+        )
+    ) or 0
+    if outstanding >= settings.max_outstanding_jobs:
+        raise _http_error(429, "user_job_limit", "Wait for or cancel an existing try-on before submitting another.")
+    global_outstanding = db.scalar(
+        select(func.count()).select_from(TryOnJob).where(TryOnJob.state.in_(["queued", "running"]))
+    ) or 0
+    if global_outstanding >= settings.max_queued_jobs:
+        raise _http_error(429, "queue_full", "The try-on queue is full. Please try again later.")
+
+    snapshots = []
+    for garment in ordered:
+        snapshots.append({
+            "garment_id": str(garment.id),
+            "garment_revision": garment.updated_at.isoformat(),
+            "garment_category": garment.category,
+            "garment_photo_type": garment.garment_photo_type,
+            "candidate_vton_category": garment.vton_eligibility["candidate_category"],
+            "garment_image_key": garment.image_key,
+            "garment_image_sha256": db.scalar(
+                select(PendingUpload.image_sha256).where(PendingUpload.id == garment.pending_upload_id)
+            ),
+            "name": garment.name,
+        })
+    first = snapshots[0]
+    job = TryOnJob(
+        user_id=owner.id,
+        garment_id=ordered[0].id,
+        person_photo_id=photo.id,
+        idempotency_key_hash=key_hash,
+        request_fingerprint=fingerprint,
+        mode="real",
+        state="queued",
+        settings_snapshot={
+            "mode": "real", "adapter": FASHN_ADAPTER,
+            "workflow": SEQUENTIAL_WORKFLOW, "step_count": len(ordered),
+        },
+        input_snapshot={
+            "workflow": SEQUENTIAL_WORKFLOW,
+            "person_image_label": "Avatar" if photo.from_avatar else "Saved photo",
+            "garments": snapshots,
+            **{key: first[key] for key in (
+                "garment_revision", "garment_category", "garment_photo_type",
+                "candidate_vton_category", "garment_image_key", "garment_image_sha256",
+            )},
+            "person_photo_image_key": photo.image_key,
+            "person_photo_sha256": photo.image_sha256,
+            "consent_version": photo.consent_version,
+        },
+    )
+    db.add(job)
+    try:
+        db.flush()
+        db.add(TryOnJobOutbox(job_id=job.id))
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        existing = db.scalar(select(TryOnJob).where(TryOnJob.user_id == user.id, TryOnJob.idempotency_key_hash == key_hash))
+        if existing is not None and existing.request_fingerprint == fingerprint:
+            return _job_view(existing, replayed=True)
+        if existing is not None:
+            raise _http_error(409, "idempotency_conflict", "This idempotency key was already used for a different request.") from None
+        raise _http_error(409, "job_conflict", "The job could not be created safely; retry with a new idempotency key.") from None
+    db.refresh(job)
+    return _job_view(job)
+
+
+@router.post("/try-on/ootd-sequences", response_model=TryOnJobView, status_code=202)
+def create_ootd_tryon_sequence(
+    body: TryOnOotdSequenceCreate,
+    user: User = Depends(current_user_csrf),
+    db: Session = Depends(get_db),
+    idempotency_key: str = Header(alias="Idempotency-Key", min_length=8, max_length=128),
+):
+    settings = get_settings()
+    if settings.vton_mode != "real":
+        raise _http_error(503, "sequence_requires_real", "Sequential multi-garment try-on requires Real mode.")
+    if fashn_runtime_problem(settings):
+        raise _http_error(503, "real_vton_unavailable", "Real try-on is not enabled on this runtime; no mock result was substituted.")
+    if len(set(body.catalog_ids)) != len(body.catalog_ids):
+        raise _http_error(422, "invalid_garment_sequence", "Choose different outfit pieces in order.")
+
+    key_hash = hashlib.sha256(idempotency_key.encode("utf-8")).hexdigest()
+    fingerprint_body = {
+        "workflow": SEQUENTIAL_WORKFLOW,
+        "source": "ootd-catalog",
+        "catalog_ids": body.catalog_ids,
+        "person_photo_id": str(body.person_photo_id),
+        "mode": "real",
+    }
+    fingerprint = hashlib.sha256(json.dumps(fingerprint_body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    existing = db.scalar(select(TryOnJob).where(TryOnJob.user_id == user.id, TryOnJob.idempotency_key_hash == key_hash))
+    if existing is not None:
+        if existing.request_fingerprint != fingerprint:
+            raise _http_error(409, "idempotency_conflict", "This idempotency key was already used for a different request.")
+        return _job_view(existing, replayed=True)
+
+    try:
+        catalog = json.loads((DATA_DIR / "catalog.json").read_text(encoding="utf-8"))
+        codes, descriptions, categories = catalog["codes"], catalog["desc"], catalog["cat"]
+    except (OSError, ValueError, KeyError, TypeError):
+        raise _http_error(503, "catalog_unavailable", "The Outfit of the Day catalog is unavailable.") from None
+    if not (len(codes) == len(descriptions) == len(categories)):
+        raise _http_error(503, "catalog_unavailable", "The Outfit of the Day catalog is inconsistent.")
+
+    snapshots = []
+    for catalog_id in body.catalog_ids:
+        if catalog_id < 0 or catalog_id >= len(codes):
+            raise _http_error(422, "invalid_catalog_garment", "One of the selected outfit pieces is unavailable.")
+        category = str(categories[catalog_id])
+        candidate = OOTD_VTON_CATEGORIES.get(category)
+        code = str(codes[catalog_id])
+        if candidate is None or not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", code):
+            raise _http_error(422, "unsupported_garment", "Only tops, bottoms, outerwear, and dresses can be applied here.")
+        image_path = (DATA_DIR / "img" / f"{code}.jpg").resolve()
+        if DATA_DIR not in image_path.parents or not image_path.is_file():
+            raise _http_error(422, "invalid_catalog_garment", "One of the selected outfit images is unavailable.")
+        snapshots.append({
+            "source": "catalog",
+            "catalog_id": catalog_id,
+            "catalog_code": code,
+            "garment_category": category,
+            "garment_photo_type": "flat-lay",
+            "candidate_vton_category": candidate,
+            "image_url": f"/img/{code}.jpg",
+            "name": str(descriptions[catalog_id]),
+        })
+
+    owner = db.scalar(select(User).where(User.id == user.id).with_for_update())
+    photo = db.scalar(select(PersonPhoto).where(PersonPhoto.id == body.person_photo_id, PersonPhoto.user_id == owner.id))
+    if photo is None:
+        raise _http_error(404, "person_photo_not_found", "Person photo not found.")
+    if photo.consent_version != CONSENT_VERSION:
+        raise _http_error(422, "photo_consent_invalid", "A current photo-use consent is required.")
+
+    outstanding = db.scalar(
+        select(func.count()).select_from(TryOnJob).where(
+            TryOnJob.user_id == owner.id, TryOnJob.state.in_(["queued", "running"])
+        )
+    ) or 0
+    if outstanding >= settings.max_outstanding_jobs:
+        raise _http_error(429, "user_job_limit", "Wait for or cancel an existing try-on before submitting another.")
+    global_outstanding = db.scalar(
+        select(func.count()).select_from(TryOnJob).where(TryOnJob.state.in_(["queued", "running"]))
+    ) or 0
+    if global_outstanding >= settings.max_queued_jobs:
+        raise _http_error(429, "queue_full", "The try-on queue is full. Please try again later.")
+
+    first = snapshots[0]
+    job = TryOnJob(
+        user_id=owner.id,
+        garment_id=None,
+        person_photo_id=photo.id,
+        idempotency_key_hash=key_hash,
+        request_fingerprint=fingerprint,
+        mode="real",
+        state="queued",
+        settings_snapshot={
+            "mode": "real", "adapter": FASHN_ADAPTER,
+            "workflow": SEQUENTIAL_WORKFLOW, "step_count": len(snapshots),
+        },
+        input_snapshot={
+            "source": "ootd-catalog",
+            "workflow": SEQUENTIAL_WORKFLOW,
+            "remove_background": True,
+            "person_image_label": "Avatar" if photo.from_avatar else "Saved photo",
+            "garments": snapshots,
+            "garment_category": first["garment_category"],
+            "garment_photo_type": first["garment_photo_type"],
+            "candidate_vton_category": first["candidate_vton_category"],
             "person_photo_image_key": photo.image_key,
             "person_photo_sha256": photo.image_sha256,
             "consent_version": photo.consent_version,
@@ -258,7 +590,12 @@ def list_tryon_jobs(
     rows = db.scalars(
         select(TryOnJob).where(TryOnJob.user_id == user.id).order_by(TryOnJob.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
     ).all()
-    return TryOnJobList(items=[_job_view(row) for row in rows])
+    # Only the count of jobs ahead is shown, so another user's job is never identified.
+    waiting = db.scalars(
+        select(TryOnJob.id).where(TryOnJob.state.in_(["queued", "running"])).order_by(TryOnJob.created_at)
+    ).all()
+    ahead = {job_id: index for index, job_id in enumerate(waiting)}
+    return TryOnJobList(items=[_job_view(row, queue_position=ahead.get(row.id) if row.state == "queued" else None) for row in rows])
 
 
 @router.get("/try-on/jobs/{job_id}", response_model=TryOnJobView)

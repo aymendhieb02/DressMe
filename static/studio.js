@@ -1,27 +1,27 @@
 /* Studio shell and event routing. Feature modules live in /static/studio/. */
 import {
-  PAGES, state, $, esc, active, node, message, request, loadPublicConfig,
+  PAGES, state, $, esc, image, active, node, message, request, loadPublicConfig,
   loadSession, clearPrivateState, clearLoadedPrivateData, studioPage,
   refreshSession,
-} from './studio/core.js?v=integrated-13';
+} from './studio/core.js?v=bo7ootd9';
 window.refreshDressMe = refreshSession;
-import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=integrated-13';
+import {authForm, handleAuthSubmit, handleAuthView, handlePasswordVisibility, safeDestination} from './studio/auth.js?v=bo7ootd9';
 import {
-  wardrobeContent, addGarmentContent, renderWardrobe, review, detail,
+  wardrobeContent, addGarmentContent, renderWardrobe, review, detail, NO_SLEEVES,
   syncSuggestionState, chooseSuggestion, handleConfirmedChange, generateDescription,
   saveReview, saveEdit, regenerateDetailDescription,
-} from './studio/wardrobe.js?v=integrated-13';
+} from './studio/wardrobe.js?v=bo7ootd9';
 import {
   avatarContent, refreshAvatar, closeAvatarSdk, saveAvatarImport, handleAvatarAction,
-} from './studio/avatar.js?v=integrated-13';
+} from './studio/avatar.js?v=bo7ootd9';
 import {
   tryonContent, historyContent, refreshTryon, refreshHistory, savePersonPhoto,
-  updateSubmitAvailability, handleTryonAction,
-} from './studio/tryon.js?v=integrated-13';
+  updateSubmitAvailability, handleTryonAction, rememberPersonSource, trackTryonGarmentSelection,
+} from './studio/tryon.js?v=bo7ootd9';
 import {
   abandonPending, clearUpload, handleUploadSelection, handleDrop, handleDragOver,
   clearDrag, validateUpload,
-} from './studio/upload.js?v=integrated-13';
+} from './studio/upload.js?v=bo7ootd9';
 
 function content(page) {
   if (page === 'bo6-wardrobe') return wardrobeContent();
@@ -104,6 +104,165 @@ async function safe(action, source) {
   }
 }
 
+let ootdTryonPanelDismissed = false;
+
+function showOotdTryon({title, detail = '', imageUrl = null, working = false, result = false, progress = null, progressLabel = ''}) {
+  const panel = document.getElementById('ootd-tryon-panel');
+  if (!panel || ootdTryonPanelDismissed) return;
+  panel.dataset.hasContent = 'true';
+  panel.hidden = false;
+  const progressValue = progress === null ? null : Math.max(0, Math.min(100, Number(progress) || 0));
+  const picture = imageUrl
+    ? `<img src="${image(imageUrl)}" alt="${result ? 'Your avatar wearing the Outfit of the Day' : 'Your avatar, ready for virtual try-on'}">`
+    : working ? '<div class="ootd-tryon-spinner" aria-hidden="true"></div>' : '';
+  const progressUi = progressValue === null ? '' : `<div class="ootd-progress"><div id="ootd-tryon-progress" class="ootd-progress-track" role="progressbar" aria-label="Outfit try-on progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(progressValue)}"><span id="ootd-tryon-progress-fill" class="ootd-progress-fill" style="width:${progressValue}%"></span></div><div class="ootd-progress-label"><span id="ootd-tryon-progress-label">${esc(progressLabel)}</span></div></div>`;
+  panel.innerHTML = `<div class="ootd-tryon-panel-head"><div><p class="eyebrow">Virtual try-on</p><h3 id="ootd-tryon-title">${esc(title)}</h3></div><button type="button" class="ootd-tryon-close" data-ootd-tryon-close aria-label="Hide virtual try-on panel" title="Hide">×</button></div>${detail ? `<p id="ootd-tryon-detail">${esc(detail)}</p>` : ''}${progressUi}${picture}${result ? '<a class="btn" href="#bo7-history">Open Virtual Try-On History</a>' : ''}`;
+}
+
+function updateOotdTryonProgress(progress, label, detail, title) {
+  const panel = document.getElementById('ootd-tryon-panel');
+  const track = panel?.querySelector('#ootd-tryon-progress');
+  const fill = panel?.querySelector('#ootd-tryon-progress-fill');
+  const labelNode = panel?.querySelector('#ootd-tryon-progress-label');
+  const detailNode = panel?.querySelector('#ootd-tryon-detail');
+  const titleNode = panel?.querySelector('#ootd-tryon-title');
+  if (!track || !fill || !labelNode) return;
+  const value = Math.max(0, Math.min(95, Number(progress) || 0));
+  fill.style.width = `${value}%`;
+  track.setAttribute('aria-valuenow', String(Math.round(value)));
+  labelNode.textContent = label;
+  if (detailNode) detailNode.textContent = detail;
+  if (titleNode && title) titleNode.textContent = title;
+}
+
+const OOTD_SECONDS_PER_CALL = 40;
+function formatOotdEstimate(seconds) {
+  const value = Math.max(0, Math.ceil(seconds));
+  if (value < 60) return `about ${value} sec`;
+  const minutes = Math.floor(value / 60);
+  const remainder = value % 60;
+  return `about ${minutes} min${remainder ? ` ${remainder} sec` : ''}`;
+}
+
+async function runOotdTryon(button) {
+  ootdTryonPanelDismissed = false;
+  const catalogIds = button.dataset.catalogIds.split(',').map(Number);
+  if (catalogIds.length < 2 || catalogIds.length > 4 || catalogIds.some(id => !Number.isInteger(id) || id < 0)) {
+    throw new Error('This outfit does not have 2–4 supported clothing pieces to try on.');
+  }
+  if (!state.publicConfig) await loadPublicConfig();
+  if (state.publicConfig?.vton_mode !== 'real') {
+    throw new Error('Outfit try-on needs Real mode.');
+  }
+  button.disabled = true;
+  let progressTimer = null;
+  showOotdTryon({title: 'Preparing your avatar', detail: 'Checking your saved avatar and consent.', working: true});
+  try {
+    const [avatar, savedPhoto] = await Promise.all([
+      request('/avatars/current/render'), request('/person-photos/from-avatar'),
+    ]);
+    if (!avatar) throw new Error('Create your avatar in My Studio before trying on this outfit.');
+    let personPhoto = savedPhoto;
+    if (!personPhoto) {
+      const remote = state.publicConfig?.vton_remote ? 'the remote GPU server' : 'the configured try-on service';
+      const accepted = confirm(`To try on this outfit, DressMe will send your avatar image to ${remote} and save the result in Virtual Try-On History. Continue?`);
+      if (!accepted) {
+        const panel = document.getElementById('ootd-tryon-panel');
+        if (panel) panel.hidden = true;
+        return;
+      }
+      personPhoto = await request('/person-photos/from-avatar', {method: 'POST', body: {consent: true}});
+    }
+    let job = await request('/try-on/ootd-sequences', {
+      method: 'POST', body: {catalog_ids: catalogIds, person_photo_id: personPhoto.id}, key: crypto.randomUUID(),
+    });
+    const sourceAvatar = avatar.image_url;
+    const totalCalls = catalogIds.length;
+    let currentStep = 0;
+    let stepStartedAt = Date.now();
+    const updateProgress = () => {
+      if (job.state === 'queued') {
+        updateOotdTryonProgress(0, `Waiting · ${totalCalls} garment calls · ${formatOotdEstimate(totalCalls * OOTD_SECONDS_PER_CALL)} estimated`, 'The estimate starts when the worker begins processing.', 'Your outfit is in the queue');
+        return;
+      }
+      if (job.state !== 'running') return;
+      const reportedStep = Number(job.result_metadata?.current_step) || 0;
+      if (reportedStep && reportedStep !== currentStep) {
+        currentStep = reportedStep;
+        stepStartedAt = Date.now();
+      }
+      const elapsed = currentStep ? (Date.now() - stepStartedAt) / 1000 : 0;
+      const completedEstimate = currentStep ? currentStep - 1 : 0;
+      const inCallEstimate = Math.min(elapsed / OOTD_SECONDS_PER_CALL, 0.95);
+      const percent = Math.min(95, ((completedEstimate + inCallEstimate) / totalCalls) * 100);
+      const remaining = currentStep
+        ? Math.max(0, (totalCalls - currentStep) * OOTD_SECONDS_PER_CALL + OOTD_SECONDS_PER_CALL - elapsed)
+        : totalCalls * OOTD_SECONDS_PER_CALL;
+      updateOotdTryonProgress(
+        percent,
+        `Call ${currentStep || 1} of ${totalCalls} · ~${OOTD_SECONDS_PER_CALL} sec each`,
+        currentStep
+          ? `Applying clothing piece ${currentStep} of ${totalCalls}. ${formatOotdEstimate(remaining)} estimated remaining.`
+          : `Starting ${totalCalls} garment calls · ${formatOotdEstimate(totalCalls * OOTD_SECONDS_PER_CALL)} estimated.`,
+        'Building your outfit',
+      );
+    };
+    showOotdTryon({
+      title: 'Your outfit is in the queue',
+      detail: 'The avatar and final result will also appear in Virtual Try-On History.',
+      imageUrl: sourceAvatar, working: true, progress: 0,
+      progressLabel: `Queued · ${totalCalls} garment calls · ${formatOotdEstimate(totalCalls * OOTD_SECONDS_PER_CALL)} estimated`,
+    });
+    progressTimer = setInterval(updateProgress, 1000);
+    for (let attempt = 0; ['queued', 'running'].includes(job.state) && attempt < 240; attempt += 1) {
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      job = await request(`/try-on/jobs/${job.id}`);
+      updateProgress();
+    }
+    if (job.state === 'succeeded' && job.result_url) {
+      const removed = job.result_metadata?.background_removed === true;
+      showOotdTryon({
+        title: 'Your outfit is ready',
+        detail: removed
+          ? 'Background removed. Your avatar and outfit are saved in Virtual Try-On History.'
+          : 'Your avatar and outfit are saved in Virtual Try-On History.',
+        imageUrl: job.result_url, result: true, progress: 100,
+        progressLabel: `Complete · ${totalCalls} garment calls`,
+      });
+    } else if (['queued', 'running'].includes(job.state)) {
+      showOotdTryon({title: 'Still processing', detail: 'The result will be saved in Virtual Try-On History when it is ready.', imageUrl: sourceAvatar, working: true, progress: 95, progressLabel: 'Almost there · check Virtual Try-On History for the result'});
+    } else {
+      throw new Error(job.error_code ? `Try-on could not finish (${job.error_code}).` : 'Try-on could not finish.');
+    }
+  } catch (error) {
+    showOotdTryon({title: 'Try-on could not start', detail: error.message || 'Please try again.'});
+    throw error;
+  } finally {
+    if (progressTimer) clearInterval(progressTimer);
+    button.disabled = false;
+  }
+}
+
+document.addEventListener('click', event => {
+  const closeButton = event.target.closest('[data-ootd-tryon-close]');
+  if (closeButton) {
+    event.preventDefault();
+    ootdTryonPanelDismissed = true;
+    const panel = document.getElementById('ootd-tryon-panel');
+    if (panel) panel.hidden = true;
+    return;
+  }
+  const button = event.target.closest('[data-ootd-tryon]');
+  if (!button) return;
+  event.preventDefault();
+  runOotdTryon(button).catch(error => showOotdTryon({title: 'Try-on could not start', detail: error.message || 'Please try again.'}));
+});
+
+document.addEventListener('dressme:section', event => {
+  const panel = document.getElementById('ootd-tryon-panel');
+  if (panel?.dataset.hasContent && event.detail !== 'ootd') panel.hidden = true;
+});
+
 document.addEventListener('submit', event => {
   const form = event.target;
   if (!form.closest('.studio')) return;
@@ -119,14 +278,22 @@ document.addEventListener('submit', event => {
       state.uploadKey ||= crypto.randomUUID();
       const data = new FormData();
       data.append('image', file);
-      const result = await request('/garments/analyze', {method: 'POST', body: data, key: state.uploadKey});
+      let result;
+      try {
+        result = await request('/garments/analyze', {method: 'POST', body: data, key: state.uploadKey});
+      } catch (error) {
+        if (error.code !== 'ml_unavailable') throw error;
+        result = await request('/garments/uploads/manual', {method: 'POST', body: data});
+      }
       if (generation !== state.uploadGeneration || active() !== 'bo6-add') {
         try { await request('/garments/uploads/' + result.id, {method: 'DELETE'}); } catch { /* expiry cleanup remains available */ }
         return;
       }
       state.pending = result;
       review();
-      message('Analysis complete. Review the suggestions and confirm every required value.');
+      message(result.prediction?.status === 'unavailable'
+        ? 'Automatic analysis is unavailable. Enter the details and a short description yourself.'
+        : 'Analysis complete. Review the suggestions and confirm every required value.');
       return;
     }
     if (formId === 'studio-confirm') return saveReview(form);
@@ -146,10 +313,11 @@ document.addEventListener('change', event => {
   if (input.matches('#studio-edit select[name="category"]')) {
     const form = input.form;
     const sleeve = form.elements.sleeve_length;
-    if (['jeans', 'shorts', 'skirt', 'trousers'].includes(input.value)) { sleeve.value = ''; sleeve.disabled = true; }
+    if (NO_SLEEVES.has(input.value)) { sleeve.value = ''; sleeve.disabled = true; }
     else sleeve.disabled = false;
   }
-  if (input.matches('#studio-garment,#studio-photo')) updateSubmitAvailability();
+  if (input.matches('.studio-garment-input')) trackTryonGarmentSelection(input);
+  if (input.matches('.studio-garment-input,#studio-photo,#studio-avatar-consent')) updateSubmitAvailability();
 });
 
 document.addEventListener('dragover', handleDragOver);
@@ -254,7 +422,7 @@ document.addEventListener('input', event => {
   const regen = $('[data-action="regenerate-detail"]', form);
   if (!regen || !original) return;
   const data = Object.fromEntries(new FormData(form));
-  const dirty = ['name', 'category', 'garment_photo_type', 'color', 'pattern', 'sleeve_length', 'description', 'notes']
+  const dirty = ['name', 'category', 'garment_photo_type', 'color', 'pattern', 'sleeve_length', 'material', 'description', 'notes']
     .some(key => (data[key] || null) !== (original[key] || null));
   regen.disabled = dirty;
   regen.setAttribute('aria-label', dirty ? 'Save changes before regenerating the description' : 'Regenerate description from confirmed values');
@@ -264,7 +432,8 @@ document.addEventListener('input', event => {
 });
 
 document.addEventListener('change', event => {
-  if (event.target.matches('#studio-garment,#studio-photo')) state.tryOnIdempotencyKey = null;
+  if (event.target.matches('.studio-garment-input,#studio-photo')) state.tryOnIdempotencyKey = null;
+  if (event.target.matches('#studio-photo')) rememberPersonSource(event.target.value);
 });
 
 document.addEventListener('dressme:session-expired', () => {

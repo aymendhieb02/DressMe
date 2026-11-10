@@ -1,16 +1,18 @@
 from dataclasses import dataclass
 
 
-POLICY_VERSION = "bo6-fashn-candidate-v1"
+POLICY_VERSION = "bo6-fashn-candidate-v2"
 
 # These are semantic candidates from the inspected project contract, not visually
 # validated product compatibility. No category is enabled until that review exists.
 _CANDIDATES = {
     "dress": "one-pieces",
+    "jacket": "tops",
     "jeans": "bottoms",
     "shorts": "bottoms",
     "skirt": "bottoms",
     "trousers": "bottoms",
+    "pants": "bottoms",  # the G2L model's name for trousers
     "shirt": "tops",
     "sweater": "tops",
     "sweatshirt": "tops",

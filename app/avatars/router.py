@@ -19,6 +19,8 @@ from ..database import get_db
 from ..models import Avatar, AvatarConsent, AvatarRender, StorageDeletion, User, utcnow
 from ..storage.cleanup import acknowledge_storage_deletion, record_storage_deletion_failure
 from ..storage.local_disk import LocalPrivateStorage
+from ..tryon.deletion import delete_avatar_photos
+from ..uploads import normalize_image
 from .glb import AvatarAssetError, validate_avatar_glb
 from .render_profile import (
     MAX_RENDER_BYTES,
@@ -99,6 +101,14 @@ def _drop_avatar_render(db: Session, avatar_id: UUID, *, delete_metadata: bool =
     if delete_metadata:
         db.delete(row)
     return key
+
+
+def _render_digest(storage: LocalPrivateStorage, image_key: str) -> str | None:
+    """The digest this render has as a person photo. A missing file must not block deleting the avatar."""
+    try:
+        return normalize_image(storage.read(image_key))[3]
+    except Exception:
+        return None
 
 
 async def _delete_new_file(storage: LocalPrivateStorage, key: str) -> None:
@@ -459,17 +469,21 @@ async def delete_current_avatar(
     user: User = Depends(current_user_csrf),
     db: Session = Depends(get_db),
 ):
+    db.scalar(select(User).where(User.id == user.id).with_for_update())
     row = db.scalar(select(Avatar).where(Avatar.user_id == user.id).with_for_update())
     if row is None:
         return Response(status_code=204)
+    storage = LocalPrivateStorage()
+    render = db.scalar(select(AvatarRender).where(AvatarRender.avatar_id == row.id))
+    digest = await asyncio.to_thread(_render_digest, storage, render.image_key) if render is not None else None
+    photo_keys = delete_avatar_photos(db, user.id, digest)
     key = row.asset_key
     render_key = _drop_avatar_render(db, row.id, delete_metadata=False)
     _queue_delete(db, key)
     db.delete(row)
     db.commit()
-    storage = LocalPrivateStorage()
     cleanup_pending = False
-    for delete_key in (key, render_key):
+    for delete_key in (key, render_key, *photo_keys):
         if delete_key is None:
             continue
         try:

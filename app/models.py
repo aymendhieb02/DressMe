@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 import uuid
 
-from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, JSON, String, UniqueConstraint, Uuid, func
+from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, JSON, LargeBinary, String, UniqueConstraint, Uuid, false, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -29,6 +29,21 @@ class User(Base):
     sessions: Mapped[list["RefreshSession"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
     __table_args__ = (CheckConstraint("gender IS NULL OR gender IN ('men', 'women')", name="ck_users_gender"),)
+
+
+class TasteReaction(Base):
+    __tablename__ = "taste_reactions"
+    __table_args__ = (
+        UniqueConstraint("user_id", "item_id", name="uq_taste_reactions_user_item"),
+        CheckConstraint("reaction IN ('like', 'dislike', 'save', 'seen')", name="ck_taste_reaction"),
+        Index("ix_taste_reactions_user_reaction", "user_id", "reaction"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    item_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    reaction: Mapped[str] = mapped_column(String(8), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
 
 class PasswordRecoveryChallenge(Base):
@@ -124,6 +139,36 @@ class Garment(Base):
     description_provenance: Mapped[dict] = mapped_column(JSON_DOCUMENT, nullable=False, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    profile: Mapped["GarmentWardrobeProfile | None"] = relationship(
+        back_populates="garment", cascade="all, delete-orphan", passive_deletes=True, uselist=False, lazy="joined"
+    )
+
+
+class GarmentWardrobeProfile(Base):
+    """Team-wardrobe fields for one garment. seq backs the public id (1_000_000 + seq)."""
+
+    __tablename__ = "garment_wardrobe_profiles"
+    __table_args__ = (
+        CheckConstraint("outfit_cat IN ('top','bottom','outer','dress','shoes','bag','other')", name="ck_gwp_cat"),
+        CheckConstraint("embedding_status IN ('pending','ready','failed')", name="ck_gwp_status"),
+        Index("ix_gwp_user_cat", "user_id", "outfit_cat"),
+        {"sqlite_autoincrement": True},
+    )
+
+    seq: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    garment_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("garments.id", ondelete="CASCADE"), nullable=False, unique=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    item_code: Mapped[str] = mapped_column(String(40), nullable=False, unique=True)
+    super_category: Mapped[str | None] = mapped_column(String(32))
+    outfit_cat: Mapped[str] = mapped_column(String(16), nullable=False)
+    material: Mapped[str | None] = mapped_column(String(32))
+    season: Mapped[str | None] = mapped_column(String(16))
+    clip_embedding: Mapped[bytes | None] = mapped_column(LargeBinary)
+    embedding_model: Mapped[str | None] = mapped_column(String(64))
+    embedding_status: Mapped[str] = mapped_column(String(16), nullable=False, default="pending", server_default="pending")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    garment: Mapped[Garment] = relationship(back_populates="profile")
 
 
 class StorageDeletion(Base):
@@ -148,6 +193,7 @@ class PersonPhoto(Base):
     height: Mapped[int] = mapped_column(Integer, nullable=False)
     consent_version: Mapped[str] = mapped_column(String(64), nullable=False)
     consented_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    from_avatar: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default=false())
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
 
@@ -230,7 +276,7 @@ class TryOnJob(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    garment_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("garments.id", ondelete="RESTRICT"), nullable=False, index=True)
+    garment_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(as_uuid=True), ForeignKey("garments.id", ondelete="RESTRICT"), nullable=True, index=True)
     person_photo_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("person_photos.id", ondelete="RESTRICT"), nullable=False, index=True)
     idempotency_key_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     request_fingerprint: Mapped[str] = mapped_column(String(64), nullable=False)

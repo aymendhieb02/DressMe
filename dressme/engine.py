@@ -278,6 +278,9 @@ class Assistant:
             try:
                 turn = self.parser.parse(message, previous_roles, previous.get('pending_facets', []), previous.get('pending_question', ''))
             except ParserUnavailable as exc:
+                if not self.parser.enabled:
+                    return dict(status='chat_disabled', message='Style Assistant chat is paused on this PC.',
+                                stage='parser', diagnostics=self.parser.health())
                 return dict(status='model_unavailable', message=str(exc), stage='parser', diagnostics=self.parser.health())
             except (ValueError, RuntimeError) as exc:
                 return dict(status='understanding_error', message=safe_error(exc), stage='parser',

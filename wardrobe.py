@@ -10,12 +10,13 @@ import threading
 from collections import Counter, defaultdict
 from functools import lru_cache
 from pathlib import Path
+from uuid import UUID
 
 import numpy as np
 import torch
 import torch.nn.functional as F
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, Response, UploadFile
 from pydantic import BaseModel
 
 
@@ -29,6 +30,8 @@ try:
 except Exception:
     pass
 
+
+import wardrobe_owned
 
 router = APIRouter(prefix="/api/wardrobe", tags=["wardrobe"])
 
@@ -537,6 +540,12 @@ def style_matrix():
 def profile(a, W):
     out = {}
 
+    # Les matrices de style ne couvrent que le catalogue.
+    if hasattr(a, "catalog_ids"):
+        W = a.catalog_ids(W)
+        if not W:
+            return out
+
     try:
         s = style_matrix()[W].mean(0)
 
@@ -596,7 +605,8 @@ def build_looks(
     k=6,
     need_bag=True,
     thr=None,
-    reuse_pen=0.3
+    reuse_pen=0.3,
+    prefer=()
 ):
     """Génère les meilleures tenues en limitant les répétitions."""
 
@@ -623,11 +633,24 @@ def build_looks(
     res = []
     newset = set(new)
 
-    for _ in range(k):
+    # Pièces réelles : au plus 2/3 des tenues en contiennent, le reste reste du catalogue.
+    preferred = set(prefer)
+    owned_quota = -(-2 * k // 3) if preferred else 0
+    ranked = [int(j) for j in np.argsort(-sc)]
+    with_owned = [j for j in ranked if preferred.intersection(outs[j])][:max(80, k * 12)]
+    without_owned = [j for j in ranked if not preferred.intersection(outs[j])][:max(80, k * 12)]
+
+    for step in range(k):
 
         best = None
 
-        for j in order:
+        candidates = order
+
+        if preferred:
+            first, second = (with_owned, without_owned) if step < owned_quota else (without_owned, with_owned)
+            candidates = [j for j in first if j not in taken] or second
+
+        for j in candidates:
 
             if j in taken:
                 continue
@@ -1018,6 +1041,18 @@ GENDER_FIELDS = (
 )
 
 
+def owned_overlay(request, a, gender):
+    """Catalogue + vraies pièces du compte, ou None pour garder le chemin d'origine."""
+    if not wardrobe_owned.enabled():
+        return None
+    identity = getattr(request.state, "assistant_identity", None)
+    if not identity:
+        return None
+    return wardrobe_owned.overlay_for(
+        a, UUID(identity["id"]), men=is_men(gender), encode=lambda raw: enc_image(a, raw)
+    )
+
+
 def _no_auth():
     raise HTTPException(
         503,
@@ -1374,7 +1409,12 @@ def me(response: Response, ctx: dict = Depends(current_ctx)):
         p = read()
 
     gender = p["gender"] if p else None
-    return dict(gender=gender, items=load_items(uid, gender) if gender else [])
+    result = dict(gender=gender, items=load_items(uid, gender) if gender else [])
+    if wardrobe_owned.enabled():
+        owned = [piece.as_item() for piece in wardrobe_owned.load_owned(UUID(uid))]
+        if owned:
+            result["owned"] = owned
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -1604,7 +1644,7 @@ def allowed(gender: str = "women"):
 # ---------------------------------------------------------------------------
 
 @router.post("/analyze")
-def analyze(b: WIn):
+def analyze(b: WIn, request: Request):
 
     a = A()
 
@@ -1613,6 +1653,11 @@ def analyze(b: WIn):
         b.items,
         b.gender
     )
+
+    overlay = owned_overlay(request, a, b.gender)
+
+    if overlay:
+        a, cur = overlay, cur + overlay.local_ids
 
     if not cur:
         raise HTTPException(
@@ -1639,7 +1684,7 @@ def analyze(b: WIn):
 # ---------------------------------------------------------------------------
 
 @router.post("/complete")
-def complete(b: WIn):
+def complete(b: WIn, request: Request):
 
     a = A()
 
@@ -1648,6 +1693,11 @@ def complete(b: WIn):
         b.items,
         b.gender
     )
+
+    overlay = owned_overlay(request, a, b.gender)
+
+    if overlay:
+        a, cur = overlay, cur + overlay.local_ids
 
     if len(cur) < 3:
         raise HTTPException(
@@ -1692,10 +1742,11 @@ def complete(b: WIn):
         cur + added,
         new=added,
         k=6,
-        need_bag=b.full_look
+        need_bag=b.full_look,
+        prefer=overlay.local_ids if overlay else ()
     )
 
-    return dict(
+    result = dict(
         recs=recs,
         before=before,
         after=after,
@@ -1703,13 +1754,18 @@ def complete(b: WIn):
         thr=thr
     )
 
+    if overlay:
+        result["owned_in_looks"] = overlay.mark_looks(looks)
+
+    return result
+
 
 # ---------------------------------------------------------------------------
 # ROUTE : GENERATION DES TENUES
 # ---------------------------------------------------------------------------
 
 @router.post("/outfits")
-def outfits_route(b: LIn):
+def outfits_route(b: LIn, request: Request):
 
     a = A()
 
@@ -1724,15 +1780,26 @@ def outfits_route(b: LIn):
         if ok_item(a, i, b.gender)
     ]
 
-    return dict(
-        looks=build_looks(
-            a,
-            cur,
-            new=new,
-            k=max(1, min(b.k, 12)),
-            need_bag=b.need_bag
-        )
+    overlay = owned_overlay(request, a, b.gender)
+
+    if overlay:
+        a, cur = overlay, cur + overlay.local_ids
+
+    looks = build_looks(
+        a,
+        cur,
+        new=new,
+        k=max(1, min(b.k, 12)),
+        need_bag=b.need_bag,
+        prefer=overlay.local_ids if overlay else ()
     )
+
+    result = dict(looks=looks)
+
+    if overlay:
+        result["owned_in_looks"] = overlay.mark_looks(looks)
+
+    return result
 
 
 # ---------------------------------------------------------------------------

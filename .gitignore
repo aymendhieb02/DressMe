@@ -28,7 +28,8 @@ runtime/
 bo6_service/bundle/*.pt
 *.log
 landing/node_modules/
-/static/landing/
+/static/landing/*
+!/static/landing/index.html
 
 # BO1/BO5 local runtime and model artifacts
 # secrets
@@ -58,3 +59,10 @@ bo5/**/training_args.bin
 
 # Transfer archives of model weights
 /output/models/
+
+# BO6 G2L bundle and weights (never push; see docs/BO6_CHANGES.md)
+*.safetensors
+*.npz
+bo6_g2l/
+bo6_service/bundle_g2l/
+.venv-bo6-g2l/

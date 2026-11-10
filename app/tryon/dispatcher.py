@@ -15,11 +15,12 @@ from ..config import get_settings
 from ..database import SessionLocal
 from ..models import TryOnAttempt, TryOnJob, TryOnJobOutbox, utcnow
 from ..storage.cleanup import drain_storage_deletions, expire_pending_uploads
-from .adapters import UNSUPPORTED_ADAPTER, supports_mock_profile
+from .adapters import UNSUPPORTED_ADAPTER, delivery_task
+from .workflow import MAX_SEQUENCE_GARMENTS, SEQUENCE_STEP_TIMEOUT_SECONDS, SEQUENTIAL_WORKFLOW, SINGLE_JOB_TIMEOUT_SECONDS
 
 QUEUE_NAME = get_settings().tryon_queue_name
 MAX_ATTEMPTS = 2
-RUN_LEASE_SECONDS = 330
+RUN_LEASE_SECONDS = 480
 MISSING_QUEUE_JOB_SECONDS = 30
 DISPATCHER_LEASE_SECONDS = 12
 
@@ -66,7 +67,8 @@ def dispatch_pending(queue: Queue, session_factory: sessionmaker = SessionLocal,
             job = db.get(TryOnJob, row.job_id)
             if job is None:
                 continue
-            if not supports_mock_profile(job.mode, job.settings_snapshot):
+            task = delivery_task(job.mode, job.settings_snapshot)
+            if task is None:
                 db.execute(
                     update(TryOnJob)
                     .where(TryOnJob.id == row.job_id, TryOnJob.state == "queued")
@@ -76,14 +78,21 @@ def dispatch_pending(queue: Queue, session_factory: sessionmaker = SessionLocal,
                 row.last_error_code = UNSUPPORTED_ADAPTER
                 continue
             queue_id = f"tryon-{row.job_id.hex}-{row.delivery_number}"
+            workflow = (job.input_snapshot or {}).get("workflow")
+            step_count = len((job.input_snapshot or {}).get("garments", [])) if workflow == SEQUENTIAL_WORKFLOW else 1
+            step_count = max(1, min(step_count, MAX_SEQUENCE_GARMENTS))
+            job_timeout = (
+                SEQUENCE_STEP_TIMEOUT_SECONDS * step_count
+                if workflow == SEQUENTIAL_WORKFLOW else SINGLE_JOB_TIMEOUT_SECONDS
+            )
             try:
                 queue.enqueue(
-                    "app.tryon.worker_tasks.run_mock_job",
+                    task,
                     str(row.job_id),
                     job_id=queue_id,
                     unique=True,
-                    job_timeout=300,
-                    ttl=900,
+                    job_timeout=job_timeout,
+                    ttl=3600,  # a job can wait behind several others that each take minutes
                     result_ttl=86400,
                     failure_ttl=86400,
                 )

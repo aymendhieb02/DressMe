@@ -3,10 +3,14 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-Category = Literal["dress", "jacket", "jeans", "shirt", "shorts", "skirt", "sweater", "sweatshirt", "t-shirt", "top", "trousers"]
-Color = Literal["beige", "black", "blue", "brown", "green", "grey", "navy", "orange", "pink", "purple", "red", "white", "yellow"]
+Category = Literal["dress", "jacket", "jeans", "shirt", "shorts", "skirt", "sweater", "sweatshirt", "t-shirt", "top", "trousers",
+                   "blouse", "cardigan", "vest", "pants", "jumpsuit", "coat", "shoes", "bag", "accessory"]
+Color = Literal["beige", "black", "blue", "brown", "green", "grey", "navy", "orange", "pink", "purple", "red", "white", "yellow",
+                "gold", "silver", "multi"]
 Pattern = Literal["solid", "striped", "checked", "printed", "floral"]
-SleeveLength = Literal["sleeveless", "short", "long"]
+SleeveLength = Literal["sleeveless", "short", "long", "three_quarter"]
+Material = Literal["cashmere", "cotton", "denim", "leather", "linen", "silk", "suede", "synthetic", "wool"]
+Season = Literal["all", "winter", "summer"]
 
 
 class ReviewFields(BaseModel):
@@ -15,6 +19,8 @@ class ReviewFields(BaseModel):
     color: Color | None = None
     pattern: Pattern | None = None
     sleeve_length: SleeveLength | None = None
+    material: Material | None = None
+    season: Season | None = None
 
 
 class DescribeInput(BaseModel):
@@ -38,6 +44,8 @@ class GarmentPatch(BaseModel):
     color: Color | None = None
     pattern: Pattern | None = None
     sleeve_length: SleeveLength | None = None
+    material: Material | None = None
+    season: Season | None = None
     description: str | None = Field(default=None, max_length=500)
     name: str | None = Field(default=None, max_length=120)
     notes: str | None = Field(default=None, max_length=2000)
@@ -78,6 +86,11 @@ class GarmentView(BaseModel):
     description_provenance: dict
     created_at: str
     updated_at: str
+    material: str | None = None
+    season: str | None = None
+    super_category: str | None = None
+    outfit_cat: str | None = None
+    item_code: str | None = None
 
 
 class GarmentList(BaseModel):

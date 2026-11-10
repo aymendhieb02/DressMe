@@ -96,10 +96,12 @@ def _accessories():
     return [i for i, b in zip(idx, best) if names[b] == "accessory"]
 
 
-def _slot_idx(slot, gender):
+def _slot_idx(slot, gender, allowed=None):
+    if allowed is not None:                      # dressing de l'utilisateur : uniquement ses pièces
+        cats = ("other", "bag") if slot == "accessory" else (slot,)
+        return [i for i in allowed if _S["cat"][i] in cats]
     base = _accessories() if slot == "accessory" else _S["bycat"].get(slot, [])
     return [i for i in base if _gender_ok(i, gender)]
-
 
 # ------------------------------------------------------------------ météo
 UA = {"User-Agent": "dressme/1.0"}
@@ -127,7 +129,8 @@ class Ootd(BaseModel):
     temp: float | None = None
     kind: str = "clear"
     wind: float = 10
-    occasion: str | None = None                  # None | casual | meeting | fancy | date
+    occasion: str | None = None   
+    use_wardrobe: bool = True                
 
 
 def get_weather(b: Ootd) -> dict:
@@ -203,45 +206,48 @@ EXTRA = {("outer", "rain"): ["a waterproof raincoat", "a trench coat"], ("shoes"
 # Clés d'une config : dress (None = pas de robe | bonus), only_dress, shoe_rule, need_outer, prompts
 OCCASIONS = {
     "casual": dict(label="Casual",
-        women=dict(dress=0.0, prompts={
+        women=dict(dress=0.0, rules={"shoes": "sneakers"}, prompts={
             "top": ["a casual t-shirt", "a relaxed sweatshirt", "a casual knit top"],
             "bottom": ["relaxed jeans", "casual chino pants"], "dress": ["a casual day dress"],
-            "shoes": ["white sneakers", "casual flat shoes"], "outer": ["a casual denim jacket", "a bomber jacket"]}),
-        men=dict(prompts={
+            "shoes": ["white sneakers", "casual sneakers"], "outer": ["a casual denim jacket", "a bomber jacket"]}),
+        men=dict(rules={"shoes": "sneakers"}, prompts={
             "top": ["a casual t-shirt", "a relaxed sweatshirt", "a casual polo shirt"],
             "bottom": ["relaxed jeans", "casual chino pants"],
             "shoes": ["white sneakers", "casual sneakers"], "outer": ["a casual denim jacket", "a bomber jacket"]})),
     "meeting": dict(label="Meeting / work",
-        women=dict(need_outer=True, shoe_rule="heels_or_sneakers", prompts={
+        women=dict(need_outer=True,      # jamais de robe (pas de clé "dress"), talons obligatoires
+                   rules={"shoes": "heels", "outer": "suit_jacket", "bottom": "suit_trousers"}, prompts={
             "top": ["a button-up shirt", "a silk blouse", "a fine knit top"],
             "bottom": ["matching suit trousers", "a tailored suit skirt"],
-            "shoes": ["elegant high heels", "heeled ankle boots", "clean white sneakers"],
+            "shoes": ["elegant high heels", "heeled ankle boots", "pointed pumps"],
             "outer": ["a tailored suit blazer", "a suit jacket"], "accessory": ["a leather belt", "a wrist watch"]}),
-        men=dict(need_outer=True, shoe_rule="dress_or_sneakers", prompts={
+        men=dict(need_outer=True,
+                 rules={"shoes": "dress_or_sneakers", "outer": "suit_jacket", "bottom": "suit_trousers"}, prompts={
             "top": ["a button-up shirt", "a fine knit sweater"], "bottom": ["matching suit trousers"],
             "shoes": ["leather oxford shoes", "leather derby shoes", "clean white sneakers"],
             "outer": ["a tailored suit jacket", "a suit blazer"],
             "accessory": ["a leather belt", "a wrist watch", "a silk tie"]})),
     "fancy": dict(label="Fancy / evening",
-        women=dict(dress=0.0, only_dress=True, shoe_rule="heels", prompts={
+        women=dict(dress=0.0, only_dress=True, rules={"shoes": "heels"}, prompts={
             "top": ["an elegant satin blouse", "a sequin top", "a silk top"],
             "bottom": ["elegant wide leg trousers", "a satin skirt"],
             "dress": ["an elegant evening dress", "a cocktail dress"],
             "shoes": ["elegant high heels", "heeled ankle boots", "stiletto pumps"],
             "outer": ["an elegant evening coat", "a tuxedo blazer"],
             "accessory": ["elegant jewelry", "a statement necklace"]}),
-        men=dict(need_outer=True, shoe_rule="dress_shoes", prompts={
+        men=dict(need_outer=True,
+                 rules={"shoes": "dress_shoes", "outer": "suit_jacket", "bottom": "suit_trousers", "top": "dress_shirt"}, prompts={
             "top": ["a white formal dress shirt", "a dress shirt"],
             "bottom": ["matching suit trousers", "formal dress trousers"],
             "shoes": ["black leather oxford shoes", "polished dress shoes"],
             "outer": ["a tuxedo jacket", "a formal suit jacket"],
             "accessory": ["a bow tie", "a silk tie", "a wrist watch"]})),
     "date": dict(label="Date night",
-        women=dict(dress=0.0, only_dress=True, shoe_rule="heels", prompts={
+        women=dict(dress=0.0, only_dress=True, rules={"shoes": "heels"}, prompts={
             "top": ["a stylish fitted top", "a silk blouse"], "bottom": ["a stylish skirt", "dark jeans"],
             "dress": ["a chic dress"], "shoes": ["heeled ankle boots", "heeled sandals", "stylish high heels"],
             "outer": ["a stylish leather jacket", "a chic blazer"], "accessory": ["delicate jewelry", "a necklace"]}),
-        men=dict(shoe_rule="dress_or_sneakers", prompts={
+        men=dict(rules={"shoes": "dress_or_sneakers"}, prompts={
             "top": ["a fitted shirt", "a fine knit sweater", "a polo shirt"], "bottom": ["dark jeans", "chino trousers"],
             "shoes": ["chelsea boots", "leather loafers", "clean minimalist sneakers"],
             "outer": ["a stylish leather jacket", "a casual blazer"],
@@ -249,7 +255,7 @@ OCCASIONS = {
 
 
 def occ_cfg(occasion, gender):
-    cfg = dict(label=OCCASIONS[occasion]["label"], dress=None, only_dress=False, shoe_rule=None, need_outer=False, prompts={})
+    cfg = dict(label=OCCASIONS[occasion]["label"], dress=None, only_dress=False, rules={}, need_outer=False, prompts={})
     cfg.update(OCCASIONS[occasion]["women" if gender == "women" else "men"])
     return cfg
 
@@ -260,16 +266,23 @@ SNEAKER_POS = ["sneakers", "clean white sneakers", "minimalist leather sneakers"
 DRESS_SHOE_POS = ["leather oxford shoes", "derby shoes", "polished dress shoes", "leather loafers", "chelsea boots"]
 FLAT_NEG = ["flat shoes", "flat sandals", "flat boots", "loafers"]
 CLOG_NEG = ["clogs", "shearling lined clogs", "fur slippers", "mules", "slides", "flip flops"]
-SHOE_RULES = {"heels": dict(allow=HEEL_POS, ban=FLAT_NEG + CLOG_NEG + ["sneakers"]),
-              "heels_or_sneakers": dict(allow=HEEL_POS + SNEAKER_POS, ban=FLAT_NEG + CLOG_NEG),
-              "dress_shoes": dict(allow=DRESS_SHOE_POS, ban=CLOG_NEG + ["sneakers", "sports running shoes"]),
-              "dress_or_sneakers": dict(allow=DRESS_SHOE_POS + SNEAKER_POS, ban=CLOG_NEG + ["sports running shoes"])}
-
+RULES = {   # slot -> règle : "allow" = ce qu'on veut, "ban" = ce qu'on refuse
+    "heels": dict(allow=HEEL_POS, ban=FLAT_NEG + CLOG_NEG + ["sneakers"]),
+    "dress_shoes": dict(allow=DRESS_SHOE_POS, ban=CLOG_NEG + ["sneakers", "sports running shoes"]),
+    "dress_or_sneakers": dict(allow=DRESS_SHOE_POS + SNEAKER_POS, ban=CLOG_NEG + ["sports running shoes"]),
+    "sneakers": dict(allow=SNEAKER_POS, ban=HEEL_POS + FLAT_NEG + CLOG_NEG + ["leather boots", "sandals", "oxford shoes"]),
+    "suit_jacket": dict(allow=["a suit blazer", "a tailored suit jacket", "a tuxedo jacket"],
+                        ban=["a puffer jacket", "a denim jacket", "a bomber jacket", "a hooded sweatshirt", "a parka",
+                             "a raincoat", "a knit cardigan", "a leather jacket"]),
+    "suit_trousers": dict(allow=["matching suit trousers", "tailored dress trousers"],
+                          ban=["jeans", "denim pants", "shorts", "sweatpants", "cargo pants", "leggings"]),
+    "dress_shirt": dict(allow=["a button-up dress shirt", "a formal white shirt"],
+                        ban=["a t-shirt", "a hoodie", "a sweatshirt", "a polo shirt"])}
 photo = lambda xs: tuple(f"a product photo of {x}" for x in xs)
 
 
-def shoe_margin(idx, rule):
-    r = SHOE_RULES[rule]
+def rule_margin(idx, rule):
+    r = RULES[rule]
     E = _S["emb"][idx]
     return (E @ tmat(photo(r["allow"])).T).max(1) - (E @ tmat(photo(r["ban"])).T).max(1)
 
@@ -310,17 +323,19 @@ def occasion_term(s, occasion, gender, idx):
     return plain, plain - CONTRAST * (E @ np.mean(others, 0))
 
 
-def score_slot(s, w, occasion, gender, topk):
+def score_slot(s, w, occasion, gender, topk, allowed=None):
     groups = prompt_groups(s, w, occasion, gender, with_occ=False)
-    idx = _slot_idx(s, gender)
+    idx = _slot_idx(s, gender, allowed)
     has_occ = bool(occasion and occ_cfg(occasion, gender)["prompts"].get(s))
     if (not groups and not has_occ) or not idx:
         return None
-    rule = occ_cfg(occasion, gender)["shoe_rule"] if occasion else None
-    if s == "shoes" and rule:                    # occasion habillée : seulement les chaussures autorisées
-        sm = shoe_margin(idx, rule)
+    rule = occ_cfg(occasion, gender)["rules"].get(s) if occasion else None
+    if rule == "sneakers" and is_snow(w):        # neige : on lâche la règle baskets
+        rule = None
+    if rule:                                     # on garde seulement les pièces qui respectent la règle
+        sm = rule_margin(idx, rule)
         ok = [i for i, m in zip(idx, sm) if m > SHOE_MARGIN]
-        idx = ok or [idx[j] for j in np.argsort(-sm)[:3]]
+        idx = ok or [idx[j] for j in np.argsort(-sm)[:3]]   # sinon la moins mauvaise (le manque sera signalé)
     E = _S["emb"][idx]
     z, raw, tot = 0, 0, 0.0
     for wt, g in groups:
@@ -347,7 +362,7 @@ def best_combo(cand, gamma):
     return {s: i for s, (i, _) in zip(names, combos[k])}, float(tot[k])
 
 
-def pick_outfit(w, occasion=None, gender="unisex", topk=5, gamma=0.5):
+def pick_outfit(w, occasion=None, gender="unisex", topk=5, gamma=0.5, allowed=None):
     cfg = occ_cfg(occasion, gender) if occasion else dict(dress=None, only_dress=False)
     dress_bonus, only_dress = cfg["dress"], cfg["only_dress"]
     results = []
@@ -356,23 +371,101 @@ def pick_outfit(w, occasion=None, gender="unisex", topk=5, gamma=0.5):
             break                                # robe trouvée : on ne regarde pas haut + bas
         cand = {}
         for s in slots_needed(w, occasion, use_dress, gender):
-            r = score_slot(s, w, occasion, gender, topk)
+            r = score_slot(s, w, occasion, gender, topk, allowed)
             if r:
                 cand[s] = r
             elif use_dress and s == "dress":
-                cand = {}; break                 # pas de robe dans le catalogue : formule robe impossible
+                cand = {}; break                 # pas de robe : formule robe impossible
+            elif allowed is not None and s in ("top", "bottom"):
+                cand = {}; break                 # (les chaussures manquantes deviennent un "gap" suggéré)
+                                # pièce indispensable absente du dressing
         if cand:
             pick, sc = best_combo(cand, gamma)
             results.append((sc + ((dress_bonus or 0.0) if use_dress else 0.0), pick))
     if not results:
-        raise RuntimeError("Not enough catalog pieces to build this outfit")
+        raise RuntimeError("Your wardrobe doesn't have enough pieces for this weather or occasion (top + bottom + shoes, or dress + shoes).")
     return max(results, key=lambda r: r[0])[1]
 
 
 # ------------------------------------------------------------------ route
+def user_wardrobe(request: Request):
+    """-> (genre, set d'ids) du dressing sauvegardé, ou (None, None) s'il n'existe pas."""
+    import scoring, wardrobe as W
+    uid = scoring._user_key(request)
+    p = W.with_db(lambda c: c.execute("SELECT gender FROM wardrobe_profile WHERE user_id=?", (uid,)).fetchone())
+    if not p:
+        return None, None
+    rows = W.with_db(lambda c: c.execute("SELECT item_id FROM wardrobe_items WHERE user_id=?", (uid,)).fetchall())
+    return p["gender"], {int(r["item_id"]) for r in rows}
+def outer_reason(w, occasion, gender):
+    if is_snow(w): return "it's snowing"
+    if is_rain(w): return "it's raining"
+    if is_windy(w): return "it's windy"
+    if w["feels"] < 18: return f"it feels like {w['feels']:.0f}°C"
+    if occasion and occ_cfg(occasion, gender)["need_outer"]:
+        return f"a {occ_cfg(occasion, gender)['label'].lower()} look needs a jacket or blazer"
+    return None
+
+
+NOUN = {("shoes", "sneakers"): ("sneakers", "Sneakers"), ("shoes", "heels"): ("heels", "Heels"),
+        ("shoes", "dress_shoes"): ("dress shoes", "Dress shoes"), ("shoes", "dress_or_sneakers"): ("dress shoes", "Shoes"),
+        ("outer", "suit_jacket"): ("a blazer", "Blazer"), ("bottom", "suit_trousers"): ("suit trousers", "Trousers"),
+        ("top", "dress_shirt"): ("a dress shirt", "Shirt")}
+NOUN_DEFAULT = {"shoes": ("shoes", "Shoes"), "outer": ("a coat", "Coat"), "dress": ("a dress", "Dress"),
+                "top": ("a top", "Top"), "bottom": ("trousers", "Bottoms")}
+
+
+def find_gaps(w, occasion, gender, pick, allowed):
+    """Pièces manquantes ou qui ne respectent pas l'occasion, avec des suggestions du catalogue."""
+    rules = occ_cfg(occasion, gender)["rules"] if occasion else {}
+    lab = occ_cfg(occasion, gender)["label"].lower() if occasion else ""
+
+    def ok(slot):
+        if slot not in pick:
+            return False
+        rule = rules.get(slot)
+        if not rule or (rule == "sneakers" and is_snow(w)):
+            return True
+        return float(rule_margin([pick[slot]], rule)[0]) > SHOE_MARGIN
+
+    def suggest(slot):
+        r = score_slot(slot, w, occasion, gender, 6, None)           # None = tout le catalogue (règles appliquées)
+        return [_S["item"](i) for i, _ in (r or []) if i not in allowed][:3]
+
+    gaps = []
+
+    def add(slot, message):
+        noun, tab = NOUN.get((slot, rules.get(slot))) or NOUN_DEFAULT[slot]
+        sug = suggest(slot)
+        if sug:
+            gaps.append(dict(slot=slot, noun=noun, tab=tab, title=f"You may need {noun}", message=message, suggestions=sug))
+
+    if occasion in ("fancy", "date") and gender == "women" and "dress" not in pick:
+        add("dress", f"A {lab} look calls for a dress, and your wardrobe has none that works.")
+    why = outer_reason(w, occasion, gender)
+    if why and not ok("outer"):
+        if rules.get("outer"):
+            add("outer", f"A {lab} look calls for a blazer or suit jacket, and nothing in your wardrobe fits.")
+        else:
+            add("outer", f"Today {why}, and nothing in your wardrobe fits as a coat or jacket.")
+    if not ok("shoes"):
+        noun = (NOUN.get(("shoes", rules.get("shoes"))) or NOUN_DEFAULT["shoes"])[0]
+        add("shoes", f"A {lab} look calls for {noun}, and none in your wardrobe fit." if rules.get("shoes")
+            else "Your wardrobe has no shoes yet.")
+    for slot in ("bottom", "top"):
+        if rules.get(slot) and slot in pick and not ok(slot):
+            noun = NOUN[(slot, rules[slot])][0]
+            add(slot, f"A {lab} look calls for {noun}, and nothing in your wardrobe fits.")
+    return gaps
+
 @router.post("/ootd")
 def api_ootd(b: Ootd, request: Request):
-    gender = user_gender(request)
+    gender, allowed = user_gender(request), None
+    if b.use_wardrobe:
+        wg, ids = user_wardrobe(request)
+        if not ids:
+            raise HTTPException(409, "Your wardrobe is empty. Open Wardrobe Completion to fill it first.")
+        gender, allowed = normalize_gender(wg), ids
     if b.occasion and b.occasion not in OCCASIONS:
         raise HTTPException(400, f"Unknown occasion (choices: {list(OCCASIONS)})")
     try:
@@ -380,12 +473,13 @@ def api_ootd(b: Ootd, request: Request):
     except requests.RequestException as e:
         raise HTTPException(502, f"Weather unavailable : {e}")
     try:
-        pick = pick_outfit(w, b.occasion, gender)
+        pick = pick_outfit(w, b.occasion, gender, allowed=allowed)
     except RuntimeError as e:
         raise HTTPException(422, str(e))
     label = occ_cfg(b.occasion, gender)["label"] if b.occasion else None
     text = f"{band(w['feels'])} {w['label']} day, feels like {w['feels']:.0f} degrees celsius" + (", windy" if is_windy(w) else "")
     item = _S["item"]
-    return dict(weather=w, gender=gender, occasion=b.occasion, occasion_label=label, text=text,
+    gaps = find_gaps(w, b.occasion, gender, pick, allowed) if allowed is not None else []
+    return dict(weather=w, gender=gender, occasion=b.occasion, occasion_label=label, text=text,gaps=gaps,
                 pick=[dict(slot=s, **item(i), prompts=[p for _, g in prompt_groups(s, w, b.occasion, gender) for p in g])
                       for s, i in pick.items()])

@@ -12,7 +12,8 @@ class E5Encoder:
         revision = '614241f622f53c4eeff9890bdc4f31cfecc418b3'
         # The revision already present locally is pinned for repeatability.
         try:
-            path = snapshot_download('intfloat/multilingual-e5-small', revision=revision, local_files_only=True)
+            path = snapshot_download('intfloat/multilingual-e5-small', revision=revision,
+                                     cache_dir=str(CACHE_DIR / 'models'), local_files_only=True)
         except Exception:
             path = snapshot_download('intfloat/multilingual-e5-small', revision=revision,
                                      token=hf_auth(), cache_dir=str(CACHE_DIR / 'models'),

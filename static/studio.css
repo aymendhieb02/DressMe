@@ -118,7 +118,51 @@
 .studio-avaturn-frame{min-height:480px}
 .studio-model-viewer{min-height:300px}
 .studio-avatar-render{display:block;max-width:min(100%,480px);height:auto;border-radius:15px;background:#eef6f3}
-.studio-person-thumb{width:110px;height:130px;object-fit:cover;border-radius:14px;margin:10px 10px 0 0}
+.studio-person-thumb{display:block;width:100%;aspect-ratio:3/4;object-fit:contain;background:#eef6f3;border-radius:16px;margin:10px 0}
+.studio-tryon-grid{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:26px;align-items:start;margin-top:14px}
+.studio-tryon-workflows{display:grid;gap:8px;margin:12px 0;padding:12px 14px;border:1px solid #cfe6e3;border-radius:14px;background:#f7fbfa}
+.studio-tryon-workflows legend{padding:0 5px;font-weight:700}
+.studio-tryon-workflows label{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600}
+.studio-tryon-workflows input{accent-color:#0e9f9a}
+.studio-tryon-workflows .studio-muted{margin:2px 0 0}
+.studio-garment-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:8px}
+.studio-garment-pick{position:relative;display:block;padding:8px;border:2px solid #d8e8e5;border-radius:16px;background:#fff;cursor:pointer}
+.studio-garment-pick img{display:block;width:100%;aspect-ratio:1;object-fit:contain;border-radius:10px;background:#f5f8f7}
+.studio-garment-pick span{display:block;margin-top:6px;font-size:.86rem;font-weight:600}
+.studio-garment-pick small{display:block;color:#5d7079}
+.studio-garment-pick .studio-sequence-order{position:absolute;top:11px;right:11px;display:grid;place-items:center;width:28px;height:28px;margin:0;border:2px solid #fff;border-radius:50%;background:#0e9f9a;color:#fff;font-weight:700;box-shadow:0 1px 5px #17283a55}
+.studio-garment-pick .studio-sequence-order[hidden]{display:none}
+.studio-garment-pick input{position:absolute;top:14px;left:14px;width:22px;height:22px;margin:0}
+.studio-garment-pick:has(input:checked){border-color:#0e9f9a;background:#e8f4f2}
+.studio-garment-pick:has(input:focus-visible){outline:2px solid #0e9f9a;outline-offset:2px}
+.studio-garment-pick.is-blocked{cursor:default;opacity:.6}
+.studio-tryon-notice{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:12px 0;padding:16px 18px;border-radius:16px;background:#e8f4f2;font-weight:600}
+.studio-job-list{display:grid;gap:16px}
+.studio-job-images{display:grid;grid-template-columns:1fr 1fr 1.6fr;gap:12px;align-items:start;margin:10px 0}
+.studio-job-images.is-sequence{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.studio-job-images figure{margin:0;min-width:0}
+.studio-job-images figcaption{margin-bottom:5px;font-size:.8rem;font-weight:600;color:#5d7079}
+.studio-zoom{display:block;width:100%;padding:0;border:0;border-radius:12px;background:#eef6f3;cursor:zoom-in;overflow:hidden}
+.studio-zoom img{display:block;width:100%;aspect-ratio:3/4;object-fit:contain}
+.studio-zoom:focus-visible{outline:2px solid #0e9f9a;outline-offset:2px}
+.studio-job-waiting{display:grid;place-items:center;aspect-ratio:3/4;padding:14px;border-radius:12px;background:#eef6f3;text-align:center;font-size:.9rem;color:#475c67}
+.studio-lightbox{width:min(96vw,1100px);max-height:96vh;padding:0;border:0;border-radius:18px;background:#10202b;color:#fff}
+.studio-lightbox::backdrop{background:#0b151ccc}
+.studio-lightbox-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px}
+.studio-lightbox-head p{margin:0;font-weight:600}
+.studio-lightbox-head a,.studio-lightbox-head button{color:#fff;background:#ffffff22;border:0;border-radius:999px;padding:8px 14px;font:inherit;text-decoration:none;cursor:pointer}
+.studio-lightbox-view{display:flex;justify-content:center;max-height:calc(96vh - 64px);overflow:auto}
+.studio-lightbox-view img{display:block;height:calc(96vh - 64px);max-width:100%;object-fit:contain;cursor:zoom-in}
+.studio-lightbox-view.is-zoomed{justify-content:flex-start}
+.studio-lightbox-view.is-zoomed img{height:auto;width:220%;max-width:none;cursor:zoom-out}
+@media(max-width:760px){.studio-tryon-grid{grid-template-columns:1fr}.studio-job-images{grid-template-columns:1fr 1fr}.studio-job-images figure:last-child{grid-column:1/-1}}
+#studio-render{margin-top:16px}
+.studio-primary-action{min-height:52px;padding-inline:34px;font-size:1.02rem}
+.studio-saved-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;padding:6px 0 14px}
+.studio-saved-photo .studio-muted{margin:0 0 8px}
+.studio-more{margin-top:14px;padding:4px 18px;border:1px solid #cfe6e3;border-radius:16px;background:#fff}
+.studio-more summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+.studio-more form{padding:6px 0 14px}
 .studio button:disabled{cursor:not-allowed;opacity:.58;filter:grayscale(.25)}
 @media(max-width:900px){.studio-review-shell{grid-template-columns:minmax(0,1fr)}.studio-review-shell>#studio-upload{position:static}.studio-review-layout{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:760px){.studio{grid-template-columns:minmax(0,1fr)}.studio-nav{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.studio-nav a{justify-content:center;text-align:center;min-width:0;padding:8px}.studio-nav a:last-child{grid-column:1/-1}.studio-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,155px),1fr))}.studio-detail-card{grid-template-columns:minmax(0,1fr)}.studio-account{width:100%;justify-content:space-between}}

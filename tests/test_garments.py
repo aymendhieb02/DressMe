@@ -78,7 +78,7 @@ def test_real_contract_upload_review_save_edit_and_private_delete(client, origin
     assert garment["garment_photo_type"] == "flat-lay"
     assert garment["vton_eligibility"] == {
         "status": "disabled", "eligible": False, "candidate_category": "tops",
-        "reason": "mapping_not_visually_validated", "policy_version": "bo6-fashn-candidate-v1",
+        "reason": "mapping_not_visually_validated", "policy_version": "bo6-fashn-candidate-v2",
     }
 
     edited = client.patch(f"/garments/{garment['id']}", headers=headers, json={"color": "red"})

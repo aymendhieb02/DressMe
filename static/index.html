@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DressMe — Style Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="/static/studio.css?v=integrated-13" rel="stylesheet">
+<link href="/static/studio.css?v=bo7ootd9" rel="stylesheet">
 <style>
 :root{--ink:#17283a;--c1:#ff6b4a;--c2:#0e9f9a;--ok:#1fb889;--warn:#f5a524;--bad:#e5484d;--hero:#17283a;--sky:linear-gradient(160deg,#fdebd8,#c9ebe7)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--sky) fixed;min-height:100vh}
@@ -44,19 +44,86 @@ input[type=range]{accent-color:var(--c2);width:220px}
 .modal>div{background:#fff;border-radius:26px;padding:22px;max-width:900px;width:100%;max-height:86vh;overflow:auto}
 .err{background:#ffe5e5;color:#a11;padding:10px 16px;border-radius:14px;margin-top:12px}.load{opacity:.6;padding:20px}
 
-/* Find Similar — custom, accessible upload control */
-.upload-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:16px 0 10px}
-.file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.upload-label{display:inline-flex;align-items:center;gap:11px;padding:12px 18px;border:1px solid #cfe6e3;border-radius:16px;background:linear-gradient(135deg,#ffffff,#f0f8f6);color:var(--ink);font:500 .9rem Inter,sans-serif;cursor:pointer;box-shadow:0 6px 18px #17283a0d;transition:transform .2s,border-color .2s,box-shadow .2s}
-.upload-label:hover{transform:translateY(-2px);border-color:#0e9f9a;box-shadow:0 10px 22px #17283a16}
-.upload-label:focus-within,.file-input:focus-visible+.upload-label{outline:3px solid #0e9f9a55;outline-offset:3px}
-.upload-icon{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:12px;background:#e4f3f0;color:#0e827e}
-.upload-copy{display:flex;flex-direction:column;gap:3px}
-.upload-copy strong{font-size:.9rem;font-weight:600}
-.upload-copy small{font-size:.72rem;color:#687889;font-weight:400}
-.file-name{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem;color:#607080}
-#simprev{max-width:100%;object-fit:cover;border:2px solid #fff}
-@media(max-width:520px){.upload-label{width:100%}.file-name{max-width:100%}}
+/* Where to Buy */
+.file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.sh-drop{display:grid;grid-template-columns:auto 1fr;gap:18px 26px;align-items:center;margin-top:18px;padding:22px;border-radius:28px;
+ background:linear-gradient(135deg,#fff7f1,#e9f6f4);border:2px dashed #b9dcd7;transition:.25s}
+.sh-drop.drag{border-color:var(--c1);background:linear-gradient(135deg,#fff0e8,#e0f4f1);transform:scale(1.01)}
+.sh-drop.has{border-style:solid;border-color:#fff}
+.sh-label{display:contents;cursor:pointer}
+.sh-frame{position:relative;width:190px;height:240px;border-radius:22px;background:#fff;display:grid;place-items:center;
+ box-shadow:0 14px 34px #17283a22;overflow:visible;transition:transform .3s}
+.sh-label:hover .sh-frame{transform:translateY(-4px) rotate(-1deg)}
+.sh-frame img{width:100%;height:100%;object-fit:cover;border-radius:22px}
+.sh-ph{color:#4f9d97;animation:shfloat 3s ease-in-out infinite alternate}
+@keyframes shfloat{to{transform:translateY(-8px)}}
+.sh-corner{position:absolute;width:22px;height:22px;border:solid var(--c1);pointer-events:none;transition:.3s}
+.sh-corner.a{top:-7px;left:-7px;border-width:3px 0 0 3px;border-radius:10px 0 0 0}
+.sh-corner.b{top:-7px;right:-7px;border-width:3px 3px 0 0;border-radius:0 10px 0 0}
+.sh-corner.c{bottom:-7px;left:-7px;border-width:0 0 3px 3px;border-radius:0 0 0 10px}
+.sh-corner.d{bottom:-7px;right:-7px;border-width:0 3px 3px 0;border-radius:0 0 10px 0}
+.sh-drop.scanning .sh-frame::after{content:"";position:absolute;left:0;right:0;top:0;height:60px;border-radius:22px;
+ background:linear-gradient(transparent,#0e9f9a33 60%,#0e9f9a88);border-bottom:2px solid #7ff5ec;box-shadow:0 6px 22px #0e9f9a;animation:shscan 1.4s linear infinite}
+@keyframes shscan{from{transform:translateY(-60px)}to{transform:translateY(240px)}}
+.sh-copy{display:flex;flex-direction:column;gap:6px;min-width:0}
+.sh-copy strong{font:300 1.6rem Fraunces,serif;letter-spacing:-.01em}
+.sh-copy small{font-size:.8rem;opacity:.6}
+.file-name{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem;color:#607080}
+.sh-actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap}
+.sh-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:26px 0 8px}
+.sh-stat{background:#fff;border-radius:20px;padding:14px 18px;box-shadow:inset 0 0 0 1px #e1eeec;animation:up .4s both}
+.sh-stat small{display:block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;opacity:.55}
+.sh-stat b{font:300 1.9rem/1.2 Fraunces,serif;font-variant-numeric:tabular-nums}
+.sh-stat.best b{color:var(--ok)}.sh-stat.top b{color:var(--c1)}
+.sh-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:14px 0}
+.sh-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sh-card{position:relative;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:#fff;text-decoration:none;color:inherit;
+ box-shadow:0 10px 26px #17283a1c;transition:transform .25s,box-shadow .25s;animation:up .45s both}
+.sh-card:hover{transform:translateY(-6px);box-shadow:0 22px 40px #17283a30}
+.sh-card .ph{height:210px;background:#f1f8f7}.sh-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.sh-card:hover img{transform:scale(1.06)}
+.sh-body{display:flex;flex-direction:column;gap:6px;padding:12px 14px 14px;flex:1}
+.sh-shop{font:600 .64rem Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--c2)}
+.sh-title{font-size:.82rem;line-height:1.35;flex:1}
+.sh-price{font:400 1.5rem Fraunces,serif}
+.sh-go{font-size:.74rem;font-weight:600;color:var(--c1)}
+.sh-badge{position:absolute;top:10px;left:10px;z-index:2;padding:5px 12px;border-radius:999px;background:linear-gradient(120deg,var(--ok),#3fcfb0);
+ color:#fff;font:700 .68rem Inter;letter-spacing:.06em;box-shadow:0 6px 14px #1fb88955}
+.sh-skel{height:330px;border-radius:22px;background:linear-gradient(100deg,#e8f4f2 30%,#f8fcfb 50%,#e8f4f2 70%) 0 0/200% 100%;animation:shimmer 1.2s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+@media(max-width:620px){.sh-drop{grid-template-columns:1fr;justify-items:center;text-align:center}.sh-frame{width:160px;height:204px}}
+
+/* --- extras "Where to Buy" (tools, budget, comparateur, liste, crop, historique) --- */
+.sh-card .sh-tools{position:absolute;top:10px;right:10px;z-index:3;display:flex;flex-direction:column;gap:6px}
+.sh-tool{width:34px;height:34px;border:0;border-radius:50%;cursor:pointer;background:#ffffffe6;color:var(--ink);font-size:1rem;
+ box-shadow:0 6px 14px #17283a30;transition:.2s;display:grid;place-items:center}
+.sh-tool:hover{transform:scale(1.12)}
+.sh-tool.on{background:var(--c1);color:#fff}
+.sh-card .ph,.sh-card .sh-body{color:inherit;text-decoration:none;display:block}
+.sh-card .sh-body{display:flex}
+.sh-orig{font-size:.7rem;opacity:.55}
+.sh-budget{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:6px 0 16px;font-size:.88rem}
+.sh-budget b{min-width:70px;font:400 1.2rem Fraunces,serif;color:var(--c1)}
+.sh-budget input{flex:1;min-width:180px;max-width:420px}
+.sh-cmpbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:12;display:flex;align-items:center;gap:12px;padding:10px 12px 10px 22px;
+ border-radius:999px;background:var(--ink);color:#fff;box-shadow:0 18px 40px #17283a66;animation:up .3s both}
+.sh-cmpbar[hidden]{display:none}
+.sh-cmpbar .btn{padding:8px 18px;font-size:.82rem}
+.sh-toast{position:fixed;left:50%;top:22px;transform:translateX(-50%);z-index:50;padding:12px 22px;border-radius:999px;background:var(--ink);color:#fff;
+ font:500 .86rem Inter;box-shadow:0 14px 34px #17283a55;animation:up .3s both}
+.sh-hist{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:26px}
+.sh-hist>span{font:500 .66rem Inter;letter-spacing:.28em;text-transform:uppercase;color:var(--c1)}
+.sh-h{width:62px;height:78px;padding:0;border:3px solid #fff;border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:0 8px 18px #17283a28;transition:.2s;background:#fff}
+.sh-h:hover{transform:translateY(-4px) rotate(-2deg)}.sh-h img{width:100%;height:100%;object-fit:cover;display:block}
+.sh-cmp{width:100%;border-collapse:collapse;font-size:.85rem}
+.sh-cmp td,.sh-cmp th{padding:10px;text-align:center;border-bottom:1px solid #e6f0ee;vertical-align:top}
+.sh-cmp th{font:500 .66rem Inter;letter-spacing:.2em;text-transform:uppercase;color:var(--c1);text-align:left}
+.sh-cmp img{width:110px;height:140px;object-fit:cover;border-radius:12px}
+.sh-cmp .low{color:var(--ok);font-weight:700}
+.sh-lrow{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #e6f0ee}
+.sh-lrow img{width:56px;height:70px;object-fit:cover;border-radius:10px}.sh-lrow div{flex:1;font-size:.85rem}
+.sh-crop{position:relative;display:inline-block;touch-action:none;cursor:crosshair;max-width:100%}
+.sh-crop canvas{display:block;max-width:100%;border-radius:14px}
 
 .wrap{max-width:1180px}
 .top{position:sticky;top:12px;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#ffffffe8;backdrop-filter:blur(16px);border-radius:22px;padding:14px 24px;box-shadow:0 10px 34px #17283a22}
@@ -134,6 +201,13 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opa
 .wd-shelf .gi{width:88px;height:88px}
 .wd-zone .gi::before{content:"";position:absolute;top:-15px;left:50%;width:24px;height:15px;border:2px solid #98a2ac;border-bottom:0;border-radius:12px 12px 0 0;transform:translateX(-50%)}
 .gi:hover{z-index:6;transform:translateY(-6px) scale(1.1)}
+.gi.owned{outline:3px solid var(--ok);outline-offset:1px}
+.gi-badge{position:absolute;left:3px;right:3px;bottom:3px;padding:1px 3px;border-radius:6px;background:#17283acc;color:#fff;font:600 .52rem/1.2 Inter,sans-serif;text-align:center;pointer-events:none}
+.gi.owned .gi-badge{background:var(--ok)}
+.wd-own-row{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 4px}
+.wd-own-row figure{margin:0;width:104px}
+.wd-own-row img{width:104px;height:128px;object-fit:cover;border-radius:10px;outline:3px solid var(--ok);outline-offset:1px;display:block}
+.wd-own-row figcaption{font-size:.72rem;line-height:1.25;margin-top:6px;opacity:.8}
 .gx{display:none;position:absolute;top:3px;right:3px;width:20px;height:20px;border:0;border-radius:50%;background:#000a;color:#fff;cursor:pointer;line-height:1}.gi:hover .gx{display:block}
 .wd-cab:not(.open) .gi{opacity:0}
 .gi.new{animation:gen .9s var(--d,0ms) backwards,glow 1.8s calc(var(--d,0ms) + .9s) ease-in-out 3;z-index:3}
@@ -531,7 +605,90 @@ label.btn input{display:none}
   #wardrobe .wd-door,#wardrobe .wd-cab,#wardrobe .wd-in{transition-duration:.01s}
   #wardrobe .wd-door,#wardrobe .wd-plaque,#wardrobe #wrun::after{animation:none}
 }
-</style><link rel="stylesheet" href="/static/assistant.css?v=integrated-13">
+/* ---------- Gap panel : suggestions flottantes à droite ---------- */
+.gapx{position:fixed;top:50%;right:18px;z-index:12;width:min(392px,92vw);max-height:88vh;display:flex;flex-direction:column;
+ border-radius:30px;background:#ffffffeb;backdrop-filter:blur(22px) saturate(1.3);border:1px solid #fff;overflow:hidden;
+ box-shadow:0 40px 90px #17283a55,0 0 0 1px #17283a0d;
+ transform:translate(125%,-50%) rotate(2deg);opacity:0;pointer-events:none;
+ transition:transform .85s cubic-bezier(.2,1.15,.3,1),opacity .4s}
+.gapx.show{transform:translate(0,-50%);opacity:1;pointer-events:auto}
+.gapx::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#ff6b4a,#ff9f43,#0e9f9a)}
+.gapx-head{padding:26px 24px 8px;position:relative}
+.gapx-head .eyebrow{color:var(--c1);opacity:1;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.gapx-head .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c1);box-shadow:0 0 0 0 #ff6b4a88;animation:gping 2s infinite}
+@keyframes gping{70%{box-shadow:0 0 0 9px #ff6b4a00}}
+.gapx-head h3{font:300 1.65rem/1.1 Fraunces,serif;letter-spacing:-.02em;margin:0 36px 8px 0}.gapx-head h3 em{font-style:italic;color:var(--c1)}
+.gapx-head p{margin:0;font-size:.82rem;line-height:1.5;opacity:.7}
+.gapx-x{position:absolute;top:20px;right:18px;width:32px;height:32px;border:0;border-radius:50%;background:#e8f4f2;color:var(--ink);cursor:pointer;font-size:1.1rem;transition:.2s}
+.gapx-x:hover{background:var(--ink);color:#fff;transform:rotate(90deg)}
+.gapx-tabs{display:flex;gap:6px;padding:10px 24px 0}
+.gapx-tabs button{border:0;cursor:pointer;padding:6px 14px;border-radius:999px;background:#e8f4f2;font:500 .78rem Inter;color:var(--ink);transition:.2s}
+.gapx-tabs button.on{background:var(--ink);color:#fff}
+.gapx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 20px 6px;overflow:auto}
+.gapx-card{position:relative;border:0;padding:0;text-align:left;cursor:pointer;background:#fff;border-radius:18px;overflow:hidden;font:inherit;color:inherit;
+ box-shadow:0 8px 20px #17283a1f,inset 0 0 0 2px transparent;transition:transform .3s cubic-bezier(.2,1.4,.3,1),box-shadow .25s,opacity .25s,filter .25s;
+ animation:gcin .6s calc(.55s + var(--k)*.12s) cubic-bezier(.2,1.2,.3,1) backwards}
+@keyframes gcin{from{opacity:0;transform:translateX(40px) scale(.9)}}
+.gapx-card img{width:100%;aspect-ratio:3/4.3;object-fit:cover;display:block;transition:transform .5s}
+.gapx-card:hover{transform:translateY(-5px)}.gapx-card:hover img{transform:scale(1.06)}
+.gapx-card p{margin:0;padding:8px 8px 10px;font-size:.66rem;line-height:1.3}
+.gapx-card em{display:block;font:700 .56rem Inter;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--c2);margin-bottom:2px}
+.gapx-card .ck{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#ff6b4a,#ff9f43);
+ transform:scale(0);transition:transform .35s cubic-bezier(.2,1.8,.3,1);box-shadow:0 4px 10px #ff6b4a77}
+.gapx-card .ck::after{content:"";position:absolute;left:8px;top:4px;width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.gapx-grid.has .gapx-card:not(.on){opacity:.5;filter:saturate(.6)}
+.gapx-card.on{transform:translateY(-6px) scale(1.04);box-shadow:0 18px 34px #ff6b4a44,inset 0 0 0 3px var(--c1)}
+.gapx-card.on .ck{transform:scale(1)}
+.gapx-foot{padding:14px 20px 20px;display:flex;flex-direction:column;gap:8px}
+.gapx-cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:999px}
+.gapx-cta svg{transition:transform .25s}.gapx-cta:not(:disabled):hover svg{transform:translateX(4px)}
+.gapx-cta:disabled{opacity:.4;box-shadow:none;cursor:not-allowed;background:#9fb3b0}
+.gapx-hint{text-align:center;font-size:.72rem;opacity:.55;margin:0}
+/* onglet latéral quand le panneau est réduit */
+.gapx-tab{position:fixed;top:50%;right:0;z-index:11;transform:translate(100%,-50%);border:0;cursor:pointer;padding:18px 12px;border-radius:18px 0 0 18px;
+ background:linear-gradient(160deg,#ff6b4a,#ff9f43);color:#fff;font:600 .78rem Inter;letter-spacing:.14em;text-transform:uppercase;writing-mode:vertical-rl;
+ box-shadow:-10px 10px 30px #ff6b4a55;transition:transform .5s cubic-bezier(.2,1.2,.3,1)}
+.gapx-tab.show{transform:translate(0,-50%)}.gapx-tab:hover{padding-right:18px}
+@media(max-width:700px){
+ .gapx{top:auto;bottom:0;right:0;left:0;width:100%;border-radius:28px 28px 0 0;transform:translateY(110%)}.gapx.show{transform:none}
+ .gapx-tab{top:auto;bottom:90px;transform:translateX(100%)}.gapx-tab.show{transform:none}
+}
+@media(prefers-reduced-motion:reduce){.gapx,.gapx-card{transition-duration:.01s;animation:none}}
+/* Gap panel : ancré en bas à droite, ne cache plus l'avatar */
+@media(min-width:701px){
+ .gapx{top:auto;bottom:16px;right:18px;
+  max-height:min(640px,calc(100vh - 300px));min-height:380px;
+  transform:translate(125%,0) rotate(2deg)}
+ .gapx.show{transform:none}
+ .gapx-head{padding:20px 24px 4px}
+ .gapx-head h3{font-size:1.4rem}
+ .gapx-grid{padding:12px 20px 4px}
+ .gapx-foot{padding:10px 20px 16px}
+ .gapx-tab{top:auto;bottom:40px;transform:translateX(100%)}
+ .gapx-tab.show{transform:none}
+}
+.ootd-tryon-panel{display:none;background:#ffffffed;backdrop-filter:blur(18px);border:1px solid #fff;border-radius:24px;padding:18px;box-shadow:0 18px 50px #17283a22;color:var(--ink)}
+.ootd-tryon-panel:not([hidden]){display:block;position:fixed;z-index:20;top:226px;left:auto;right:14px;width:min(340px,calc(100vw - 28px));max-height:calc(100vh - 250px);overflow:auto}
+.ootd-tryon-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.ootd-tryon-close{flex:0 0 32px;width:32px;height:32px;border:0;border-radius:50%;background:#e8f4f2;color:var(--ink);font:500 1.2rem/1 Inter,sans-serif;cursor:pointer;transition:background .2s,transform .2s}
+.ootd-tryon-close:hover{background:#d5e9e6;transform:rotate(90deg)}
+.ootd-tryon-panel .eyebrow{color:var(--c1);margin:0 0 6px}
+.ootd-tryon-panel h3{font:400 1.35rem Fraunces,serif;margin:0 0 6px}
+.ootd-tryon-panel p{font-size:.82rem;line-height:1.5;margin:6px 0 12px;opacity:.78}
+.ootd-tryon-panel img{display:block;width:100%;max-height:min(56vh,520px);object-fit:contain;border-radius:16px}
+.ootd-tryon-panel .ootd-tryon-spinner{width:28px;height:28px;border:3px solid #d8e9e6;border-top-color:var(--c1);border-radius:50%;animation:ootdSpin .8s linear infinite;margin:18px auto}
+@keyframes ootdSpin{to{transform:rotate(360deg)}}
+.ootd-progress{margin:10px 0 14px}
+.ootd-progress-track{height:8px;border-radius:999px;background:#e6efed;overflow:hidden}
+.ootd-progress-fill{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#ff6b4a,#ff9f43);transition:width .6s ease}
+.ootd-progress-label{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:.68rem;opacity:.7}
+.ootd-tryon-action{margin-top:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ootd-tryon-action small{font-size:.72rem;opacity:.65}
+@media(min-width:1760px){.ootd-tryon-panel:not([hidden]){width:min(370px,calc(100vw - 28px))}}
+@media(max-width:760px){.ootd-tryon-panel:not([hidden]){top:auto;bottom:12px;right:12px;width:min(300px,calc(100vw - 24px));max-height:70vh}.ootd-tryon-panel img{max-height:38vh}}
+@media(prefers-reduced-motion:reduce){.ootd-tryon-spinner,.ootd-progress-fill{animation:none;transition:none}}
+</style><link rel="stylesheet" href="/static/assistant.css?v=bo7ootd9"><link rel="stylesheet" href="/static/taste.css?v=1">
+<script type="importmap">{"imports":{"three":"/static/vendor/three/build/three.module.min.js"}}</script>
 </head><body><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#0e9f9a"/></linearGradient><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d5166"/><stop offset="1" stop-color="#17283a"/></linearGradient></defs></svg>
 <div id="intro" hidden><div class="tp"><div class="logo"><svg class="mono" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" fill="none" stroke="url(#lg)" stroke-width="1.2"/><circle cx="37.5" cy="9.5" r="2.3" fill="#ff6b4a"/><text x="22" y="28" text-anchor="middle">dm</text></svg><span class="wm">DRESS<i>ME</i><small>STYLE INTELLIGENCE</small></span></div></div><div class="fl b"></div><div class="figs"><div class="her"><div class="bub">I have nothing to wear.</div><img src="/static/woman.png" alt=""></div><div class="hm"><div class="bub b2">I'm late, I have a meeting.</div><img class="him" src="/static/man.png" alt="" onerror="this.remove()"></div></div><div class="pile"></div><div class="fl f"></div>
 <div class="copy"><p class="eyebrow">Wardrobe intelligence</p><h1>Where weather, taste and wardrobe <em>finally agree.</em></h1></div>
@@ -543,6 +700,7 @@ label.btn input{display:none}
 <section id="ootd" class="glass"><div class="chead"><div><p class="eyebrow">No. 01</p><h2>Outfit of the Day</h2></div>
 <button class="mini-av" id="occ-av2" type="button" aria-label="Change the occasion" title="Change the occasion"><img src="/static/avatar.png" alt=""></button></div><div class="chips" id="src"><button class="cc on" data-s="geo">My location</button><button class="cc" data-s="city">City</button><button class="cc" data-s="man">Simulate weather</button></div>
 <div id="srcui"></div><div id="ootdout"></div></section>
+<aside id="ootd-tryon-panel" class="ootd-tryon-panel" aria-live="polite" aria-label="Virtual try-on result" hidden></aside>
 
 <section id="score" class="glass" hidden><p class="eyebrow">No. 02</p><h2>Rate My Look</h2>
 <div class="row" id="b1"></div><div style="margin-top:14px"><button class="btn ghost" id="ex1">Load a real outfit</button></div><div id="sout"></div></section>
@@ -574,30 +732,39 @@ label.btn input{display:none}
   <button class="occp-skip" id="gp-x" type="button" style="position:static;transform:none;margin-top:30px">Never mind</button>
  </div>
 </div>
-<section id="sim" class="glass" hidden><p class="eyebrow">No. 04</p><h2>Find Similar</h2>
-<p class="sub">Upload a photo of a garment: we find similar pieces and the shops that sell it.</p>
-<div class="upload-row">
+<section id="sim" class="glass" hidden>
+ <p class="eyebrow">No. 04</p><h2>Where to Buy It</h2>
+ <p class="sub">Drop a photo of any garment. We scan the web and line up the shops, cheapest first.</p>
+
+ <div class="sh-drop" id="simdrop">
   <input class="file-input" type="file" id="simfile" accept="image/*" aria-label="Upload a garment photo">
-  <label class="upload-label" for="simfile">
-    <span class="upload-icon" aria-hidden="true">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-        <path d="m21 15-5-5L5 21"></path>
-      </svg>
-    </span>
-    <span class="upload-copy">
-      <strong>Upload a garment photo</strong>
-      <small>Choose an image · JPG, PNG or WEBP</small>
-    </span>
+  <label class="sh-label" for="simfile">
+   <div class="sh-frame">
+    <img id="simprev" hidden alt="Garment photo preview">
+    <div class="sh-ph" id="simph">
+     <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.5 16 2a4 4 0 0 1-8 0L3.6 3.5a2 2 0 0 0-1.3 2.2l.6 3.5a1 1 0 0 0 1 .8H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.1a1 1 0 0 0 1-.8l.6-3.5a2 2 0 0 0-1.3-2.2z"/></svg>
+    </div>
+    <i class="sh-corner a"></i><i class="sh-corner b"></i><i class="sh-corner c"></i><i class="sh-corner d"></i>
+   </div>
+   <div class="sh-copy">
+    <strong id="simtitle">Drop a garment photo</strong>
+    <small>or click to browse · or paste with Ctrl+V · JPG, PNG, WEBP</small>
+    <span class="file-name" id="simfilename" aria-live="polite"></span>
+   </div>
   </label>
-  <span class="file-name" id="simfilename" aria-live="polite">No image selected</span>
-  <img id="simprev" hidden alt="Garment photo preview" style="height:110px;border-radius:14px;box-shadow:0 8px 22px #17283a20">
-</div>
-<div class="chips" id="simcat"></div>
-<button class="btn" id="simgo">Find similar pieces</button>
-<button class="btn ghost" id="shopgo">Where to buy it</button>
-<div id="simout"></div><div id="shopout"></div></section>
+  <div class="sh-actions">
+   <button class="btn" id="shopgo" type="button">Where to buy it</button>
+   <button class="btn ghost" id="shopcrop" type="button" hidden>✂ Crop</button>
+   <button class="btn ghost" id="shwd" type="button" hidden>+ Add to my wardrobe</button>
+   <button class="btn ghost" id="shopclear" type="button" hidden>Remove photo</button>
+   <button class="btn ghost" id="shlist" type="button">♥ My list <b id="shlistn">0</b></button>
+  </div>
+ </div>
+
+ <div id="shopout" aria-live="polite"></div>
+ <div id="shhist"></div>
+ <div class="sh-cmpbar" id="shcmp" hidden></div>
+</section>
 
 <section id="wardrobe" class="glass" hidden><p class="eyebrow">No. 05</p><h2>Wardrobe Completion</h2>
 <p class="sub">Open your digital wardrobe. We find the pieces that unlock the most new outfits and add them to your closet.</p>
@@ -615,6 +782,27 @@ label.btn input{display:none}
 <div id="wan" class="chips" style="margin:2px 0 6px"></div>
 <div class="wd-stage"><div class="wd-cab" id="wcab"><div class="wd-in" id="win"></div><div class="wd-door l"></div><div class="wd-door r"></div></div></div>
 <div id="wout"></div></section>
+<section id="reco" class="glass taste-page" hidden>
+ <p class="eyebrow">Taste</p><h2>Taste Studio</h2>
+ <p class="sub">Browse pieces from every style. Like, dislike or save to shape your recommendations.</p>
+ <div class="taste-toolbar"><span><b id="taste-count">0</b> reactions</span><div class="chips" id="taste-gender"></div><button class="btn ghost" id="taste-reset" type="button">Start over</button></div>
+ <div class="chips" id="taste-tabs"></div><div class="chips" id="taste-slots"></div>
+ <div id="taste-output" aria-live="polite"></div>
+</section>
+<section id="style" class="glass taste-page" hidden>
+ <p class="eyebrow">Taste</p><h2>Style Profile</h2>
+ <p class="sub">Analyze photos or your Taste Studio likes. The model estimates four broad styles and suggests catalog pieces.</p>
+ <div class="chips" id="taste-style-mode"><button class="cc on" data-mode="photos" type="button">Upload photos</button><button class="cc" data-mode="likes" type="button">Use my likes</button></div>
+ <div id="taste-style-photos"><div class="taste-upload"><label class="btn ghost" for="taste-photos">Choose garment photos</label><input id="taste-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden><span id="taste-photo-name">Up to 12 JPG, PNG or WEBP images, 8 MB each</span></div><div id="taste-previews" class="taste-previews"></div><button class="btn" id="taste-analyze" type="button">Analyse my style</button> <button class="btn ghost" id="taste-sample" type="button">Try a catalog sample</button></div>
+ <div id="taste-style-likes" hidden><p class="sub" id="taste-likes-count"></p><button class="btn" id="taste-analyze-likes" type="button">Analyse my likes</button></div>
+ <div id="taste-style-output" aria-live="polite"></div>
+</section>
+<section id="bubble" class="glass taste-page" hidden>
+ <p class="eyebrow">Taste</p><h2>Bubble Breaker</h2>
+ <p class="sub">Explore less familiar styles while keeping your likes in the mix.</p>
+ <div class="taste-bubble-control"><label for="taste-surprise">Surprise level <b id="taste-surprise-value">25%</b></label><input id="taste-surprise" type="range" min="0" max="100" value="25"><button class="btn" id="taste-bubble-go" type="button">Break my bubble</button></div>
+ <p class="sub" id="taste-surprise-help">A balanced mix of familiar and less explored styles.</p><div id="taste-bubble-output" aria-live="polite"></div>
+</section>
 <section id="bo6-wardrobe" class="glass" hidden><div data-studio-page="bo6-wardrobe"></div></section>
 <section id="bo6-add" class="glass" hidden><div data-studio-page="bo6-add"></div></section>
 <section id="bo7-avatar" class="glass" hidden><div data-studio-page="bo7-avatar"></div></section>
@@ -738,16 +926,20 @@ const MENU=[{label:'Style Me',items:[
  {id:'score',title:'Rate My Look',desc:'Rate any outfit and improve it'},
  {id:'comp',title:'Complete My Outfit',desc:'Complete a partial outfit'}]},
  {label:'Shopping',items:[
- {id:'sim',title:'Find Similar',desc:'Upload a piece, find lookalikes and where to buy it'},
+ {id:'sim',title:'Where to Buy',desc:'Upload a piece, compare prices across shops'},
  {id:'wardrobe',title:'Wardrobe Completion',desc:'The missing piece that unlocks the most new outfits'},
  ]},
+ {label:'Taste',items:[
+ {id:'reco',title:'Taste Studio',desc:'Discover, like and save catalog pieces'},
+ {id:'style',title:'Style Profile',desc:'Find your style from photos or likes'},
+ {id:'bubble',title:'Bubble Breaker',desc:'Discover styles beyond your usual picks'}]},
  {label:'Wardrobe Check',items:[
  {id:'bo3',title:'Redundancy Check',desc:'Spot duplicates and clutter, donate what you do not wear'}]},
   {label:'My Studio',items:[
  {id:'bo6-wardrobe',title:'My Wardrobe',desc:'Your private garments'},
  {id:'bo6-add',title:'Add Garment',desc:'Analyze and review a photo'},
  {id:'bo7-avatar',title:'My Avatar',desc:'Saved avatar and provider status'},
- {id:'bo7-tryon',title:'Virtual Try-On',desc:'Private mock preview workflow'},
+ {id:'bo7-tryon',title:'Virtual Try-On',desc:'Private try-on workflow'},
  {id:'bo7-history',title:'Try-On History',desc:'Your saved jobs'}]},
  {label:'Profile',items:[
  {id:'logout',title:'Logout',desc:'Sign out of DressMe'}]}];
@@ -806,19 +998,29 @@ document.addEventListener('click',event=>{if(mobileMenu()&&mobileMenuOpen&&!even
 window.addEventListener('resize',()=>{closeGroups();mobileMenuOpen=false;syncMenuMode()},{passive:true});
 window.addEventListener('hashchange',()=>{if(mobileMenu()&&mobileMenuOpen)closeMobileMenu(false)});
 /* ---------- sélecteur d'articles (hide = catégories à masquer, ex. ['dress'] pour une garde-robe homme) ---------- */
-function picker(cb,hide=[],allow=null){let f='all',q='';const m=document.createElement('div');m.className='modal';
+function picker(cb,hide=[],mine=null){let f='all',q='';const m=document.createElement('div');m.className='modal';
+ const base=()=>mine||C;
  m.innerHTML=`<div><div class="row" style="align-items:center;justify-content:space-between"><h2>Pick an item</h2><button class="btn ghost" id="cl">Close</button></div>
  <input type="search" placeholder="Search (coat, silk, boots…)" id="q"><div class="chips" id="fc"></div><div class="grid" id="g"></div></div>`;document.body.appendChild(m);
  const cats=['all',...Object.keys(FR).filter(c=>!hide.includes(c))];$('#fc',m).innerHTML=cats.map(c=>`<button class="cc ${c=='all'?'on':''}" data-c="${c}">${c=='all'?'All':FR[c]}</button>`).join('');
- const draw=()=>{const L=C.filter(x=>!hide.includes(x.c)&&(!allow||allow.has(x.i))&&(f=='all'||x.c==f)&&x.d.toLowerCase().includes(q)).slice(0,120);
-  $('#g',m).innerHTML=L.map(x=>`<div class="card" data-i="${x.i}"><img loading="lazy" src="${img(x.k)}"><p><em>${FR[x.c]}</em><br>${x.d.slice(0,46)}</p></div>`).join('')||'<p>No results</p>'};
+ const draw=()=>{const L=base().filter(x=>!hide.includes(x.c)&&(f=='all'||x.c==f)&&String(x.d||'').toLowerCase().includes(q)).slice(0,120);
+  $('#g',m).innerHTML=L.map(x=>`<div class="card" data-i="${x.i}"><img loading="lazy" src="${x.photo||img(x.k)}"><p><em>${FR[x.c]||x.c}</em><br>${esc(String(x.d||'').slice(0,46))}</p></div>`).join('')||'<p>No results</p>'};
  m.onclick=e=>{if(e.target===m||e.target.id=='cl')return m.remove();const c=e.target.closest('[data-c]');if(c){f=c.dataset.c;$$('.cc',m).forEach(x=>x.classList.toggle('on',x===c));draw()}
   const k=e.target.closest('[data-i]');if(k){m.remove();cb(+k.dataset.i)}};$('#q',m).oninput=e=>{q=e.target.value.toLowerCase();draw()};draw()}
-function Builder(root,max,onChange){const st={it:Array(max).fill(null),bad:-1,good:-1};
+const PH={};
+async function mineFetch(){await wdFlush();const r=await api('wardrobe/me');r.items.forEach(x=>{if(x.photo)PH[x.i]=x.photo});return r.items}
+async function pickMine(cb){try{const items=await mineFetch();
+ if(!items.length){alert('Your wardrobe is empty. Fill it in Wardrobe Completion first.');return}
+ picker(cb,[],items)}catch(e){console.error(e);alert('Could not load your wardrobe: '+e.message)}}
+async function mineLook(n){const items=await mineFetch(),by={};items.forEach(x=>(by[x.c]=by[x.c]||[]).push(x.i));
+ const pick=c=>by[c]?.[Math.random()*by[c].length|0];
+ const cats=by.dress&&Math.random()<.3?['dress','shoes','outer','bag']:['top','bottom','shoes','outer','bag'];
+ const ids=cats.map(pick).filter(v=>v!=null);if(ids.length<2)throw new Error('Not enough pieces in your wardrobe yet.');return ids.slice(0,n)}
+  function Builder(root,max,onChange){const st={it:Array(max).fill(null),bad:-1,good:-1};
  const draw=()=>{root.innerHTML=st.it.map((id,j)=>id==null?`<div class="slot empty" data-j="${j}"><b>+</b><small>Add an item</small></div>`:
-  `<div class="slot ${j==st.bad?'bad':''} ${j==st.good?'good':''}" data-j="${j}"><img src="${img(cat(id).k)}"><small>${FR[cat(id).c]} · ${cat(id).d.slice(0,26)}</small><button class="x" data-x="${j}">×</button></div>`).join('')};
+  `<div class="slot ${j==st.bad?'bad':''} ${j==st.good?'good':''}" data-j="${j}"><img src="${PH[id]||img(cat(id).k)}"><small>${FR[cat(id).c]} · ${cat(id).d.slice(0,26)}</small><button class="x" data-x="${j}">×</button></div>`).join('')};
  root.onclick=e=>{const x=e.target.closest('[data-x]');if(x){e.stopPropagation();st.it[+x.dataset.x]=null;st.bad=st.good=-1;draw();onChange();return}
-  const s=e.target.closest('.slot');if(s)picker(id=>{st.it[+s.dataset.j]=id;st.bad=st.good=-1;draw();onChange()})};
+  const s=e.target.closest('.slot');if(s)pickMine(id=>{st.it[+s.dataset.j]=id;st.bad=st.good=-1;draw();onChange()})};
  st.idx=()=>st.it.map((v,j)=>v==null?-1:j).filter(j=>j>=0);st.get=()=>st.it.filter(v=>v!=null);
  st.set=a=>{st.it=Array.from({length:max},(_,j)=>a[j]??null);st.bad=st.good=-1;draw();onChange()};
  st.put=(id,j)=>{if(j==null)j=st.it.indexOf(null);if(j<0)return false;st.it[j]=id;st.bad=-1;st.good=j;draw();onChange();return true};draw();return st}
@@ -826,18 +1028,18 @@ function Builder(root,max,onChange){const st={it:Array(max).fill(null),bad:-1,go
 const B1=Builder($('#b1'),5,()=>rate());let tm;
 function rate(){clearTimeout(tm);const it=B1.get();if(it.length<2){$('#sout').innerHTML='';vdHide();return}
  $('#sout').innerHTML='<div class="spin"></div>';
- tm=setTimeout(()=>api('score',{items:it}).then(r=>{const [v,c]=verdict(r.score),ix=B1.idx();B1.bad=r.odd>0&&r.score<8?ix[r.odd-1]:-1;B1.good=-1;
-  $$('.slot',$('#b1')).forEach((s,j)=>s.classList.toggle('bad',j==B1.bad));
+ tm=setTimeout(()=>api('score',{items:it}).then(r=>{const miss=r.missing||[],inc=miss.length>0,[v,c]=inc?['INCOMPLETE','var(--warn)']:verdict(r.score),ix=B1.idx();B1.bad=!inc&&r.odd>0&&r.score<8?ix[r.odd-1]:-1;
   $('#sout').innerHTML=`<div class="res"><div class="gauge"><svg width="140" height="140"><circle cx="70" cy="70" r="58" fill="none" stroke="#dcefec" stroke-width="14"/><circle id="ring" cx="70" cy="70" r="58" fill="none" stroke="${c}" stroke-width="14" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="364" style="transition:1s"/></svg><b><span id="num">0.0</span><small>/ 10</small></b></div>
-  <div><span class="pill" style="background:${c}">${v}</span><p style="max-width:420px">${r.score>=8?'Flawless. Not a single piece out of place.':r.odd>0?`The <b>${FR[cat(it[r.odd-1]).c]}</b> (red frame) is stealing the show for the wrong reasons.`:'Nothing clashes, yet this look still has room to shine.'}</p></div></div>
+  <div><span class="pill" style="background:${c}">${v}</span><p style="max-width:420px">${inc?`Not a complete outfit yet: it still needs <b>${miss.map(m=>FR[m]||m).join(' + ')}</b>.`:r.score>=8?'Flawless. Not a single piece out of place.':r.odd>0?`The <b>${FR[cat(it[r.odd-1]).c]}</b> (red frame) is stealing the show for the wrong reasons.`:'Nothing clashes, yet this look still has room to shine.'}</p></div></div>
   <div id="sg"></div>`;
   requestAnimationFrame(()=>{$('#ring').style.strokeDashoffset=364*(1-r.score/10)});let n=0;const t=setInterval(()=>{n+=r.score/25;if(n>=r.score){n=r.score;clearInterval(t)}$('#num').textContent=n.toFixed(1)},30);
   $('#sg').innerHTML=r.swaps.length?'<h3>Swaps that raise the score</h3>'+r.swaps.map((s,k)=>{const add=s.action==='add',slot=add?'':ix[s.pos];
    return `<div class="sug" style="animation-delay:${k*.12}s"><img src="${img(s.item.k)}"><div>${add?`<b>Add</b> ${FR[s.item.c]}`:`<b>${FR[s.item.c]}</b> instead of “${esc(cat(it[s.pos]).d.slice(0,32))}”`}<br>${esc(s.item.d.slice(0,50))}</div><span class="pill" style="background:${verdict(s.score)[1]}">${s.score.toFixed(1)} (+${(s.score-r.score).toFixed(1)})</span><button class="btn" data-p="${slot}" data-i="${s.item.i}">Apply</button></div>`}).join(''):'';
   $$('[data-p]',$('#sg')).forEach(b=>b.onclick=()=>B1.put(+b.dataset.i,b.dataset.p===''?null:+b.dataset.p));
   vdAsk(it)}).catch(e=>{$('#sout').innerHTML=`<div class="err">${esc(e.message)}</div>`;vdHide()}),350)}
-let EX;$('#ex1').onclick=async()=>{EX=EX||await api('examples');B1.set(EX[Math.random()*EX.length|0].items)};
-/* ---------- IDÉE 2 : complétion ---------- */
+$('#ex1').onclick=async()=>{try{B1.set(await mineLook(4))}catch(e){$('#sout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+
+  /* ---------- IDÉE 2 : complétion ---------- */
 let want='auto',nGuess=1,coLoaded=false;const F={sty:'',sea:'',col:[]};const B2=Builder($('#b2'),5,()=>{});
 const WANTS=['auto','top','bottom','dress','outer','shoes','bag','accessory'];
 const WL=c=>c==='auto'?'Auto':c==='accessory'?'Accessory':(FR[c]||c);
@@ -888,7 +1090,7 @@ $('#go2').onclick=async()=>{const it=B2.get(),out=$('#cout');
   if(!r.items.length){out.innerHTML='<div class="nores">No suggestion matches these filters. Try removing one.</div>';return}
   const cats=(nGuess===1&&want==='auto'&&r.cats.length)?`<p class="sub">This look is calling for: ${r.cats.map(c=>`<b>${esc(WL(c[0]))}</b>`).join(' · ')}</p>`:'';
   const note=r.ignored?`<p class="sub">${r.ignored} piece(s) unknown to the model were ignored.</p>`:'';
-  const card=(x,k,lab)=>`<div class="card rv" style="animation-delay:${k*.12}s" data-i="${x.i}"><img src="${img(x.k)}" alt=""><p><em>${lab}${FR[x.c]}</em><br>${esc(x.d.slice(0,46))}<br><b style="color:var(--c2)">+ Add</b></p></div>`;
+  const card=(x,k,lab)=>`<div class="card rv" style="animation-delay:${k*.12}s" data-i="${x.i}"><img src="${x.photo||img(x.k)}" alt=""><p><em>${lab}${FR[x.c]}</em><br>${esc(x.d.slice(0,46))}<br><b style="color:var(--c2)">+ Add</b></p></div>`;
   const pair=nGuess===2&&r.items.length>1;
   const body=pair?`<div class="pair"><div class="pg">${r.items.map((x,k)=>card(x,k,`Piece ${k+1} · `)).join('<span class="plus">+</span>')}</div><button class="btn" id="addall" type="button">Add both pieces</button></div>`
    :'<div class="grid">'+r.items.map((x,k)=>card(x,k,'')).join('')+'</div>';
@@ -896,9 +1098,9 @@ $('#go2').onclick=async()=>{const it=B2.get(),out=$('#cout');
   const full=()=>out.insertAdjacentHTML('afterbegin','<div class="err">Remove an item first.</div>');
   $$('.card',out).forEach(c=>c.onclick=()=>{if(!B2.put(+c.dataset.i))full()});
   const all=$('#addall',out);if(all)all.onclick=()=>{if(5-B2.get().length<r.items.length)return full();r.items.forEach(x=>B2.put(x.i))}
- }).catch(e=>out.innerHTML=`<div class="err">${esc(e.message)}</div>`)};
-$('#ex2').onclick=async()=>{EX=EX||await api('examples');B2.set(EX[Math.random()*EX.length|0].items.slice(0,2))};
-/* ---------- IDÉE 3 : tenue du jour ---------- */
+ }).catch(e=>out.innerHTML=`<div class="err">${esc(e.message)}</div>`)}
+$('#ex2').onclick=async()=>{try{B2.set(await mineLook(2))}catch(e){$('#cout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+ /* ---------- IDÉE 3 : tenue du jour ---------- */
 let src='geo';
 function srcUI(){const u=$('#srcui');
  if(src=='geo')u.innerHTML='<button class="btn" id="loc">Use my location</button>';
@@ -914,58 +1116,228 @@ $('#src').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;src=b.da
 function vibe(w){const f=w.feels,t=f<5?'Bitterly cold out there. Wrap up properly.':f<12?'Chilly all day. Real layers are your friend.':f<18?'Fresh and breezy. One good layer does the job.':f<25?'Easy, mild weather. Dress light and move freely.':'A hot one. Keep it light and breathable.';
  const x=w.kind==='rain'||w.kind==='storm'||w.rain>=60?' Keep something waterproof close.':w.kind==='snow'?' Boots and a proper coat, no debate.':w.wind>=30?' The wind is up too.':w.kind==='clear'?' Sunshine all day.':'';return t+x}
 let OCC='',lastBody=null;
-function ootd(body){lastBody=body;$('#ootdout').innerHTML='<div class="spin"></div>';
+const gapsHtml=g=>(g||[]).map(x=>`<div class="nores" style="margin-top:14px"><b>${esc(x.title)}</b><p class="sub" style="margin:4px 0 8px">${esc(x.message)}</p><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))">${x.suggestions.map(s=>`<div class="card"><img src="${img(s.k)}" alt=""><p><em>${FR[s.c]}</em><br>${esc(s.d.slice(0,40))}</p></div>`).join('')}</div><p class="sub" style="margin:10px 0 0">You could check the availability of this item in <a href="#sim" data-go="sim"><b>Shopping → Where to Buy</b></a>.</p></div>`).join('');
+/* ---------- Gap panel : 3 suggestions à droite → Find Similar ---------- */
+const gapEl=document.createElement('aside');gapEl.className='gapx';gapEl.setAttribute('aria-label','Suggestions');
+const gapTab=document.createElement('button');gapTab.className='gapx-tab';gapTab.type='button';
+document.body.append(gapEl,gapTab);
+let gapData=[],gapI=0,gapSel=null,gapDismissed=false;
+const GAP_CAT={dress:'dress',outer:'outerwear',top:'top',bottom:'bottom',shoes:'shoes',bag:'bag',accessory:'accessory'};
+const gapOpen=v=>{gapEl.classList.toggle('show',v);gapTab.classList.toggle('show',!v&&gapData.length>0&&tab==='ootd')};
+function gapClear(){gapData=[];gapSel=null;gapEl.classList.remove('show');gapTab.classList.remove('show')}
+function gapDraw(){
+ const g=gapData[gapI];if(!g)return;
+ gapEl.innerHTML=`<div class="gapx-head"><p class="eyebrow">Missing piece${gapData.length>1?`s · ${gapData.length}`:''}</p>
+  <h3>Your wardrobe needs <em>${esc(g.noun||'a piece')}</em></h3><p>${esc(g.message)}</p>
+  <button class="gapx-x" type="button" aria-label="Minimise">&times;</button></div>
+  ${gapData.length>1?`<div class="gapx-tabs">${gapData.map((x,n)=>`<button type="button" data-n="${n}" class="${n===gapI?'on':''}">${esc(x.tab||x.slot)}</button>`).join('')}</div>`:''}
+  <div class="gapx-grid ${gapSel!=null?'has':''}">${g.suggestions.slice(0,3).map((s,k)=>`<button type="button" class="gapx-card ${gapSel===k?'on':''}" data-k="${k}" style="--k:${k}">
+   <span class="ck"></span><img src="${img(s.k)}" alt=""><p><em>${esc(FR[s.c]||s.c)}</em>${esc(String(s.d||'').slice(0,42))}</p></button>`).join('')}</div>
+  <div class="gapx-foot"><button class="btn gapx-cta" type="button" ${gapSel==null?'disabled':''}>Where to buy
+   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+   <p class="gapx-hint">${gapSel==null?'Tap a piece to select it':'We’ll load this photo into Where to Buy'}</p></div>`;
+ gapTab.textContent=`${gapData.length} missing piece${gapData.length>1?'s':''}`;
+}
+function gapPanel(gaps){
+ gapData=(gaps||[]).filter(g=>g.suggestions&&g.suggestions.length);gapI=0;gapSel=null;
+ if(!gapData.length){gapClear();return}
+ gapDraw();setTimeout(()=>{if(tab==='ootd')gapOpen(true)},900)}
+gapEl.addEventListener('click',async e=>{
+ if(e.target.closest('.gapx-x'))return gapOpen(false);
+ const t=e.target.closest('.gapx-tabs [data-n]');if(t){gapI=+t.dataset.n;gapSel=null;gapDraw();return}
+ const c=e.target.closest('.gapx-card');if(c){const k=+c.dataset.k;gapSel=gapSel===k?null:k;gapDraw();return}
+ const go_=e.target.closest('.gapx-cta');if(go_&&gapSel!=null){
+  const g=gapData[gapI],s=g.suggestions[gapSel];go_.disabled=true;go_.firstChild.textContent='Loading… ';
+  try{
+   const blob=await (await fetch(img(s.k))).blob(),f=new File([blob],`${s.k}.jpg`,{type:blob.type||'image/jpeg'}),dt=new DataTransfer();
+   dt.items.add(f);const inp=$('#simfile');inp.files=dt.files;inp.dispatchEvent(new Event('change'));
+   gapOpen(false);go('sim');scrollTo({top:0,behavior:'smooth'});
+  }catch(err){go_.disabled=false;alert('Could not load this photo: '+err.message)}}});
+gapTab.onclick=()=>gapOpen(true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&gapEl.classList.contains('show'))gapOpen(false)});
+document.addEventListener('dressme:section',e=>{if(e.detail!=='ootd'){gapEl.classList.remove('show');gapTab.classList.remove('show')}else if(gapData.length)gapTab.classList.add('show')});
+document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(a){e.preventDefault();go(a.dataset.go)}});
+function ootd(body){lastBody=body;gapClear();$('#ootdout').innerHTML='<div class="spin"></div>';
  api('ootd',{...body,occasion:OCC||null}).then(r=>{const w=r.weather;scene(w.kind);
   const map=w.lat!=null?`<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${w.lon-.06}%2C${w.lat-.035}%2C${w.lon+.06}%2C${w.lat+.035}&layer=mapnik&marker=${w.lat}%2C${w.lon}"></iframe>`:'';
   const who={women:"Women's outfit",men:"Men's outfit",unisex:'Unisex outfit'}[r.gender]||'';
+  const tryOnPieces=r.pick.filter(x=>['top','bottom','outer','dress'].includes(x.c)&&Number.isInteger(Number(x.i)));
+  const catalogIds=tryOnPieces.map(x=>Number(x.i));
+  const tryOnAction=`<div class="ootd-tryon-action"><button class="btn" type="button" data-ootd-tryon data-catalog-ids="${catalogIds.join(',')}" ${catalogIds.length<2?'disabled':''}>Try it on me</button><small>${catalogIds.length<2?'This outfit needs at least two compatible clothing pieces.':'Applies clothing pieces in order; shoes and accessories are skipped.'}</small></div>`;
   $('#ootdout').innerHTML=`<div class="wx"><div><b>${w.place}</b><div class="temp">${w.temp.toFixed(0)}°</div><div class="cond">${w.label}</div><div class="facts"><span>Feels like ${w.feels.toFixed(0)}°</span><span>Wind ${w.wind.toFixed(0)} km/h</span><span>Min ${w.tmin.toFixed(0)}° / Max ${w.tmax.toFixed(0)}°</span><span>Rain ${w.rain.toFixed(0)} %</span></div>${map}</div>
   <div><div class="grid">${r.pick.map((x,k)=>`<div class="card" style="animation-delay:${k*.12}s"><img src="${img(x.k)}"><p><em>${FR[x.c]}</em><br>${x.d.slice(0,46)}</p></div>`).join('')}</div>
-  <p class="vibe">${vibe(w)}</p></div></div>`})
+  <p class="vibe">${vibe(w)}</p>${tryOnAction}</div></div>`;gapPanel(r.gaps)})
  .catch(e=>$('#ootdout').innerHTML=`<div class="err">${esc(e.message)}</div>`)}
 
-/* ---------- IDÉE 4 : similarité + boutiques ---------- */
+/* ---------- IDÉE 4 : Where to Buy : photo -> SerpApi -> boutiques + prix ---------- */
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const upl=async(p,fd)=>{let r=await fetch('/api/search/'+p,{method:'POST',body:fd});if(r.status===401&&window.refreshDressMe){try{await window.refreshDressMe();r=await fetch('/api/search/'+p,{method:'POST',body:fd})}catch{location.replace('/login?next='+encodeURIComponent('/app'+location.hash));throw new Error('Sign in again to continue.')}}if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(d.detail||r.status)}return r.json()};
-let simCat='';
-const SC={'':'Auto',top:'Top',bottom:'Bottom',dress:'Dress',shoes:'Shoes',bag:'Bag',outerwear:'Outerwear',accessory:'Accessory'};
-$('#simcat').innerHTML=Object.entries(SC).map(([k,v])=>`<button class="cc ${k===''?'on':''}" data-sc="${k}">${v}</button>`).join('');
-$('#simcat').onclick=e=>{const b=e.target.closest('[data-sc]');if(!b)return;simCat=b.dataset.sc;$$('.cc',$('#simcat')).forEach(x=>x.classList.toggle('on',x===b))};
-$('#simfile').onchange=e=>{const f=e.target.files[0],p=$('#simprev'),n=$('#simfilename');p.hidden=!f;if(f){p.src=URL.createObjectURL(f);n.textContent=f.name;n.title=f.name}else{p.removeAttribute('src');n.textContent='No image selected';n.removeAttribute('title')}};
-const simFD=()=>{const f=$('#simfile').files[0];if(!f)throw new Error('Choose a photo first.');const d=new FormData();d.append('file',f);return d};
+const LS=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch{return null}};
+const SH={file:null,list:[],sort:'low',shop:'',cur:'€',budget:null,fav:LS('dm_fav')||[],hist:LS('dm_hist')||[],alerts:LS('dm_alerts')||[],cmp:[]};
+/* taux approximatifs, à remplacer idéalement par une conversion côté backend */
+const RATES={'€':1,EUR:1,'$':.92,USD:.92,'£':1.17,GBP:1.17,TND:.30,DT:.30};
+const TARGETS=['€','$','TND'];
+const shEls={drop:$('#simdrop'),inp:$('#simfile'),prev:$('#simprev'),ph:$('#simph'),name:$('#simfilename'),title:$('#simtitle'),out:$('#shopout'),clr:$('#shopclear'),crop:$('#shopcrop'),wd:$('#shwd')};
+const shNum=p=>{if(typeof p.extracted_price==='number')return p.extracted_price;
+ const m=String(p.price||'').replace(/\s/g,'').match(/\d[\d.,]*/);if(!m)return null;let s=m[0];
+ s=/,\d{1,2}$/.test(s)?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'');const n=parseFloat(s);return isNaN(n)?null:n};
+const shCur=p=>{const m=String(p.price||'').match(/[^\d\s.,]+/);return m?m[0]:''};
+const shVal=p=>p.n==null?null:p.n*(RATES[p.cur]??RATES[SH.cur])/RATES[SH.cur];
+const shFmt=v=>SH.cur==='TND'?`${v.toFixed(2)} TND`:`${SH.cur}${v.toFixed(2)}`;
+function shToast(t){const e=document.createElement('div');e.className='sh-toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2400)}
+const shMini=p=>({link:p.link,title:p.title,shop:p.shop,price:p.price,thumb:p.thumb,n:p.n,cur:p.cur});
+const shThumb=src=>new Promise(res=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas'),s=96/Math.max(i.width,i.height);
+ c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};i.onerror=()=>res('');i.src=src});
 
-$('#simgo').onclick=async()=>{$('#simout').innerHTML='<div class="spin"></div>';
- try{const d=simFD();d.append('category',simCat);d.append('k',8);
-  const r=await upl('similar',d);
-  $('#simout').innerHTML=r.results.length?`<p class="sub">Detected: <b>${esc(r.category)}</b> · colour <b>${esc(r.color)}</b></p><div class="grid">`+
-   r.results.map((x,k)=>`<div class="card" style="animation-delay:${k*.08}s"><img src="${esc(x.img)}"><p><em>${esc(x.mid||x.category)}</em><br>${esc(x.category).slice(0,46)}<br><b style="color:var(--c2)">${(x.score*100).toFixed(0)}% match</b></p></div>`).join('')+'</div>'
-   :'<p class="sub">No match. Try another category or a cleaner photo.</p>'}
- catch(e){$('#simout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+/* --- fichier : drop / clic / coller --- */
+function shSetFile(f){
+ if(!f||!f.type.startsWith('image/')){shEls.out.innerHTML='<div class="err">Please choose an image file.</div>';return}
+ SH.file=f;shEls.prev.src=URL.createObjectURL(f);shEls.prev.hidden=false;shEls.ph.hidden=true;
+ shEls.name.textContent=f.name;shEls.title.textContent='Looks great. Scanning the shops…';
+ shEls.drop.classList.add('has');[shEls.clr,shEls.crop,shEls.wd].forEach(b=>b.hidden=false);shRun()}
+function shClear(){SH.file=null;SH.list=[];shEls.inp.value='';shEls.prev.hidden=true;shEls.prev.removeAttribute('src');shEls.ph.hidden=false;
+ shEls.name.textContent='';shEls.title.textContent='Drop a garment photo';shEls.drop.classList.remove('has','scanning');
+ [shEls.clr,shEls.crop,shEls.wd].forEach(b=>b.hidden=true);shEls.out.innerHTML='';SH.cmp=[];shCmpBar()}
+shEls.inp.onchange=e=>shSetFile(e.target.files[0]);shEls.clr.onclick=shClear;
+['dragenter','dragover'].forEach(t=>shEls.drop.addEventListener(t,e=>{e.preventDefault();shEls.drop.classList.add('drag')}));
+['dragleave','drop'].forEach(t=>shEls.drop.addEventListener(t,e=>{e.preventDefault();shEls.drop.classList.remove('drag')}));
+shEls.drop.addEventListener('drop',e=>shSetFile(e.dataTransfer.files[0]));
+document.addEventListener('paste',e=>{if(tab!=='sim')return;const f=[...(e.clipboardData?.files||[])].find(x=>x.type.startsWith('image/'));if(f)shSetFile(f)});
 
-$('#shopgo').onclick=async()=>{$('#shopout').innerHTML='<div class="spin"></div>';
- try{const d=simFD();d.append('max_results',10);
+/* --- recadrage --- */
+shEls.crop.onclick=()=>{if(!SH.file)return;const m=document.createElement('div');m.className='modal';
+ m.innerHTML=`<div style="max-width:620px"><div class="row" style="align-items:center;justify-content:space-between"><h2>Crop the garment</h2><button class="btn ghost" id="cl">Close</button></div>
+ <p class="sub">Drag to select only the garment. A tighter photo gives better results.</p><div class="sh-crop"><canvas id="cc"></canvas></div>
+ <div class="row" style="margin-top:12px"><button class="btn" id="cuse">Use this crop</button><button class="btn ghost" id="cfull">Keep full photo</button></div></div>`;
+ document.body.appendChild(m);
+ const img=new Image();img.src=shEls.prev.src;const cv=$('#cc',m),g=cv.getContext('2d');let R=null,a=null,k=1;
+ const draw=()=>{g.drawImage(img,0,0,cv.width,cv.height);if(R){g.fillStyle='#17283a99';g.fillRect(0,0,cv.width,cv.height);g.drawImage(img,R.x/k,R.y/k,R.w/k,R.h/k,R.x,R.y,R.w,R.h);g.strokeStyle='#ff6b4a';g.lineWidth=3;g.strokeRect(R.x,R.y,R.w,R.h)}};
+ img.onload=()=>{k=img.width/Math.min(560,img.width);cv.width=img.width/k;cv.height=img.height/k;draw()};
+ const pt=e=>{const b=cv.getBoundingClientRect();return{x:(e.clientX-b.left)*cv.width/b.width,y:(e.clientY-b.top)*cv.height/b.height}};
+ cv.onpointerdown=e=>{a=pt(e);cv.setPointerCapture(e.pointerId)};
+ cv.onpointermove=e=>{if(!a)return;const p=pt(e);R={x:Math.min(a.x,p.x),y:Math.min(a.y,p.y),w:Math.abs(p.x-a.x),h:Math.abs(p.y-a.y)};draw()};
+ cv.onpointerup=()=>{a=null};
+ m.onclick=e=>{if(e.target===m||e.target.id==='cl'||e.target.id==='cfull')return m.remove();
+  if(e.target.id==='cuse'){if(!R||R.w<20||R.h<20)return m.remove();const o=document.createElement('canvas');o.width=R.w*k;o.height=R.h*k;
+   o.getContext('2d').drawImage(img,R.x*k,R.y*k,R.w*k,R.h*k,0,0,o.width,o.height);
+   o.toBlob(b=>{m.remove();shSetFile(new File([b],'crop.jpg',{type:'image/jpeg'}))},'image/jpeg',.92)}}};
+
+/* --- recherche --- */
+async function shRun(){
+ if(!SH.file){shEls.out.innerHTML='<div class="err">Choose a photo first.</div>';return}
+ shEls.drop.classList.add('scanning');$('#shopgo').disabled=true;
+ shEls.out.innerHTML='<div class="grid">'+'<div class="sh-skel"></div>'.repeat(6)+'</div>';
+ try{const d=new FormData();d.append('file',SH.file);d.append('max_results',12);
   const r=await upl('shops',d);
-  $('#shopout').innerHTML=r.products.length?'<h3>Where to buy it</h3><div class="grid">'+r.products.map((p,k)=>`<a class="card" style="animation-delay:${k*.08}s;text-decoration:none;color:inherit" href="${esc(p.link)}" target="_blank" rel="noopener">${p.thumb?`<img src="${esc(p.thumb)}">`:''}<p><em>${esc(p.shop)}</em><br>${esc(p.title).slice(0,46)}<br><b style="color:var(--c2)">${esc(p.price||'See price')}</b></p></a>`).join('')+'</div>'
-   :'<p class="sub">No shop found for this photo.</p>'}
- catch(e){$('#shopout').innerHTML=`<div class="err">${esc(e.message)}</div>`}};
+  SH.list=(r.products||[]).map((p,i)=>({...p,n:shNum(p),cur:shCur(p),_i:i}));SH.shop='';SH.budget=null;SH.cmp=[];shCmpBar();
+  const cc={};SH.list.forEach(p=>{if(RATES[p.cur])cc[p.cur]=(cc[p.cur]||0)+1});
+  const top=Object.entries(cc).sort((a,b)=>b[1]-a[1])[0];SH.cur=top&&TARGETS.includes(top[0])?top[0]:SH.cur;     // devise dominante
+  shEls.title.textContent=SH.list.length?`${SH.list.length} offers found`:'Nothing found';shRender();
+  if(SH.list.length){const t=await shThumb(shEls.prev.src);SH.hist=[{t,list:SH.list.map(shMini),ts:Date.now()},...SH.hist].slice(0,6);LS('dm_hist',SH.hist);shHist()}}
+ catch(e){shEls.out.innerHTML=`<div class="err">${esc(e.message)}</div>`;shEls.title.textContent='Something went wrong'}
+ shEls.drop.classList.remove('scanning');$('#shopgo').disabled=false}
+
+/* --- rendu --- */
+function shRender(){
+ if(!SH.list.length){shEls.out.innerHTML='<div class="nores">No shop found for this photo. Try a cleaner picture: the garment alone, on a plain background.</div>';return}
+ const vs=SH.list.map(shVal).filter(v=>v!=null),max=vs.length?Math.ceil(Math.max(...vs)):0,shops=[...new Set(SH.list.map(p=>p.shop).filter(Boolean))];
+ const seg=`<div class="seg" id="shsort">${[['low','Cheapest'],['high','Priciest'],['rel','Best match']].map(([k,v])=>`<button type="button" data-s="${k}" class="${SH.sort===k?'on':''}">${v}</button>`).join('')}</div>`;
+ const cur=`<div class="seg" title="Display currency">${TARGETS.map(c=>`<button type="button" data-cur="${c}" class="${SH.cur===c?'on':''}">${c}</button>`).join('')}</div>`;
+ const chips=`<div class="sh-chips"><button class="cc ${SH.shop?'':'on'}" data-sh="">All shops</button>${shops.map(s=>`<button class="cc ${SH.shop===s?'on':''}" data-sh="${esc(s)}">${esc(s)}</button>`).join('')}</div>`;
+ const bud=max?`<label class="sh-budget">Max budget <b id="shbv">${shFmt(SH.budget??max)}</b><input type="range" id="shbr" min="0" max="${max}" value="${SH.budget??max}"></label>`:'';
+ shEls.out.innerHTML=`<div id="shstats"></div><div class="sh-bar">${seg}${cur}${chips}</div>${bud}<div class="grid" id="shgrid" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr))"></div>`;shDraw()}
+function shDraw(){
+ let L=SH.list.filter(p=>!SH.shop||p.shop===SH.shop);const vs=L.map(shVal).filter(v=>v!=null);
+ const min=Math.min(...vs),max=Math.max(...vs),avg=vs.reduce((a,b)=>a+b,0)/(vs.length||1);
+ $('#shstats').innerHTML=vs.length?`<div class="sh-stats"><div class="sh-stat best"><small>Lowest</small><b>${shFmt(min)}</b></div><div class="sh-stat"><small>Average</small><b>${shFmt(avg)}</b></div><div class="sh-stat top"><small>Highest</small><b>${shFmt(max)}</b></div><div class="sh-stat"><small>Offers</small><b>${L.length}</b></div></div>`:'';
+ if(SH.budget!=null)L=L.filter(p=>shVal(p)==null||shVal(p)<=SH.budget);
+ if(SH.sort==='low')L.sort((a,b)=>(shVal(a)??1e12)-(shVal(b)??1e12));else if(SH.sort==='high')L.sort((a,b)=>(shVal(b)??-1)-(shVal(a)??-1));
+ $('#shgrid').innerHTML=L.length?L.map((p,k)=>{const v=shVal(p),fav=SH.fav.some(x=>x.link===p.link),cm=SH.cmp.includes(p._i),bell=SH.alerts.some(x=>x.link===p.link),conv=v!=null&&p.cur&&p.cur!==SH.cur&&RATES[p.cur];
+  return `<div class="sh-card" style="animation-delay:${k*.05}s">
+  ${vs.length&&v===min?'<span class="sh-badge">BEST PRICE</span>':''}
+  <div class="sh-tools"><button class="sh-tool ${fav?'on':''}" data-fav="${p._i}" title="Save to my list" aria-label="Save to my list">♥</button>
+   <button class="sh-tool ${cm?'on':''}" data-cmp="${p._i}" title="Compare" aria-label="Compare">⇄</button>
+   <button class="sh-tool ${bell?'on':''}" data-bell="${p._i}" title="Alert me if the price drops" aria-label="Price alert">🔔</button></div>
+  <a class="ph" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">${p.thumb?`<img loading="lazy" src="${esc(p.thumb)}" alt="">`:''}</a>
+  <a class="sh-body" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer"><span class="sh-shop">${esc(p.shop)}</span><span class="sh-title">${esc(p.title).slice(0,70)}</span>
+  <span class="sh-price">${v!=null?(conv?'≈ ':'')+shFmt(v):esc(p.price||'See price')}</span>${conv?`<span class="sh-orig">Listed at ${esc(p.price)}</span>`:''}<span class="sh-go">Visit shop ↗</span></a></div>`}).join('')
+  :'<div class="nores">Nothing under this budget. Raise the slider a little.</div>'}
+
+/* --- clics de la zone résultats --- */
+shEls.out.onclick=e=>{const T=s=>e.target.closest(s);let b;
+ if(b=T('[data-s]')){SH.sort=b.dataset.s;return shRender()}
+ if(b=T('[data-cur]')){SH.cur=b.dataset.cur;SH.budget=null;return shRender()}
+ if(b=T('[data-sh]')){SH.shop=b.dataset.sh;return shRender()}
+ if(b=T('[data-fav]')){const p=SH.list[+b.dataset.fav],i=SH.fav.findIndex(x=>x.link===p.link);
+  if(i>=0)SH.fav.splice(i,1);else SH.fav.push(shMini(p));LS('dm_fav',SH.fav);shListCount();b.classList.toggle('on');return shToast(i>=0?'Removed from your list':'Saved to your list ♥')}
+ if(b=T('[data-cmp]')){const i=+b.dataset.cmp,k=SH.cmp.indexOf(i);
+  if(k>=0)SH.cmp.splice(k,1);else{if(SH.cmp.length>=3)return shToast('Compare up to 3 pieces');SH.cmp.push(i)}b.classList.toggle('on');return shCmpBar()}
+ if(b=T('[data-bell]')){const p=SH.list[+b.dataset.bell],i=SH.alerts.findIndex(x=>x.link===p.link);
+  if(i>=0)SH.alerts.splice(i,1);else{const a={...shMini(p),at:Date.now()};SH.alerts.push(a);api('alerts',a).catch(()=>{})}   // endpoint optionnel
+  LS('dm_alerts',SH.alerts);b.classList.toggle('on');return shToast(i>=0?'Alert removed':'We will warn you if the price drops 🔔')}};
+shEls.out.oninput=e=>{if(e.target.id!=='shbr')return;SH.budget=+e.target.value;$('#shbv').textContent=shFmt(SH.budget);shDraw()};
+
+/* --- comparateur (2 à 3 pièces) --- */
+function shCmpBar(){const bar=$('#shcmp'),n=SH.cmp.length;bar.hidden=n<1;
+ bar.innerHTML=`<span>${n} selected</span><button class="btn" id="cgo" type="button" ${n<2?'disabled':''}>Compare</button><button class="btn ghost" id="cx" type="button">Clear</button>`}
+$('#shcmp').onclick=e=>{if(e.target.id==='cx'){SH.cmp=[];shCmpBar();return shDraw()}
+ if(e.target.id!=='cgo')return;const P=SH.cmp.map(i=>SH.list[i]),vs=P.map(shVal),lo=Math.min(...vs.filter(v=>v!=null)),m=document.createElement('div');m.className='modal';
+ const row=(l,f)=>`<tr><th>${l}</th>${P.map(f).join('')}</tr>`;
+ m.innerHTML=`<div><div class="row" style="align-items:center;justify-content:space-between"><h2>Side by side</h2><button class="btn ghost" id="cl">Close</button></div>
+ <table class="sh-cmp">${row('',p=>`<td><img src="${esc(p.thumb||'')}" alt=""></td>`)}${row('Shop',p=>`<td>${esc(p.shop)}</td>`)}${row('Piece',p=>`<td>${esc(p.title).slice(0,60)}</td>`)}
+ ${row('Price',p=>{const v=shVal(p);return `<td class="${v===lo?'low':''}">${v!=null?shFmt(v):esc(p.price||'–')}</td>`})}${row('',p=>`<td><a class="btn" style="display:inline-block;text-decoration:none" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">Visit ↗</a></td>`)}</table></div>`;
+ document.body.appendChild(m);m.onclick=ev=>{if(ev.target===m||ev.target.id==='cl')m.remove()}};
+
+/* --- ma liste d'envies --- */
+const shListCount=()=>{$('#shlistn').textContent=SH.fav.length};shListCount();
+$('#shlist').onclick=()=>{const m=document.createElement('div');m.className='modal';
+ const draw=()=>{const tot=SH.fav.reduce((s,p)=>s+(shVal(p)||0),0);
+  m.innerHTML=`<div style="max-width:560px"><div class="row" style="align-items:center;justify-content:space-between"><h2>My shopping list</h2><button class="btn ghost" id="cl">Close</button></div>
+  ${SH.fav.length?SH.fav.map((p,i)=>`<div class="sh-lrow"><img src="${esc(p.thumb||'')}" alt=""><div><b>${esc(p.shop)}</b><br>${esc(p.title).slice(0,50)}<br>${esc(p.price||'')}</div>
+   <a class="btn ghost" style="padding:8px 14px;text-decoration:none" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">Visit</a><button class="sh-tool on" data-rm="${i}" aria-label="Remove">×</button></div>`).join('')
+   +`<p style="margin-top:14px"><b>Total: ${shFmt(tot)}</b></p><button class="btn ghost" id="lcopy">Copy list</button>`:'<p class="sub">Nothing saved yet. Tap ♥ on any offer.</p>'}</div>`};
+ draw();document.body.appendChild(m);
+ m.onclick=e=>{if(e.target===m||e.target.id==='cl')return m.remove();
+  const r=e.target.closest('[data-rm]');if(r){SH.fav.splice(+r.dataset.rm,1);LS('dm_fav',SH.fav);shListCount();draw()}
+  if(e.target.id==='lcopy'){navigator.clipboard?.writeText(SH.fav.map(p=>`${p.shop} - ${p.title} - ${p.price||''}\n${p.link}`).join('\n\n'));shToast('List copied')}}};
+
+/* --- ajouter la photo à ma garde-robe --- */
+shEls.wd.onclick=async()=>{
+ if(!SH.file)return;if(!WD.ready)return shToast('Open “Wardrobe Completion” once, then retry');
+ shEls.wd.disabled=true;
+ try{const fd=new FormData();fd.append('file',SH.file);fd.append('category','');fd.append('gender',WD.gender);fd.append('exclude',WD.items.map(x=>x.i).join(','));
+  const r=await wdUpload(fd);wdAddItem({...r.item,photo:r.photo||URL.createObjectURL(SH.file)});shToast(`Added to your wardrobe · ${FR[r.item.c]}`)}
+ catch(e){shToast(e.message)}
+ shEls.wd.disabled=false};
+
+/* --- historique --- */
+function shHist(){$('#shhist').innerHTML=SH.hist.length?`<div class="sh-hist"><span>Recent</span>${SH.hist.map((h,i)=>`<button class="sh-h" data-h="${i}" type="button" aria-label="Open search ${i+1}">${h.t?`<img src="${h.t}" alt="">`:''}</button>`).join('')}</div>`:''}
+$('#shhist').onclick=e=>{const b=e.target.closest('[data-h]');if(!b)return;const h=SH.hist[+b.dataset.h];
+ SH.list=h.list.map((p,i)=>({...p,_i:i}));SH.shop='';SH.budget=null;SH.cmp=[];shCmpBar();
+ if(h.t){shEls.prev.src=h.t;shEls.prev.hidden=false;shEls.ph.hidden=true;shEls.drop.classList.add('has');shEls.clr.hidden=false}
+ shEls.title.textContent=`${SH.list.length} offers (saved search)`;shRender()};
+shHist();
+$('#shopgo').onclick=()=>shRun();
 
 /* ---------- IDÉE 5 : Wardrobe Completion ---------- */
-const WD={items:[],fresh:new Set(),open:false,n:3,init:false,gender:'women',ready:false};
+const WD={items:[],owned:[],fresh:new Set(),open:false,n:3,init:false,gender:'women',ready:false};
 const wdHide=()=>WD.gender==='men'?['dress']:[];
 const zoneBox=(z,l)=>`<div class="wd-zone" data-z="${z}"><span class="wd-lab">${l}</span><div class="wd-items"></div></div>`;
 $('#win').innerHTML=`<div class="wd-shelf" data-z="bag"><span class="wd-lab">Bags &amp; accessories</span><div class="wd-items"></div></div>
  <div class="wd-rails">${zoneBox('outer','Outerwear')}${zoneBox('top','Tops')}${zoneBox('dress','Dresses')}${zoneBox('bottom','Bottoms')}</div>
  <div class="wd-shelf" data-z="shoes"><span class="wd-lab">Shoes</span><div class="wd-items"></div></div>`;
 function wdPut(x,fresh,delay){const z=$(`#win [data-z="${(x.c==='other'||x.c==='accessory')?'bag':x.c}"] .wd-items`);if(!z)return;
- const d=document.createElement('div');d.className='gi'+(fresh?' new':'');d.style.setProperty('--d',(delay||0)+'ms');d.title=x.d;
- d.innerHTML=`<img src="${x.photo||img(x.k)}" alt=""><button class="gx" data-x="${x.i}">×</button>`;z.appendChild(d);if(fresh)z.scrollLeft=z.scrollWidth}
+ const d=document.createElement('div');d.className='gi'+(fresh?' new':'')+(x.owned?' owned':'');d.style.setProperty('--d',(delay||0)+'ms');d.title=x.d;
+ const starter=!x.owned&&!x.photo&&!fresh&&WD.owned.length?'<span class="gi-badge">Starter</span>':'';
+ d.innerHTML=`<img src="${x.photo||img(x.k)}" alt="">${x.owned?'<span class="gi-badge">From your wardrobe</span>':`<button class="gx" data-x="${x.i}">×</button>${starter}`}`;z.appendChild(d);if(fresh)z.scrollLeft=z.scrollWidth}
 
 let wdTimer;
 function wdStats(reset){
-  $('#wn').textContent=WD.items.length;
+  $('#wn').textContent=WD.items.length+WD.owned.length;
   if(reset){$('#wo').textContent='–';clearTimeout(wdTimer);wdTimer=setTimeout(wdAnalyze,400)}
 }
 async function wdAnalyze(){
-  if(!WD.items.length){$('#wan').innerHTML='';return}
+  if(!WD.items.length&&!WD.owned.length){$('#wan').innerHTML='';return}
   try{
     const r=await api('wardrobe/analyze',{items:WD.items.map(x=>x.i),gender:WD.gender});
     $('#wo').textContent=r.outfits;
@@ -982,19 +1354,22 @@ function wdLooks(looks){
   const own=new Map(WD.items.filter(x=>x.photo).map(x=>[x.i,x.photo]));
   return `<h3 style="margin-top:26px">Your complete outfits</h3><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(270px,1fr))">`+
     looks.map((l,k)=>`<div class="card" style="animation-delay:${k*.1}s;padding:10px;cursor:default">
-      <div style="display:flex;gap:8px;margin-bottom:6px">${l.items.map(x=>`<img src="${own.get(x.i)||img(x.k)}" title="${esc(x.d)}" style="width:56px;height:72px;object-fit:cover;border-radius:8px;${l.new.includes(x.i)?'outline:3px solid #ff6b4a;outline-offset:1px':''}">`).join('')}</div>
-      <p style="padding:0"><b>${l.score.toFixed(1)}/10</b>${l.new.length?` · <span style="color:var(--c1)">${l.new.length} new piece${l.new.length>1?'s':''}</span>`:''}</p></div>`).join('')+'</div>';
+      <div style="display:flex;gap:8px;margin-bottom:6px">${l.items.map(x=>`<img src="${x.photo||own.get(x.i)||img(x.k)}" title="${esc(x.d)}" style="width:56px;height:72px;object-fit:cover;border-radius:8px;${x.owned?'outline:3px solid var(--ok);outline-offset:1px':l.new.includes(x.i)?'outline:3px solid #ff6b4a;outline-offset:1px':''}">`).join('')}</div>
+      <p style="padding:0"><b>${l.score.toFixed(1)}/10</b>${l.new.length?` · <span style="color:var(--c1)">${l.new.length} new piece${l.new.length>1?'s':''}</span>`:''}${l.owned&&l.owned.length?` · <span style="color:var(--ok)">From your wardrobe</span>`:''}</p></div>`).join('')+'</div>';
 }
-function wdRender(){$$('#win .wd-items').forEach(e=>e.innerHTML='');WD.items.forEach((x,k)=>wdPut(x,WD.fresh.has(x.i),k*60));wdStats(true)}
+function wdOwnRow(list){
+  if(!list||!list.length)return '';
+  return `<h3 style="margin-top:26px">You own</h3><p class="sub">Pieces from your wardrobe used in these looks.</p><div class="wd-own-row">`+
+    list.map(x=>`<figure><img src="${esc(x.photo)}" alt="" title="${esc(x.d)}"><figcaption>${esc(x.d.slice(0,40))} · ${x.looks} look${x.looks>1?'s':''}</figcaption></figure>`).join('')+'</div>';
+}
+function wdRender(){$$('#win .wd-items').forEach(e=>e.innerHTML='');WD.items.forEach((x,k)=>wdPut(x,WD.fresh.has(x.i),k*60));WD.owned.forEach((x,k)=>wdPut(x,false,(WD.items.length+k)*60));wdStats(true)}
 function wdOpen(v){WD.open=v;$('#wcab').classList.toggle('open',v);$('#wopen').textContent=v?'Close the wardrobe':'Open the wardrobe'}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function countTo(el,a,b){let t=0;const id=setInterval(()=>{t+=.04;if(t>=1){t=1;clearInterval(id)}el.textContent=Math.round(a+(b-a)*t)},30)}
 async function wdSample(force){
  if(force!==true&&WD.items.length&&!confirm('Replace your saved wardrobe with a sample wardrobe?'))return;
  try{
-   // On demande l'échantillon du genre choisi
    const r=await api('wardrobe/sample?gender='+WD.gender);
-   // On filtre par sécurité : pas de robes pour les hommes
    WD.items = r.items.filter(x => !(WD.gender === 'men' && x.c === 'dress'));
    WD.fresh.clear();$('#wout').innerHTML='';wdRender();wdSave();
    if(!WD.open){await sleep(500);wdOpen(true)}
@@ -1038,11 +1413,11 @@ function wdChooseGender(){
 /* CORRECTION 2.b : chargement avec jeton d'annulation, plus de promesse partagée bloquée */
 let wdTok=0;
 function wdShow(r){
- wdApplyGender(r.gender);WD.items=r.items||[];WD.fresh.clear();WD.ready=true;$('#wout').innerHTML='';wdRender();
+ wdApplyGender(r.gender);WD.items=r.items||[];WD.owned=r.owned||[];WD.fresh.clear();WD.ready=true;$('#wout').innerHTML='';wdRender();
  wdStatus(WD.items.length?'Saved to your account ✓':'Your wardrobe is empty: use “Sample wardrobe”');
  setTimeout(()=>{if(!$('#wcab').classList.contains('open'))wdOpen(true)},400)}
 function wdReset(){                                   // à appeler quand la session change (déconnexion)
- wdTok++;WD.ready=false;WD.items=[];WD.fresh.clear();clearTimeout(wdSaveT);wdSaveT=null;
+ wdTok++;WD.ready=false;WD.items=[];WD.owned=[];WD.fresh.clear();clearTimeout(wdSaveT);wdSaveT=null;
  $$('#win .wd-items').forEach(e=>e.innerHTML='');$('#wn').textContent=0;$('#wo').textContent='–';
  $('#wan').innerHTML='';$('#wout').innerHTML='';wdStatus('')}
 async function wdLoad(){
@@ -1079,7 +1454,9 @@ function wdAddMenu(){const m=document.createElement('div');m.className='modal';
  <p class="sub">Photograph a real garment or pick one from the catalog.</p>
  <div class="row"><button class="btn" id="am-cam">Take a photo</button><button class="btn ghost" id="am-cat">Browse the catalog</button></div></div>`;
  document.body.appendChild(m);
+ fetch('/api/studio-config',{credentials:'same-origin'}).then(r=>r.json()).then(c=>{if(c.bo6_enabled&&m.isConnected)$('#am-cam',m).insertAdjacentHTML('beforebegin','<button class="btn" id="am-scan">Scan my real garment</button>')}).catch(()=>{});
  m.onclick=e=>{if(e.target===m||e.target.id==='cl')m.remove();
+  else if(e.target.id==='am-scan'){m.remove();window.dressmeReturnPage='wardrobe';location.hash='bo6-add'}
   else if(e.target.id==='am-cam'){m.remove();wdCamera()}
   else if(e.target.id==='am-cat'){m.remove();wdFromCatalog()}}}
 function wdCamera(){let stream=null,blob=null,cat='';const m=document.createElement('div');m.className='modal';
@@ -1180,19 +1557,16 @@ $('#wgd').onclick=async e=>{
 $('#wnn').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;WD.n=+b.dataset.n;$$('.cc',$('#wnn')).forEach(x=>x.classList.toggle('on',x===b))};
 $('#win').onclick=e=>{const x=e.target.closest('.gx');if(!x)return;const i=+x.dataset.x;WD.items=WD.items.filter(v=>v.i!==i);WD.fresh.delete(i);x.closest('.gi').remove();wdStats(true);wdSave()};
 $('#wrun').onclick=async()=>{const btn=$('#wrun');
- if(WD.items.length<3){$('#wout').innerHTML='<div class="err">Add at least 3 pieces (or load the sample wardrobe).</div>';return}
+ if(WD.items.length+WD.owned.length<3){$('#wout').innerHTML='<div class="err">Add at least 3 pieces (or load the sample wardrobe).</div>';return}
  btn.disabled=true;$('#wout').innerHTML='';if(!WD.open){wdOpen(true);await sleep(1000)}
  $('#wcab').classList.add('scan');
  
  try{
-  // On envoie le genre actuel (women ou men) au serveur
   const r=await api('wardrobe/complete',{items:WD.items.map(x=>x.i),n:WD.n,gender:WD.gender});
   $('#wcab').classList.remove('scan');
 
-  // Si le serveur n'a pas respecté le genre, on filtre par sécurité
   const validRecs = r.recs.filter(q => {
     if (WD.gender === 'men' && q.item.c === 'dress') return false;
-    // On suppose que l'item a une propriété 'g' (genre) ou on vérifie via le catalogue
     const catItem = C.find(x => x.i === q.item.i);
     if (catItem && catItem.g && catItem.g !== 'unisex' && catItem.g !== WD.gender) return false;
     return true;
@@ -1204,12 +1578,12 @@ $('#wrun').onclick=async()=>{const btn=$('#wrun');
     return;
   }
 
-  validRecs.forEach((q,k)=>setTimeout(()=>{if(WD.items.some(x=>x.i===q.item.i))return;WD.items.push(q.item);WD.fresh.add(q.item.i);wdPut(q.item,true,0);$('#wn').textContent=WD.items.length},k*1000));
+  validRecs.forEach((q,k)=>setTimeout(()=>{if(WD.items.some(x=>x.i===q.item.i))return;WD.items.push(q.item);WD.fresh.add(q.item.i);wdPut(q.item,true,0);$('#wn').textContent=WD.items.length+WD.owned.length},k*1000));
   await sleep(validRecs.length*1000);wdSave();
   
   const wo=$('#wo');wo.textContent=r.before;countTo(wo,r.before,r.after);
   
-  $('#wout').innerHTML=`<h3>Pieces your wardrobe was missing · <span style="color:var(--ok)">+${r.after-r.before} outfits</span></h3>`+validRecs.map((q,k)=>`<div class="sug" style="animation-delay:${k*.15}s"><img src="${img(q.item.k)}"><div><b>${FR[q.item.c]}</b> · ${esc(q.item.d.slice(0,50))}<br><small>${q.gain?`Unlocks <b>${q.gain}</b> new outfit${q.gain>1?'s':''}`:'Foundation piece your closet was lacking'}${q.best_score!=null?` · best look ${q.best_score.toFixed(1)}/10`:''}</small>${q.look.length?`<div class="wd-ex">${q.look.map(x=>`<img src="${img(x.k)}">`).join('')}</div>`:''}</div><span class="pill" style="background:var(--ok)">+${q.gain}</span></div>`).join('')+wdLooks(r.looks);
+  $('#wout').innerHTML=`<h3>Pieces your wardrobe was missing · <span style="color:var(--ok)">+${r.after-r.before} outfits</span></h3>`+validRecs.map((q,k)=>`<div class="sug" style="animation-delay:${k*.15}s"><img src="${img(q.item.k)}"><div><b>${FR[q.item.c]}</b> · ${esc(q.item.d.slice(0,50))}<br><small>${q.gain?`Unlocks <b>${q.gain}</b> new outfit${q.gain>1?'s':''}`:'Foundation piece your closet was lacking'}${q.best_score!=null?` · best look ${q.best_score.toFixed(1)}/10`:''}</small>${q.look.length?`<div class="wd-ex">${q.look.map(x=>`<img src="${img(x.k)}">`).join('')}</div>`:''}</div><span class="pill" style="background:var(--ok)">+${q.gain}</span></div>`).join('')+wdOwnRow(r.owned_in_looks)+wdLooks(r.looks);
   setTimeout(wdAnalyze,1500);
  }catch(e){
   $('#wcab').classList.remove('scan');
@@ -1296,5 +1670,5 @@ $('#vd-x').onclick=()=>vdEl.classList.add('mini');
 $('#vd-av').onclick=()=>vdEl.classList.toggle('mini');
 document.addEventListener('dressme:section',e=>{if(e.detail!=='score')vdHide();else if(vdLast&&B1.get().length>=2){vdThink();vdSay(vdLast)}});
 
-</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=integrated-13"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
-<script type="module" src="/static/assistant.js?v=relevance-1"></script></body></html>
+</script><script src="/static/gsap.min.js"></script><script type="module" src="/static/studio.js?v=bo7ootd9"></script><script>(function(){function l(){var f=document.getElementById('bo3-frame');if(!f.getAttribute('src'))f.setAttribute('src','/bo3?v='+Date.now()+'#redund')}document.addEventListener('dressme:section',function(e){if(e.detail==='bo3')l()});if(location.hash==='#bo3')l()})();</script>
+<script type="module" src="/static/assistant.js?v=bo7ootd9"></script><script type="module" src="/static/taste.js?v=bo7ootd9"></script></body></html>

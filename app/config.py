@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import os
 from pathlib import Path
 import secrets
@@ -37,14 +37,28 @@ class Settings:
     jwt_secret: str = os.getenv("JWT_SECRET", "") or secrets.token_urlsafe(48)
     csrf_header_name: str = "X-CSRF-Token"
     bo6_service_url: str = os.getenv("BO6_SERVICE_URL", "http://localhost:18022").rstrip("/")
+    bo6_enabled: bool = os.getenv("BO6_ENABLED", "0").strip() == "1"
     bo6_connect_timeout_seconds: float = 2.0
     bo6_read_timeout_seconds: float = 30.0
     bo6_write_timeout_seconds: float = 10.0
     redis_url: str = os.getenv("REDIS_URL", "redis://redis:6379/0")
     tryon_queue_name: str = os.getenv("TRYON_QUEUE_NAME", "try-on").strip() or "try-on"
     vton_mode: str = os.getenv("VTON_MODE", "mock").strip().lower()
+    vton_runtime_dir: str = os.getenv("VTON_RUNTIME_DIR", "").strip()
+    # Below the RQ job_timeout (450) and the dispatcher run lease (480), so a slow job fails before it is retried.
+    vton_timeout_seconds: int = _integer("VTON_TIMEOUT_SECONDS", 280, 30, 290)
+    vton_min_free_vram_mib: int = _integer("VTON_MIN_FREE_VRAM_MIB", 3500, 0, 1048576)
+    # A real run took 2.4-3.5 GiB of RAM in the experiment; this clears it while staying above the abort line.
+    vton_min_free_ram_mib: int = _integer("VTON_MIN_FREE_RAM_MIB", 3072, 0, 1048576)
+    vton_abort_free_ram_mib: int = _integer("VTON_ABORT_FREE_RAM_MIB", 460, 0, 1048576)
+    # Base URL of the remote FASHN server, used when this machine lacks capacity; empty disables it.
+    vton_remote_url: str = os.getenv("VTON_REMOTE_URL", "").strip().rstrip("/")
+    # Bearer token for that server. repr=False keeps it out of anything that prints these settings.
+    vton_remote_api_key: str = field(default=os.getenv("VTON_REMOTE_API_KEY", "").strip(), repr=False)
+    # Manual testing override: "local" or "remote" skips the capacity check; empty decides per job.
+    vton_backend_force: str = os.getenv("VTON_BACKEND_FORCE", "").strip().lower()
     max_person_photos: int = _integer("MAX_PERSON_PHOTOS", 10, 1, 50)
-    max_outstanding_jobs: int = _integer("MAX_OUTSTANDING_JOBS", 3, 1, 20)
+    max_outstanding_jobs: int = _integer("MAX_OUTSTANDING_JOBS", 6, 1, 20)
     max_queued_jobs: int = _integer("MAX_QUEUED_JOBS", 200, 1, 10000)
     max_upload_bytes: int = _integer("MAX_UPLOAD_BYTES", 10 * 1024 * 1024, 1024, 50 * 1024 * 1024)
     max_image_pixels: int = _integer("MAX_IMAGE_PIXELS", 40_000_000, 100_000, 100_000_000)
@@ -70,6 +84,10 @@ class Settings:
     def __post_init__(self) -> None:
         if self.vton_mode not in {"mock", "real"}:
             raise ValueError("VTON_MODE must be 'mock' or 'real'")
+        if self.vton_backend_force not in {"", "local", "remote"}:
+            raise ValueError("VTON_BACKEND_FORCE must be 'local', 'remote' or empty")
+        if self.vton_remote_url and not self.vton_remote_url.startswith(("https://", "http://127.0.0.1", "http://localhost")):
+            raise ValueError("VTON_REMOTE_URL must use https, because it carries the API key")
         if self.email_delivery_mode not in {"capture", "smtp"}:
             raise ValueError("EMAIL_DELIVERY_MODE must be 'capture' or 'smtp'")
         if self.smtp_security not in {"starttls", "ssl", "none"}:

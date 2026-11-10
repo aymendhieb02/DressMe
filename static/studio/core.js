@@ -15,6 +15,7 @@ export const state = {
   renderVersion: 0,
   filters: {q: '', category: '', color: '', sort: 'newest', page: 1},
   tryOnIdempotencyKey: null,
+  tryOnSequenceOrder: [],
 };
 
 export const $ = (selector, root = document) => root?.querySelector(selector) ?? null;
@@ -24,7 +25,7 @@ export const esc = value => String(value ?? '').replace(/[&<>"']/g, character =>
 }[character]));
 export const active = () => location.pathname === '/login' ? 'bo6-wardrobe' : location.hash.slice(1);
 export const node = () => document.querySelector(`[data-studio-page="${active()}"]`);
-export const image = url => ROOT + url;
+export const image = url => url?.startsWith('/img/') ? url : ROOT + url;
 
 let refreshPromise;
 export function refreshSession() {
@@ -101,7 +102,9 @@ export async function request(path, {method = 'GET', body, key, retry = true, ba
   if (!response.ok) {
     const detail = await response.json().catch(() => ({}));
     const reason = detail.error?.message || detail.detail?.message || detail.detail;
-    throw new Error(typeof reason === 'string' ? reason : `Request failed (${response.status}).`);
+    const failure = new Error(typeof reason === 'string' ? reason : `Request failed (${response.status}).`);
+    failure.code = detail.error?.code || detail.detail?.code;
+    throw failure;
   }
   return response.status === 204 ? null : response.json();
 }
@@ -159,6 +162,7 @@ export function clearPrivateState() {
   state.jobs = [];
   state.selected = null;
   state.tryOnIdempotencyKey = null;
+  state.tryOnSequenceOrder = [];
   state.avatarConsent = null;
   state.filters = {q: '', category: '', color: '', sort: 'newest', page: 1};
 }
@@ -175,6 +179,7 @@ export function clearLoadedPrivateData() {
   state.uploadKey = null;
   state.filters = {q: '', category: '', color: '', sort: 'newest', page: 1};
   state.tryOnIdempotencyKey = null;
+  state.tryOnSequenceOrder = [];
 }
 
 export function studioPage(id) {

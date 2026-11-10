@@ -9,13 +9,15 @@ from PIL import Image, UnidentifiedImageError
 
 from .config import ALLOWED_FORMATS, BUNDLE_DIR, CONTENT_TYPES, MAX_UPLOAD_BYTES
 from .errors import ServiceError, service_error_handler, validation_error_handler
+from .g2l_runtime import G2LRuntime, is_g2l_bundle
 from .model_runtime import ModelRuntime
 from .schemas import DescribeRequest
 
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
-    application.state.runtime = ModelRuntime(BUNDLE_DIR)
+    # The bundle folder picks the runtime; pointing MODEL_BUNDLE_DIR at bundle/ is the rollback.
+    application.state.runtime = (G2LRuntime if is_g2l_bundle(BUNDLE_DIR) else ModelRuntime)(BUNDLE_DIR)
     yield
 
 
@@ -77,6 +79,8 @@ async def analyze(image: UploadFile = File(...)):
 async def describe(body: DescribeRequest):
     runtime: ModelRuntime = app.state.runtime
     confirmed = body.confirmed.model_dump(exclude_none=True)
+    if not runtime.accepts(confirmed):
+        raise ServiceError(422, "validation_error", "These fields are not supported by the active model.")
     # Pydantic validates client fields. A failure for validated fields is an
     # internal error, not a misleading input rejection or an exposed exception.
     return runtime.describe(confirmed)

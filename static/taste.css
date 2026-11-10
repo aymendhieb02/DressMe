@@ -1,0 +1,24 @@
+.taste-page .taste-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 6px}
+.taste-page .taste-toolbar>span{margin-right:auto;font-size:.9rem}.taste-page .taste-toolbar>span b{font:400 1.5rem Fraunces,serif;color:var(--c2)}
+.taste-page .taste-toolbar .chips{margin:0}
+.taste-page .taste-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;margin:16px 0}
+.taste-page .taste-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 22px #17283a20;min-width:0;animation:up .4s both}
+.taste-page .taste-card img{width:100%;height:200px;object-fit:cover;display:block;background:#e8f4f2}
+.taste-page .taste-card p{margin:0;padding:8px 10px;font-size:.76rem;line-height:1.35;min-height:76px}
+.taste-page .taste-card em{font-style:normal;font-weight:700;color:var(--c2);text-transform:uppercase;font-size:.65rem}
+.taste-page .taste-card .taste-because{padding:0 10px 8px;font-size:.72rem;color:#61707c;min-height:34px}
+.taste-page .taste-actions{display:flex;gap:7px;padding:0 10px 12px}
+.taste-page .taste-actions button{flex:1;border:0;border-radius:999px;padding:8px;background:#e8f4f2;color:var(--ink);cursor:pointer;font:500 .82rem Inter,sans-serif}
+.taste-page .taste-actions button:hover,.taste-page .taste-actions button:focus-visible{background:var(--c2);color:#fff}
+.taste-page .taste-bar{display:flex;align-items:center;gap:12px;margin:9px 0;font-size:.82rem}
+.taste-page .taste-bar span{width:110px;text-transform:capitalize}.taste-page .taste-bar div{flex:1;height:10px;background:#dcefec;border-radius:99px;overflow:hidden}
+.taste-page .taste-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.taste-page .taste-upload,.taste-page .taste-bubble-control{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:16px 0}
+.taste-page .taste-upload span{font-size:.82rem;color:#61707c}
+.taste-page .taste-previews{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.taste-page .taste-previews img{height:90px;width:72px;object-fit:cover;border-radius:10px;box-shadow:0 5px 14px #17283a22}
+.taste-page .taste-bubble-control label{font-weight:600}.taste-page .taste-bubble-control input{width:min(300px,80vw)}
+.taste-page .taste-error{padding:12px 16px;border-radius:14px;background:#fff0ec;color:#9b382b;margin:16px 0}
+.taste-page [hidden]{display:none!important}
+.taste-page .taste-loading{margin:20px 0;color:#61707c}
+@media(max-width:520px){.taste-page .taste-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.taste-page .taste-card img{height:160px}}

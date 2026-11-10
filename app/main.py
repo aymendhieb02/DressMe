@@ -17,6 +17,7 @@ from .ml.client import BO6Client, BO6ServiceError
 from .models import AvatarRender, Garment, PendingUpload, RefreshSession, StorageDeletion, User  # register metadata for Alembic
 from .storage.local_disk import LocalPrivateStorage
 from .storage.cleanup import drain_storage_deletions, expire_pending_uploads
+from .tryon.adapters import fashn_runtime_problem
 from .tryon.router import router as tryon_router
 from .tryon.runtime import tryon_runtime_status
 from fastapi.exceptions import RequestValidationError
@@ -115,4 +116,4 @@ async def ready():
                                  "model_version": ml_version,
                                  "inference_mode": "bo6_real" if ml_ok else "unavailable",
                                  "vton_mode": settings.vton_mode,
-                                 "real_vton_ready": False})
+                                 "real_vton_ready": settings.vton_mode == "real" and fashn_runtime_problem(settings) is None})

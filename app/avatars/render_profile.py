@@ -8,22 +8,22 @@ from io import BytesIO
 from PIL import Image, UnidentifiedImageError
 
 PROFILE_ID = "fashn-full-body-frontal"
-PROFILE_VERSION = 1
-RENDERER_VERSION = "google-model-viewer@4.3.1"
+PROFILE_VERSION = 2
+RENDERER_VERSION = "three@0.183.2"
 OUTPUT_WIDTH = 576
 OUTPUT_HEIGHT = 768
 MAX_RENDER_BYTES = 5 * 1024 * 1024
 BACKGROUND = "#F4F3EE"
 CAMERA_FOV_DEGREES = 30.0
 CAMERA_AZIMUTH_DEGREES = 0.0
-CAMERA_POLAR_DEGREES = 75.0
-CAMERA_MARGIN_FACTOR = 1.12
+CAMERA_POLAR_DEGREES = 90.0
+FRAME_FILL = 0.9
 
 
 def expected_camera_radius(bounds: dict[str, float]) -> float:
-    """Return the fixed-perspective bounding-sphere distance used by the browser."""
-    diagonal = math.sqrt(sum(bounds[axis] ** 2 for axis in ("x", "y", "z")))
-    return (diagonal / 2.0) / math.sin(math.radians(CAMERA_FOV_DEGREES / 2.0)) * CAMERA_MARGIN_FACTOR
+    """Return the distance at which the posed body fills FRAME_FILL of the frame, as the browser computes it."""
+    needed = max(bounds["y"], bounds["x"] / (OUTPUT_WIDTH / OUTPUT_HEIGHT))
+    return needed / FRAME_FILL / (2.0 * math.tan(math.radians(CAMERA_FOV_DEGREES / 2.0)))
 
 
 def validate_camera_settings(value: object) -> dict:
@@ -48,7 +48,7 @@ def validate_camera_settings(value: object) -> dict:
         raise ValueError("The camera does not match the selected render profile.")
     return {
         "bounds_m": dimensions,
-        "framing": "bounding-sphere-margin-v1",
+        "framing": "body-fill-v1",
         "azimuth_degrees": CAMERA_AZIMUTH_DEGREES,
         "polar_degrees": CAMERA_POLAR_DEGREES,
         "fov_degrees": CAMERA_FOV_DEGREES,
@@ -76,10 +76,10 @@ def validate_render_png(data: bytes) -> tuple[int, int]:
 
 def profile_settings(camera: dict) -> dict:
     return {
-        "pose": "source-glb-default; animations-disabled",
+        "pose": "arms-lowered-v1; source GLB unchanged",
         "camera": camera,
         "background": {"color": BACKGROUND, "opacity": 1.0},
-        "lighting": {"environment": "model-viewer-default-neutral", "exposure": 1.0, "shadow_intensity": 0.8},
+        "lighting": {"hemisphere": 2.2, "directional": 1.5},
         "color_space": "sRGB",
         "output": {"format": "image/png", "width": OUTPUT_WIDTH, "height": OUTPUT_HEIGHT, "fit": "contain"},
     }
