@@ -1,0 +1,912 @@
+[
+  {
+    "text": "ADVANCED DATA SCIENCE  /  ACADEMIC PROJECT",
+    "x": 74,
+    "y": 60,
+    "width": 390.02,
+    "font_size": 15.5
+  },
+  {
+    "text": "FASHION  +  INTELLIGENCE",
+    "x": 1400.28,
+    "y": 60,
+    "width": 209.5,
+    "font_size": 15.5
+  },
+  {
+    "text": "DRESSME",
+    "x": 70,
+    "y": 111,
+    "width": 833.9,
+    "font_size": 166
+  },
+  {
+    "text": "Your Personal AI Fashion Assistant",
+    "x": 78,
+    "y": 279,
+    "width": 535.2,
+    "font_size": 39
+  },
+  {
+    "text": "An intelligent fashion ecosystem that transforms your wardrobe into a personalized digital experience using Artificial Intelligence, Computer Vision,",
+    "x": 79,
+    "y": 339,
+    "width": 1436.1,
+    "font_size": 24
+  },
+  {
+    "text": "and Recommendation Systems.",
+    "x": 79,
+    "y": 369,
+    "width": 307.03,
+    "font_size": 24
+  },
+  {
+    "text": "Your Wardrobe. Your Style. Your Intelligence.",
+    "x": 79,
+    "y": 410,
+    "width": 405.72,
+    "font_size": 26
+  },
+  {
+    "text": "01  /  PROJECT VISION",
+    "x": 77,
+    "y": 461,
+    "width": 175.37,
+    "font_size": 15.5
+  },
+  {
+    "text": "Digitize your wardrobe. Understand your style. Discover outfits. Make smarter purchases.",
+    "x": 77,
+    "y": 488,
+    "width": 854.72,
+    "font_size": 23.5
+  },
+  {
+    "text": "01",
+    "x": 98,
+    "y": 558,
+    "width": 18.25,
+    "font_size": 18
+  },
+  {
+    "text": "Smart Digital Wardrobe",
+    "x": 178,
+    "y": 559,
+    "width": 221.42,
+    "font_size": 22.5
+  },
+  {
+    "text": "Upload clothing images and automatically organize",
+    "x": 99,
+    "y": 601,
+    "width": 445.4,
+    "font_size": 21.5
+  },
+  {
+    "text": "your personal digital wardrobe.",
+    "x": 99,
+    "y": 627,
+    "width": 274.64,
+    "font_size": 21.5
+  },
+  {
+    "text": "02",
+    "x": 98,
+    "y": 724,
+    "width": 18.25,
+    "font_size": 18
+  },
+  {
+    "text": "AI Clothing Recognition",
+    "x": 178,
+    "y": 725,
+    "width": 218.75,
+    "font_size": 22.5
+  },
+  {
+    "text": "Identify clothing categories, colors, styles and",
+    "x": 99,
+    "y": 767,
+    "width": 397.54,
+    "font_size": 21.5
+  },
+  {
+    "text": "visual characteristics with Computer Vision.",
+    "x": 99,
+    "y": 793,
+    "width": 380.27,
+    "font_size": 21.5
+  },
+  {
+    "text": "03",
+    "x": 98,
+    "y": 890,
+    "width": 18.25,
+    "font_size": 18
+  },
+  {
+    "text": "Personal Style Profiling",
+    "x": 178,
+    "y": 891,
+    "width": 215.71,
+    "font_size": 22.5
+  },
+  {
+    "text": "Learn individual preferences from clothing",
+    "x": 99,
+    "y": 933,
+    "width": 370.41,
+    "font_size": 21.5
+  },
+  {
+    "text": "characteristics and user interactions.",
+    "x": 99,
+    "y": 959,
+    "width": 320.94,
+    "font_size": 21.5
+  },
+  {
+    "text": "04",
+    "x": 1135,
+    "y": 558,
+    "width": 18.25,
+    "font_size": 18
+  },
+  {
+    "text": "Intelligent Outfit Recommendation",
+    "x": 1215,
+    "y": 559,
+    "width": 327.55,
+    "font_size": 22.5
+  },
+  {
+    "text": "Generate personalized outfit combinations using",
+    "x": 1136,
+    "y": 601,
+    "width": 425.77,
+    "font_size": 21.5
+  },
+  {
+    "text": "pieces already in your wardrobe.",
+    "x": 1136,
+    "y": 627,
+    "width": 286.12,
+    "font_size": 21.5
+  },
+  {
+    "text": "05",
+    "x": 1135,
+    "y": 724,
+    "width": 18.25,
+    "font_size": 18
+  },
+  {
+    "text": "Smart Shopping Assistant",
+    "x": 1215,
+    "y": 725,
+    "width": 238.11,
+    "font_size": 22.5
+  },
+  {
+    "text": "Evaluate potential purchases against your style and",
+    "x": 1136,
+    "y": 767,
+    "width": 447.87,
+    "font_size": 21.5
+  },
+  {
+    "text": "the clothes you already own.",
+    "x": 1136,
+    "y": 793,
+    "width": 252.15,
+    "font_size": 21.5
+  },
+  {
+    "text": "06",
+    "x": 1135,
+    "y": 890,
+    "width": 18.25,
+    "font_size": 18
+  },
+  {
+    "text": "Wardrobe Optimization",
+    "x": 1215,
+    "y": 891,
+    "width": 222.14,
+    "font_size": 22.5
+  },
+  {
+    "text": "Find missing pieces, detect redundant items and",
+    "x": 1136,
+    "y": 933,
+    "width": 422.0,
+    "font_size": 21.5
+  },
+  {
+    "text": "improve wardrobe diversity.",
+    "x": 1136,
+    "y": 959,
+    "width": 247.49,
+    "font_size": 21.5
+  },
+  {
+    "text": "9:41",
+    "x": 713,
+    "y": 537,
+    "width": 17.96,
+    "font_size": 10
+  },
+  {
+    "text": "DRESSME",
+    "x": 711,
+    "y": 570,
+    "width": 118.58,
+    "font_size": 23
+  },
+  {
+    "text": "Your digital wardrobe",
+    "x": 711,
+    "y": 602,
+    "width": 185.59,
+    "font_size": 20.5
+  },
+  {
+    "text": "All",
+    "x": 724.64,
+    "y": 643,
+    "width": 13.71,
+    "font_size": 12.5
+  },
+  {
+    "text": "Tops",
+    "x": 772.93,
+    "y": 643,
+    "width": 24.14,
+    "font_size": 12.5
+  },
+  {
+    "text": "Bottoms",
+    "x": 829.88,
+    "y": 643,
+    "width": 43.23,
+    "font_size": 12.5
+  },
+  {
+    "text": "More",
+    "x": 902.07,
+    "y": 643,
+    "width": 27.86,
+    "font_size": 12.5
+  },
+  {
+    "text": "Outerwear",
+    "x": 709.0,
+    "y": 760,
+    "width": 48.77,
+    "font_size": 10.8
+  },
+  {
+    "text": "Taupe blazer",
+    "x": 709.0,
+    "y": 772,
+    "width": 53.72,
+    "font_size": 10.3
+  },
+  {
+    "text": "Knitwear",
+    "x": 847.5,
+    "y": 760,
+    "width": 40.75,
+    "font_size": 10.8
+  },
+  {
+    "text": "Ivory sweater",
+    "x": 847.5,
+    "y": 772,
+    "width": 56.88,
+    "font_size": 10.3
+  },
+  {
+    "text": "Bottoms",
+    "x": 709.0,
+    "y": 868,
+    "width": 38.25,
+    "font_size": 10.8
+  },
+  {
+    "text": "Burgundy trousers",
+    "x": 709.0,
+    "y": 880,
+    "width": 77.34,
+    "font_size": 10.3
+  },
+  {
+    "text": "Tops",
+    "x": 847.5,
+    "y": 868,
+    "width": 21.26,
+    "font_size": 10.8
+  },
+  {
+    "text": "Linen shirt",
+    "x": 847.5,
+    "y": 880,
+    "width": 43.82,
+    "font_size": 10.3
+  },
+  {
+    "text": "Shoes",
+    "x": 709.0,
+    "y": 976,
+    "width": 26.45,
+    "font_size": 10.8
+  },
+  {
+    "text": "Everyday sneakers",
+    "x": 709.0,
+    "y": 988,
+    "width": 77.32,
+    "font_size": 10.3
+  },
+  {
+    "text": "Accessories",
+    "x": 847.5,
+    "y": 976,
+    "width": 51.68,
+    "font_size": 10.8
+  },
+  {
+    "text": "Leather bag",
+    "x": 847.5,
+    "y": 988,
+    "width": 49.49,
+    "font_size": 10.3
+  },
+  {
+    "text": "ILLUSTRATIVE WARDROBE INTERFACE",
+    "x": 730.62,
+    "y": 1056,
+    "width": 220.77,
+    "font_size": 12.5
+  },
+  {
+    "text": "07",
+    "x": 98,
+    "y": 1112,
+    "width": 20.27,
+    "font_size": 20
+  },
+  {
+    "text": "Explainable Fashion AI",
+    "x": 199,
+    "y": 1108,
+    "width": 232.93,
+    "font_size": 25
+  },
+  {
+    "text": "Clear explanations and compatibility scores reveal why each recommendation fits your wardrobe.",
+    "x": 199,
+    "y": 1144,
+    "width": 852.99,
+    "font_size": 21.5
+  },
+  {
+    "text": "02  /  HOW DOES DRESSME WORK?",
+    "x": 77,
+    "y": 1222,
+    "width": 274.68,
+    "font_size": 15.5
+  },
+  {
+    "text": "01",
+    "x": 324.78,
+    "y": 1280,
+    "width": 16.22,
+    "font_size": 16
+  },
+  {
+    "text": "USER INPUT",
+    "x": 94.0,
+    "y": 1323,
+    "width": 90.14,
+    "font_size": 18
+  },
+  {
+    "text": "Clothing images +",
+    "x": 94.0,
+    "y": 1356,
+    "width": 135.23,
+    "font_size": 18.8
+  },
+  {
+    "text": "user interactions",
+    "x": 94.0,
+    "y": 1379,
+    "width": 128.5,
+    "font_size": 18.8
+  },
+  {
+    "text": "02",
+    "x": 636.28,
+    "y": 1280,
+    "width": 16.22,
+    "font_size": 16
+  },
+  {
+    "text": "COMPUTER VISION",
+    "x": 405.5,
+    "y": 1323,
+    "width": 143.44,
+    "font_size": 18
+  },
+  {
+    "text": "Clothing recognition +",
+    "x": 405.5,
+    "y": 1356,
+    "width": 168.55,
+    "font_size": 18.8
+  },
+  {
+    "text": "feature extraction",
+    "x": 405.5,
+    "y": 1379,
+    "width": 138.14,
+    "font_size": 18.8
+  },
+  {
+    "text": "03",
+    "x": 947.78,
+    "y": 1280,
+    "width": 16.22,
+    "font_size": 16
+  },
+  {
+    "text": "PERSONALIZATION",
+    "x": 717.0,
+    "y": 1323,
+    "width": 141.6,
+    "font_size": 18
+  },
+  {
+    "text": "Style profiling +",
+    "x": 717.0,
+    "y": 1356,
+    "width": 118.73,
+    "font_size": 18.8
+  },
+  {
+    "text": "preference modeling",
+    "x": 717.0,
+    "y": 1379,
+    "width": 159.74,
+    "font_size": 18.8
+  },
+  {
+    "text": "04",
+    "x": 1259.28,
+    "y": 1280,
+    "width": 16.22,
+    "font_size": 16
+  },
+  {
+    "text": "RECOMMENDATION ENGINE",
+    "x": 1028.5,
+    "y": 1323,
+    "width": 214.32,
+    "font_size": 18
+  },
+  {
+    "text": "Outfit generation, matching +",
+    "x": 1028.5,
+    "y": 1356,
+    "width": 226.36,
+    "font_size": 18.8
+  },
+  {
+    "text": "wardrobe optimization",
+    "x": 1028.5,
+    "y": 1379,
+    "width": 175.4,
+    "font_size": 18.8
+  },
+  {
+    "text": "05",
+    "x": 1570.78,
+    "y": 1280,
+    "width": 16.22,
+    "font_size": 16
+  },
+  {
+    "text": "INTELLIGENT FASHION ADVICE",
+    "x": 1340.0,
+    "y": 1323,
+    "width": 210.97,
+    "font_size": 16.7
+  },
+  {
+    "text": "Personalized outfits +",
+    "x": 1340.0,
+    "y": 1356,
+    "width": 164.71,
+    "font_size": 18.8
+  },
+  {
+    "text": "shopping decisions",
+    "x": 1340.0,
+    "y": 1379,
+    "width": 144.5,
+    "font_size": 18.8
+  },
+  {
+    "text": "03  /  AN INNOVATIVE FEATURE",
+    "x": 101,
+    "y": 1485,
+    "width": 249.17,
+    "font_size": 15.5
+  },
+  {
+    "text": "Should I buy this?",
+    "x": 102,
+    "y": 1514,
+    "width": 262.7,
+    "font_size": 34
+  },
+  {
+    "text": "9:41",
+    "x": 126,
+    "y": 1586,
+    "width": 17.96,
+    "font_size": 10
+  },
+  {
+    "text": "DRESSME",
+    "x": 125,
+    "y": 1614,
+    "width": 81.04,
+    "font_size": 15
+  },
+  {
+    "text": "Should I buy this?",
+    "x": 125,
+    "y": 1640,
+    "width": 132.28,
+    "font_size": 18
+  },
+  {
+    "text": "87%",
+    "x": 169.6,
+    "y": 1777,
+    "width": 48.79,
+    "font_size": 28
+  },
+  {
+    "text": "wardrobe compatibility",
+    "x": 144.54,
+    "y": 1812,
+    "width": 98.93,
+    "font_size": 10.4
+  },
+  {
+    "text": "RECOMMENDED PURCHASE",
+    "x": 367,
+    "y": 1578,
+    "width": 237.8,
+    "font_size": 20.5
+  },
+  {
+    "text": "This item matches your style and combines with several pieces in your",
+    "x": 367,
+    "y": 1608.0,
+    "width": 593.02,
+    "font_size": 20.8
+  },
+  {
+    "text": "wardrobe.",
+    "x": 367,
+    "y": 1632.5,
+    "width": 87.76,
+    "font_size": 20.8
+  },
+  {
+    "text": "THINK TWICE",
+    "x": 367,
+    "y": 1667,
+    "width": 112.94,
+    "font_size": 20.5
+  },
+  {
+    "text": "You already own similar items. This purchase adds limited value to your",
+    "x": 367,
+    "y": 1697.0,
+    "width": 603.84,
+    "font_size": 20.8
+  },
+  {
+    "text": "wardrobe.",
+    "x": 367,
+    "y": 1721.5,
+    "width": 87.76,
+    "font_size": 20.8
+  },
+  {
+    "text": "NOT RECOMMENDED",
+    "x": 367,
+    "y": 1756,
+    "width": 183.59,
+    "font_size": 20.5
+  },
+  {
+    "text": "This item has low compatibility with your current wardrobe.",
+    "x": 367,
+    "y": 1786.0,
+    "width": 506.91,
+    "font_size": 20.8
+  },
+  {
+    "text": "Illustrative UI example. The score is not a measured project result.",
+    "x": 313,
+    "y": 1850,
+    "width": 355.36,
+    "font_size": 16.2
+  },
+  {
+    "text": "AI METHODS",
+    "x": 1120,
+    "y": 1485,
+    "width": 98.47,
+    "font_size": 15.5
+  },
+  {
+    "text": "Powered by Data Science",
+    "x": 1118,
+    "y": 1518,
+    "width": 286.47,
+    "font_size": 27
+  },
+  {
+    "text": "& Artificial Intelligence",
+    "x": 1118,
+    "y": 1551,
+    "width": 266.66,
+    "font_size": 27
+  },
+  {
+    "text": "Computer Vision",
+    "x": 1156,
+    "y": 1611,
+    "width": 127.61,
+    "font_size": 18.8
+  },
+  {
+    "text": "Convolutional Neural",
+    "x": 1405,
+    "y": 1611,
+    "width": 161.63,
+    "font_size": 18.8
+  },
+  {
+    "text": "Networks (CNN)",
+    "x": 1405,
+    "y": 1631,
+    "width": 123.54,
+    "font_size": 18.8
+  },
+  {
+    "text": "Deep Learning",
+    "x": 1156,
+    "y": 1662,
+    "width": 110.14,
+    "font_size": 18.8
+  },
+  {
+    "text": "Recommendation",
+    "x": 1405,
+    "y": 1662,
+    "width": 135.98,
+    "font_size": 18.8
+  },
+  {
+    "text": "Systems",
+    "x": 1405,
+    "y": 1682,
+    "width": 62.52,
+    "font_size": 18.8
+  },
+  {
+    "text": "Collaborative",
+    "x": 1156,
+    "y": 1713,
+    "width": 101.38,
+    "font_size": 18.8
+  },
+  {
+    "text": "Filtering",
+    "x": 1156,
+    "y": 1733,
+    "width": 62.51,
+    "font_size": 18.8
+  },
+  {
+    "text": "Preference",
+    "x": 1405,
+    "y": 1713,
+    "width": 83.8,
+    "font_size": 18.8
+  },
+  {
+    "text": "Modeling",
+    "x": 1405,
+    "y": 1733,
+    "width": 72.57,
+    "font_size": 18.8
+  },
+  {
+    "text": "Multimodal AI",
+    "x": 1156,
+    "y": 1764,
+    "width": 108.87,
+    "font_size": 18.8
+  },
+  {
+    "text": "Explainable AI",
+    "x": 1405,
+    "y": 1764,
+    "width": 107.13,
+    "font_size": 18.8
+  },
+  {
+    "text": "Generative AI",
+    "x": 1156,
+    "y": 1815,
+    "width": 104.33,
+    "font_size": 18.8
+  },
+  {
+    "text": "04  /  INNOVATION & IMPACT",
+    "x": 77,
+    "y": 1933,
+    "width": 234.11,
+    "font_size": 15.5
+  },
+  {
+    "text": "Beyond Fashion:",
+    "x": 76,
+    "y": 1968,
+    "width": 241.82,
+    "font_size": 34
+  },
+  {
+    "text": "Smarter & More Sustainable Choices",
+    "x": 77,
+    "y": 2006,
+    "width": 441.37,
+    "font_size": 30
+  },
+  {
+    "text": "Personalized fashion experiences",
+    "x": 118,
+    "y": 2073,
+    "width": 282.74,
+    "font_size": 21
+  },
+  {
+    "text": "Fewer unnecessary purchases",
+    "x": 638,
+    "y": 2073,
+    "width": 254.8,
+    "font_size": 21
+  },
+  {
+    "text": "Better wardrobe utilization",
+    "x": 118,
+    "y": 2118,
+    "width": 231.35,
+    "font_size": 21
+  },
+  {
+    "text": "Budget-conscious shopping",
+    "x": 638,
+    "y": 2118,
+    "width": 233.38,
+    "font_size": 21
+  },
+  {
+    "text": "More sustainable consumption habits",
+    "x": 118,
+    "y": 2163,
+    "width": 322.0,
+    "font_size": 21
+  },
+  {
+    "text": "Tunisian fashion preferences & seasons",
+    "x": 638,
+    "y": 2163,
+    "width": 336.46,
+    "font_size": 21
+  },
+  {
+    "text": "OPTIONAL EXTENSION",
+    "x": 1173,
+    "y": 1954,
+    "width": 173.27,
+    "font_size": 15.5
+  },
+  {
+    "text": "Virtual Try-On",
+    "x": 1173,
+    "y": 1986,
+    "width": 185.99,
+    "font_size": 29
+  },
+  {
+    "text": "Visualize an outfit through a",
+    "x": 1310,
+    "y": 2040,
+    "width": 240.38,
+    "font_size": 21
+  },
+  {
+    "text": "virtual fitting interface.",
+    "x": 1310,
+    "y": 2066,
+    "width": 196.85,
+    "font_size": 21
+  },
+  {
+    "text": "Future perspective",
+    "x": 1310,
+    "y": 2148,
+    "width": 140.14,
+    "font_size": 18
+  },
+  {
+    "text": "Not implemented",
+    "x": 1310,
+    "y": 2174,
+    "width": 125.9,
+    "font_size": 17.5
+  },
+  {
+    "text": "ADVANCED DATA SCIENCE PROJECT",
+    "x": 77,
+    "y": 2276,
+    "width": 300.04,
+    "font_size": 18
+  },
+  {
+    "text": "Academic project - Data Science & Artificial Intelligence",
+    "x": 77,
+    "y": 2308,
+    "width": 404.72,
+    "font_size": 18
+  },
+  {
+    "text": "DressMe | Your Personal AI Fashion Assistant",
+    "x": 77,
+    "y": 2337,
+    "width": 355.66,
+    "font_size": 18
+  },
+  {
+    "text": "UNIVERSITY LOGO",
+    "x": 874.39,
+    "y": 2310,
+    "width": 109.21,
+    "font_size": 13.2
+  },
+  {
+    "text": "TEAM MEMBERS",
+    "x": 1061,
+    "y": 2276,
+    "width": 127.34,
+    "font_size": 15.5
+  },
+  {
+    "text": "ACADEMIC SUPERVISORS",
+    "x": 1061,
+    "y": 2327,
+    "width": 195.15,
+    "font_size": 15.5
+  }
+]
