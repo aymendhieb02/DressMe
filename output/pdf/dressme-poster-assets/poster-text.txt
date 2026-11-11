@@ -1,0 +1,111 @@
+ADVANCED DATA SCIENCE  /  ACADEMIC PROJECT FASHION  +  INTELLIGENCE
+DRESSMEYour Personal AI Fashion Assistant
+An intelligent fashion ecosystem that transforms your wardrobe into a personalized digital experience using Artificial Intelligence, Computer Vision,
+and Recommendation Systems.
+Your Wardrobe. Your Style. Your Intelligence.
+01  /  PROJECT VISION
+Digitize your wardrobe. Understand your style. Discover outfits. Make smarter purchases.
+01 Smart Digital Wardrobe
+Upload clothing images and automatically organize
+your personal digital wardrobe.
+02 AI Clothing Recognition
+Identify clothing categories, colors, styles and
+visual characteristics with Computer Vision.
+03 Personal Style Profiling
+Learn individual preferences from clothing
+characteristics and user interactions.
+04 Intelligent Outfit Recommendation
+Generate personalized outfit combinations using
+pieces already in your wardrobe.
+05 Smart Shopping Assistant
+Evaluate potential purchases against your style and
+the clothes you already own.
+06 Wardrobe Optimization
+Find missing pieces, detect redundant items and
+improve wardrobe diversity.
+9:41
+DRESSME
+Your digital wardrobe
+All Tops Bottoms More
+Outerwear
+Taupe blazer
+Knitwear
+Ivory sweater
+Bottoms
+Burgundy trousers
+Tops
+Linen shirt
+Shoes
+Everyday sneakers
+Accessories
+Leather bag
+ILLUSTRATIVE WARDROBE INTERFACE
+07 Explainable Fashion AI
+Clear explanations and compatibility scores reveal why each recommendation fits your wardrobe.
+02  /  HOW DOES DRESSME WORK?
+01
+USER INPUT
+Clothing images +
+user interactions
+02
+COMPUTER VISION
+Clothing recognition +
+feature extraction
+03
+PERSONALIZATION
+Style profiling +
+preference modeling
+04
+RECOMMENDATION ENGINE
+Outfit generation, matching +
+wardrobe optimization
+05
+INTELLIGENT FASHION ADVICE
+Personalized outfits +
+shopping decisions
+03  /  AN INNOVATIVE FEATURE
+Should I buy this?
+9:41
+DRESSME
+Should I buy this?
+87%wardrobe compatibility
+RECOMMENDED PURCHASE
+This item matches your style and combines with several pieces in your
+wardrobe.
+THINK TWICE
+You already own similar items. This purchase adds limited value to your
+wardrobe.
+NOT RECOMMENDED
+This item has low compatibility with your current wardrobe.
+Illustrative UI example. The score is not a measured project result.
+AI METHODS
+Powered by Data Science
+& Artificial Intelligence
+Computer Vision Convolutional Neural
+Networks (CNN)
+Deep Learning Recommendation
+Systems
+Collaborative
+Filtering
+Preference
+Modeling
+Multimodal AI Explainable AI
+Generative AI
+04  /  INNOVATION & IMPACT
+Beyond Fashion:
+Smarter & More Sustainable Choices
+Personalized fashion experiences Fewer unnecessary purchases
+Better wardrobe utilization Budget-conscious shopping
+More sustainable consumption habits Tunisian fashion preferences & seasons
+OPTIONAL EXTENSION
+Virtual Try-On
+Visualize an outfit through a
+virtual fitting interface.
+Future perspective
+Not implemented
+ADVANCED DATA SCIENCE PROJECT
+Academic project - Data Science & Artificial Intelligence
+DressMe | Your Personal AI Fashion Assistant
+UNIVERSITY LOGO
+TEAM MEMBERS
+ACADEMIC SUPERVISORS

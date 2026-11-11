@@ -1,0 +1,135 @@
+[
+  {
+    "gender": "men",
+    "message": "Compose deux tenues pour une sortie",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "black wool half-zip ski top",
+        "black ski pants",
+        "beige suede mid-calf boots"
+      ],
+      [
+        "black virgin wool zip-up sweater",
+        "blue wool and cashmere sweatpants",
+        "black leather derby shoes"
+      ]
+    ]
+  },
+  {
+    "gender": "men",
+    "message": "je veux une tenue pour diner",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "blue striped linen bowling shirt",
+        "beige pinstripe linen trousers",
+        "brown leather loafers"
+      ]
+    ]
+  },
+  {
+    "gender": "men",
+    "message": "je veux une tenue pour diner",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "white crochet-trimmed bowling shirt",
+        "white virgin wool tapered pants",
+        "black woven leather penny loafers"
+      ]
+    ]
+  },
+  {
+    "gender": "men",
+    "message": "Compose une tenue de sport",
+    "status": "no_conforming_candidates",
+    "answer": "Je ne peux pas composer une tenue complète pour pratique du sport avec les articles autorisés : il manque des chaussures dont la description indique cet usage. Je ne les remplace pas par des pièces inadaptées.",
+    "items": []
+  },
+  {
+    "gender": "men",
+    "message": "Compose une tenue au style sportif",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "grey long-sleeved embroidered cotton t-shirt",
+        "black track pants",
+        "black leather sneakers"
+      ]
+    ]
+  },
+  {
+    "gender": "women",
+    "message": "Compose deux tenues pour une sortie",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "black polka-dot tie-neck silk blouse",
+        "brown pleated asymmetric midi skirt",
+        "black studded leather over-the-knee boots"
+      ],
+      [
+        "brown and beige striped cotton-blend asymmetric top",
+        "black gathered asymmetric midi skirt",
+        "green parco intrecciato leather mules"
+      ]
+    ]
+  },
+  {
+    "gender": "women",
+    "message": "je veux une tenue pour diner",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "black silk satin blouse",
+        "black leather midi skirt",
+        "brown leather loafers"
+      ]
+    ]
+  },
+  {
+    "gender": "women",
+    "message": "je veux une tenue pour diner",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "multicoloured floral silk-blend cloqué midi dress",
+        "silver metallic leather loafers"
+      ]
+    ]
+  },
+  {
+    "gender": "women",
+    "message": "Compose une tenue de sport",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "multicoloured embroidered striped T-shirt",
+        "beige oversized wide-leg track pants",
+        "green running shoes"
+      ]
+    ]
+  },
+  {
+    "gender": "women",
+    "message": "Compose une tenue au style sportif",
+    "status": "results_with_limits",
+    "answer": "Tenues assemblées à partir des articles locaux et notées par BO1. Les propositions privilégient des pièces différentes, en respectant les critères de cette recherche.",
+    "items": [
+      [
+        "brown cotton terry hoodie",
+        "brown patchwork cotton terry sweatpants",
+        "black leather sneakers"
+      ]
+    ]
+  }
+]

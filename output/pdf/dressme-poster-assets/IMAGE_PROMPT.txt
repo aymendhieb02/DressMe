@@ -1,0 +1,18 @@
+Generation mode: built-in image_gen tool.
+Asset: wardrobe-photography.png
+Layout use: six full garment photographs inside illustrative phone interfaces.
+
+Use case: product-mockup
+Asset type: clothing photography contact sheet to be placed within tiny digital wardrobe tiles in a premium academic poster.
+Primary request: one high-resolution portrait studio contact sheet in a strict 2-column by 3-row grid, each of the six equally sized cells contains exactly one complete isolated clothing item on the same warm ivory background. No cell borders.
+Top-left: an elegant warm taupe tailored blazer, front view.
+Top-right: an ivory ribbed crewneck knit sweater, front view.
+Middle-left: burgundy tailored wide-leg trousers, front view.
+Middle-right: a dusty blue linen short-sleeve button-up shirt, front view.
+Bottom-left: a pair of clean off-white low-top sneakers, three-quarter view.
+Bottom-right: a small structured tan leather shoulder bag, three-quarter view.
+Style/medium: realistic premium fashion ecommerce product photography, fine textile detail, soft diffuse studio light, very subtle soft grounding shadows.
+Composition: exact 2 by 3 equal grid, each item centered in its cell, fully inside the cell with at least 15% padding on all sides so individual cells can be placed in mockups. Clothing without people, mannequins, or hangers.
+Palette: ivory, warm taupe, muted burgundy, dusty blue and cognac.
+Text: none.
+Avoid: letters, text, numbers, logos, branding, watermarks, decorative dividers, extra objects.

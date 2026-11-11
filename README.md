@@ -4,6 +4,16 @@ DressMe is a fashion and wardrobe application. It suggests outfits for the weath
 
 **Version 1.0.0** · **To run it, see [RUN.md](RUN.md).**
 
+## Intégration BO1/BO5 et comptes utilisateurs
+
+La branche intégrée ajoute le chat BO1/BO5 à l'application de l'équipe. Le genre choisi à l'inscription ou dans **Account** est lu automatiquement depuis le compte authentifié ; une demande explicite garde la priorité.
+
+La correction des tenues répétitives et du choix des vêtements selon l’usage est documentée dans [diagnostics/RELEVANCE_FIX.md](diagnostics/RELEVANCE_FIX.md).
+
+Les détails de l'intégration et des validations sont dans [docs/SESSION_GENDER_INTEGRATION.md](docs/SESSION_GENDER_INTEGRATION.md). **Le verrou commun actuel est `requirements-integrated.lock.txt`** ; les anciens verrous et bilans décrivent les environnements antérieurs. Pour le lancement de l'application complète, suivre [RUN.md](RUN.md).
+
+L'ancien guide local BO1/BO5 est conservé dans [docs/BO1_BO5_LOCAL.md](docs/BO1_BO5_LOCAL.md).
+
 ## Features
 
 | Menu | Feature | What it does | Needs |

@@ -18,6 +18,8 @@ from .rag import E5Encoder, ProductRAG
 from .schemas import CORE_TEMPLATES, ComposeSpec, Facet, ROLES, digest
 from .state import Sessions
 from .identity import without_account_defaults, with_account_gender
+from .context import allowed_for_context, context_coverage, search_query
+from .selection import calibrate_signals, choose_diverse
 
 
 class Assistant:
@@ -43,7 +45,10 @@ class Assistant:
                              encoder=self.rag.identity if self.rag else 'intfloat/multilingual-e5-small (not loaded)'),
                     assembly=dict(available=True, method='BO5 bounded catalog assembly + exported BO1 score',
                                   trained_generator=False, exhaustive=False, pool_per_role=self.per_role,
-                                  max_examined=20000, max_scored=512, weights=self.weights),
+                                  max_examined=20000, max_scored=512, weights=self.weights,
+                                  context_policy='description-grounded use cases v1',
+                                  relevance='per-role percentiles among eligible products',
+                                  selection='diversity plus last 12 shown outfits; deterministic'),
                     session='Isolated assistant state; integrated deployment uses the authenticated account identity.')
 
     def retrieval(self, query):
@@ -76,7 +81,11 @@ class Assistant:
         allowed = set(products) if spec.scope=='catalog' else set(state['wardrobe_ids']) & set(products)
         return {key for key in allowed if products[key].get('scoreable') and
                 products[key]['role']!='unknown' and Path(products[key]['image_path']).is_file() and
-                admissible(products[key],spec)}
+                admissible(products[key],spec) and allowed_for_context(products[key],spec)}
+
+    def search(self,spec,state,products=None):
+        products=products or self.products_for(state)
+        return calibrate_signals(self.retrieval(search_query(spec)),products,self._allowed(products,spec,state))
 
     def _retain(self, candidates, evidence, retained=(), limit=512):
         """Reserve support for every soft criterion, then fill by relevance."""
@@ -111,7 +120,7 @@ class Assistant:
             selected.setdefault(row['candidate_id'],row)
         return sorted(selected.values(),key=lambda r:(-r['relevance'],r['candidate_id']))
 
-    def _assemble(self, spec, state, signals, fixed=(), preferences=()):
+    def _assemble(self, spec, state, signals, fixed=(), preferences=(), recent=()):
         products = self.products_for(state)
         allowed = set(products)
         if spec.scope == 'wardrobe':
@@ -123,6 +132,12 @@ class Assistant:
             raise ValueError('Une pièce à conserver est inconnue ou incompatible avec les nouvelles contraintes.')
         pools = {role: sorted((k for k in allowed if products[k]['role'] == role),
                               key=lambda k: (-signals.get(k, {}).get('relevance', 0), k))[:self.per_role] for role in ROLES}
+        if recent:
+            used=set().union(*(set(ids) for ids in recent))
+            for role in pools:
+                fresh=sorted((k for k in allowed if products[k]['role']==role and k not in used),
+                    key=lambda k:(-signals.get(k,{}).get('relevance',0),k))[:3]
+                pools[role]=list(dict.fromkeys(pools[role]+fresh))
         # Positive constraints retain representatives even outside the first retrieval results.
         for f in spec.facets:
             if f.strength != 'must' or f.mode in {'clear', 'exclude'} or f.field not in {'type', 'color', 'item_id'}:
@@ -187,7 +202,11 @@ class Assistant:
                                        relevance=relevance, constraint_report=reports))
             if examined >= 20000:
                 break
-        candidates = self._retain(candidates,evidence)
+        retained=[]
+        if recent:
+            used=set().union(*(set(ids) for ids in recent))
+            retained=sorted(candidates,key=lambda row:(sum(k in used for k in row['item_ids']),-row['relevance'],row['candidate_id']))[:128]
+        candidates = self._retain(candidates,evidence,retained=retained)
         if candidates:
             scores = self.bo1.score([r['item_ids'] for r in candidates])
             for row, score in zip(candidates, scores):
@@ -198,7 +217,8 @@ class Assistant:
                            source_products=initial, examined=min(examined, 20000), scored=len(candidates),
                            rejections=dict(rejected), exhaustive=False,
                            role_pool_sizes={r: len(v) for r, v in pools.items()},
-                           original_message_preserved=True)
+                           original_message_preserved=True,context_coverage=context_coverage(products,allowed,spec),
+                           relevance='role-relative retrieval; raw cosine is not a probability')
         return candidates, diagnostics
 
     def rank(self, candidates, preferences, products):
@@ -247,6 +267,8 @@ class Assistant:
         with self.sessions.lock(sid):
             state = self.sessions.get(sid)
             previous = state['conversation']
+            if not state.get('recent_outfits') and previous.get('displayed'):
+                state['recent_outfits']=[sorted(r['item_ids']) for r in previous['displayed']]
             products = self.products_for(state)
             rows = previous.get('displayed', [])
             previous_roles = [dict(number=i, roles=[products[k]['role'] for k in row['item_ids'] if k in products])
@@ -329,7 +351,7 @@ class Assistant:
                                                  pending_question='Quelle devise pour ce budget ?')
                     self.sessions.save(sid, state)
                     return dict(status='clarification', message='Quelle devise pour ce budget ? Le symbole $ seul est ambigu.', diagnostics=trace)
-                signals = self.retrieval(spec.query)
+                signals = self.search(spec,state,products)
                 preferences = list(state['preferences'])
                 # A clear preference in a what-if affects this scenario, not the saved profile.
                 for f in turn.facets:
@@ -369,9 +391,9 @@ class Assistant:
                     if turn.before_facets:
                         before_spec = with_account_gender(compile_spec(turn, message=message, before=True), turn, state)
                         spec = with_account_gender(compile_spec(turn, without_account_defaults(before_spec), message), turn, state)
-                        signals = self.retrieval(spec.query)
+                        signals = self.search(spec,state,products)
                         before_preferences=self._unique_preferences(state['preferences']+[f.model_dump() for f in before_spec.facets if f.strength=='prefer'])
-                        before_pool, _ = self._assemble(before_spec, state, self.retrieval(before_spec.query),preferences=before_preferences)
+                        before_pool, _ = self._assemble(before_spec, state, self.search(before_spec,state,products),preferences=before_preferences)
                         before_rows = self.rank(before_pool, before_preferences, products)
                         preferences=self._unique_preferences(preferences+[f.model_dump() for f in spec.facets if f.strength=='prefer'])
                         evidence=self._preference_evidence(preferences,products)
@@ -400,12 +422,14 @@ class Assistant:
                     diagnostics.update(same_candidate_pool=True,expanded_for_preferences=pool_changed,
                                        comparison_candidates=len(candidates))
                 else:
-                    candidates, diagnostics = self._assemble(spec, state, signals, fixed, preferences)
+                    recent=state.get('recent_outfits',[]) if turn.action=='compose' else []
+                    candidates, diagnostics = self._assemble(spec, state, signals, fixed, preferences,recent=recent)
                 if turn.action == 'replace':
                     forbidden={tuple(sorted(r['item_ids'])) for r in old_displayed}
                     candidates=[r for r in candidates if tuple(sorted(r['item_ids'])) not in forbidden]
                 ranked = self.rank(candidates, preferences, products)
-                displayed = ranked[:spec.top_n]
+                recent=state.get('recent_outfits',[]) if turn.action=='compose' else []
+                displayed = choose_diverse(ranked,spec.top_n,recent=recent,products=products)
                 if turn.action=='replace':
                     if not ranked:
                         return dict(status='no_replacement_candidate',message='Aucun remplacement conforme parmi les candidats examinés. Les propositions précédentes sont conservées.',
@@ -425,7 +449,7 @@ class Assistant:
                     global_preferences=previous.get('preferences',state['preferences'])
                     global_evidence=self._preference_evidence(global_preferences,products)
                     global_pool=copy.deepcopy(previous.get('candidates',[])+displayed)
-                    global_signals=self.retrieval(global_base.query)
+                    global_signals=self.search(global_base,state,products)
                     for row in global_pool:
                         row['relevance']=float(np.mean([global_signals[k]['relevance'] for k in row['item_ids']]))
                         row['constraint_report']=constraint_reports([products[k] for k in row['item_ids']],global_base,state['wardrobe_ids'])
@@ -442,7 +466,7 @@ class Assistant:
                     comparison = dict(kind='what_if', same_candidate_pool=bool(preference_only),
                                       candidate_pool_changed=pool_changed,
                                       previous_selection=previous_public,
-                                      before=self._public((before_rows or [])[:spec.top_n], products),
+                                      before=self._public(choose_diverse(before_rows or [],spec.top_n,products=products), products),
                                       after=self._public(displayed, products),
                                       effect='recalculated ranks; BO1 changes only when the selected combination changes')
                 if turn.action!='replace':
@@ -459,13 +483,32 @@ class Assistant:
                     message_text='Les préférences ont été réévaluées sur des alternatives recherchées dans les articles autorisés.'
                 else:
                     message_text='Tenues assemblées à partir des articles locaux et notées par BO1.' if displayed else 'Aucune proposition conforme parmi les candidats examinés. Vérifie les métadonnées inconnues et les critères.'
+                context=diagnostics.get('context_coverage')
+                if not displayed and context and context['missing_roles']:
+                    message_text=context['message']
+                elif displayed and turn.action!='replace':
+                    message_text+=' J’ai limité les pièces communes entre propositions.'
+                    if context:
+                        message_text+=' Usage retenu : '+', '.join(context['labels'])+'.'
+                    if context and 'outing' in context['contexts']:
+                        message_text+=' « Sortie » est interprété comme une sortie décontractée ; précise « habillée » si nécessaire.'
+                    if any(r.get('selection_details',{}).get('novelty_relaxed') for r in displayed):
+                        message_text+=' Le choix disponible est limité : certaines pièces déjà montrées sont réutilisées.'
+                    if len(displayed)<spec.top_n:
+                        message_text+=f' Je ne trouve que {len(displayed)} proposition(s) assez différente(s) parmi les candidats examinés.'
+                if displayed:
+                    history=state.get('recent_outfits',[])
+                    for row in displayed:
+                        signature=sorted(row['item_ids'])
+                        history=[ids for ids in history if sorted(ids)!=signature]+[signature]
+                    state['recent_outfits']=history[-12:]
                 notes=coverage_messages(coverage)
                 result = dict(status='results_with_limits' if displayed else 'no_conforming_candidates',
                               message=' '.join([message_text,*notes]),preference_coverage=coverage,
                               results=self._public(displayed, products), comparison=comparison,
                               limits=['Assemblage borné BO5 et score BO1 ; la complétion entraînée reste un outil séparé.',
                                       'Score appris de compatibilité, pas une note esthétique humaine.',
-                                      'Style, occasion et météo : pertinence de recherche sans garantie fonctionnelle.',
+                                      'Usage sélectionné d’après les descriptions ; performances techniques non certifiées.',
                                       'Genre, prix et palette complète inconnus ne passent pas un filtre strict.'],
                               diagnostics={**trace, 'assembly': diagnostics, 'active_spec': spec.model_dump()})
                 self.sessions.save(sid, state)

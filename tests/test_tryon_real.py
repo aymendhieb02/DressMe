@@ -180,7 +180,7 @@ def _real_job(client, origin, monkeypatch, tmp_path):
 def _success(person, garment, category, photo_type, *, output_dir, settings, should_cancel, tick):
     assert Path(person).read_bytes() and Path(garment).read_bytes()
     assert Path(person).parent.parent == Path(settings.storage_path).resolve()
-    output_dir.mkdir()
+    output_dir.mkdir(parents=True)
     path = output_dir / "output_00.png"
     path.write_bytes(b"\x89PNG real result")
     return FashnResult(output_path=path, details={"category_seen": category, "photo_seen": photo_type, "inference_seconds": 2.0})

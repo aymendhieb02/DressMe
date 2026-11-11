@@ -5,6 +5,7 @@ from decimal import Decimal, InvalidOperation
 from babel.numbers import get_currency_name, list_currencies
 
 from .schemas import ComposeSpec, Facet, norm, tokens
+from .context import active_contexts, context_evidence, scoped_contexts
 
 
 def resolve_currency(text):
@@ -78,7 +79,7 @@ def compile_spec(turn, previous=None, message='', before=False):
     semantic = [turn.query_en.strip(), message.strip()] if previous is None and not before else []
     active = [f'{f.field}: {", ".join(f.values)}' for f in facets
               if f.mode not in {'exclude', 'clear'} and f.strength == 'must' and
-              f.field not in {'budget', 'currency', 'scope', 'count'}]
+              f.field not in {'budget', 'currency', 'scope', 'count', 'gender', 'role', 'item_id'}]
     spec.query = '. '.join(dict.fromkeys(['clothing item' if turn.action == 'products' else 'complete outfit', *filter(None, semantic), *active]))
     return spec
 
@@ -136,6 +137,12 @@ def constraint_reports(items, spec, wardrobe_ids=()):
         reports.append(dict(facet=f.model_dump(), verified=True, passed=bool(passed),
                             matching_ids=hits, evaluated_ids=[p['image_id'] for p in evaluated],
                             reason='unknown_attribute' if not known and evaluated else 'product_metadata'))
+    for key in active_contexts(spec):
+        evaluated=[p for p in items if key in scoped_contexts(spec,p.get('role'))]
+        evidence=[dict(item_id=p['image_id'],**context_evidence(p,key)) for p in evaluated]
+        reports.append(dict(criterion='use_case',context=key,verified=False,
+            passed=bool(evaluated) and all(e['supported'] for e in evidence),evidence=evidence,
+            reason='catalogue_description_policy; not verified technical performance'))
     if spec.scope == 'wardrobe':
         reports.append(dict(criterion='ownership', verified=True,
                             passed=all(p['image_id'] in wardrobe_ids for p in items)))

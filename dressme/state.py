@@ -30,7 +30,7 @@ class Sessions:
     def create(self, sid=None):
         sid = sid or secrets.token_urlsafe(32)
         self.save(sid, dict(preferences=[], wardrobe_ids=[], overrides={}, personal={},
-                            conversation={}, history=[]))
+                            conversation={}, history=[],recent_outfits=[]))
         return sid
 
     def save(self, sid, value):
