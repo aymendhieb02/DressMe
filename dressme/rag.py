@@ -1,24 +1,55 @@
 """BM25/E5 inference extracted from BO5 notebook cell 17 (passage:/query: convention)."""
 import math
 from collections import Counter
+from pathlib import Path
 import numpy as np
 from .schemas import tokens, digest
 from .config import CACHE as CACHE_DIR, ALLOW_DOWNLOADS, hf_auth
 
 class E5Encoder:
+    @staticmethod
+    def _complete_snapshot(path):
+        path = Path(path)
+        required = ('config.json', 'modules.json', '1_Pooling/config.json', 'tokenizer_config.json')
+        if not all((path / name).is_file() and (path / name).stat().st_size for name in required):
+            return False
+        if not any((path / name).is_file() and (path / name).stat().st_size
+                   for name in ('tokenizer.json', 'sentencepiece.bpe.model')):
+            return False
+        for name in ('model.safetensors', 'pytorch_model.bin'):
+            weights = path / name
+            if weights.is_file() and weights.stat().st_size:
+                with weights.open('rb') as stream:
+                    if not stream.read(160).startswith(b'version https://git-lfs.github.com/spec/v1'):
+                        return True
+        return False
+
     def __init__(self):
         from sentence_transformers import SentenceTransformer
         from huggingface_hub import snapshot_download
         revision = '614241f622f53c4eeff9890bdc4f31cfecc418b3'
-        # The revision already present locally is pinned for repeatability.
-        try:
-            path = snapshot_download('intfloat/multilingual-e5-small', revision=revision,
-                                     cache_dir=str(CACHE_DIR / 'models'), local_files_only=True)
-        except Exception:
+        # A cached snapshot can contain metadata only. Check its files before
+        # selecting it, and also try the user's existing cache while offline.
+        path = None
+        for cache_dir in (str(CACHE_DIR / 'models'), None):
+            try:
+                candidate = snapshot_download('intfloat/multilingual-e5-small', revision=revision,
+                                              cache_dir=cache_dir, local_files_only=True)
+            except Exception:
+                continue
+            if self._complete_snapshot(candidate):
+                path = candidate
+                break
+        if path is None:
+            if not ALLOW_DOWNLOADS:
+                raise FileNotFoundError('No complete local multilingual-e5-small snapshot: restore its weights and tokenizer '
+                                        'in .cache/models, or explicitly enable DRESSME_ALLOW_DOWNLOADS=1.')
             path = snapshot_download('intfloat/multilingual-e5-small', revision=revision,
                                      token=hf_auth(), cache_dir=str(CACHE_DIR / 'models'),
-                                     local_files_only=not ALLOW_DOWNLOADS,
+                                     local_files_only=False,
                                      allow_patterns=['*.json', '*.safetensors', '*.model', '1_Pooling/*'])
+            if not self._complete_snapshot(path):
+                raise FileNotFoundError('Downloaded multilingual-e5-small snapshot is incomplete; weights or tokenizer missing.')
         self.model = SentenceTransformer(path, device='cpu', local_files_only=True)
         self.model.max_seq_length = 512
         self.tokenizer = self.model.tokenizer
