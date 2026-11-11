@@ -10,6 +10,11 @@ __pycache__/
 *.pyc
 *.py[cod]
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
 
 # editeur / historique
 .history/
@@ -20,6 +25,20 @@ __pycache__/
 Thumbs.db
 .DS_Store
 
+# Local databases and SQLite sidecar files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-shm
+*.sqlite3-wal
+
 # Private integration data and restored model weights
 data/private-images/
 data/mail-capture/
@@ -27,18 +46,9 @@ var/
 runtime/
 bo6_service/bundle/*.pt
 *.log
-landing/node_modules/
+node_modules/
 /static/landing/*
 !/static/landing/index.html
-
-# BO1/BO5 local runtime and model artifacts
-# secrets
-
-# Python
-
-# editeur / historique
-
-# OS
 
 # Local inference caches, private wardrobes and generated diagnostics
 .cache/
@@ -51,6 +61,7 @@ bo1/**/*.npy
 bo5/**/adapter_model.safetensors
 bo5/**/optimizer.pt
 bo5/**/scheduler.pt
+bo5/**/scaler.pt
 bo5/**/rng_state.pth
 bo5/**/training_args.bin
 
@@ -59,6 +70,24 @@ bo5/**/training_args.bin
 
 # Transfer archives of model weights
 /output/models/
+
+# LaTeX build files and redundant poster exports
+/output/pdf/*.aux
+/output/pdf/*.toc
+/output/pdf/*.out
+/output/pdf/*.fls
+/output/pdf/*.fdb_latexmk
+/output/pdf/*.synctex.gz
+/output/pdf/*.bbl
+/output/pdf/*.blg
+/output/pdf/DressMe_A1_Poster_Complete.zip
+/output/pdf/DressMe_Poster_Preview.png
+
+# Copies from the previous report layout
+/output/pdf/images/bo5-learning-curve.png
+/output/pdf/images/dressme-bo5-chat.jpg
+/output/pdf/images/dressme-bo6-review.png
+/output/pdf/images/dressme-ootd.png
 
 # BO6 G2L bundle and weights (never push; see docs/BO6_CHANGES.md)
 *.safetensors
